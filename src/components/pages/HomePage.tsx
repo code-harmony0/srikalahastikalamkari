@@ -689,9 +689,9 @@ export default function HomePage() {
                   <input
                     type="email"
                     placeholder="Enter your email address"
-                    className="flex-grow h-12 px-4 bg-primary-foreground/10 border border-accent-color rounded-sm placeholder:text-primary-foreground/50 font-paragraph focus:ring-2 focus:ring-accent-color focus:outline-none text-primary-foreground"
+                    className="flex-grow h-12 px-4 bg-white border border-white rounded-sm placeholder:text-foreground/40 font-paragraph focus:ring-2 focus:ring-primary-foreground focus:outline-none text-foreground"
                   />
-                  <Button type="submit" size="lg" className="h-12 px-8 rounded-sm font-paragraph bg-accent-color hover:bg-amber-600 text-primary font-semibold">
+                  <Button type="submit" size="lg" className="h-12 px-8 rounded-sm font-paragraph bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold">
                     Subscribe
                   </Button>
                 </form>
