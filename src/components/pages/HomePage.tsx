@@ -57,6 +57,7 @@ export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Products[]>([]);
   const [promotions, setPromotions] = useState<Promotions[]>([]);
   const [loading, setLoading] = useState(true);
+  const galleryScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +80,52 @@ export default function HomePage() {
     };
 
     fetchData();
+  }, []);
+
+  // Auto-scroll gallery
+  useEffect(() => {
+    const scrollContainer = galleryScrollRef.current;
+    if (!scrollContainer) return;
+
+    let scrollPosition = 0;
+    let isAutoScrolling = true;
+    let lastInteractionTime = Date.now();
+
+    const autoScroll = () => {
+      if (!isAutoScrolling || !scrollContainer) return;
+
+      // Check if user has interacted recently (pause auto-scroll for 5 seconds after interaction)
+      if (Date.now() - lastInteractionTime < 5000) {
+        return;
+      }
+
+      scrollPosition += 2;
+      const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+
+      if (scrollPosition >= maxScroll) {
+        scrollPosition = 0; // Loop back to start
+      }
+
+      scrollContainer.scrollLeft = scrollPosition;
+    };
+
+    const scrollInterval = setInterval(autoScroll, 50);
+
+    // Pause auto-scroll on user interaction
+    const handleUserInteraction = () => {
+      lastInteractionTime = Date.now();
+    };
+
+    scrollContainer.addEventListener('wheel', handleUserInteraction);
+    scrollContainer.addEventListener('touchstart', handleUserInteraction);
+    scrollContainer.addEventListener('mousedown', handleUserInteraction);
+
+    return () => {
+      clearInterval(scrollInterval);
+      scrollContainer.removeEventListener('wheel', handleUserInteraction);
+      scrollContainer.removeEventListener('touchstart', handleUserInteraction);
+      scrollContainer.removeEventListener('mousedown', handleUserInteraction);
+    };
   }, []);
 
   const whyChooseUsItems = [
@@ -451,16 +498,16 @@ export default function HomePage() {
                         width={900}
                         height={500}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileHover={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
                         className="absolute bottom-0 left-0 p-8 md:p-12 text-primary-foreground w-full"
                       >
-                        <h3 className="font-heading text-4xl mb-3 font-bold">{promotions[0].title}</h3>
-                        <p className="font-paragraph text-lg max-w-md mb-6 text-primary-foreground/95">{promotions[0].description}</p>
-                        <Button size="lg" className="bg-accent-color hover:bg-amber-600 text-primary font-semibold rounded-sm">Shop Now</Button>
+                        <h3 className="font-heading text-4xl mb-3 font-bold text-white drop-shadow-lg">{promotions[0].title}</h3>
+                        <p className="font-paragraph text-lg max-w-md mb-6 text-white/95 drop-shadow-md">{promotions[0].description}</p>
+                        <Button size="lg" className="bg-accent-color hover:bg-amber-600 text-primary font-semibold rounded-sm shadow-lg">Shop Now</Button>
                       </motion.div>
                     </a>
                   </motion.div>
@@ -481,16 +528,16 @@ export default function HomePage() {
                         width={600}
                         height={500}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileHover={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
                         className="absolute bottom-0 left-0 p-8 text-primary-foreground w-full"
                       >
-                        <h3 className="font-heading text-3xl mb-2 font-bold">{promotions[1].title}</h3>
-                        <p className="font-paragraph mb-4 text-primary-foreground/95">{promotions[1].description}</p>
-                        <Button variant="secondary" className="bg-accent-color hover:bg-amber-600 text-primary font-semibold rounded-sm">Explore</Button>
+                        <h3 className="font-heading text-3xl mb-2 font-bold text-white drop-shadow-lg">{promotions[1].title}</h3>
+                        <p className="font-paragraph mb-4 text-white/95 drop-shadow-md">{promotions[1].description}</p>
+                        <Button variant="secondary" className="bg-accent-color hover:bg-amber-600 text-primary font-semibold rounded-sm shadow-lg">Explore</Button>
                       </motion.div>
                     </a>
                   </motion.div>
@@ -571,7 +618,7 @@ export default function HomePage() {
           
           {/* Gallery Container */}
           <div className="relative">
-            <div className="horizontal-scroll-container overflow-x-auto pb-8 px-6 md:px-12">
+            <div ref={galleryScrollRef} className="horizontal-scroll-container overflow-x-auto pb-8 px-6 md:px-12">
               <div className="flex gap-8 w-max">
                 {galleryImages.map((image, index) => (
                   <motion.div
@@ -603,7 +650,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="absolute bottom-0 right-12 md:right-24 flex items-center gap-2 text-foreground/50 text-xs font-paragraph uppercase tracking-widest"
             >
-              <span>Scroll</span>
+              <span>Auto-scrolling</span>
               <motion.svg
                 animate={{ x: [0, 4, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
