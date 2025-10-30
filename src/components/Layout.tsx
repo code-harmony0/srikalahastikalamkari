@@ -299,7 +299,7 @@ export default function Layout() {
                   placeholder="Your email"
                   className="flex-1 px-3 py-2 border border-accent-color rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-accent-color bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/50"
                 />
-                <Button className="bg-accent-color hover:bg-amber-600 text-primary px-4 py-2 rounded-sm font-semibold">
+                <Button className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary px-4 py-2 rounded-sm font-semibold">
                   Subscribe
                 </Button>
               </div>

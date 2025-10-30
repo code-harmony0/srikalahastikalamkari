@@ -268,7 +268,7 @@ export default function HomePage() {
               className="mt-12 flex flex-col sm:flex-row gap-4"
             >
               <Link to="/shop">
-                <Button size="lg" className="h-14 px-10 text-base rounded-sm font-paragraph bg-accent-color hover:bg-amber-600 font-semibold shadow-lg text-destructive-foreground">
+                <Button size="lg" className="h-14 px-10 text-base rounded-sm font-paragraph bg-primary-foreground hover:bg-primary-foreground/90 font-semibold shadow-lg text-primary">
                   Explore Collection
                 </Button>
               </Link>
@@ -365,7 +365,7 @@ export default function HomePage() {
                           transition={{ duration: 0.3 }}
                           className="absolute bottom-0 left-0 right-0 p-4 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
-                          <Button size="sm" className="h-10 rounded-full bg-accent-color hover:bg-amber-600 text-primary font-semibold shadow-lg">
+                          <Button size="sm" className="h-10 rounded-full bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold shadow-lg">
                             <ShoppingBag className="h-4 w-4 mr-2" /> View
                           </Button>
                         </motion.div>
@@ -454,7 +454,7 @@ export default function HomePage() {
                 </p>
               </div>
               <Link to="/shop" className="mt-10 inline-block">
-                <Button className="bg-accent-color hover:bg-amber-600 text-primary px-8 py-3 rounded-sm font-paragraph font-semibold group">
+                <Button className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary px-8 py-3 rounded-sm font-paragraph font-semibold group">
                   Discover the Craft <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1"/>
                 </Button>
               </Link>
@@ -507,7 +507,7 @@ export default function HomePage() {
                       >
                         <h3 className="font-heading text-4xl mb-3 font-bold text-white drop-shadow-lg">{promotions[0].title}</h3>
                         <p className="font-paragraph text-lg max-w-md mb-6 text-white/95 drop-shadow-md">{promotions[0].description}</p>
-                        <Button size="lg" className="bg-accent-color hover:bg-amber-600 text-primary font-semibold rounded-sm shadow-lg">Shop Now</Button>
+                        <Button size="lg" className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold rounded-sm shadow-lg">Shop Now</Button>
                       </motion.div>
                     </a>
                   </motion.div>
@@ -537,7 +537,7 @@ export default function HomePage() {
                       >
                         <h3 className="font-heading text-3xl mb-2 font-bold text-white drop-shadow-lg">{promotions[1].title}</h3>
                         <p className="font-paragraph mb-4 text-white/95 drop-shadow-md">{promotions[1].description}</p>
-                        <Button variant="secondary" className="bg-accent-color hover:bg-amber-600 text-primary font-semibold rounded-sm shadow-lg">Explore</Button>
+                        <Button variant="secondary" className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold rounded-sm shadow-lg">Explore</Button>
                       </motion.div>
                     </a>
                   </motion.div>
