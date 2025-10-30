@@ -128,12 +128,22 @@ export default function HomePage() {
           background-size: 8px 8px;
           z-index: -1;
         }
+        .horizontal-scroll-container {
+          scroll-behavior: smooth;
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
         .horizontal-scroll-container::-webkit-scrollbar {
           display: none;
         }
-        .horizontal-scroll-container {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+        .gallery-item {
+          scroll-snap-align: start;
+          scroll-snap-stop: always;
+        }
+        .scroll-indicator {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .kalamkari-glow {
           position: relative;
@@ -558,28 +568,53 @@ export default function HomePage() {
               </motion.div>
             </AnimatedElement>
           </div>
-          <div className="horizontal-scroll-container overflow-x-auto pb-8">
-            <div className="flex gap-8 px-6 md:px-12 w-max">
-              {galleryImages.map((image, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -10 }}
-                  className="w-[40vh] md:w-[50vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={500}
-                    height={667}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                </motion.div>
-              ))}
+          
+          {/* Gallery Container */}
+          <div className="relative">
+            <div className="horizontal-scroll-container overflow-x-auto pb-8 px-6 md:px-12">
+              <div className="flex gap-8 w-max">
+                {galleryImages.map((image, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true, margin: "0px 100px" }}
+                    whileHover={{ y: -12 }}
+                    className="gallery-item w-[40vh] md:w-[50vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 group"
+                  >
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={500}
+                      height={667}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    />
+                  </motion.div>
+                ))}
+              </div>
             </div>
+            
+            {/* Scroll Hint */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="absolute bottom-0 right-12 md:right-24 flex items-center gap-2 text-foreground/50 text-xs font-paragraph uppercase tracking-widest"
+            >
+              <span>Scroll</span>
+              <motion.svg
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7m0 0l-7 7m7-7H6" />
+              </motion.svg>
+            </motion.div>
           </div>
         </section>
 
