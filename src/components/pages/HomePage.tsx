@@ -236,7 +236,7 @@ export default function HomePage() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
-              className="mb-6 flex items-center gap-2 text-accent-color"
+              className="mb-6 flex items-center gap-2 text-primary-foreground"
             >
               <Sparkles className="w-5 h-5" />
               <span className="font-paragraph text-sm tracking-widest uppercase">Heritage Crafted</span>
@@ -268,7 +268,7 @@ export default function HomePage() {
               className="mt-12 flex flex-col sm:flex-row gap-4"
             >
               <Link to="/shop">
-                <Button size="lg" className="h-14 px-10 text-base rounded-sm font-paragraph bg-accent-color hover:bg-amber-600 text-primary font-semibold shadow-lg">
+                <Button size="lg" className="h-14 px-10 text-base rounded-sm font-paragraph bg-accent-color hover:bg-amber-600 font-semibold shadow-lg text-destructive-foreground">
                   Explore Collection
                 </Button>
               </Link>
