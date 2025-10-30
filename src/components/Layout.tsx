@@ -10,8 +10,8 @@ export default function Layout() {
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/shop' },
-    { label: 'About', href: '/#about' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -51,12 +51,12 @@ export default function Layout() {
               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden sm:flex">
                 <Heart className="w-5 h-5 text-foreground/70" />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
+              <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
                 <ShoppingCart className="w-5 h-5 text-foreground/70" />
                 <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
-                  0
+                  2
                 </span>
-              </button>
+              </Link>
               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden sm:flex">
                 <User className="w-5 h-5 text-foreground/70" />
               </button>

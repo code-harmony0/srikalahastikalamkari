@@ -80,12 +80,12 @@ export default function HomePage() {
   ];
 
   const galleryImages = [
-    { src: "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=gallery-saree-1", alt: "A woman in a vibrant, patterned Kalamkari saree." },
-    { src: "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=gallery-saree-2", alt: "Close-up detail of a Kalamkari fabric." },
-    { src: "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=gallery-saree-3", alt: "A model showcasing a modern-styled Kalamkari saree." },
-    { src: "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=gallery-saree-4", alt: "An artisan carefully painting a design onto fabric." },
-    { src: "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=gallery-saree-5", alt: "A folded stack of colorful Kalamkari sarees." },
-    { src: "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=gallery-saree-6", alt: "A woman smiling, draped in an elegant Kalamkari saree." },
+    { src: "https://static.wixstatic.com/media/07221c_a472c3ef713149fc9e659225e7b494f5~mv2.png?originWidth=448&originHeight=640", alt: "A woman in a vibrant, patterned Kalamkari saree." },
+    { src: "https://static.wixstatic.com/media/07221c_24d1a5224a3a4efdba5941d80526de9d~mv2.png?originWidth=448&originHeight=640", alt: "Close-up detail of a Kalamkari fabric." },
+    { src: "https://static.wixstatic.com/media/07221c_b9f5ac481d3e4258b0892671da656df3~mv2.png?originWidth=448&originHeight=640", alt: "A model showcasing a modern-styled Kalamkari saree." },
+    { src: "https://static.wixstatic.com/media/07221c_e41b824ff190413783da0106b24687bc~mv2.png?originWidth=448&originHeight=640", alt: "An artisan carefully painting a design onto fabric." },
+    { src: "https://static.wixstatic.com/media/07221c_34372093ed9d4c35aa96a263080fe962~mv2.png?originWidth=448&originHeight=640", alt: "A folded stack of colorful Kalamkari sarees." },
+    { src: "https://static.wixstatic.com/media/07221c_291baffbbf9f4e7cab79e22424cd67c1~mv2.png?originWidth=448&originHeight=640", alt: "A woman smiling, draped in an elegant Kalamkari saree." },
   ];
 
   return (
@@ -124,7 +124,7 @@ export default function HomePage() {
         <section className="relative w-full min-h-screen flex items-center justify-center">
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=hero-background-saree-fabric"
+              src="https://static.wixstatic.com/media/07221c_071767876ac742d2aadac0238ead57d0~mv2.png?originWidth=1920&originHeight=1024"
               alt="A rich tapestry of handcrafted Kalamkari fabrics showing intricate patterns and warm, earthy tones."
               width={1920}
               height={1080}
@@ -175,7 +175,7 @@ export default function HomePage() {
                     <Link to={`/product/${product._id}`} className="group block">
                       <div className="relative overflow-clip bg-secondary/30 mb-4">
                         <Image
-                          src={product.mainImage || "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=product-placeholder"}
+                          src={product.mainImage || "https://static.wixstatic.com/media/07221c_67c22c1851d8410f9ea099841ce35b1a~mv2.png?originWidth=384&originHeight=512"}
                           alt={product.title || 'Kalamkari Saree'}
                           className="w-full aspect-[3/4] object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
                           width={400}
@@ -214,7 +214,7 @@ export default function HomePage() {
             <AnimatedElement>
               <div className="relative aspect-square max-w-lg mx-auto">
                 <Image
-                  src="https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=artisan-hand-painting"
+                  src="https://static.wixstatic.com/media/07221c_2d9705923c15466887b842567c2d0261~mv2.png?originWidth=768&originHeight=768"
                   alt="An artisan's hand meticulously painting a traditional Kalamkari design onto fabric with a bamboo pen."
                   className="w-full h-full object-cover"
                   width={800}
@@ -256,7 +256,7 @@ export default function HomePage() {
                   <AnimatedElement className="lg:col-span-3">
                     <a href={promotions[0].callToActionUrl} className="group relative block overflow-clip h-[500px]">
                       <Image
-                        src={promotions[0].bannerImage || "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=promo-large"}
+                        src={promotions[0].bannerImage || "https://static.wixstatic.com/media/07221c_a7a400975312440d932b7a737b5ebebf~mv2.png?originWidth=896&originHeight=448"}
                         alt={promotions[0].title || 'Seasonal Promotion'}
                         className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
                         width={900}
@@ -275,7 +275,7 @@ export default function HomePage() {
                   <AnimatedElement className="lg:col-span-2" delay={200}>
                     <a href={promotions[1].callToActionUrl} className="group relative block overflow-clip h-[500px] bg-secondary/30">
                       <Image
-                        src={promotions[1].bannerImage || "https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=promo-small"}
+                        src={promotions[1].bannerImage || "https://static.wixstatic.com/media/07221c_13a941c0dfd84492b785af619b1d7ae3~mv2.png?originWidth=896&originHeight=448"}
                         alt={promotions[1].title || 'Special Offer'}
                         className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
                         width={600}

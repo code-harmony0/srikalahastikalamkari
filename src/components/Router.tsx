@@ -6,6 +6,10 @@ import Layout from '@/components/Layout';
 import HomePage from '@/components/pages/HomePage';
 import ShopPage from '@/components/pages/ShopPage';
 import ProductDetailPage from '@/components/pages/ProductDetailPage';
+import CartPage from '@/components/pages/CartPage';
+import CheckoutPage from '@/components/pages/CheckoutPage';
+import ContactPage from '@/components/pages/ContactPage';
+import AboutPage from '@/components/pages/AboutPage';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +33,22 @@ const router = createBrowserRouter([
       {
         path: "product/:id",
         element: <ProductDetailPage />,
+      },
+      {
+        path: "cart",
+        element: <CartPage />,
+      },
+      {
+        path: "checkout",
+        element: <CheckoutPage />,
+      },
+      {
+        path: "contact",
+        element: <ContactPage />,
+      },
+      {
+        path: "about",
+        element: <AboutPage />,
       },
       {
         path: "*",
