@@ -10,6 +10,8 @@ import CartPage from '@/components/pages/CartPage';
 import CheckoutPage from '@/components/pages/CheckoutPage';
 import ContactPage from '@/components/pages/ContactPage';
 import AboutPage from '@/components/pages/AboutPage';
+import ProfilePage from '@/components/pages/ProfilePage';
+import { MemberProtectedRoute } from '@/components/ui/member-protected-route';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,14 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutPage />,
+      },
+      {
+        path: "profile",
+        element: (
+          <MemberProtectedRoute>
+            <ProfilePage />
+          </MemberProtectedRoute>
+        ),
       },
       {
         path: "*",

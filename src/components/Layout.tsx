@@ -3,9 +3,11 @@ import { Link, Outlet } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X, Search, Heart, ShoppingCart, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useMember } from '@/integrations';
 
 export default function Layout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { member, isAuthenticated, isLoading } = useMember();
 
   const navLinks = [
     { label: 'Home', href: '/' },
@@ -57,9 +59,15 @@ export default function Layout() {
                   2
                 </span>
               </Link>
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden sm:flex">
-                <User className="w-5 h-5 text-foreground/70" />
-              </button>
+              {isAuthenticated ? (
+                <Link to="/profile" className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden sm:flex">
+                  <User className="w-5 h-5 text-foreground/70" />
+                </Link>
+              ) : (
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden sm:flex">
+                  <User className="w-5 h-5 text-foreground/70" />
+                </button>
+              )}
 
               {/* Mobile Menu Button */}
               <button

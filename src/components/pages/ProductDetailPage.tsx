@@ -7,7 +7,7 @@ import { Image } from '@/components/ui/image';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Heart, Share2, ChevronLeft } from 'lucide-react';
+import { Heart, Share2, ChevronLeft, ShoppingBag } from 'lucide-react';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -73,6 +73,26 @@ export default function ProductDetailPage() {
   const availableSizes = product.availableSizes
     ? product.availableSizes.split(',').map(s => s.trim())
     : [];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: 'easeOut' as const },
+    },
+  } as const;
 
   return (
     <div className="w-full min-h-screen bg-background">
@@ -145,14 +165,19 @@ export default function ProductDetailPage() {
 
             {/* Size Selection */}
             {availableSizes.length > 0 && (
-              <div className="mb-8">
+              <motion.div variants={itemVariants} className="mb-8">
                 <Label className="text-sm font-semibold text-foreground mb-4 block">
                   Select Size
                 </Label>
                 <RadioGroup value={selectedSize} onValueChange={setSelectedSize}>
                   <div className="flex flex-wrap gap-3">
                     {availableSizes.map(size => (
-                      <div key={size} className="flex items-center">
+                      <motion.div
+                        key={size}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center"
+                      >
                         <RadioGroupItem
                           value={size}
                           id={`size-${size}`}
@@ -164,43 +189,52 @@ export default function ProductDetailPage() {
                         >
                           {size}
                         </Label>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </RadioGroup>
-              </div>
+              </motion.div>
             )}
 
             {/* Quantity Selection */}
-            <div className="mb-8">
+            <motion.div variants={itemVariants} className="mb-8">
               <Label className="text-sm font-semibold text-foreground mb-4 block">
                 Quantity
               </Label>
               <div className="flex items-center gap-4">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="w-10 h-10 border border-gray-300 rounded-sm flex items-center justify-center hover:border-primary transition-colors"
                 >
                   −
-                </button>
+                </motion.button>
                 <span className="text-lg font-semibold text-foreground w-8 text-center">
                   {quantity}
                 </span>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setQuantity(quantity + 1)}
                   className="w-10 h-10 border border-gray-300 rounded-sm flex items-center justify-center hover:border-primary transition-colors"
                 >
                   +
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 mb-8">
-              <Button className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-lg rounded-sm">
-                Add to Cart
-              </Button>
-              <button
+            <motion.div variants={itemVariants} className="flex gap-4 mb-8">
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-lg rounded-sm group">
+                  <ShoppingBag className="w-5 h-5 mr-2 transition-transform group-hover:scale-110" />
+                  Add to Cart
+                </Button>
+              </motion.div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setIsWishlisted(!isWishlisted)}
                 className={`w-12 h-12 border rounded-sm flex items-center justify-center transition-colors ${
                   isWishlisted
@@ -209,44 +243,60 @@ export default function ProductDetailPage() {
                 }`}
               >
                 <Heart className="w-6 h-6" fill={isWishlisted ? 'currentColor' : 'none'} />
-              </button>
-              <button className="w-12 h-12 border border-gray-300 rounded-sm flex items-center justify-center text-foreground/70 hover:border-primary transition-colors">
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-12 h-12 border border-gray-300 rounded-sm flex items-center justify-center text-foreground/70 hover:border-primary transition-colors"
+              >
                 <Share2 className="w-6 h-6" />
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
             {/* Product Details Accordion */}
-            <div className="space-y-4 border-t border-gray-200 pt-8">
-              <details className="group">
-                <summary className="flex items-center justify-between cursor-pointer py-4 text-lg font-heading font-semibold text-foreground">
+            <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-4 border-t border-gray-200 pt-8">
+              <motion.details variants={itemVariants} className="group">
+                <summary className="flex items-center justify-between cursor-pointer py-4 text-lg font-heading font-semibold text-foreground hover:text-primary transition-colors">
                   Product Description
-                  <span className="group-open:rotate-180 transition-transform">
+                  <motion.span
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: 0 }}
+                    className="group-open:rotate-180 transition-transform"
+                  >
                     ▼
-                  </span>
+                  </motion.span>
                 </summary>
                 <p className="text-foreground/70 font-paragraph leading-relaxed pb-4">
                   {product.description}
                 </p>
-              </details>
+              </motion.details>
 
-              <details className="group">
-                <summary className="flex items-center justify-between cursor-pointer py-4 text-lg font-heading font-semibold text-foreground">
+              <motion.details variants={itemVariants} className="group">
+                <summary className="flex items-center justify-between cursor-pointer py-4 text-lg font-heading font-semibold text-foreground hover:text-primary transition-colors">
                   Material & Craft
-                  <span className="group-open:rotate-180 transition-transform">
+                  <motion.span
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: 0 }}
+                    className="group-open:rotate-180 transition-transform"
+                  >
                     ▼
-                  </span>
+                  </motion.span>
                 </summary>
                 <p className="text-foreground/70 font-paragraph leading-relaxed pb-4">
                   This exquisite Kalamkari saree is hand-painted using traditional techniques with natural dyes. Each piece is a unique work of art, meticulously crafted by skilled artisans. The saree features intricate patterns inspired by nature and cultural motifs.
                 </p>
-              </details>
+              </motion.details>
 
-              <details className="group">
-                <summary className="flex items-center justify-between cursor-pointer py-4 text-lg font-heading font-semibold text-foreground">
+              <motion.details variants={itemVariants} className="group">
+                <summary className="flex items-center justify-between cursor-pointer py-4 text-lg font-heading font-semibold text-foreground hover:text-primary transition-colors">
                   Care Instructions
-                  <span className="group-open:rotate-180 transition-transform">
+                  <motion.span
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: 0 }}
+                    className="group-open:rotate-180 transition-transform"
+                  >
                     ▼
-                  </span>
+                  </motion.span>
                 </summary>
                 <ul className="text-foreground/70 font-paragraph leading-relaxed pb-4 space-y-2 list-disc list-inside">
                   <li>Dry clean recommended for best results</li>
@@ -255,8 +305,8 @@ export default function ProductDetailPage() {
                   <li>Iron on low heat on the reverse side</li>
                   <li>Store in a cool, dry place away from moisture</li>
                 </ul>
-              </details>
-            </div>
+              </motion.details>
+            </motion.div>
           </motion.div>
         </div>
 

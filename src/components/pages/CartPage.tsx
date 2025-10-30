@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Image } from '@/components/ui/image';
-import { Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 
 interface CartItem {
   id: string;
@@ -45,6 +45,31 @@ export default function CartPage() {
     setCartItems(cartItems.filter(item => item.id !== id));
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: 'easeOut' as const },
+    },
+    exit: {
+      opacity: 0,
+      x: -100,
+      transition: { duration: 0.3 },
+    },
+  } as const;
+
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal > 0 ? 200 : 0;
   const tax = Math.round(subtotal * 0.05);
@@ -81,14 +106,18 @@ export default function CartPage() {
               className="lg:col-span-2"
             >
               <div className="space-y-6">
-                {cartItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
-                  >
+                <AnimatePresence mode="popLayout">
+                  {cartItems.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      layout
+                      className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                    >
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
                       {/* Product Image */}
                       <div className="md:col-span-1">
@@ -144,6 +173,7 @@ export default function CartPage() {
                     </div>
                   </motion.div>
                 ))}
+                </AnimatePresence>
               </div>
 
               {/* Continue Shopping */}

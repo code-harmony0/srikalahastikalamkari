@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BaseCrudService } from '@/integrations';
 import { Products, ProductCategories } from '@/entities';
 import { Image } from '@/components/ui/image';
@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ShoppingBag } from 'lucide-react';
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Products[]>([]);
@@ -104,6 +104,27 @@ export default function ShopPage() {
       prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
     );
   };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.5, ease: 'easeOut' as const },
+    },
+  } as const;
 
   return (
     <div className="w-full min-h-screen bg-background">
@@ -266,46 +287,83 @@ export default function ShopPage() {
                 ))}
               </div>
             ) : filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredProducts.map((product, index) => (
-                  <motion.div
-                    key={product._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="group"
-                  >
-                    <Link to={`/product/${product._id}`}>
-                      <div className="relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow mb-4">
-                        {product.mainImage && (
-                          <Image
-                            src={product.mainImage}
-                            alt={product.title || 'Product'}
-                            className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
-                            width={300}
-                            height={400}
-                          />
-                        )}
-                        {product.isFeatured && (
-                          <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-sm text-sm font-semibold">
-                            Featured
-                          </div>
-                        )}
-                      </div>
-                      <h3 className="text-lg font-heading font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                        {product.title}
-                      </h3>
-                      <p className="text-foreground/70 text-sm font-paragraph mb-3 line-clamp-2">
-                        {product.description}
-                      </p>
-                      <p className="text-primary font-bold text-lg">
-                        ₹{product.price?.toLocaleString('en-IN')}
-                      </p>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              >
+                <AnimatePresence mode="popLayout">
+                  {filteredProducts.map((product, index) => (
+                    <motion.div
+                      key={product._id}
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      layout
+                      className="group"
+                    >
+                      <Link to={`/product/${product._id}`}>
+                        <div className="relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-lg transition-all duration-300 mb-4">
+                          {product.mainImage && (
+                            <Image
+                              src={product.mainImage}
+                              alt={product.title || 'Product'}
+                              className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+                              width={300}
+                              height={400}
+                            />
+                          )}
+                          {product.isFeatured && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-sm text-sm font-semibold"
+                            >
+                              Featured
+                            </motion.div>
+                          )}
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            whileHover={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="absolute bottom-0 left-0 right-0 p-3 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          >
+                            <Button size="sm" variant="secondary" className="h-9 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background">
+                              <ShoppingBag className="h-4 w-4 mr-2" /> View
+                            </Button>
+                          </motion.div>
+                        </div>
+                        <motion.h3
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.1 }}
+                          className="text-lg font-heading font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2"
+                        >
+                          {product.title}
+                        </motion.h3>
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.15 }}
+                          className="text-foreground/70 text-sm font-paragraph mb-3 line-clamp-2"
+                        >
+                          {product.description}
+                        </motion.p>
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.2 }}
+                          className="text-primary font-bold text-lg"
+                        >
+                          ₹{product.price?.toLocaleString('en-IN')}
+                        </motion.p>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
             ) : (
               <div className="text-center py-16">
                 <p className="text-lg text-foreground/70 font-paragraph mb-4">
