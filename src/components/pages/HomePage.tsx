@@ -354,7 +354,7 @@ export default function HomePage() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.4 }}
                             viewport={{ once: true }}
-                            className="absolute top-4 right-4 bg-accent-color text-primary px-3 py-1 rounded-full text-xs font-bold"
+                            className="absolute top-4 right-4 bg-primary-foreground text-primary px-3 py-1 rounded-full text-xs font-bold"
                           >
                             Featured
                           </motion.div>
