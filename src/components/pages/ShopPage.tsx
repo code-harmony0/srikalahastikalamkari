@@ -10,7 +10,7 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { ChevronDown, ShoppingBag, Grid3X3, List, Filter } from 'lucide-react';
-import { DecorativePattern, FloatingDots, DecorativeBorder } from '@/components/ui/decorative-pattern';
+import { KanjeevaramPattern, DecorativeBorder } from '@/components/ui/decorative-pattern';
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Products[]>([]);
@@ -184,8 +184,7 @@ export default function ShopPage() {
 
   return (
     <div className="w-full min-h-screen bg-background relative">
-      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
-      <FloatingDots className="text-accent-color" count={12} />
+      <KanjeevaramPattern className="text-primary/5" opacity="opacity-3" />
       {/* Page Header */}
       <section className="bg-white border-b border-gray-200 py-8 md:py-12">
         <div className="max-w-[100rem] mx-auto px-4 md:px-8">

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Image } from '@/components/ui/image';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
-import { DecorativePattern } from '@/components/ui/decorative-pattern';
+import { BandhaniPattern } from '@/components/ui/decorative-pattern';
 
 interface CartItem {
   id: string;
@@ -78,10 +78,10 @@ export default function CartPage() {
 
   return (
     <div className="w-full min-h-screen bg-background relative">
-      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
+      <BandhaniPattern className="text-primary/5" opacity="opacity-3" />
       {/* Page Header */}
       <section className="bg-white border-b border-gray-200 py-8 md:py-12 relative">
-        <DecorativePattern className="text-accent-color/10" opacity="opacity-10" />
+        <BandhaniPattern className="text-accent-color/10" opacity="opacity-10" />
         <div className="max-w-[100rem] mx-auto px-4 md:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -99,7 +99,7 @@ export default function CartPage() {
       </section>
 
       <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-12 relative z-10">
-        <DecorativePattern className="text-primary/5" opacity="opacity-5" />
+        <BandhaniPattern className="text-primary/5" opacity="opacity-5" />
         {cartItems.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}

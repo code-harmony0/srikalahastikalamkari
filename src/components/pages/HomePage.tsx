@@ -7,6 +7,7 @@ import { Products, Promotions } from '@/entities';
 import { Image } from '@/components/ui/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ShoppingBag, Sparkles } from 'lucide-react';
+import { BanarasiPattern } from '@/components/ui/decorative-pattern';
 
 type AnimatedElementProps = {
   children: React.ReactNode;
@@ -37,20 +38,9 @@ const AnimatedElement: React.FC<AnimatedElementProps> = ({ children, className, 
     return <div ref={ref} className={`${className || ''} animate-reveal`}>{children}</div>;
 };
 
-// Decorative pattern component
+// Decorative pattern component - Banarasi inspired for HomePage
 const DecorativePattern = ({ className = '' }: { className?: string }) => (
-  <div className={`absolute inset-0 opacity-5 ${className}`}>
-    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="kalamkari-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-          <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="1"/>
-          <path d="M 50 20 Q 70 50 50 80 Q 30 50 50 20" fill="none" stroke="currentColor" strokeWidth="1"/>
-          <circle cx="50" cy="50" r="10" fill="currentColor"/>
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#kalamkari-pattern)"/>
-    </svg>
-  </div>
+  <BanarasiPattern className={className} opacity="opacity-5" />
 );
 
 export default function HomePage() {

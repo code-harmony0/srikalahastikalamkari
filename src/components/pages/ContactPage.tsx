@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { Image } from '@/components/ui/image';
-import { DecorativePattern, FloatingDots, DecorativeBorder } from '@/components/ui/decorative-pattern';
+import { ChikankariPattern, DecorativeBorder, DecorativePattern } from '@/components/ui/decorative-pattern';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -36,8 +36,7 @@ export default function ContactPage() {
 
   return (
     <div className="w-full min-h-screen bg-background relative">
-      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
-      <FloatingDots className="text-accent-color" count={8} />
+      <ChikankariPattern className="text-primary/5" opacity="opacity-3" />
       {/* Hero Section */}
       <section className="relative w-full py-24 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">

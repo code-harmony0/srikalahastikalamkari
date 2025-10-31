@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Image } from '@/components/ui/image';
 import { ChevronLeft, Lock } from 'lucide-react';
-import { DecorativePattern } from '@/components/ui/decorative-pattern';
+import { IkatPattern } from '@/components/ui/decorative-pattern';
 
 interface CheckoutFormData {
   // Shipping
@@ -105,10 +105,10 @@ export default function CheckoutPage() {
 
   return (
     <div className="w-full min-h-screen bg-background relative">
-      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
+      <IkatPattern className="text-primary/5" opacity="opacity-3" />
       {/* Page Header */}
       <section className="bg-white border-b border-gray-200 py-8 md:py-12 relative">
-        <DecorativePattern className="text-accent-color/10" opacity="opacity-10" />
+        <IkatPattern className="text-accent-color/10" opacity="opacity-10" />
         <div className="max-w-[100rem] mx-auto px-4 md:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -126,7 +126,7 @@ export default function CheckoutPage() {
       </section>
 
       <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-12 relative z-10">
-        <DecorativePattern className="text-primary/5" opacity="opacity-5" />
+        <IkatPattern className="text-primary/5" opacity="opacity-5" />
         {/* Progress Indicator */}
         <div className="flex items-center justify-center gap-4 mb-12">
           {['shipping', 'payment', 'confirmation'].map((s, index) => (
