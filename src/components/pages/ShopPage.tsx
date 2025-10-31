@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { ChevronDown, ShoppingBag } from 'lucide-react';
+import { ChevronDown, ShoppingBag, Grid3X3, List, Filter } from 'lucide-react';
+import { DecorativePattern, FloatingDots, DecorativeBorder } from '@/components/ui/decorative-pattern';
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Products[]>([]);
@@ -20,8 +21,12 @@ export default function ShopPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [inStock, setInStock] = useState(false);
   const [sortBy, setSortBy] = useState('popular');
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +65,31 @@ export default function ShopPage() {
       return price >= priceRange[0] && price <= priceRange[1];
     });
 
+    // Category filter
+    if (selectedCategories.length > 0) {
+      // Note: This would need category reference field in products
+      // For now, we'll skip category filtering as products don't have category references
+    }
+
+    // Color filter (basic implementation based on title/description)
+    if (selectedColors.length > 0) {
+      filtered = filtered.filter(p => {
+        const text = `${p.title} ${p.description}`.toLowerCase();
+        return selectedColors.some(color => text.includes(color.toLowerCase()));
+      });
+    }
+
+    // Featured filter
+    if (featuredOnly) {
+      filtered = filtered.filter(p => p.isFeatured);
+    }
+
+    // In stock filter (assuming all products are in stock for now)
+    if (inStock) {
+      // This would check actual stock levels in a real implementation
+      filtered = filtered.filter(p => true);
+    }
+
     // Size filter
     if (selectedSizes.length > 0) {
       filtered = filtered.filter(p => {
@@ -84,13 +114,22 @@ export default function ShopPage() {
           return dateB - dateA;
         });
         break;
+      case 'name-az':
+        filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        break;
+      case 'name-za':
+        filtered.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+        break;
+      case 'featured':
+        filtered.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
+        break;
       case 'popular':
       default:
         filtered.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
     }
 
     setFilteredProducts(filtered);
-  }, [products, searchTerm, selectedCategories, priceRange, selectedSizes, sortBy]);
+  }, [products, searchTerm, selectedCategories, priceRange, selectedSizes, selectedColors, featuredOnly, inStock, sortBy]);
 
   const allSizes = Array.from(
     new Set(
@@ -99,10 +138,27 @@ export default function ShopPage() {
     )
   ).sort();
 
+  const availableColors = ['Red', 'Blue', 'Green', 'Yellow', 'Pink', 'Purple', 'Orange', 'Black', 'White', 'Indigo', 'Crimson', 'Golden'];
+
   const handleSizeToggle = (size: string) => {
     setSelectedSizes(prev =>
       prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
     );
+  };
+
+  const handleColorToggle = (color: string) => {
+    setSelectedColors(prev =>
+      prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setSelectedSizes([]);
+    setSelectedColors([]);
+    setFeaturedOnly(false);
+    setInStock(false);
+    setPriceRange([0, 10000]);
   };
 
   const containerVariants = {
@@ -127,7 +183,9 @@ export default function ShopPage() {
   } as const;
 
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full min-h-screen bg-background relative">
+      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
+      <FloatingDots className="text-accent-color" count={12} />
       {/* Page Header */}
       <section className="bg-white border-b border-gray-200 py-8 md:py-12">
         <div className="max-w-[100rem] mx-auto px-4 md:px-8">
@@ -155,7 +213,9 @@ export default function ShopPage() {
             transition={{ duration: 0.6 }}
             className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}
           >
-            <div className="bg-white rounded-lg p-6 shadow-sm sticky top-20">
+            <div className="bg-white rounded-lg p-6 shadow-sm sticky top-20 relative">
+              <DecorativeBorder position="top" className="opacity-50" />
+              <DecorativeBorder position="bottom" className="opacity-50" />
               <h2 className="text-xl font-heading font-bold text-foreground mb-6">
                 Filters
               </h2>
@@ -219,18 +279,73 @@ export default function ShopPage() {
                 </div>
               )}
 
+              {/* Colors */}
+              <div className="mb-8">
+                <Label className="text-sm font-semibold text-foreground mb-4 block">
+                  Colors
+                </Label>
+                <div className="grid grid-cols-2 gap-3">
+                  {availableColors.map(color => (
+                    <div key={color} className="flex items-center">
+                      <Checkbox
+                        id={`color-${color}`}
+                        checked={selectedColors.includes(color)}
+                        onCheckedChange={() => handleColorToggle(color)}
+                      />
+                      <Label
+                        htmlFor={`color-${color}`}
+                        className="ml-3 text-sm text-foreground/70 cursor-pointer"
+                      >
+                        {color}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Filters */}
+              <div className="mb-8">
+                <Label className="text-sm font-semibold text-foreground mb-4 block">
+                  Quick Filters
+                </Label>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <Checkbox
+                      id="featured-only"
+                      checked={featuredOnly}
+                      onCheckedChange={(checked) => setFeaturedOnly(checked === true)}
+                    />
+                    <Label
+                      htmlFor="featured-only"
+                      className="ml-3 text-sm text-foreground/70 cursor-pointer"
+                    >
+                      Featured Only
+                    </Label>
+                  </div>
+                  <div className="flex items-center">
+                    <Checkbox
+                      id="in-stock"
+                      checked={inStock}
+                      onCheckedChange={(checked) => setInStock(checked === true)}
+                    />
+                    <Label
+                      htmlFor="in-stock"
+                      className="ml-3 text-sm text-foreground/70 cursor-pointer"
+                    >
+                      In Stock
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
               {/* Clear Filters */}
-              {(searchTerm || selectedSizes.length > 0 || priceRange[0] > 0 || priceRange[1] < 10000) && (
+              {(searchTerm || selectedSizes.length > 0 || selectedColors.length > 0 || featuredOnly || inStock || priceRange[0] > 0 || priceRange[1] < 10000) && (
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedSizes([]);
-                    setPriceRange([0, 10000]);
-                  }}
+                  onClick={clearAllFilters}
                 >
-                  Clear Filters
+                  Clear All Filters
                 </Button>
               )}
             </div>
@@ -250,7 +365,7 @@ export default function ShopPage() {
                   onClick={() => setShowFilters(!showFilters)}
                   className="lg:hidden flex items-center gap-2 text-primary font-semibold"
                 >
-                  <ChevronDown className="w-5 h-5" />
+                  <Filter className="w-5 h-5" />
                   Filters
                 </button>
                 <p className="text-foreground/70 font-paragraph">
@@ -258,27 +373,49 @@ export default function ShopPage() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Label className="text-sm text-foreground/70">Sort by:</Label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="popular">Most Popular</option>
-                  <option value="newest">Newest</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                </select>
+              <div className="flex items-center gap-4">
+                {/* View Mode Toggle */}
+                <div className="flex items-center border border-gray-300 rounded-sm overflow-hidden">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-2 ${viewMode === 'grid' ? 'bg-primary text-primary-foreground' : 'bg-white text-foreground/70 hover:bg-gray-50'}`}
+                  >
+                    <Grid3X3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-2 ${viewMode === 'list' ? 'bg-primary text-primary-foreground' : 'bg-white text-foreground/70 hover:bg-gray-50'}`}
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Sort Dropdown */}
+                <div className="flex items-center gap-2">
+                  <Label className="text-sm text-foreground/70">Sort by:</Label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="popular">Most Popular</option>
+                    <option value="newest">Newest</option>
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name-az">Name: A to Z</option>
+                    <option value="name-za">Name: Z to A</option>
+                  </select>
+                </div>
               </div>
             </div>
 
-            {/* Products Grid */}
+            {/* Products Grid/List */}
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-8`}>
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="bg-white rounded-lg overflow-hidden animate-pulse">
-                    <div className="w-full h-80 bg-gray-200" />
+                    <div className={`w-full ${viewMode === 'grid' ? 'h-80' : 'h-48'} bg-gray-200`} />
                     <div className="p-4 space-y-3">
                       <div className="h-4 bg-gray-200 rounded w-3/4" />
                       <div className="h-4 bg-gray-200 rounded w-1/2" />
@@ -291,7 +428,7 @@ export default function ShopPage() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-8`}
               >
                 <AnimatePresence mode="popLayout">
                   {filteredProducts.map((product, index) => (
@@ -305,60 +442,64 @@ export default function ShopPage() {
                       className="group"
                     >
                       <Link to={`/product/${product._id}`}>
-                        <div className="relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-lg transition-all duration-300 mb-4">
-                          {product.mainImage && (
-                            <Image
-                              src={product.mainImage}
-                              alt={product.title || 'Product'}
-                              className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
-                              width={300}
-                              height={400}
-                            />
-                          )}
-                          {product.isFeatured && (
+                        <div className={`${viewMode === 'list' ? 'flex gap-6' : 'block'}`}>
+                          <div className={`relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-lg transition-all duration-300 mb-4 ${viewMode === 'list' ? 'w-48 flex-shrink-0' : ''}`}>
+                            {product.mainImage && (
+                              <Image
+                                src={product.mainImage}
+                                alt={product.title || 'Product'}
+                                className={`w-full ${viewMode === 'grid' ? 'h-80' : 'h-32'} object-cover group-hover:scale-110 transition-transform duration-500 ease-out`}
+                                width={300}
+                                height={400}
+                              />
+                            )}
+                            {product.isFeatured && (
+                              <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-sm text-sm font-semibold"
+                              >
+                                Featured
+                              </motion.div>
+                            )}
                             <motion.div
-                              initial={{ opacity: 0, y: -10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-sm text-sm font-semibold"
+                              initial={{ opacity: 0, y: 10 }}
+                              whileHover={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="absolute bottom-0 left-0 right-0 p-3 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                             >
-                              Featured
+                              <Button size="sm" variant="secondary" className="h-9 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background">
+                                <ShoppingBag className="h-4 w-4 mr-2" /> View
+                              </Button>
                             </motion.div>
-                          )}
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            whileHover={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="absolute bottom-0 left-0 right-0 p-3 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          >
-                            <Button size="sm" variant="secondary" className="h-9 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background">
-                              <ShoppingBag className="h-4 w-4 mr-2" /> View
-                            </Button>
-                          </motion.div>
+                          </div>
+                          <div className={`${viewMode === 'list' ? 'flex-1' : ''}`}>
+                            <motion.h3
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.1 }}
+                              className="text-lg font-heading font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2"
+                            >
+                              {product.title}
+                            </motion.h3>
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.15 }}
+                              className="text-foreground/70 text-sm font-paragraph mb-3 line-clamp-2"
+                            >
+                              {product.description}
+                            </motion.p>
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.2 }}
+                              className="text-primary font-bold text-lg"
+                            >
+                              ₹{product.price?.toLocaleString('en-IN')}
+                            </motion.p>
+                          </div>
                         </div>
-                        <motion.h3
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.1 }}
-                          className="text-lg font-heading font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2"
-                        >
-                          {product.title}
-                        </motion.h3>
-                        <motion.p
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.15 }}
-                          className="text-foreground/70 text-sm font-paragraph mb-3 line-clamp-2"
-                        >
-                          {product.description}
-                        </motion.p>
-                        <motion.p
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.2 }}
-                          className="text-primary font-bold text-lg"
-                        >
-                          ₹{product.price?.toLocaleString('en-IN')}
-                        </motion.p>
                       </Link>
                     </motion.div>
                   ))}
@@ -370,14 +511,10 @@ export default function ShopPage() {
                   No products found matching your filters.
                 </p>
                 <Button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedSizes([]);
-                    setPriceRange([0, 10000]);
-                  }}
+                  onClick={clearAllFilters}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
-                  Clear Filters
+                  Clear All Filters
                 </Button>
               </div>
             )}

@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { Image } from '@/components/ui/image';
+import { DecorativePattern, FloatingDots, DecorativeBorder } from '@/components/ui/decorative-pattern';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -34,12 +35,15 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full min-h-screen bg-background relative">
+      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
+      <FloatingDots className="text-accent-color" count={8} />
       {/* Hero Section */}
       <section className="relative w-full py-24 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image src="https://static.wixstatic.com/media/07221c_d429380cd73a433caa954c962ce5d49e~mv2.png" alt="Kalamkari fabric texture background" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/40"></div>
+          <DecorativePattern className="text-accent-color" />
         </div>
         <div className="relative z-10 max-w-[100rem] mx-auto px-4 md:px-8 text-center">
           <motion.h1
@@ -62,7 +66,8 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Content */}
-      <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-16 md:py-24">
+      <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-16 md:py-24 relative z-10">
+        <DecorativePattern className="text-primary/5" opacity="opacity-5" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Form */}
           <motion.div
@@ -186,7 +191,8 @@ export default function ContactPage() {
             className="space-y-8"
           >
             {/* Email */}
-            <div className="bg-white rounded-lg p-6 shadow-sm">
+            <div className="bg-white rounded-lg p-6 shadow-sm relative">
+              <DecorativeBorder position="top" className="opacity-40" />
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail className="w-6 h-6 text-primary" />

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Heart, Share2, ChevronLeft, ShoppingBag } from 'lucide-react';
+import { DecorativePattern } from '@/components/ui/decorative-pattern';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -95,10 +96,12 @@ export default function ProductDetailPage() {
   } as const;
 
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full min-h-screen bg-background relative">
+      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-4">
+      <div className="bg-white border-b border-gray-200 relative">
+        <DecorativePattern className="text-accent-color/10" opacity="opacity-10" />
+        <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-4 relative z-10">
           <div className="flex items-center gap-2 text-sm text-foreground/70">
             <Link to="/shop" className="hover:text-primary transition-colors">
               Shop
@@ -110,7 +113,8 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Product Detail */}
-      <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-12">
+      <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-12 relative z-10">
+        <DecorativePattern className="text-primary/5" opacity="opacity-5" />
         <Link
           to="/shop"
           className="flex items-center gap-2 text-primary hover:text-primary/80 mb-8 w-fit"

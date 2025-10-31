@@ -23,3 +23,51 @@ export const DecorativePattern: React.FC<DecorativePatternProps> = ({
     </svg>
   </div>
 );
+
+// Floating decorative dots inspired by traditional Indian textile motifs
+interface FloatingDotsProps {
+  className?: string;
+  count?: number;
+}
+
+export const FloatingDots: React.FC<FloatingDotsProps> = ({ 
+  className = '', 
+  count = 8 
+}) => (
+  <div className={`absolute inset-0 pointer-events-none ${className}`}>
+    {Array.from({ length: count }).map((_, i) => (
+      <div
+        key={i}
+        className="absolute w-2 h-2 bg-accent-color/20 rounded-full animate-pulse"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 3}s`,
+          animationDuration: `${2 + Math.random() * 2}s`,
+        }}
+      />
+    ))}
+  </div>
+);
+
+// Decorative border inspired by saree borders
+interface DecorativeBorderProps {
+  className?: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+export const DecorativeBorder: React.FC<DecorativeBorderProps> = ({ 
+  className = '', 
+  position = 'top' 
+}) => {
+  const borderClasses = {
+    top: 'top-0 left-0 right-0 h-1',
+    bottom: 'bottom-0 left-0 right-0 h-1',
+    left: 'left-0 top-0 bottom-0 w-1',
+    right: 'right-0 top-0 bottom-0 w-1',
+  };
+
+  return (
+    <div className={`absolute ${borderClasses[position]} bg-gradient-to-r from-accent-color via-primary to-accent-color opacity-30 ${className}`} />
+  );
+};

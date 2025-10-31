@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Image } from '@/components/ui/image';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { DecorativePattern, FloatingDots, DecorativeBorder } from '@/components/ui/decorative-pattern';
 
 export default function AboutPage() {
   const teamMembers = [
@@ -43,7 +44,9 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full min-h-screen bg-background relative">
+      <DecorativePattern className="text-primary/5" opacity="opacity-3" />
+      <FloatingDots className="text-accent-color" count={10} />
       {/* Hero Section */}
       <section className="relative w-full py-24 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -147,8 +150,9 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-lg p-8 shadow-sm border border-gray-200"
+                className="bg-white rounded-lg p-8 shadow-sm border border-gray-200 relative"
               >
+                <DecorativeBorder position="left" className="opacity-30" />
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-2xl font-heading font-bold text-primary">
                     {String.fromCharCode(65 + index)}
