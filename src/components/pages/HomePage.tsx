@@ -38,9 +38,9 @@ const AnimatedElement: React.FC<AnimatedElementProps> = ({ children, className, 
     return <div ref={ref} className={`${className || ''} animate-reveal`}>{children}</div>;
 };
 
-// Decorative pattern component - Banarasi inspired for HomePage
+// Decorative pattern component - Enhanced Indian-inspired floral and leaf motifs for HomePage
 const DecorativePattern = ({ className = '' }: { className?: string }) => (
-  <BanarasiPattern className={className} opacity="opacity-5" />
+  <BanarasiPattern className={className} opacity="opacity-8" />
 );
 
 export default function HomePage() {
@@ -287,7 +287,7 @@ export default function HomePage() {
 
         {/* Featured Products Section */}
         <section className="w-full py-24 md:py-32 bg-background relative">
-          <DecorativePattern className="text-primary/5" />
+          <DecorativePattern className="text-primary/8" />
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 relative z-10">
             <AnimatedElement>
               <div className="mb-16">
@@ -393,7 +393,7 @@ export default function HomePage() {
 
         {/* The Art of Kalamkari Section */}
         <section className="w-full py-24 md:py-32 bg-gradient-to-b from-secondary/20 to-background relative overflow-hidden">
-          <DecorativePattern className="text-primary/5" />
+          <DecorativePattern className="text-primary/8" />
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 md:gap-24 items-center relative z-10">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -539,7 +539,7 @@ export default function HomePage() {
 
         {/* Why Choose Us Section */}
         <section className="w-full py-24 md:py-32 bg-gradient-to-b from-background to-secondary/20 relative overflow-hidden">
-          <DecorativePattern className="text-primary/5" />
+          <DecorativePattern className="text-primary/8" />
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 relative z-10">
             <AnimatedElement className="text-center max-w-3xl mx-auto mb-20">
               <motion.div
@@ -657,7 +657,7 @@ export default function HomePage() {
 
         {/* Newsletter Section */}
         <section className="w-full py-24 md:py-32 bg-gradient-to-r from-primary via-amber-700 to-primary text-primary-foreground relative overflow-hidden">
-          <DecorativePattern className="text-primary-foreground/10" />
+          <DecorativePattern className="text-primary-foreground/15" />
           <div className="max-w-2xl mx-auto text-center px-6 relative z-10">
             <AnimatedElement>
               <motion.div

@@ -8,23 +8,59 @@ interface DecorativePatternProps {
 
 export const DecorativePattern: React.FC<DecorativePatternProps> = ({ 
   className = '', 
-  opacity = 'opacity-5' 
+  opacity = 'opacity-10' 
 }) => (
   <div className={`absolute inset-0 ${opacity} ${className}`}>
     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <pattern id="kalamkari-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-          <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="1"/>
-          <path d="M 50 20 Q 70 50 50 80 Q 30 50 50 20" fill="none" stroke="currentColor" strokeWidth="1"/>
-          <circle cx="50" cy="50" r="10" fill="currentColor"/>
+        <pattern id="enhanced-floral-pattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+          {/* Large lotus flower */}
+          <g transform="translate(60,60)">
+            <path d="M 0 -25 Q 15 -20 20 -5 Q 15 10 0 15 Q -15 10 -20 -5 Q -15 -20 0 -25" 
+                  fill="currentColor" opacity="0.4"/>
+            <path d="M 0 -20 Q 12 -15 15 -3 Q 12 8 0 12 Q -12 8 -15 -3 Q -12 -15 0 -20" 
+                  fill="currentColor" opacity="0.6"/>
+            <circle cx="0" cy="0" r="6" fill="currentColor" opacity="0.8"/>
+            {/* Petals around lotus */}
+            <path d="M 0 -30 Q 8 -25 0 -20 Q -8 -25 0 -30" fill="currentColor" opacity="0.3"/>
+            <path d="M 21 -15 Q 26 -7 21 -2 Q 16 -7 21 -15" fill="currentColor" opacity="0.3"/>
+            <path d="M 21 15 Q 26 7 21 2 Q 16 7 21 15" fill="currentColor" opacity="0.3"/>
+            <path d="M 0 30 Q 8 25 0 20 Q -8 25 0 30" fill="currentColor" opacity="0.3"/>
+            <path d="M -21 15 Q -26 7 -21 2 Q -16 7 -21 15" fill="currentColor" opacity="0.3"/>
+            <path d="M -21 -15 Q -26 -7 -21 -2 Q -16 -7 -21 -15" fill="currentColor" opacity="0.3"/>
+          </g>
+          
+          {/* Decorative leaves in corners */}
+          <g transform="translate(20,20)">
+            <path d="M 0 0 Q 8 -5 15 0 Q 8 8 0 5 Q -5 2 0 0" fill="currentColor" opacity="0.3"/>
+            <path d="M 2 1 Q 6 -2 10 1 Q 6 5 2 3" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.5"/>
+          </g>
+          <g transform="translate(100,20)">
+            <path d="M 0 0 Q -8 -5 -15 0 Q -8 8 0 5 Q 5 2 0 0" fill="currentColor" opacity="0.3"/>
+            <path d="M -2 1 Q -6 -2 -10 1 Q -6 5 -2 3" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.5"/>
+          </g>
+          <g transform="translate(20,100)">
+            <path d="M 0 0 Q 8 5 15 0 Q 8 -8 0 -5 Q -5 -2 0 0" fill="currentColor" opacity="0.3"/>
+            <path d="M 2 -1 Q 6 2 10 -1 Q 6 -5 2 -3" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.5"/>
+          </g>
+          <g transform="translate(100,100)">
+            <path d="M 0 0 Q -8 5 -15 0 Q -8 -8 0 -5 Q 5 -2 0 0" fill="currentColor" opacity="0.3"/>
+            <path d="M -2 -1 Q -6 2 -10 -1 Q -6 -5 -2 -3" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.5"/>
+          </g>
+          
+          {/* Small decorative dots */}
+          <circle cx="30" cy="60" r="2" fill="currentColor" opacity="0.4"/>
+          <circle cx="90" cy="60" r="2" fill="currentColor" opacity="0.4"/>
+          <circle cx="60" cy="30" r="2" fill="currentColor" opacity="0.4"/>
+          <circle cx="60" cy="90" r="2" fill="currentColor" opacity="0.4"/>
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill="url(#kalamkari-pattern)"/>
+      <rect width="100%" height="100%" fill="url(#enhanced-floral-pattern)"/>
     </svg>
   </div>
 );
 
-// Banarasi Silk Pattern - Intricate paisley and floral motifs
+// Banarasi Silk Pattern - Enhanced with more visible Indian-inspired floral and leaf motifs
 interface BanarasiPatternProps {
   className?: string;
   opacity?: string;
@@ -32,29 +68,64 @@ interface BanarasiPatternProps {
 
 export const BanarasiPattern: React.FC<BanarasiPatternProps> = ({ 
   className = '', 
-  opacity = 'opacity-5' 
+  opacity = 'opacity-10' 
 }) => (
   <div className={`absolute inset-0 ${opacity} ${className}`}>
     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <pattern id="banarasi-pattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-          {/* Paisley motif */}
-          <path d="M 60 20 Q 80 30 85 50 Q 80 70 60 80 Q 50 75 45 60 Q 50 40 60 20" 
-                fill="none" stroke="currentColor" strokeWidth="1.5"/>
-          {/* Inner paisley detail */}
-          <path d="M 60 30 Q 70 35 72 45 Q 70 55 60 60 Q 55 57 53 50 Q 55 40 60 30" 
-                fill="currentColor" opacity="0.3"/>
-          {/* Decorative dots */}
-          <circle cx="30" cy="30" r="2" fill="currentColor"/>
-          <circle cx="90" cy="30" r="2" fill="currentColor"/>
-          <circle cx="30" cy="90" r="2" fill="currentColor"/>
-          <circle cx="90" cy="90" r="2" fill="currentColor"/>
-          {/* Floral elements */}
-          <circle cx="20" cy="60" r="8" fill="none" stroke="currentColor" strokeWidth="1"/>
-          <circle cx="100" cy="60" r="8" fill="none" stroke="currentColor" strokeWidth="1"/>
+        <pattern id="enhanced-banarasi-pattern" x="0" y="0" width="140" height="140" patternUnits="userSpaceOnUse">
+          {/* Large paisley motif with enhanced visibility */}
+          <g transform="translate(70,70)">
+            <path d="M 0 -35 Q 25 -30 30 -5 Q 25 20 0 25 Q -15 20 -20 0 Q -15 -25 0 -35" 
+                  fill="currentColor" opacity="0.5" stroke="currentColor" strokeWidth="1"/>
+            {/* Inner paisley detail */}
+            <path d="M 0 -25 Q 18 -20 22 -3 Q 18 15 0 18 Q -10 15 -13 0 Q -10 -18 0 -25" 
+                  fill="currentColor" opacity="0.7"/>
+            {/* Paisley center */}
+            <circle cx="0" cy="0" r="8" fill="currentColor" opacity="0.8"/>
+            <circle cx="0" cy="0" r="4" fill="currentColor"/>
+          </g>
+          
+          {/* Enhanced floral elements */}
+          <g transform="translate(25,25)">
+            <circle cx="0" cy="0" r="12" fill="none" stroke="currentColor" strokeWidth="2" opacity="0.6"/>
+            <path d="M 0 -8 Q 4 -4 0 0 Q -4 -4 0 -8" fill="currentColor" opacity="0.5"/>
+            <path d="M 8 0 Q 4 4 0 0 Q 4 -4 8 0" fill="currentColor" opacity="0.5"/>
+            <path d="M 0 8 Q -4 4 0 0 Q 4 4 0 8" fill="currentColor" opacity="0.5"/>
+            <path d="M -8 0 Q -4 -4 0 0 Q -4 4 -8 0" fill="currentColor" opacity="0.5"/>
+          </g>
+          
+          <g transform="translate(115,115)">
+            <circle cx="0" cy="0" r="12" fill="none" stroke="currentColor" strokeWidth="2" opacity="0.6"/>
+            <path d="M 0 -8 Q 4 -4 0 0 Q -4 -4 0 -8" fill="currentColor" opacity="0.5"/>
+            <path d="M 8 0 Q 4 4 0 0 Q 4 -4 8 0" fill="currentColor" opacity="0.5"/>
+            <path d="M 0 8 Q -4 4 0 0 Q 4 4 0 8" fill="currentColor" opacity="0.5"/>
+            <path d="M -8 0 Q -4 -4 0 0 Q -4 4 -8 0" fill="currentColor" opacity="0.5"/>
+          </g>
+          
+          {/* Decorative leaf motifs */}
+          <g transform="translate(25,115)">
+            <path d="M 0 0 Q 10 -8 20 0 Q 15 12 5 10 Q -5 8 0 0" fill="currentColor" opacity="0.4"/>
+            <path d="M 3 2 Q 8 -3 13 2 Q 10 8 6 7" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
+          </g>
+          
+          <g transform="translate(115,25)">
+            <path d="M 0 0 Q -10 -8 -20 0 Q -15 12 -5 10 Q 5 8 0 0" fill="currentColor" opacity="0.4"/>
+            <path d="M -3 2 Q -8 -3 -13 2 Q -10 8 -6 7" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
+          </g>
+          
+          {/* Enhanced decorative dots */}
+          <circle cx="50" cy="25" r="3" fill="currentColor" opacity="0.6"/>
+          <circle cx="90" cy="50" r="3" fill="currentColor" opacity="0.6"/>
+          <circle cx="50" cy="115" r="3" fill="currentColor" opacity="0.6"/>
+          <circle cx="10" cy="90" r="3" fill="currentColor" opacity="0.6"/>
+          
+          {/* Connecting vine elements */}
+          <path d="M 35 35 Q 50 45 65 35" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+          <path d="M 105 75 Q 90 85 75 75" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill="url(#banarasi-pattern)"/>
+      <rect width="100%" height="100%" fill="url(#enhanced-banarasi-pattern)"/>
     </svg>
   </div>
 );
