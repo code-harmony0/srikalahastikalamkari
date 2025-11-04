@@ -39,8 +39,8 @@ const AnimatedElement: React.FC<AnimatedElementProps> = ({ children, className, 
 };
 
 // Decorative pattern component - Enhanced Indian-inspired floral and leaf motifs for HomePage
-const DecorativePattern = ({ className = '' }: { className?: string }) => (
-  <BanarasiPattern className={className} opacity="opacity-5" />
+const DecorativePattern = ({ className = '', animated = false }: { className?: string; animated?: boolean }) => (
+  <BanarasiPattern className={className} opacity="opacity-5" animated={animated} />
 );
 
 export default function HomePage() {
@@ -200,6 +200,24 @@ export default function HomePage() {
           0%, 100% { transform: translate(0, 0); }
           50% { transform: translate(20px, 20px); }
         }
+        @keyframes pattern-float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          33% { transform: translateY(-10px) rotate(1deg); }
+          66% { transform: translateY(5px) rotate(-0.5deg); }
+        }
+        .animate-pattern-float {
+          animation: pattern-float 12s ease-in-out infinite;
+        }
+        .pattern-shimmer {
+          background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+          background-size: 200% 200%;
+          animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% -200%; }
+          50% { background-position: 200% 200%; }
+          100% { background-position: -200% -200%; }
+        }
       `}</style>
       <main className="w-full bg-background text-foreground overflow-clip">
         {/* Hero Section */}
@@ -213,7 +231,7 @@ export default function HomePage() {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
-            <DecorativePattern className="text-accent-color" />
+            <DecorativePattern className="text-accent-color pattern-shimmer" animated={true} />
           </div>
           
           <motion.div
@@ -286,8 +304,8 @@ export default function HomePage() {
         </section>
 
         {/* Featured Products Section */}
-        <section className="w-full py-24 md:py-32 bg-background relative">
-          <DecorativePattern className="text-primary/5" />
+        <section className="w-full py-24 md:py-32 bg-background relative overflow-hidden">
+          <DecorativePattern className="text-primary/5 pattern-shimmer" animated={true} />
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 relative z-10">
             <AnimatedElement>
               <div className="mb-16">
@@ -393,7 +411,7 @@ export default function HomePage() {
 
         {/* The Art of Kalamkari Section */}
         <section className="w-full py-24 md:py-32 bg-gradient-to-b from-secondary/20 to-background relative overflow-hidden">
-          <DecorativePattern className="text-primary/5" />
+          <DecorativePattern className="text-primary/5 pattern-shimmer" animated={true} />
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 md:gap-24 items-center relative z-10">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -539,7 +557,7 @@ export default function HomePage() {
 
         {/* Why Choose Us Section */}
         <section className="w-full py-24 md:py-32 bg-gradient-to-b from-background to-secondary/20 relative overflow-hidden">
-          <DecorativePattern className="text-primary/5" />
+          <DecorativePattern className="text-primary/5 pattern-shimmer" animated={true} />
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 relative z-10">
             <AnimatedElement className="text-center max-w-3xl mx-auto mb-20">
               <motion.div
@@ -570,8 +588,8 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   className="relative group"
                 >
-                  <div className="absolute -inset-1 bg-gradient-to-r from-accent-color/20 to-primary/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur"></div>
-                  <div className="relative bg-white rounded-lg p-8 shadow-sm hover:shadow-lg transition-all duration-300">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-accent-color/20 to-primary/20 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-500 blur"></div>
+                  <div className="relative bg-white rounded-lg p-8 shadow-sm hover:shadow-xl transition-all duration-500 transform group-hover:-translate-y-2">
                     <div className="flex items-center justify-center w-16 h-16 bg-accent-color/10 rounded-lg mb-6 mx-auto">
                       <span className="text-3xl font-heading font-bold text-accent-color">0{index + 1}</span>
                     </div>
@@ -657,7 +675,7 @@ export default function HomePage() {
 
         {/* Newsletter Section */}
         <section className="w-full py-24 md:py-32 bg-gradient-to-r from-primary via-amber-700 to-primary text-primary-foreground relative overflow-hidden">
-          <DecorativePattern className="text-primary-foreground/10" />
+          <DecorativePattern className="text-primary-foreground/10 pattern-shimmer" animated={true} />
           <div className="max-w-2xl mx-auto text-center px-6 relative z-10">
             <AnimatedElement>
               <motion.div

@@ -64,68 +64,104 @@ export const DecorativePattern: React.FC<DecorativePatternProps> = ({
 interface BanarasiPatternProps {
   className?: string;
   opacity?: string;
+  animated?: boolean;
 }
 
 export const BanarasiPattern: React.FC<BanarasiPatternProps> = ({ 
   className = '', 
-  opacity = 'opacity-10' 
+  opacity = 'opacity-10',
+  animated = false
 }) => (
-  <div className={`absolute inset-0 ${opacity} ${className}`}>
+  <div className={`absolute inset-0 ${opacity} ${className} ${animated ? 'animate-pattern-float' : ''}`}>
     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="enhanced-banarasi-pattern" x="0" y="0" width="140" height="140" patternUnits="userSpaceOnUse">
           {/* Large paisley motif with enhanced visibility */}
           <g transform="translate(70,70)">
             <path d="M 0 -35 Q 25 -30 30 -5 Q 25 20 0 25 Q -15 20 -20 0 Q -15 -25 0 -35" 
-                  fill="currentColor" opacity="0.5" stroke="currentColor" strokeWidth="1"/>
+                  fill="currentColor" opacity="0.6" stroke="currentColor" strokeWidth="1.5"/>
             {/* Inner paisley detail */}
             <path d="M 0 -25 Q 18 -20 22 -3 Q 18 15 0 18 Q -10 15 -13 0 Q -10 -18 0 -25" 
-                  fill="currentColor" opacity="0.7"/>
-            {/* Paisley center */}
-            <circle cx="0" cy="0" r="8" fill="currentColor" opacity="0.8"/>
+                  fill="currentColor" opacity="0.8"/>
+            {/* Paisley center with gradient effect */}
+            <circle cx="0" cy="0" r="8" fill="currentColor" opacity="0.9"/>
             <circle cx="0" cy="0" r="4" fill="currentColor"/>
+            {/* Decorative dots around paisley */}
+            <circle cx="-15" cy="-10" r="2" fill="currentColor" opacity="0.7"/>
+            <circle cx="15" cy="10" r="2" fill="currentColor" opacity="0.7"/>
+            <circle cx="10" cy="-15" r="1.5" fill="currentColor" opacity="0.6"/>
           </g>
           
-          {/* Enhanced floral elements */}
+          {/* Enhanced floral elements with more detail */}
           <g transform="translate(25,25)">
-            <circle cx="0" cy="0" r="12" fill="none" stroke="currentColor" strokeWidth="2" opacity="0.6"/>
-            <path d="M 0 -8 Q 4 -4 0 0 Q -4 -4 0 -8" fill="currentColor" opacity="0.5"/>
-            <path d="M 8 0 Q 4 4 0 0 Q 4 -4 8 0" fill="currentColor" opacity="0.5"/>
-            <path d="M 0 8 Q -4 4 0 0 Q 4 4 0 8" fill="currentColor" opacity="0.5"/>
-            <path d="M -8 0 Q -4 -4 0 0 Q -4 4 -8 0" fill="currentColor" opacity="0.5"/>
+            <circle cx="0" cy="0" r="15" fill="none" stroke="currentColor" strokeWidth="2.5" opacity="0.7"/>
+            <circle cx="0" cy="0" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.5"/>
+            <path d="M 0 -10 Q 5 -5 0 0 Q -5 -5 0 -10" fill="currentColor" opacity="0.6"/>
+            <path d="M 10 0 Q 5 5 0 0 Q 5 -5 10 0" fill="currentColor" opacity="0.6"/>
+            <path d="M 0 10 Q -5 5 0 0 Q 5 5 0 10" fill="currentColor" opacity="0.6"/>
+            <path d="M -10 0 Q -5 -5 0 0 Q -5 5 -10 0" fill="currentColor" opacity="0.6"/>
+            {/* Central flower detail */}
+            <circle cx="0" cy="0" r="3" fill="currentColor" opacity="0.8"/>
           </g>
           
           <g transform="translate(115,115)">
-            <circle cx="0" cy="0" r="12" fill="none" stroke="currentColor" strokeWidth="2" opacity="0.6"/>
-            <path d="M 0 -8 Q 4 -4 0 0 Q -4 -4 0 -8" fill="currentColor" opacity="0.5"/>
-            <path d="M 8 0 Q 4 4 0 0 Q 4 -4 8 0" fill="currentColor" opacity="0.5"/>
-            <path d="M 0 8 Q -4 4 0 0 Q 4 4 0 8" fill="currentColor" opacity="0.5"/>
-            <path d="M -8 0 Q -4 -4 0 0 Q -4 4 -8 0" fill="currentColor" opacity="0.5"/>
+            <circle cx="0" cy="0" r="15" fill="none" stroke="currentColor" strokeWidth="2.5" opacity="0.7"/>
+            <circle cx="0" cy="0" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.5"/>
+            <path d="M 0 -10 Q 5 -5 0 0 Q -5 -5 0 -10" fill="currentColor" opacity="0.6"/>
+            <path d="M 10 0 Q 5 5 0 0 Q 5 -5 10 0" fill="currentColor" opacity="0.6"/>
+            <path d="M 0 10 Q -5 5 0 0 Q 5 5 0 10" fill="currentColor" opacity="0.6"/>
+            <path d="M -10 0 Q -5 -5 0 0 Q -5 5 -10 0" fill="currentColor" opacity="0.6"/>
+            <circle cx="0" cy="0" r="3" fill="currentColor" opacity="0.8"/>
           </g>
           
-          {/* Decorative leaf motifs */}
+          {/* Enhanced decorative leaf motifs */}
           <g transform="translate(25,115)">
-            <path d="M 0 0 Q 10 -8 20 0 Q 15 12 5 10 Q -5 8 0 0" fill="currentColor" opacity="0.4"/>
-            <path d="M 3 2 Q 8 -3 13 2 Q 10 8 6 7" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
+            <path d="M 0 0 Q 12 -10 24 0 Q 18 15 6 12 Q -6 10 0 0" fill="currentColor" opacity="0.5"/>
+            <path d="M 4 3 Q 10 -4 16 3 Q 12 10 8 9" fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.7"/>
+            <path d="M 8 6 Q 12 2 16 6" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6"/>
           </g>
           
           <g transform="translate(115,25)">
-            <path d="M 0 0 Q -10 -8 -20 0 Q -15 12 -5 10 Q 5 8 0 0" fill="currentColor" opacity="0.4"/>
-            <path d="M -3 2 Q -8 -3 -13 2 Q -10 8 -6 7" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
+            <path d="M 0 0 Q -12 -10 -24 0 Q -18 15 -6 12 Q 6 10 0 0" fill="currentColor" opacity="0.5"/>
+            <path d="M -4 3 Q -10 -4 -16 3 Q -12 10 -8 9" fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.7"/>
+            <path d="M -8 6 Q -12 2 -16 6" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6"/>
           </g>
           
-          {/* Enhanced decorative dots */}
-          <circle cx="50" cy="25" r="3" fill="currentColor" opacity="0.6"/>
-          <circle cx="90" cy="50" r="3" fill="currentColor" opacity="0.6"/>
-          <circle cx="50" cy="115" r="3" fill="currentColor" opacity="0.6"/>
-          <circle cx="10" cy="90" r="3" fill="currentColor" opacity="0.6"/>
+          {/* Enhanced decorative dots with varying sizes */}
+          <circle cx="50" cy="25" r="4" fill="currentColor" opacity="0.7"/>
+          <circle cx="90" cy="50" r="3.5" fill="currentColor" opacity="0.6"/>
+          <circle cx="50" cy="115" r="4" fill="currentColor" opacity="0.7"/>
+          <circle cx="10" cy="90" r="3.5" fill="currentColor" opacity="0.6"/>
           
-          {/* Connecting vine elements */}
-          <path d="M 35 35 Q 50 45 65 35" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
-          <path d="M 105 75 Q 90 85 75 75" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+          {/* Additional small accent dots */}
+          <circle cx="70" cy="35" r="2" fill="currentColor" opacity="0.5"/>
+          <circle cx="35" cy="70" r="2" fill="currentColor" opacity="0.5"/>
+          <circle cx="105" cy="105" r="2" fill="currentColor" opacity="0.5"/>
+          
+          {/* Enhanced connecting vine elements */}
+          <path d="M 35 35 Q 50 45 65 35" fill="none" stroke="currentColor" strokeWidth="2" opacity="0.5"/>
+          <path d="M 105 75 Q 90 85 75 75" fill="none" stroke="currentColor" strokeWidth="2" opacity="0.5"/>
+          <path d="M 20 60 Q 35 70 50 60" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+          <path d="M 90 20 Q 105 30 120 20" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
         </pattern>
+        
+        {/* Animated gradient overlay for shimmer effect */}
+        <linearGradient id="shimmer-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0">
+            <animate attributeName="stop-opacity" values="0;0.3;0" dur="4s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="50%" stopColor="currentColor" stopOpacity="0">
+            <animate attributeName="stop-opacity" values="0;0.5;0" dur="4s" repeatCount="indefinite" begin="1s"/>
+          </stop>
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0">
+            <animate attributeName="stop-opacity" values="0;0.3;0" dur="4s" repeatCount="indefinite" begin="2s"/>
+          </stop>
+        </linearGradient>
       </defs>
       <rect width="100%" height="100%" fill="url(#enhanced-banarasi-pattern)"/>
+      {animated && (
+        <rect width="100%" height="100%" fill="url(#shimmer-gradient)" opacity="0.3"/>
+      )}
     </svg>
   </div>
 );
