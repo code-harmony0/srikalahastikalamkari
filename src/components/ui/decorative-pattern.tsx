@@ -506,6 +506,141 @@ export const KalamkariHeroPattern: React.FC<KalamkariHeroPatternProps> = ({
   </div>
 );
 
+// Diagonal Flowing Kalamkari Paisley Pattern - Softly blurred with fabric depth
+interface DiagonalKalamkariPatternProps {
+  className?: string;
+  opacity?: string;
+  animated?: boolean;
+}
+
+export const DiagonalKalamkariPattern: React.FC<DiagonalKalamkariPatternProps> = ({ 
+  className = '', 
+  opacity = 'opacity-10',
+  animated = false
+}) => (
+  <div className={`absolute inset-0 ${opacity} ${className} ${animated ? 'animate-diagonal-flow' : ''}`}>
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {/* Soft blur filter for paisley patterns */}
+        <filter id="soft-blur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5"/>
+          <feColorMatrix type="saturate" values="0.8"/>
+        </filter>
+
+        {/* Fabric depth shadow filter */}
+        <filter id="fabric-depth" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="1" dy="2" stdDeviation="3" floodColor="currentColor" floodOpacity="0.15"/>
+          <feDropShadow dx="-0.5" dy="1" stdDeviation="1.5" floodColor="currentColor" floodOpacity="0.1"/>
+        </filter>
+
+        {/* Enhanced fabric grain with depth */}
+        <filter id="enhanced-fabric-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence baseFrequency="0.8" numOctaves="3" result="noise"/>
+          <feColorMatrix in="noise" type="saturate" values="0"/>
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="0.05 0.1 0.05 0.15"/>
+          </feComponentTransfer>
+          <feComposite operator="multiply" in2="SourceGraphic"/>
+          <feDropShadow dx="0.5" dy="1" stdDeviation="1" floodColor="currentColor" floodOpacity="0.08"/>
+        </filter>
+
+        {/* Diagonal flowing pattern - rotated 45 degrees */}
+        <pattern id="diagonal-kalamkari-pattern" x="0" y="0" width="300" height="300" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          
+          {/* Large flowing paisley - main focal point */}
+          <g transform="translate(150,80)">
+            <path d="M 0 -60 Q 45 -55 55 -15 Q 50 35 0 50 Q -30 35 -35 0 Q -30 -40 0 -60" 
+                  fill="currentColor" opacity="0.12" filter="url(#soft-blur)"/>
+            {/* Inner paisley with gradient effect */}
+            <path d="M 0 -45 Q 32 -40 40 -10 Q 35 25 0 35 Q -22 25 -26 0 Q -22 -30 0 -45" 
+                  fill="currentColor" opacity="0.18" filter="url(#soft-blur)"/>
+            {/* Paisley center with soft glow */}
+            <circle cx="0" cy="0" r="15" fill="currentColor" opacity="0.25" filter="url(#soft-blur)"/>
+            <circle cx="0" cy="0" r="8" fill="currentColor" opacity="0.3"/>
+            
+            {/* Flowing decorative elements around main paisley */}
+            <path d="M -25 -20 Q -15 -25 -5 -20 Q -15 -10 -25 -20" fill="currentColor" opacity="0.15" filter="url(#soft-blur)"/>
+            <path d="M 25 20 Q 35 15 45 20 Q 35 30 25 20" fill="currentColor" opacity="0.15" filter="url(#soft-blur)"/>
+            <path d="M 20 -25 Q 30 -30 40 -25 Q 30 -15 20 -25" fill="currentColor" opacity="0.12" filter="url(#soft-blur)"/>
+          </g>
+          
+          {/* Medium paisley - secondary flow */}
+          <g transform="translate(80,220)">
+            <path d="M 0 -40 Q 28 -35 35 -8 Q 30 20 0 30 Q -18 20 -22 0 Q -18 -25 0 -40" 
+                  fill="currentColor" opacity="0.1" filter="url(#soft-blur)"/>
+            <path d="M 0 -28 Q 20 -24 25 -5 Q 22 15 0 20 Q -12 15 -15 0 Q -12 -18 0 -28" 
+                  fill="currentColor" opacity="0.15" filter="url(#soft-blur)"/>
+            <circle cx="0" cy="0" r="8" fill="currentColor" opacity="0.2" filter="url(#soft-blur)"/>
+          </g>
+
+          {/* Small paisley - tertiary flow */}
+          <g transform="translate(220,160)">
+            <path d="M 0 -25 Q 18 -22 22 -5 Q 20 12 0 18 Q -12 12 -14 0 Q -12 -15 0 -25" 
+                  fill="currentColor" opacity="0.08" filter="url(#soft-blur)"/>
+            <circle cx="0" cy="0" r="6" fill="currentColor" opacity="0.12" filter="url(#soft-blur)"/>
+          </g>
+
+          {/* Flowing vine connections */}
+          <path d="M 120 60 Q 140 80 160 100 Q 180 120 200 140" 
+                fill="none" stroke="currentColor" strokeWidth="2" opacity="0.08" filter="url(#soft-blur)"/>
+          <path d="M 60 180 Q 80 200 100 220 Q 120 240 140 260" 
+                fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.06" filter="url(#soft-blur)"/>
+          
+          {/* Delicate floral sprigs along the flow */}
+          <g transform="translate(180,120)">
+            <path d="M 0 -8 Q 4 -4 0 0 Q -4 -4 0 -8" fill="currentColor" opacity="0.1" filter="url(#soft-blur)"/>
+            <path d="M 8 0 Q 4 4 0 0 Q 4 -4 8 0" fill="currentColor" opacity="0.1" filter="url(#soft-blur)"/>
+            <path d="M 0 8 Q -4 4 0 0 Q 4 4 0 8" fill="currentColor" opacity="0.1" filter="url(#soft-blur)"/>
+            <path d="M -8 0 Q -4 -4 0 0 Q -4 4 -8 0" fill="currentColor" opacity="0.1" filter="url(#soft-blur)"/>
+            <circle cx="0" cy="0" r="2" fill="currentColor" opacity="0.15"/>
+          </g>
+
+          <g transform="translate(100,180)">
+            <path d="M 0 -6 Q 3 -3 0 0 Q -3 -3 0 -6" fill="currentColor" opacity="0.08" filter="url(#soft-blur)"/>
+            <path d="M 6 0 Q 3 3 0 0 Q 3 -3 6 0" fill="currentColor" opacity="0.08" filter="url(#soft-blur)"/>
+            <path d="M 0 6 Q -3 3 0 0 Q 3 3 0 6" fill="currentColor" opacity="0.08" filter="url(#soft-blur)"/>
+            <path d="M -6 0 Q -3 -3 0 0 Q -3 3 -6 0" fill="currentColor" opacity="0.08" filter="url(#soft-blur)"/>
+            <circle cx="0" cy="0" r="1.5" fill="currentColor" opacity="0.12"/>
+          </g>
+
+          {/* Scattered decorative dots following the diagonal flow */}
+          <circle cx="140" cy="40" r="2" fill="currentColor" opacity="0.08" filter="url(#soft-blur)"/>
+          <circle cx="160" cy="80" r="1.5" fill="currentColor" opacity="0.06" filter="url(#soft-blur)"/>
+          <circle cx="200" cy="120" r="2.5" fill="currentColor" opacity="0.1" filter="url(#soft-blur)"/>
+          <circle cx="240" cy="180" r="1.8" fill="currentColor" opacity="0.07" filter="url(#soft-blur)"/>
+          <circle cx="120" cy="200" r="2.2" fill="currentColor" opacity="0.09" filter="url(#soft-blur)"/>
+          <circle cx="80" cy="160" r="1.2" fill="currentColor" opacity="0.05" filter="url(#soft-blur)"/>
+
+          {/* Additional small paisley elements for richness */}
+          <g transform="translate(40,120)">
+            <path d="M 0 -12 Q 8 -10 10 -3 Q 8 6 0 9 Q -6 6 -7 0 Q -6 -8 0 -12" 
+                  fill="currentColor" opacity="0.06" filter="url(#soft-blur)"/>
+          </g>
+          
+          <g transform="translate(260,80)">
+            <path d="M 0 -10 Q 6 -8 8 -2 Q 6 5 0 7 Q -4 5 -5 0 Q -4 -6 0 -10" 
+                  fill="currentColor" opacity="0.05" filter="url(#soft-blur)"/>
+          </g>
+        </pattern>
+
+        {/* Animation keyframes for diagonal flow */}
+        <animateTransform 
+          attributeName="patternTransform" 
+          type="translate" 
+          values="0,0; 50,50; 0,0" 
+          dur="25s" 
+          repeatCount="indefinite"/>
+      </defs>
+      
+      {/* Base diagonal pattern with fabric depth */}
+      <rect width="100%" height="100%" fill="url(#diagonal-kalamkari-pattern)" filter="url(#fabric-depth)"/>
+      
+      {/* Enhanced fabric grain overlay */}
+      <rect width="100%" height="100%" fill="currentColor" opacity="0.03" filter="url(#enhanced-fabric-grain)"/>
+    </svg>
+  </div>
+);
+
 // Decorative border inspired by saree borders
 interface DecorativeBorderProps {
   className?: string;
