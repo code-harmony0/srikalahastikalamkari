@@ -179,20 +179,20 @@ export const KanjeevaramPattern: React.FC<KanjeevaramPatternProps> = ({
   <div className={`absolute inset-0 ${opacity} ${className}`}>
     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <pattern id="kanjeevaram-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-          {/* Temple border design */}
-          <rect x="10" y="10" width="60" height="60" fill="none" stroke="currentColor" strokeWidth="2"/>
-          <rect x="20" y="20" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1"/>
-          {/* Geometric elements */}
-          <polygon points="40,15 50,25 40,35 30,25" fill="currentColor" opacity="0.4"/>
-          <polygon points="40,45 50,55 40,65 30,55" fill="currentColor" opacity="0.4"/>
-          <polygon points="15,40 25,50 15,60 5,50" fill="currentColor" opacity="0.4"/>
-          <polygon points="55,40 65,50 55,60 45,50" fill="currentColor" opacity="0.4"/>
-          {/* Central motif */}
-          <circle cx="40" cy="40" r="8" fill="none" stroke="currentColor" strokeWidth="1.5"/>
-          <circle cx="40" cy="40" r="3" fill="currentColor"/>
-        </pattern>
-      </defs>
+            <pattern id="kanjeevaram-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+              {/* Temple border design */}
+              <rect x="10" y="10" width="60" height="60" fill="none" stroke="currentColor" strokeWidth="2"/>
+              <rect x="20" y="20" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1"/>
+              {/* Geometric elements */}
+              <polygon points="40,15 50,25 40,35 30,25" fill="currentColor" opacity="0.4"/>
+              <polygon points="40,45 50,55 40,65 30,55" fill="currentColor" opacity="0.4"/>
+              <polygon points="15,40 25,50 15,60 5,50" fill="currentColor" opacity="0.4"/>
+              <polygon points="55,40 65,50 55,60 45,50" fill="currentColor" opacity="0.4"/>
+              {/* Central motif */}
+              <circle cx="40" cy="40" r="8" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+              <circle cx="40" cy="40" r="3" fill="currentColor"/>
+            </pattern>
+          </defs>
       <rect width="100%" height="100%" fill="url(#kanjeevaram-pattern)"/>
     </svg>
   </div>
