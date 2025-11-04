@@ -379,6 +379,133 @@ export const ChikankariPattern: React.FC<ChikankariPatternProps> = ({
   </div>
 );
 
+// Kalamkari Hero Pattern - Soft floral and paisley background for hero sections
+interface KalamkariHeroPatternProps {
+  className?: string;
+  opacity?: string;
+  animated?: boolean;
+}
+
+export const KalamkariHeroPattern: React.FC<KalamkariHeroPatternProps> = ({ 
+  className = '', 
+  opacity = 'opacity-5',
+  animated = false
+}) => (
+  <div className={`absolute inset-0 ${opacity} ${className} ${animated ? 'animate-pattern-float' : ''}`}>
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {/* Fabric grain texture filter */}
+        <filter id="fabric-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence baseFrequency="0.9" numOctaves="4" result="noise"/>
+          <feColorMatrix in="noise" type="saturate" values="0"/>
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="0.1 0.15 0.1 0.2"/>
+          </feComponentTransfer>
+          <feComposite operator="multiply" in2="SourceGraphic"/>
+        </filter>
+
+        {/* Soft gradient for depth */}
+        <radialGradient id="soft-depth" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.1"/>
+          <stop offset="50%" stopColor="currentColor" stopOpacity="0.05"/>
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.02"/>
+        </radialGradient>
+
+        <pattern id="kalamkari-hero-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+          {/* Large central paisley with soft edges */}
+          <g transform="translate(100,100)">
+            <path d="M 0 -50 Q 35 -45 45 -10 Q 40 30 0 40 Q -25 30 -30 0 Q -25 -35 0 -50" 
+                  fill="currentColor" opacity="0.08" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.05"/>
+            {/* Inner paisley detail */}
+            <path d="M 0 -35 Q 25 -30 32 -8 Q 28 22 0 28 Q -18 22 -22 0 Q -18 -25 0 -35" 
+                  fill="currentColor" opacity="0.12"/>
+            {/* Soft center */}
+            <circle cx="0" cy="0" r="12" fill="currentColor" opacity="0.15"/>
+            <circle cx="0" cy="0" r="6" fill="currentColor" opacity="0.2"/>
+            
+            {/* Delicate decorative dots around paisley */}
+            <circle cx="-20" cy="-15" r="2" fill="currentColor" opacity="0.1"/>
+            <circle cx="20" cy="15" r="2" fill="currentColor" opacity="0.1"/>
+            <circle cx="15" cy="-20" r="1.5" fill="currentColor" opacity="0.08"/>
+            <circle cx="-15" cy="20" r="1.5" fill="currentColor" opacity="0.08"/>
+          </g>
+          
+          {/* Soft floral motifs in corners */}
+          <g transform="translate(40,40)">
+            <circle cx="0" cy="0" r="20" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.06"/>
+            <circle cx="0" cy="0" r="12" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.04"/>
+            {/* Flower petals */}
+            <path d="M 0 -12 Q 6 -6 0 0 Q -6 -6 0 -12" fill="currentColor" opacity="0.08"/>
+            <path d="M 12 0 Q 6 6 0 0 Q 6 -6 12 0" fill="currentColor" opacity="0.08"/>
+            <path d="M 0 12 Q -6 6 0 0 Q 6 6 0 12" fill="currentColor" opacity="0.08"/>
+            <path d="M -12 0 Q -6 -6 0 0 Q -6 6 -12 0" fill="currentColor" opacity="0.08"/>
+            <circle cx="0" cy="0" r="4" fill="currentColor" opacity="0.12"/>
+          </g>
+          
+          <g transform="translate(160,160)">
+            <circle cx="0" cy="0" r="20" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.06"/>
+            <circle cx="0" cy="0" r="12" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.04"/>
+            <path d="M 0 -12 Q 6 -6 0 0 Q -6 -6 0 -12" fill="currentColor" opacity="0.08"/>
+            <path d="M 12 0 Q 6 6 0 0 Q 6 -6 12 0" fill="currentColor" opacity="0.08"/>
+            <path d="M 0 12 Q -6 6 0 0 Q 6 6 0 12" fill="currentColor" opacity="0.08"/>
+            <path d="M -12 0 Q -6 -6 0 0 Q -6 6 -12 0" fill="currentColor" opacity="0.08"/>
+            <circle cx="0" cy="0" r="4" fill="currentColor" opacity="0.12"/>
+          </g>
+
+          {/* Delicate leaf motifs */}
+          <g transform="translate(40,160)">
+            <path d="M 0 0 Q 15 -12 30 0 Q 22 18 8 15 Q -8 12 0 0" fill="currentColor" opacity="0.06"/>
+            <path d="M 6 4 Q 15 -6 24 4 Q 18 12 12 11" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.04"/>
+            <path d="M 12 8 Q 18 4 24 8" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.03"/>
+          </g>
+          
+          <g transform="translate(160,40)">
+            <path d="M 0 0 Q -15 -12 -30 0 Q -22 18 -8 15 Q 8 12 0 0" fill="currentColor" opacity="0.06"/>
+            <path d="M -6 4 Q -15 -6 -24 4 Q -18 12 -12 11" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.04"/>
+            <path d="M -12 8 Q -18 4 -24 8" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.03"/>
+          </g>
+
+          {/* Scattered small paisley motifs */}
+          <g transform="translate(70,30)">
+            <path d="M 0 -8 Q 6 -6 8 -2 Q 6 4 0 6 Q -4 4 -5 0 Q -4 -5 0 -8" 
+                  fill="currentColor" opacity="0.06"/>
+            <circle cx="0" cy="0" r="2" fill="currentColor" opacity="0.08"/>
+          </g>
+          
+          <g transform="translate(130,170)">
+            <path d="M 0 -8 Q 6 -6 8 -2 Q 6 4 0 6 Q -4 4 -5 0 Q -4 -5 0 -8" 
+                  fill="currentColor" opacity="0.06"/>
+            <circle cx="0" cy="0" r="2" fill="currentColor" opacity="0.08"/>
+          </g>
+
+          {/* Delicate connecting vines */}
+          <path d="M 60 60 Q 80 70 100 60" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.04"/>
+          <path d="M 140 140 Q 120 130 100 140" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.04"/>
+          <path d="M 30 100 Q 50 110 70 100" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.03"/>
+          <path d="M 130 100 Q 150 110 170 100" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.03"/>
+
+          {/* Tiny decorative dots for texture */}
+          <circle cx="80" cy="50" r="1" fill="currentColor" opacity="0.05"/>
+          <circle cx="120" cy="80" r="1" fill="currentColor" opacity="0.05"/>
+          <circle cx="50" cy="120" r="1" fill="currentColor" opacity="0.05"/>
+          <circle cx="150" cy="150" r="1" fill="currentColor" opacity="0.05"/>
+          <circle cx="25" cy="75" r="1" fill="currentColor" opacity="0.05"/>
+          <circle cx="175" cy="125" r="1" fill="currentColor" opacity="0.05"/>
+        </pattern>
+      </defs>
+      
+      {/* Base pattern */}
+      <rect width="100%" height="100%" fill="url(#kalamkari-hero-pattern)"/>
+      
+      {/* Soft depth overlay */}
+      <rect width="100%" height="100%" fill="url(#soft-depth)"/>
+      
+      {/* Fabric grain texture */}
+      <rect width="100%" height="100%" fill="currentColor" opacity="0.02" filter="url(#fabric-grain)"/>
+    </svg>
+  </div>
+);
+
 // Decorative border inspired by saree borders
 interface DecorativeBorderProps {
   className?: string;

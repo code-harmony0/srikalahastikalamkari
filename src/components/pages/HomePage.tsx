@@ -6,7 +6,7 @@ import { Products, Promotions } from '@/entities';
 import { Image } from '@/components/ui/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ShoppingBag, Sparkles, Star, Heart, Award, Users, Palette, Scissors } from 'lucide-react';
-import { KanjeevaramPattern } from '@/components/ui/decorative-pattern';
+import { KanjeevaramPattern, KalamkariHeroPattern } from '@/components/ui/decorative-pattern';
 
 type AnimatedElementProps = {
   children: React.ReactNode;
@@ -39,7 +39,12 @@ const AnimatedElement: React.FC<AnimatedElementProps> = ({ children, className, 
 
 // Premium decorative pattern component for sophisticated heritage branding
 const DecorativePattern = ({ className = '', animated = false }: { className?: string; animated?: boolean }) => (
-  <KanjeevaramPattern className={className} />
+  <KanjeevaramPattern className={className} opacity="opacity-5" />
+);
+
+// Kalamkari Hero Background - Soft, artistic pattern for hero section
+const KalamkariHeroBackground = ({ className = '', animated = false }: { className?: string; animated?: boolean }) => (
+  <KalamkariHeroPattern className={className} opacity="opacity-8" animated={animated} />
 );
 
 export default function HomePage() {
@@ -195,11 +200,33 @@ export default function HomePage() {
         }
         .luxury-gradient {
           background: linear-gradient(135deg, 
-            rgba(160, 82, 45, 0.95) 0%, 
-            rgba(139, 69, 19, 0.95) 25%,
-            rgba(101, 67, 33, 0.95) 50%,
-            rgba(160, 82, 45, 0.95) 75%,
-            rgba(184, 134, 11, 0.95) 100%);
+            rgba(160, 82, 45, 0.85) 0%, 
+            rgba(139, 69, 19, 0.85) 25%,
+            rgba(101, 67, 33, 0.85) 50%,
+            rgba(160, 82, 45, 0.85) 75%,
+            rgba(184, 134, 11, 0.85) 100%);
+        }
+        .kalamkari-hero-overlay {
+          background: linear-gradient(
+            135deg,
+            rgba(160, 82, 45, 0.3) 0%,
+            rgba(184, 134, 11, 0.2) 25%,
+            rgba(139, 69, 19, 0.25) 50%,
+            rgba(160, 82, 45, 0.3) 75%,
+            rgba(184, 134, 11, 0.2) 100%
+          );
+        }
+        .fabric-grain {
+          background-image: 
+            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.08) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.06) 1px, transparent 1px),
+            linear-gradient(45deg, transparent 48%, rgba(184, 134, 11, 0.03) 49%, rgba(184, 134, 11, 0.03) 51%, transparent 52%);
+          background-size: 16px 16px, 12px 12px, 8px 8px;
+          animation: fabricShift 20s ease-in-out infinite;
+        }
+        @keyframes fabricShift {
+          0%, 100% { background-position: 0 0, 8px 8px, 4px 4px; }
+          50% { background-position: 8px 8px, 0 0, 12px 12px; }
         }
         .heritage-texture::before {
           content: '';
@@ -280,25 +307,38 @@ export default function HomePage() {
         }
       `}</style>
       <main className="w-full bg-background text-foreground overflow-hidden">
-        {/* Hero Section - Premium Luxury Design */}
+        {/* Hero Section - Refined Kalamkari Art Background */}
         <section 
           ref={heroRef}
           className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
         >
-          {/* Background with Parallax */}
+          {/* Multi-layered Background with Parallax */}
           <motion.div 
             style={{ y: heroY }}
             className="absolute inset-0 z-0"
           >
+            {/* Base Image */}
             <Image
-              src="https://static.wixstatic.com/media/07221c_36a971b1d7ed477e84f5f329ed25ac4b~mv2.png?originWidth=1920&originHeight=1024"
+              src="https://static.wixstatic.com/media/07221c_e8e7803ddf9643f5b6e30ce8bc520048~mv2.png?originWidth=1920&originHeight=1024"
               alt="Luxurious display of handcrafted Kalamkari sarees showcasing intricate patterns and rich heritage colors"
               width={1920}
               height={1080}
               className="w-full h-full object-cover scale-110"
             />
+            
+            {/* Soft Kalamkari Pattern Overlay */}
+            <div className="absolute inset-0">
+              <KalamkariHeroBackground className="text-accent-color" animated={true} />
+            </div>
+            
+            {/* Warm Gradient Overlay */}
+            <div className="absolute inset-0 kalamkari-hero-overlay"></div>
+            
+            {/* Fabric Grain Texture */}
+            <div className="absolute inset-0 fabric-grain opacity-40"></div>
+            
+            {/* Final Luxury Gradient */}
             <div className="absolute inset-0 luxury-gradient"></div>
-            <DecorativePattern className="text-accent-color/20 premium-shimmer heritage-float" animated={true} />
           </motion.div>
           
           {/* Hero Content */}
