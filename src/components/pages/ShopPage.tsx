@@ -205,47 +205,108 @@ export default function ShopPage() {
   } as const;
 
   return (
-    <div className="w-full min-h-screen bg-background relative">
-      <KanjeevaramPattern className="text-primary/5" opacity="opacity-3" />
-      
+    <div className="w-full min-h-screen bg-background">
       {/* Page Header */}
-      <section className="bg-white border-b border-gray-200 py-12 md:py-16">
+      <section className="bg-gradient-to-br from-white via-background/50 to-secondary/20 border-b border-gray-200 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center"
           >
-            <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">
-              Our Collection
-            </h1>
-            <p className="text-lg text-foreground/70 font-paragraph max-w-2xl mx-auto">
-              Discover our exquisite range of handcrafted Kalamkari sarees, each piece telling a unique story of tradition and artistry
-            </p>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-block mb-6"
+            >
+              <span className="inline-block px-4 py-2 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20">
+                Premium Collection
+              </span>
+            </motion.div>
             
-            {/* Quick Stats */}
-            <div className="flex justify-center items-center gap-8 mt-8">
-              <div className="text-center">
-                <div className="text-2xl font-heading font-bold text-primary">{products.length}</div>
-                <div className="text-sm text-foreground/60 font-paragraph">Total Products</div>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground mb-6 leading-tight"
+            >
+              Our Collection
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-xl md:text-2xl text-foreground/70 font-paragraph max-w-3xl mx-auto mb-12 leading-relaxed"
+            >
+              Discover our exquisite range of handcrafted Kalamkari sarees, where each piece tells a unique story of tradition, artistry, and timeless elegance
+            </motion.p>
+            
+            {/* Enhanced Stats Section */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto"
+            >
+              <div className="group">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                    className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2"
+                  >
+                    {products.length}
+                  </motion.div>
+                  <div className="text-sm font-paragraph text-foreground/70 font-medium">
+                    Unique Designs
+                  </div>
+                </div>
               </div>
-              <div className="w-px h-8 bg-gray-300"></div>
-              <div className="text-center">
-                <div className="text-2xl font-heading font-bold text-primary">{products.filter(p => p.isFeatured).length}</div>
-                <div className="text-sm text-foreground/60 font-paragraph">Featured</div>
+              
+              <div className="group">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.9 }}
+                    className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2"
+                  >
+                    {products.filter(p => p.isFeatured).length}
+                  </motion.div>
+                  <div className="text-sm font-paragraph text-foreground/70 font-medium">
+                    Featured Pieces
+                  </div>
+                </div>
               </div>
-              <div className="w-px h-8 bg-gray-300"></div>
-              <div className="text-center">
-                <div className="text-2xl font-heading font-bold text-primary">{categories.length}</div>
-                <div className="text-sm text-foreground/60 font-paragraph">Categories</div>
+              
+              <div className="group">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, delay: 1.0 }}
+                    className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2"
+                  >
+                    {categories.length}
+                  </motion.div>
+                  <div className="text-sm font-paragraph text-foreground/70 font-medium">
+                    Categories
+                  </div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
+      {/* Main Content with Background Pattern */}
+      <div className="relative">
+        <KanjeevaramPattern className="text-primary/5" opacity="opacity-3" />
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar Filters */}
           <motion.div
@@ -756,6 +817,7 @@ export default function ShopPage() {
               </motion.div>
             )}
           </motion.div>
+        </div>
         </div>
       </div>
     </div>
