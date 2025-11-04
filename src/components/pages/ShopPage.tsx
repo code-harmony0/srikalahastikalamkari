@@ -206,108 +206,185 @@ export default function ShopPage() {
 
   return (
     <div className="w-full min-h-screen bg-background">
-      {/* Page Header */}
-      <section className="bg-gradient-to-br from-white via-background/50 to-secondary/20 border-b border-gray-200 py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
+      {/* Page Header - Our Collection Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-white via-background/30 to-secondary/10">
+        {/* Subtle decorative pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <KanjeevaramPattern className="text-primary" opacity="opacity-100" />
+        </div>
+        
+        <div className="relative z-10 max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-20 md:py-28 lg:py-32">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-center"
           >
+            {/* Premium Badge */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-block mb-6"
+              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              className="inline-block mb-8"
             >
-              <span className="inline-block px-4 py-2 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20">
-                Premium Collection
-              </span>
+              <div className="relative">
+                <span className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary/10 to-accent-color/10 text-primary text-sm font-semibold rounded-full border border-primary/20 backdrop-blur-sm">
+                  <span className="w-2 h-2 bg-primary rounded-full mr-3 animate-pulse"></span>
+                  Premium Collection
+                </span>
+              </div>
             </motion.div>
             
+            {/* Main Heading */}
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground mb-6 leading-tight"
+              transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+              className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-heading font-bold text-foreground mb-8 leading-[0.9] tracking-tight"
             >
               Our Collection
             </motion.h1>
             
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl md:text-2xl text-foreground/70 font-paragraph max-w-3xl mx-auto mb-12 leading-relaxed"
-            >
-              Discover our exquisite range of handcrafted Kalamkari sarees, where each piece tells a unique story of tradition, artistry, and timeless elegance
-            </motion.p>
-            
-            {/* Enhanced Stats Section */}
+            {/* Subtitle */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto"
+              transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+              className="max-w-4xl mx-auto mb-16"
             >
-              <div className="group">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50">
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.8 }}
-                    className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2"
-                  >
-                    {products.length}
-                  </motion.div>
-                  <div className="text-sm font-paragraph text-foreground/70 font-medium">
-                    Unique Designs
+              <p className="text-xl md:text-2xl lg:text-3xl text-foreground/70 font-paragraph leading-relaxed mb-6">
+                Discover our exquisite range of handcrafted Kalamkari sarees, where each piece tells a unique story of tradition, artistry, and timeless elegance
+              </p>
+              <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent-color mx-auto rounded-full"></div>
+            </motion.div>
+            
+            {/* Enhanced Stats Section with Modern Cards */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 max-w-5xl mx-auto"
+            >
+              {/* Unique Designs Card */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+                className="group relative"
+              >
+                <div className="relative bg-white/60 backdrop-blur-md rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
+                  {/* Subtle gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative z-10">
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.6, delay: 1, type: "spring", stiffness: 200 }}
+                      className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-primary mb-4 group-hover:scale-110 transition-transform duration-300"
+                    >
+                      {products.length}
+                    </motion.div>
+                    <div className="text-base md:text-lg font-paragraph text-foreground/80 font-medium leading-tight">
+                      Unique Designs
+                    </div>
+                    <div className="text-sm text-foreground/60 mt-2">
+                      Handcrafted pieces
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="group">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50">
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.9 }}
-                    className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2"
-                  >
-                    {products.filter(p => p.isFeatured).length}
-                  </motion.div>
-                  <div className="text-sm font-paragraph text-foreground/70 font-medium">
-                    Featured Pieces
+              {/* Featured Pieces Card */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+                className="group relative"
+              >
+                <div className="relative bg-white/60 backdrop-blur-md rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent-color/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative z-10">
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.6, delay: 1.1, type: "spring", stiffness: 200 }}
+                      className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-primary mb-4 group-hover:scale-110 transition-transform duration-300"
+                    >
+                      {products.filter(p => p.isFeatured).length}
+                    </motion.div>
+                    <div className="text-base md:text-lg font-paragraph text-foreground/80 font-medium leading-tight">
+                      Featured Pieces
+                    </div>
+                    <div className="text-sm text-foreground/60 mt-2">
+                      Curated selection
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="group">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50">
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.5, delay: 1.0 }}
-                    className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2"
-                  >
-                    {categories.length}
-                  </motion.div>
-                  <div className="text-sm font-paragraph text-foreground/70 font-medium">
-                    Categories
+              {/* Categories Card */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
+                className="group relative"
+              >
+                <div className="relative bg-white/60 backdrop-blur-md rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative z-10">
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.6, delay: 1.2, type: "spring", stiffness: 200 }}
+                      className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-primary mb-4 group-hover:scale-110 transition-transform duration-300"
+                    >
+                      {categories.length}
+                    </motion.div>
+                    <div className="text-base md:text-lg font-paragraph text-foreground/80 font-medium leading-tight">
+                      Categories
+                    </div>
+                    <div className="text-sm text-foreground/60 mt-2">
+                      Diverse styles
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Call to Action Hint */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.4 }}
+              className="mt-16"
+            >
+              <p className="text-foreground/50 font-paragraph text-sm md:text-base">
+                Scroll down to explore our complete collection
+              </p>
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="mt-4"
+              >
+                <ChevronDown className="w-6 h-6 text-foreground/30 mx-auto" />
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Main Content with Background Pattern */}
-      <div className="relative">
-        <KanjeevaramPattern className="text-primary/5" opacity="opacity-3" />
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {/* Main Content with Refined Background Pattern */}
+      <div className="relative bg-gradient-to-b from-background/30 to-white">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-[0.015]">
+          <KanjeevaramPattern className="text-primary" opacity="opacity-100" />
+        </div>
+        
+        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-12 md:py-16 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Sidebar Filters */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -315,34 +392,35 @@ export default function ShopPage() {
             transition={{ duration: 0.6 }}
             className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}
           >
-            <div className="bg-white rounded-lg p-6 shadow-sm sticky top-20 relative">
-              <DecorativeBorder position="top" className="opacity-50" />
-              <DecorativeBorder position="bottom" className="opacity-50" />
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/60 sticky top-24 relative overflow-hidden">
+              {/* Subtle decorative elements */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/20 via-accent-color/20 to-primary/20"></div>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary/10 via-accent-color/10 to-primary/10"></div>
               
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-heading font-bold text-foreground">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-heading font-bold text-foreground">
                   Filters
                 </h2>
                 {getActiveFiltersCount() > 0 && (
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
+                  <Badge variant="secondary" className="bg-primary/15 text-primary border-primary/20 px-3 py-1">
                     {getActiveFiltersCount()} active
                   </Badge>
                 )}
               </div>
 
               {/* Search */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-3 block">
-                  Search
+              <div className="mb-8">
+                <Label className="text-sm font-semibold text-foreground mb-4 block">
+                  Search Products
                 </Label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
                   <Input
                     type="text"
-                    placeholder="Search products..."
+                    placeholder="Search by name, description..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-full"
+                    className="pl-10 w-full border-gray-200 focus:border-primary focus:ring-primary/20"
                   />
                   {searchTerm && (
                     <button
@@ -356,39 +434,41 @@ export default function ShopPage() {
               </div>
 
               {/* Price Range */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-4 block">
+              <div className="mb-8">
+                <Label className="text-sm font-semibold text-foreground mb-5 block">
                   Price Range
                 </Label>
-                <Slider
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  min={0}
-                  max={10000}
-                  step={100}
-                  className="w-full"
-                />
-                <div className="flex justify-between mt-3 text-sm text-foreground/70">
-                  <span>₹{priceRange[0].toLocaleString()}</span>
-                  <span>₹{priceRange[1].toLocaleString()}</span>
+                <div className="px-2">
+                  <Slider
+                    value={priceRange}
+                    onValueChange={setPriceRange}
+                    min={0}
+                    max={10000}
+                    step={100}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between mt-4 text-sm text-foreground/70 font-medium">
+                    <span>₹{priceRange[0].toLocaleString()}</span>
+                    <span>₹{priceRange[1].toLocaleString()}</span>
+                  </div>
                 </div>
               </div>
 
               {/* Sizes */}
               {allSizes.length > 0 && (
-                <div className="mb-6">
-                  <Label className="text-sm font-semibold text-foreground mb-4 block">
-                    Sizes
+                <div className="mb-8">
+                  <Label className="text-sm font-semibold text-foreground mb-5 block">
+                    Available Sizes
                   </Label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {allSizes.map(size => (
                       <button
                         key={size}
                         onClick={() => handleSizeToggle(size)}
-                        className={`px-3 py-1 text-xs rounded-full border transition-all ${
+                        className={`px-4 py-2 text-sm rounded-lg border-2 transition-all duration-200 font-medium ${
                           selectedSizes.includes(size)
-                            ? 'bg-primary text-primary-foreground border-primary'
-                            : 'bg-white text-foreground/70 border-gray-300 hover:border-primary'
+                            ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                            : 'bg-white text-foreground/70 border-gray-200 hover:border-primary/50 hover:text-primary'
                         }`}
                       >
                         {size}
@@ -399,19 +479,19 @@ export default function ShopPage() {
               )}
 
               {/* Colors */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-4 block">
+              <div className="mb-8">
+                <Label className="text-sm font-semibold text-foreground mb-5 block">
                   Colors
                 </Label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   {availableColors.map(color => (
                     <button
                       key={color}
                       onClick={() => handleColorToggle(color)}
-                      className={`px-2 py-1 text-xs rounded border transition-all ${
+                      className={`px-3 py-2 text-sm rounded-lg border-2 transition-all duration-200 font-medium ${
                         selectedColors.includes(color)
-                          ? 'bg-primary text-primary-foreground border-primary'
-                          : 'bg-white text-foreground/70 border-gray-300 hover:border-primary'
+                          ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                          : 'bg-white text-foreground/70 border-gray-200 hover:border-primary/50 hover:text-primary'
                       }`}
                     >
                       {color}
@@ -421,20 +501,21 @@ export default function ShopPage() {
               </div>
 
               {/* Quick Filters */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-4 block">
+              <div className="mb-8">
+                <Label className="text-sm font-semibold text-foreground mb-5 block">
                   Quick Filters
                 </Label>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-center">
                     <Checkbox
                       id="featured-only"
                       checked={featuredOnly}
                       onCheckedChange={(checked) => setFeaturedOnly(checked === true)}
+                      className="border-2 border-gray-200 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
                     <Label
                       htmlFor="featured-only"
-                      className="ml-3 text-sm text-foreground/70 cursor-pointer"
+                      className="ml-3 text-sm text-foreground/80 cursor-pointer font-medium"
                     >
                       Featured Only
                     </Label>
@@ -444,12 +525,13 @@ export default function ShopPage() {
                       id="in-stock"
                       checked={inStock}
                       onCheckedChange={(checked) => setInStock(checked === true)}
+                      className="border-2 border-gray-200 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
                     <Label
                       htmlFor="in-stock"
-                      className="ml-3 text-sm text-foreground/70 cursor-pointer"
+                      className="ml-3 text-sm text-foreground/80 cursor-pointer font-medium"
                     >
-                      In Stock
+                      In Stock Only
                     </Label>
                   </div>
                 </div>
@@ -459,7 +541,7 @@ export default function ShopPage() {
               {getActiveFiltersCount() > 0 && (
                 <Button
                   variant="outline"
-                  className="w-full"
+                  className="w-full border-2 border-gray-200 hover:border-primary hover:text-primary transition-all duration-200"
                   onClick={clearAllFilters}
                 >
                   <X className="w-4 h-4 mr-2" />
@@ -477,28 +559,28 @@ export default function ShopPage() {
             className="lg:col-span-3"
           >
             {/* Toolbar */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 bg-white rounded-lg p-4 shadow-sm">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/60">
+              <div className="flex items-center gap-6">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="lg:hidden flex items-center gap-2 text-primary font-semibold hover:text-primary/80 transition-colors"
+                  className="lg:hidden flex items-center gap-3 text-primary font-semibold hover:text-primary/80 transition-colors px-4 py-2 rounded-lg border border-primary/20 hover:border-primary/40"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   Filters
                   {getActiveFiltersCount() > 0 && (
-                    <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
+                    <Badge variant="secondary" className="bg-primary/15 text-primary text-xs border-primary/20">
                       {getActiveFiltersCount()}
                     </Badge>
                   )}
                 </button>
-                <div className="flex items-center gap-2">
-                  <span className="text-foreground/70 font-paragraph text-sm">
+                <div className="flex items-center gap-3">
+                  <span className="text-foreground/70 font-paragraph text-sm font-medium">
                     Showing {filteredProducts.length} of {products.length} products
                   </span>
                   {getActiveFiltersCount() > 0 && (
                     <button
                       onClick={clearAllFilters}
-                      className="text-primary text-sm hover:text-primary/80 transition-colors"
+                      className="text-primary text-sm hover:text-primary/80 transition-colors font-medium underline underline-offset-2"
                     >
                       Clear filters
                     </button>
@@ -506,25 +588,25 @@ export default function ShopPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 {/* View Mode Toggle */}
-                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 transition-all ${
+                    className={`p-3 transition-all duration-200 ${
                       viewMode === 'grid' 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-white text-foreground/70 hover:bg-gray-50'
+                        ? 'bg-primary text-primary-foreground shadow-sm' 
+                        : 'bg-white text-foreground/70 hover:bg-gray-50 hover:text-primary'
                     }`}
                   >
                     <Grid3X3 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 transition-all ${
+                    className={`p-3 transition-all duration-200 ${
                       viewMode === 'list' 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-white text-foreground/70 hover:bg-gray-50'
+                        ? 'bg-primary text-primary-foreground shadow-sm' 
+                        : 'bg-white text-foreground/70 hover:bg-gray-50 hover:text-primary'
                     }`}
                   >
                     <List className="w-4 h-4" />
@@ -532,12 +614,12 @@ export default function ShopPage() {
                 </div>
 
                 {/* Sort Dropdown */}
-                <div className="flex items-center gap-2">
-                  <Label className="text-sm text-foreground/70 whitespace-nowrap">Sort by:</Label>
+                <div className="flex items-center gap-3">
+                  <Label className="text-sm text-foreground/70 whitespace-nowrap font-medium">Sort by:</Label>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                    className="px-4 py-3 border-2 border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white font-medium transition-all duration-200"
                   >
                     <option value="popular">Most Popular</option>
                     <option value="newest">Newest</option>
