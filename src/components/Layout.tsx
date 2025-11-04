@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Menu, X, Search, Heart, ShoppingCart, User, Sparkles } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Menu, X, Search, Heart, ShoppingCart, User, Sparkles, Instagram, Facebook, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useMember } from '@/integrations';
 
 export default function Layout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { member, isAuthenticated, isLoading } = useMember();
+  
+  // Header scroll effect
+  const { scrollY } = useScroll();
+  const headerOpacity = useTransform(scrollY, [0, 100], [1, 0.95]);
+  const headerBlur = useTransform(scrollY, [0, 100], [0, 10]);
 
   const navLinks = [
     { label: 'Home', href: '/' },
@@ -36,38 +41,47 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-primary via-amber-700 to-primary shadow-lg sticky top-0 z-50 border-b-4 border-accent-color">
-        <div className="max-w-[100rem] mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo Section */}
+      {/* Enhanced Premium Header */}
+      <motion.header 
+        style={{ 
+          opacity: headerOpacity,
+          backdropFilter: `blur(${headerBlur}px)`
+        }}
+        className="bg-gradient-to-r from-primary via-amber-800 to-primary shadow-2xl sticky top-0 z-50 border-b-2 border-accent-color/50"
+      >
+        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12">
+          <div className="flex items-center justify-between h-20 lg:h-24">
+            {/* Enhanced Logo Section */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <Link to="/" className="flex items-center gap-3 group">
-                <div className="relative w-12 h-12 bg-gradient-to-br from-accent-color to-primary rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
-                  <span className="text-primary-foreground font-heading font-bold text-xl">K</span>
+              <Link to="/" className="flex items-center gap-4 group">
+                <div className="relative">
+                  <div className="w-14 h-14 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-2xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-3">
+                    <span className="text-primary-foreground font-heading font-bold text-2xl">K</span>
+                  </div>
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                    className="absolute inset-0 rounded-lg border-2 border-transparent border-t-accent-color opacity-30"
+                    transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-0 rounded-2xl border-2 border-transparent border-t-accent-color/60 opacity-40"
                   />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-color rounded-full animate-pulse"></div>
                 </div>
                 <div className="hidden sm:flex flex-col">
-                  <span className="text-xl font-heading font-bold text-primary-foreground leading-tight">
+                  <span className="text-2xl font-heading font-bold text-primary-foreground leading-tight tracking-tight">
                     Kalamkari
                   </span>
-                  <span className="text-xs font-paragraph text-primary-foreground/80 tracking-widest">
+                  <span className="text-xs font-paragraph text-accent-color tracking-[0.3em] font-semibold">
                     HERITAGE
                   </span>
                 </div>
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
+            {/* Enhanced Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-10">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
@@ -78,13 +92,20 @@ export default function Layout() {
                 >
                   <Link
                     to={link.href}
-                    className="relative text-primary-foreground font-paragraph text-sm font-semibold group overflow-hidden"
+                    className="relative text-primary-foreground font-paragraph text-base font-semibold group overflow-hidden py-2 px-1"
                   >
-                    <span className="relative z-10">{link.label}</span>
+                    <span className="relative z-10 transition-colors duration-300 group-hover:text-accent-color">
+                      {link.label}
+                    </span>
                     <motion.div
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-accent-color origin-left"
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent-color to-amber-400 origin-left"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                    />
+                    <motion.div
+                      className="absolute inset-0 bg-primary-foreground/10 rounded-lg opacity-0"
+                      whileHover={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}
                     />
                   </Link>
@@ -92,141 +113,220 @@ export default function Layout() {
               ))}
             </nav>
 
-            {/* Right Icons */}
-            <div className="flex items-center gap-2 md:gap-4">
+            {/* Enhanced Right Icons */}
+            <div className="flex items-center gap-3 lg:gap-4">
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group"
+              >
+                <Search className="w-5 h-5 group-hover:text-accent-color transition-colors" />
+              </motion.button>
+              
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors hidden sm:flex text-primary-foreground"
+                className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group relative"
               >
-                <Search className="w-5 h-5" />
+                <Heart className="w-5 h-5 group-hover:text-red-400 transition-colors" />
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
+                >
+                  3
+                </motion.span>
               </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors hidden sm:flex text-primary-foreground"
-              >
-                <Heart className="w-5 h-5" />
-              </motion.button>
+              
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link to="/cart" className="p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors relative flex text-primary-foreground">
-                  <ShoppingCart className="w-5 h-5" />
+                <Link to="/cart" className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 relative flex text-primary-foreground group">
+                  <ShoppingCart className="w-5 h-5 group-hover:text-accent-color transition-colors" />
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute top-0 right-0 w-5 h-5 bg-accent-color text-primary-foreground text-xs rounded-full flex items-center justify-center font-bold shadow-md"
+                    whileHover={{ scale: 1.1 }}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-accent-color text-primary font-bold text-xs rounded-full flex items-center justify-center shadow-lg"
                   >
                     2
                   </motion.span>
                 </Link>
               </motion.div>
+              
               {isAuthenticated ? (
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Link to="/profile" className="p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors hidden sm:flex text-primary-foreground">
-                    <User className="w-5 h-5" />
+                  <Link to="/profile" className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group">
+                    <User className="w-5 h-5 group-hover:text-accent-color transition-colors" />
                   </Link>
                 </motion.div>
               ) : (
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors hidden sm:flex text-primary-foreground"
+                  className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group"
                 >
-                  <User className="w-5 h-5" />
+                  <User className="w-5 h-5 group-hover:text-accent-color transition-colors" />
                 </motion.button>
               )}
 
-              {/* Mobile Menu Button */}
+              {/* Enhanced Mobile Menu Button */}
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors text-primary-foreground"
+                className="lg:hidden p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 text-primary-foreground"
               >
-                {isMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
+                <motion.div
+                  animate={{ rotate: isMenuOpen ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {isMenuOpen ? (
+                    <X className="w-6 h-6" />
+                  ) : (
+                    <Menu className="w-6 h-6" />
+                  )}
+                </motion.div>
               </motion.button>
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Enhanced Mobile Navigation */}
           <motion.nav
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: isMenuOpen ? 1 : 0, height: isMenuOpen ? 'auto' : 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden overflow-hidden border-t border-primary-foreground/20"
+            animate={{ 
+              opacity: isMenuOpen ? 1 : 0, 
+              height: isMenuOpen ? 'auto' : 0 
+            }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="lg:hidden overflow-hidden border-t border-primary-foreground/20"
           >
-            <div className="py-4 space-y-3">
-              {navLinks.map(link => (
-                <Link
+            <div className="py-6 space-y-4">
+              {navLinks.map((link, index) => (
+                <motion.div
                   key={link.href}
-                  to={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-primary-foreground hover:text-accent-color transition-colors font-paragraph text-sm font-semibold py-2 px-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ 
+                    opacity: isMenuOpen ? 1 : 0, 
+                    x: isMenuOpen ? 0 : -20 
+                  }}
+                  transition={{ delay: index * 0.1, duration: 0.3 }}
                 >
-                  {link.label}
-                </Link>
+                  <Link
+                    to={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-primary-foreground hover:text-accent-color transition-colors font-paragraph text-lg font-semibold py-3 px-4 rounded-lg hover:bg-primary-foreground/10"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
+              
+              {/* Mobile Icons */}
+              <div className="flex items-center justify-center gap-6 pt-4 border-t border-primary-foreground/20">
+                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
+                  <Search className="w-6 h-6" />
+                </button>
+                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
+                  <Heart className="w-6 h-6" />
+                </button>
+                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
+                  <User className="w-6 h-6" />
+                </button>
+              </div>
             </div>
           </motion.nav>
         </div>
-      </header>
+      </motion.header>
 
       {/* Main Content */}
       <main className="flex-1">
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-r from-primary via-amber-700 to-primary text-primary-foreground border-t-4 border-accent-color mt-20">
-        <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            {/* Brand */}
+      {/* Enhanced Premium Footer */}
+      <footer className="bg-gradient-to-br from-primary via-amber-800 to-primary text-primary-foreground border-t-2 border-accent-color/50 mt-20 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(184,134,11,0.3)_2px,transparent_2px),radial-gradient(circle_at_75%_75%,rgba(160,82,45,0.3)_1px,transparent_1px)] bg-[length:24px_24px,16px_16px]"></div>
+        </div>
+        
+        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-20 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            {/* Enhanced Brand Section */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.8 }}
               viewport={{ once: true }}
+              className="lg:col-span-1"
             >
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-accent-color rounded-lg flex items-center justify-center">
-                  <span className="text-primary font-heading font-bold text-lg">K</span>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-accent-color to-amber-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="text-primary font-heading font-bold text-xl">K</span>
                 </div>
-                <span className="text-lg font-heading font-bold text-primary-foreground">
-                  Kalamkari
-                </span>
+                <div>
+                  <span className="text-2xl font-heading font-bold text-primary-foreground block leading-tight">
+                    Kalamkari
+                  </span>
+                  <span className="text-xs font-paragraph text-accent-color tracking-[0.2em] font-semibold">
+                    HERITAGE
+                  </span>
+                </div>
               </div>
-              <p className="text-primary-foreground/80 font-paragraph text-sm leading-relaxed">
-                Handcrafted Kalamkari sarees celebrating the rich heritage of Indian textile traditions.
+              <p className="text-primary-foreground/90 font-paragraph text-base leading-relaxed mb-6">
+                Handcrafted Kalamkari sarees celebrating the rich heritage of Indian textile traditions. Each piece tells a story of artistry, culture, and timeless elegance.
               </p>
+              
+              {/* Social Media */}
+              <div className="flex items-center gap-4">
+                <motion.a
+                  href="#"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-10 h-10 bg-primary-foreground/10 hover:bg-accent-color/20 rounded-xl flex items-center justify-center transition-all duration-300 group"
+                >
+                  <Instagram className="w-5 h-5 text-primary-foreground group-hover:text-accent-color" />
+                </motion.a>
+                <motion.a
+                  href="#"
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  className="w-10 h-10 bg-primary-foreground/10 hover:bg-accent-color/20 rounded-xl flex items-center justify-center transition-all duration-300 group"
+                >
+                  <Facebook className="w-5 h-5 text-primary-foreground group-hover:text-accent-color" />
+                </motion.a>
+                <motion.a
+                  href="#"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-10 h-10 bg-primary-foreground/10 hover:bg-accent-color/20 rounded-xl flex items-center justify-center transition-all duration-300 group"
+                >
+                  <Twitter className="w-5 h-5 text-primary-foreground group-hover:text-accent-color" />
+                </motion.a>
+              </div>
             </motion.div>
 
             {/* Quick Links */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-lg font-heading font-bold text-primary-foreground mb-4">
+              <h3 className="text-xl font-heading font-bold text-primary-foreground mb-6 relative">
                 Quick Links
+                <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-accent-color"></div>
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {navLinks.map(link => (
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
+                      className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center group"
                     >
+                      <span className="w-1.5 h-1.5 bg-accent-color/50 rounded-full mr-3 group-hover:bg-accent-color transition-colors"></span>
                       {link.label}
                     </Link>
                   </li>
@@ -236,88 +336,127 @@ export default function Layout() {
 
             {/* Customer Service */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-lg font-heading font-bold text-primary-foreground mb-4">
-                Customer Service
+              <h3 className="text-xl font-heading font-bold text-primary-foreground mb-6 relative">
+                Customer Care
+                <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-accent-color"></div>
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 <li>
                   <a
                     href="#"
-                    className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
+                    className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center group"
                   >
+                    <span className="w-1.5 h-1.5 bg-accent-color/50 rounded-full mr-3 group-hover:bg-accent-color transition-colors"></span>
                     Contact Us
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
+                    className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center group"
                   >
-                    Shipping Info
+                    <span className="w-1.5 h-1.5 bg-accent-color/50 rounded-full mr-3 group-hover:bg-accent-color transition-colors"></span>
+                    Shipping & Returns
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
+                    className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center group"
                   >
-                    Returns
+                    <span className="w-1.5 h-1.5 bg-accent-color/50 rounded-full mr-3 group-hover:bg-accent-color transition-colors"></span>
+                    Size Guide
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
+                    className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center group"
                   >
-                    FAQ
+                    <span className="w-1.5 h-1.5 bg-accent-color/50 rounded-full mr-3 group-hover:bg-accent-color transition-colors"></span>
+                    Care Instructions
                   </a>
                 </li>
               </ul>
             </motion.div>
 
-            {/* Newsletter */}
+            {/* Contact Info */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-lg font-heading font-bold text-primary-foreground mb-4">
-                Newsletter
+              <h3 className="text-xl font-heading font-bold text-primary-foreground mb-6 relative">
+                Get in Touch
+                <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-accent-color"></div>
               </h3>
-              <p className="text-primary-foreground/80 font-paragraph text-sm mb-4">
-                Subscribe to get special offers and updates.
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 px-3 py-2 border border-accent-color rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-accent-color bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/50"
-                />
-                <Button className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary px-4 py-2 rounded-sm font-semibold">
-                  Subscribe
-                </Button>
+              
+              <div className="space-y-4 mb-6">
+                <div className="flex items-center gap-3 text-primary-foreground/80">
+                  <Mail className="w-5 h-5 text-accent-color flex-shrink-0" />
+                  <span className="font-paragraph text-base">hello@kalamkari.com</span>
+                </div>
+                <div className="flex items-center gap-3 text-primary-foreground/80">
+                  <Phone className="w-5 h-5 text-accent-color flex-shrink-0" />
+                  <span className="font-paragraph text-base">+91 98765 43210</span>
+                </div>
+                <div className="flex items-start gap-3 text-primary-foreground/80">
+                  <MapPin className="w-5 h-5 text-accent-color flex-shrink-0 mt-0.5" />
+                  <span className="font-paragraph text-base leading-relaxed">
+                    Heritage Craft Center<br />
+                    Srikalahasti, Andhra Pradesh<br />
+                    India - 517644
+                  </span>
+                </div>
+              </div>
+
+              {/* Newsletter Signup */}
+              <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-2xl p-6 border border-primary-foreground/20">
+                <h4 className="text-lg font-heading font-semibold text-primary-foreground mb-3">
+                  Stay Updated
+                </h4>
+                <p className="text-primary-foreground/80 font-paragraph text-sm mb-4">
+                  Subscribe for exclusive offers and heritage stories.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="Your email"
+                    className="flex-1 px-4 py-3 border border-accent-color/30 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent-color/50 bg-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 backdrop-blur-sm"
+                  />
+                  <Button className="bg-accent-color hover:bg-accent-color/90 text-primary px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg">
+                    Join
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Bottom Bar */}
+          {/* Enhanced Bottom Bar */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="border-t border-primary-foreground/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+            className="border-t border-primary-foreground/20 pt-8 flex flex-col lg:flex-row justify-between items-center gap-6"
           >
-            <p className="text-primary-foreground/80 font-paragraph text-sm">
-              © 2024 Kalamkari. All rights reserved.
-            </p>
-            <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <p className="text-primary-foreground/80 font-paragraph text-base">
+                © 2024 Kalamkari Heritage. All rights reserved.
+              </p>
+              <div className="flex items-center gap-2 text-primary-foreground/60 text-sm">
+                <Sparkles className="w-4 h-4 text-accent-color" />
+                <span>Handcrafted with love in India</span>
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-6">
               <a
                 href="#"
                 className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
@@ -329,6 +468,12 @@ export default function Layout() {
                 className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
               >
                 Terms of Service
+              </a>
+              <a
+                href="#"
+                className="text-primary-foreground/80 hover:text-accent-color transition-colors font-paragraph text-sm"
+              >
+                Artisan Partners
               </a>
             </div>
           </motion.div>
