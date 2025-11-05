@@ -343,15 +343,25 @@ export default function HomePage() {
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
+        /* Enhanced Premium Button Styles */
         .luxury-primary-cta {
-          background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
+          background: linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #A0522D 100%);
+          background-size: 200% 200%;
           box-shadow: 
-            0 8px 32px rgba(160, 82, 45, 0.3),
-            0 4px 16px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            0 12px 40px rgba(160, 82, 45, 0.4),
+            0 6px 20px rgba(0, 0, 0, 0.15),
+            inset 0 2px 0 rgba(255, 255, 255, 0.25),
+            0 0 0 1px rgba(184, 134, 11, 0.3);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           position: relative;
           overflow: hidden;
+          backdrop-filter: blur(15px);
+          animation: luxuryGradientShift 6s ease-in-out infinite;
+        }
+
+        @keyframes luxuryGradientShift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
         }
 
         .luxury-primary-cta::before {
@@ -364,10 +374,10 @@ export default function HomePage() {
           background: linear-gradient(
             90deg,
             transparent 0%,
-            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.3) 50%,
             transparent 100%
           );
-          transition: left 0.7s ease;
+          transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .luxury-primary-cta:hover::before {
@@ -375,43 +385,59 @@ export default function HomePage() {
         }
 
         .luxury-primary-cta:hover {
-          background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+          background: linear-gradient(135deg, #8B4513 0%, #DAA520 50%, #8B4513 100%);
           box-shadow: 
-            0 12px 48px rgba(160, 82, 45, 0.4),
-            0 6px 24px rgba(0, 0, 0, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
-          transform: translateY(-3px) scale(1.03);
-        }
-
-        .shadow-luxury {
-          box-shadow: 
-            0 8px 32px rgba(160, 82, 45, 0.3),
-            0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .shadow-luxury-hover {
-          box-shadow: 
-            0 12px 48px rgba(160, 82, 45, 0.4),
-            0 6px 24px rgba(0, 0, 0, 0.15);
+            0 0 50px rgba(218, 165, 32, 0.7),
+            0 0 100px rgba(218, 165, 32, 0.4),
+            0 16px 60px rgba(160, 82, 45, 0.5),
+            inset 0 2px 0 rgba(255, 255, 255, 0.35),
+            0 0 0 2px rgba(184, 134, 11, 0.6);
+          transform: translateY(-6px) scale(1.05);
+          border-color: rgba(218, 165, 32, 0.8);
         }
 
         .luxury-secondary-cta {
-          background: rgba(51, 51, 51, 0.05);
-          backdrop-filter: blur(25px);
-          border: 1px solid rgba(51, 51, 51, 0.3);
+          background: rgba(255, 255, 255, 0.12);
+          backdrop-filter: blur(30px);
+          border: 2px solid rgba(184, 134, 11, 0.4);
           box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-          transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            0 12px 40px rgba(0, 0, 0, 0.1),
+            inset 0 2px 0 rgba(255, 255, 255, 0.2),
+            0 0 0 1px rgba(184, 134, 11, 0.2);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .luxury-secondary-cta::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(184, 134, 11, 0.2) 50%,
+            transparent 100%
+          );
+          transition: left 0.8s ease;
+        }
+
+        .luxury-secondary-cta:hover::before {
+          left: 100%;
         }
 
         .luxury-secondary-cta:hover {
-          background: rgba(51, 51, 51, 0.08);
-          border-color: rgba(51, 51, 51, 0.5);
+          background: rgba(184, 134, 11, 0.15);
+          border-color: rgba(184, 134, 11, 0.8);
           box-shadow: 
-            0 12px 48px rgba(0, 0, 0, 0.12),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
-          transform: translateY(-3px) scale(1.03);
+            0 16px 60px rgba(184, 134, 11, 0.3),
+            inset 0 2px 0 rgba(255, 255, 255, 0.3),
+            0 0 0 2px rgba(184, 134, 11, 0.4);
+          transform: translateY(-6px) scale(1.05);
+          color: #8B4513;
         }
 
         .luxury-cta-text {
@@ -594,7 +620,7 @@ export default function HomePage() {
             style={{ opacity: heroOpacity }}
             className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-[90rem] mx-auto w-full"
           >
-            {/* Minimal Heritage Badge */}
+            {/* Luxury Heritage Badge */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -605,14 +631,14 @@ export default function HomePage() {
               }}
               className="mb-12 md:mb-16"
             >
-              <div className="refined-glass-badge px-6 py-3 rounded-full backdrop-blur-xl">
-                <span className="font-paragraph text-sm md:text-base tracking-[0.3em] uppercase font-medium text-foreground/80">
-                  Heritage Crafted Since 1500s
+              <div className="refined-glass-badge px-8 py-4 rounded-full backdrop-blur-xl border border-accent-color/20">
+                <span className="font-paragraph text-sm md:text-base tracking-[0.3em] uppercase font-medium text-accent-color">
+                  ✨ Authentic Heritage Since 1500s
                 </span>
               </div>
             </motion.div>
 
-            {/* Centered Elegant Serif Headline */}
+            {/* Refined Luxury Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 80, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -623,27 +649,44 @@ export default function HomePage() {
               }}
               className="font-heading text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] text-foreground max-w-6xl leading-[0.8] tracking-tight refined-headline-shadow mb-8 md:mb-12"
             >
-              <span className="block refined-fade-in">Kalamkari</span>
-              <span className="block refined-slide-up">Heritage</span>
+              <span className="block refined-fade-in">Exquisite</span>
+              <span className="block refined-slide-up text-primary">Kalamkari</span>
             </motion.h1>
 
-            {/* Gold Gradient Subheading */}
+            {/* Luxury Descriptor */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 1.5, 
+                delay: 0.7, 
+                ease: [0.25, 0.46, 0.45, 0.94] 
+              }}
+              className="mb-8 md:mb-10"
+            >
+              <p className="font-heading text-2xl md:text-3xl lg:text-4xl text-foreground/90 font-light tracking-wide">
+                Handcrafted Heritage Sarees
+              </p>
+            </motion.div>
+
+            {/* Poetic Gold Tagline */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
                 duration: 1.8, 
-                delay: 0.8, 
+                delay: 0.9, 
                 ease: [0.25, 0.46, 0.45, 0.94] 
               }}
-              className="mb-10 md:mb-14"
+              className="mb-12 md:mb-16"
             >
-              <p className="font-heading text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-tight tracking-wide refined-gold-gradient refined-shimmer-text">
-                Handcrafted Stories. Worn with Pride.
+              <p className="font-paragraph text-lg md:text-xl lg:text-2xl leading-relaxed refined-gold-gradient refined-shimmer-text italic max-w-4xl mx-auto">
+                "Where centuries of artistry meet contemporary elegance,<br />
+                each saree tells a timeless story of cultural magnificence."
               </p>
             </motion.div>
 
-            {/* Clean Sans-Serif Body Text */}
+            {/* Enhanced Luxury Description */}
             <motion.p
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -652,12 +695,12 @@ export default function HomePage() {
                 delay: 1.1, 
                 ease: "easeOut" 
               }}
-              className="font-paragraph text-lg md:text-xl lg:text-2xl text-foreground/75 max-w-4xl leading-relaxed mb-14 md:mb-18 refined-body-text"
+              className="font-paragraph text-lg md:text-xl text-foreground/75 max-w-4xl leading-relaxed mb-16 md:mb-20 refined-body-text"
             >
-              Discover the timeless artistry of traditional Kalamkari sarees, where ancient techniques meet contemporary elegance. Each piece tells a story of cultural heritage, handcrafted with precision by master artisans.
+              Immerse yourself in the extraordinary world of Kalamkari artistry. Each saree in our collection represents the pinnacle of traditional craftsmanship, meticulously hand-painted by master artisans who have inherited techniques spanning five centuries. Experience the luxury of authentic heritage, where every thread whispers stories of cultural pride and artistic excellence.
             </motion.p>
 
-            {/* Luxury CTA Button Pair */}
+            {/* Premium Luxury CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -671,10 +714,12 @@ export default function HomePage() {
               <Link to="/shop" className="group">
                 <Button 
                   size="lg" 
-                  className="luxury-primary-cta h-16 px-14 text-lg rounded-full font-paragraph bg-primary hover:bg-primary/90 font-semibold shadow-luxury text-primary-foreground transition-all duration-700 hover:scale-105 hover:shadow-luxury-hover group-focus:ring-4 group-focus:ring-primary/30"
-                  aria-label="Explore our complete Kalamkari saree collection"
+                  className="luxury-primary-cta h-18 px-16 text-lg rounded-full font-paragraph bg-gradient-to-r from-primary via-amber-800 to-primary hover:from-amber-800 hover:to-primary font-semibold shadow-luxury text-primary-foreground transition-all duration-700 hover:scale-105 hover:shadow-luxury-hover group-focus:ring-4 group-focus:ring-primary/30 border border-accent-color/30"
+                  aria-label="Explore our complete luxury Kalamkari saree collection"
                 >
-                  <span className="luxury-cta-text">Explore Collection</span>
+                  <span className="luxury-cta-text flex items-center gap-3">
+                    ✨ Explore Luxury Collection
+                  </span>
                   <ArrowRight className="ml-3 w-5 h-5 transition-transform group-hover:translate-x-2" aria-hidden="true" />
                 </Button>
               </Link>
@@ -682,10 +727,12 @@ export default function HomePage() {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="luxury-secondary-cta h-16 px-14 text-lg rounded-full font-paragraph border-2 border-foreground/30 text-foreground hover:bg-foreground/5 backdrop-blur-xl transition-all duration-700 hover:scale-105 hover:border-foreground/50 group-focus:ring-4 group-focus:ring-foreground/20"
-                  aria-label="Learn about our heritage and craftsmanship story"
+                  className="luxury-secondary-cta h-18 px-16 text-lg rounded-full font-paragraph border-2 border-accent-color/40 text-foreground hover:bg-accent-color/10 hover:border-accent-color backdrop-blur-xl transition-all duration-700 hover:scale-105 group-focus:ring-4 group-focus:ring-accent-color/20 bg-white/10"
+                  aria-label="Discover our rich heritage and master craftsmanship story"
                 >
-                  <span className="luxury-cta-text">Our Heritage Story</span>
+                  <span className="luxury-cta-text flex items-center gap-2">
+                    🏛️ Heritage Story
+                  </span>
                 </Button>
               </Link>
             </motion.div>
