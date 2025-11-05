@@ -200,200 +200,271 @@ export default function HomePage() {
           transform: translateY(0);
         }
 
-        /* Kalamkari Heritage Hero Background System */
-        .heritage-fabric-grain {
-          background-image: 
-            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.12) 1.5px, transparent 1.5px),
-            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.08) 1px, transparent 1px),
-            radial-gradient(circle at 40% 60%, rgba(205, 133, 63, 0.06) 0.8px, transparent 0.8px),
-            linear-gradient(45deg, transparent 47%, rgba(184, 134, 11, 0.04) 49%, rgba(184, 134, 11, 0.04) 51%, transparent 53%),
-            linear-gradient(-45deg, transparent 47%, rgba(160, 82, 45, 0.03) 49%, rgba(160, 82, 45, 0.03) 51%, transparent 53%);
-          background-size: 18px 18px, 14px 14px, 10px 10px, 12px 12px, 16px 16px;
-          animation: heritageGrainFlow 25s ease-in-out infinite;
-        }
-        
-        @keyframes heritageGrainFlow {
-          0%, 100% { background-position: 0 0, 9px 9px, 5px 5px, 6px 6px, 8px 8px; }
-          25% { background-position: 4px -4px, 13px 5px, 9px 1px, 10px 2px, 12px 4px; }
-          50% { background-position: -2px 6px, 7px 13px, 3px 9px, 4px 10px, 6px 12px; }
-          75% { background-position: 6px -2px, 15px 7px, 11px 3px, 12px 6px, 14px 8px; }
-        }
-
-        .kalamkari-heritage-gradient {
+        /* Refined 2025 Hero Background System */
+        .refined-terracotta-gold-overlay {
           background: linear-gradient(
             135deg,
-            rgba(160, 82, 45, 0.85) 0%,
-            rgba(139, 69, 19, 0.80) 15%,
-            rgba(101, 67, 33, 0.75) 30%,
-            rgba(184, 134, 11, 0.70) 45%,
-            rgba(205, 133, 63, 0.65) 60%,
-            rgba(160, 82, 45, 0.70) 75%,
-            rgba(139, 69, 19, 0.80) 90%,
-            rgba(101, 67, 33, 0.85) 100%
+            rgba(205, 133, 63, 0.25) 0%,
+            rgba(184, 134, 11, 0.20) 25%,
+            rgba(160, 82, 45, 0.15) 50%,
+            rgba(222, 184, 135, 0.20) 75%,
+            rgba(245, 245, 220, 0.25) 100%
           );
-          animation: heritageGradientShift 20s ease-in-out infinite;
+          animation: refinedTerracottaFlow 18s ease-in-out infinite;
         }
 
-        @keyframes heritageGradientShift {
-          0%, 100% { opacity: 0.85; filter: hue-rotate(0deg) saturate(1.1); }
-          25% { opacity: 0.80; filter: hue-rotate(5deg) saturate(1.15); }
-          50% { opacity: 0.75; filter: hue-rotate(-3deg) saturate(1.2); }
-          75% { opacity: 0.80; filter: hue-rotate(2deg) saturate(1.1); }
+        @keyframes refinedTerracottaFlow {
+          0%, 100% { opacity: 0.25; filter: hue-rotate(0deg) saturate(1.1); }
+          33% { opacity: 0.30; filter: hue-rotate(3deg) saturate(1.15); }
+          66% { opacity: 0.20; filter: hue-rotate(-2deg) saturate(1.05); }
         }
 
-        .heritage-depth-overlay {
+        .refined-soft-gradient {
           background: radial-gradient(
             ellipse at center,
-            transparent 0%,
-            rgba(0, 0, 0, 0.15) 70%,
-            rgba(0, 0, 0, 0.25) 100%
+            rgba(245, 245, 220, 0.1) 0%,
+            rgba(222, 184, 135, 0.15) 30%,
+            rgba(160, 82, 45, 0.20) 70%,
+            rgba(101, 67, 33, 0.25) 100%
           );
-          mix-blend-mode: multiply;
+          animation: refinedSoftPulse 12s ease-in-out infinite;
         }
 
-        /* Typography Enhancement System */
-        .heritage-text-shadow {
+        @keyframes refinedSoftPulse {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 0.9; transform: scale(1.02); }
+        }
+
+        .cinematic-lighting-2025 {
+          background: 
+            radial-gradient(circle at 30% 20%, rgba(184, 134, 11, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 70% 80%, rgba(160, 82, 45, 0.12) 0%, transparent 50%),
+            linear-gradient(45deg, transparent 40%, rgba(245, 245, 220, 0.08) 50%, transparent 60%);
+          animation: cinematicLighting 15s ease-in-out infinite;
+        }
+
+        @keyframes cinematicLighting {
+          0%, 100% { opacity: 0.6; }
+          25% { opacity: 0.8; }
+          50% { opacity: 0.7; }
+          75% { opacity: 0.9; }
+        }
+
+        /* Refined Typography System */
+        .refined-headline-shadow {
           text-shadow: 
-            0 2px 4px rgba(0, 0, 0, 0.4),
-            0 4px 8px rgba(0, 0, 0, 0.3),
-            0 8px 16px rgba(0, 0, 0, 0.2),
+            0 2px 8px rgba(0, 0, 0, 0.15),
+            0 4px 16px rgba(0, 0, 0, 0.1),
             0 1px 2px rgba(255, 255, 255, 0.1);
         }
 
-        .heritage-text-flow {
-          animation: heritageTextFlow 8s ease-in-out infinite;
+        .refined-fade-in {
+          animation: refinedFadeIn 2.5s ease-out;
         }
 
-        @keyframes heritageTextFlow {
-          0%, 100% { transform: translateY(0px) scale(1); }
-          25% { transform: translateY(-2px) scale(1.002); }
-          50% { transform: translateY(-1px) scale(1.001); }
-          75% { transform: translateY(-1.5px) scale(1.0015); }
+        @keyframes refinedFadeIn {
+          0% { opacity: 0; transform: translateY(30px) scale(0.98); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .heritage-text-glow {
-          animation: heritageAntiqueGlow 6s ease-in-out infinite;
-          filter: drop-shadow(0 0 8px rgba(184, 134, 11, 0.4));
+        .refined-slide-up {
+          animation: refinedSlideUp 2.8s ease-out 0.3s both;
         }
 
-        @keyframes heritageAntiqueGlow {
-          0%, 100% { filter: drop-shadow(0 0 8px rgba(184, 134, 11, 0.4)) brightness(1); }
-          50% { filter: drop-shadow(0 0 12px rgba(184, 134, 11, 0.6)) brightness(1.05); }
+        @keyframes refinedSlideUp {
+          0% { opacity: 0; transform: translateY(40px) scale(0.97); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .heritage-antique-glow {
-          text-shadow: 
-            0 0 10px rgba(184, 134, 11, 0.5),
-            0 2px 4px rgba(0, 0, 0, 0.3),
-            0 4px 8px rgba(0, 0, 0, 0.2);
-          animation: antiqueShimmer 4s ease-in-out infinite;
+        .refined-gold-gradient {
+          background: linear-gradient(
+            135deg,
+            #B8860B 0%,
+            #DAA520 25%,
+            #FFD700 50%,
+            #DAA520 75%,
+            #B8860B 100%
+          );
+          background-size: 200% 200%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: refinedGoldFlow 8s ease-in-out infinite;
         }
 
-        @keyframes antiqueShimmer {
-          0%, 100% { text-shadow: 0 0 10px rgba(184, 134, 11, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2); }
-          50% { text-shadow: 0 0 15px rgba(184, 134, 11, 0.7), 0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2); }
+        @keyframes refinedGoldFlow {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
         }
 
-        .heritage-subtext {
-          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
-          animation: subtextFloat 12s ease-in-out infinite;
+        .refined-shimmer-text {
+          position: relative;
+          overflow: hidden;
         }
 
-        @keyframes subtextFloat {
-          0%, 100% { transform: translateY(0px); opacity: 0.95; }
-          50% { transform: translateY(-1px); opacity: 1; }
+        .refined-shimmer-text::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 100%
+          );
+          animation: refinedShimmer 6s ease-in-out infinite;
         }
 
-        /* Premium UI Components */
-        .heritage-glass-badge {
-          background: rgba(255, 255, 255, 0.15);
+        @keyframes refinedShimmer {
+          0% { left: -100%; }
+          50%, 100% { left: 100%; }
+        }
+
+        .refined-body-text {
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          animation: refinedBodyFloat 10s ease-in-out infinite;
+        }
+
+        @keyframes refinedBodyFloat {
+          0%, 100% { transform: translateY(0px); opacity: 0.85; }
+          50% { transform: translateY(-2px); opacity: 1; }
+        }
+
+        /* Refined UI Components */
+        .refined-glass-badge {
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(30px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .luxury-primary-cta {
+          background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
+          box-shadow: 
+            0 8px 32px rgba(160, 82, 45, 0.3),
+            0 4px 16px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .luxury-primary-cta::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent 100%
+          );
+          transition: left 0.7s ease;
+        }
+
+        .luxury-primary-cta:hover::before {
+          left: 100%;
+        }
+
+        .luxury-primary-cta:hover {
+          background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+          box-shadow: 
+            0 12px 48px rgba(160, 82, 45, 0.4),
+            0 6px 24px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          transform: translateY(-3px) scale(1.03);
+        }
+
+        .shadow-luxury {
+          box-shadow: 
+            0 8px 32px rgba(160, 82, 45, 0.3),
+            0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .shadow-luxury-hover {
+          box-shadow: 
+            0 12px 48px rgba(160, 82, 45, 0.4),
+            0 6px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .luxury-secondary-cta {
+          background: rgba(51, 51, 51, 0.05);
           backdrop-filter: blur(25px);
-          border: 1px solid rgba(255, 255, 255, 0.25);
+          border: 1px solid rgba(51, 51, 51, 0.3);
           box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            0 8px 32px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .heritage-primary-cta {
-          background: linear-gradient(135deg, #FFFFFF 0%, #F8F8F8 100%);
+        .luxury-secondary-cta:hover {
+          background: rgba(51, 51, 51, 0.08);
+          border-color: rgba(51, 51, 51, 0.5);
           box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.15),
-            0 4px 16px rgba(160, 82, 45, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.8);
-          transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            0 12px 48px rgba(0, 0, 0, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          transform: translateY(-3px) scale(1.03);
         }
 
-        .heritage-primary-cta:hover {
-          background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
-          box-shadow: 
-            0 12px 48px rgba(0, 0, 0, 0.2),
-            0 6px 24px rgba(160, 82, 45, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
-          transform: translateY(-2px) scale(1.02);
+        .luxury-cta-text {
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          position: relative;
+          z-index: 1;
         }
 
-        .heritage-secondary-cta {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(20px);
-          border: 2px solid rgba(255, 255, 255, 0.9);
-          box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
-          transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        .refined-trust-item {
+          animation: refinedTrustFloat 8s ease-in-out infinite;
         }
 
-        .heritage-secondary-cta:hover {
-          background: rgba(255, 255, 255, 0.2);
-          border-color: rgba(255, 255, 255, 1);
-          box-shadow: 
-            0 12px 48px rgba(0, 0, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.4);
-          transform: translateY(-2px) scale(1.02);
+        .refined-trust-item:nth-child(1) { animation-delay: 0s; }
+        .refined-trust-item:nth-child(2) { animation-delay: 1.5s; }
+        .refined-trust-item:nth-child(3) { animation-delay: 3s; }
+
+        @keyframes refinedTrustFloat {
+          0%, 100% { transform: translateY(0px); opacity: 0.8; }
+          50% { transform: translateY(-4px); opacity: 1; }
         }
 
-        .heritage-cta-text {
-          font-weight: 700;
-          letter-spacing: 0.025em;
+        .refined-scroll-indicator {
+          animation: refinedScrollPulse 5s ease-in-out infinite;
         }
 
-        .heritage-trust-item {
-          animation: trustItemFloat 10s ease-in-out infinite;
+        @keyframes refinedScrollPulse {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.08); }
         }
 
-        .heritage-trust-item:nth-child(1) { animation-delay: 0s; }
-        .heritage-trust-item:nth-child(2) { animation-delay: 2s; }
-        .heritage-trust-item:nth-child(3) { animation-delay: 4s; }
-
-        @keyframes trustItemFloat {
-          0%, 100% { transform: translateY(0px); opacity: 0.9; }
-          50% { transform: translateY(-3px); opacity: 1; }
+        .refined-scroll-mouse {
+          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .heritage-scroll-indicator {
-          animation: scrollIndicatorPulse 4s ease-in-out infinite;
+        .refined-scroll-mouse:hover {
+          border-color: rgba(51, 51, 51, 0.8);
+          transform: scale(1.15);
         }
 
-        @keyframes scrollIndicatorPulse {
-          0%, 100% { opacity: 0.8; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        .heritage-scroll-mouse {
-          transition: all 0.3s ease;
-        }
-
-        .heritage-scroll-mouse:hover {
-          border-color: rgba(255, 255, 255, 0.9);
-          transform: scale(1.1);
-        }
-
-        /* Responsive Typography Scaling */
+        /* Responsive Refinements */
         @media (max-width: 640px) {
-          .heritage-text-shadow {
+          .refined-headline-shadow {
             text-shadow: 
-              0 1px 2px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              0 4px 8px rgba(0, 0, 0, 0.2);
+              0 1px 4px rgba(0, 0, 0, 0.15),
+              0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+          
+          .refined-gold-gradient {
+            background: #B8860B;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
           }
         }
 
@@ -485,220 +556,204 @@ export default function HomePage() {
         }
       `}</style>
       <main className="w-full bg-background text-foreground overflow-hidden">
-        {/* Hero Section - Kalamkari Heritage with Layered Background */}
+        {/* Hero Section - Refined Kalamkari Heritage with Soft Silk Background */}
         <section 
           ref={heroRef}
           className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
           role="banner"
           aria-label="Kalamkari Heritage - Handcrafted Stories"
         >
-          {/* Multi-layered Background System */}
+          {/* Refined Background System */}
           <motion.div 
             style={{ y: heroY }}
             className="absolute inset-0 z-0"
           >
-            {/* Layer 1: Base Fabric Photo */}
+            {/* Soft Silk Fabric Base */}
             <div className="absolute inset-0">
               <Image
-                src="https://static.wixstatic.com/media/07221c_531dbc6e4aee4c56901e8260739d0cdf~mv2.png?originWidth=1920&originHeight=1024"
-                alt="Premium handwoven silk fabric texture in rich terracotta and cream tones"
+                src="https://static.wixstatic.com/media/07221c_8c9ba02df4bf480f84fc9269eac079e8~mv2.png?originWidth=1920&originHeight=1024"
+                alt="Luxurious soft silk fabric with warm terracotta and gold undertones"
                 width={1920}
                 height={1080}
                 className="w-full h-full object-cover scale-105"
               />
             </div>
             
-            {/* Layer 2: Kalamkari Motif Overlay */}
-            <div className="absolute inset-0 opacity-30">
-              <Image
-                src="https://static.wixstatic.com/media/07221c_a72cdaa89bcd47d4a1bd72bbd915b206~mv2.png?originWidth=1920&originHeight=1024"
-                alt=""
-                width={1920}
-                height={1080}
-                className="w-full h-full object-cover mix-blend-multiply"
-                aria-hidden="true"
-              />
-            </div>
+            {/* Warm Terracotta & Gold Undertones */}
+            <div className="absolute inset-0 refined-terracotta-gold-overlay"></div>
             
-            {/* Layer 3: Fabric Grain Texture */}
-            <div className="absolute inset-0 heritage-fabric-grain opacity-40"></div>
+            {/* Soft Gradient Overlay */}
+            <div className="absolute inset-0 refined-soft-gradient"></div>
             
-            {/* Layer 4: Sophisticated Gradient */}
-            <div className="absolute inset-0 kalamkari-heritage-gradient"></div>
-            
-            {/* Layer 5: Depth Enhancement */}
-            <div className="absolute inset-0 heritage-depth-overlay"></div>
+            {/* Cinematic Lighting Enhancement */}
+            <div className="absolute inset-0 cinematic-lighting-2025"></div>
           </motion.div>
           
           {/* Hero Content Container */}
           <motion.div
             style={{ opacity: heroOpacity }}
-            className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-[120rem] mx-auto w-full"
+            className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-[90rem] mx-auto w-full"
           >
-            {/* Heritage Badge */}
+            {/* Minimal Heritage Badge */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ 
-                duration: 1.2, 
-                delay: 0.3, 
+                duration: 1.5, 
+                delay: 0.2, 
                 ease: [0.25, 0.46, 0.45, 0.94] 
               }}
-              className="mb-8 md:mb-12"
+              className="mb-12 md:mb-16"
             >
-              <div className="heritage-glass-badge px-8 py-4 rounded-full backdrop-blur-md">
-                <div className="flex items-center gap-3 text-primary-foreground">
-                  <Sparkles className="w-5 h-5 text-accent-color animate-pulse" aria-hidden="true" />
-                  <span className="font-paragraph text-sm md:text-base tracking-[0.25em] uppercase font-semibold">
-                    Heritage Crafted Since 1500s
-                  </span>
-                  <Sparkles className="w-5 h-5 text-accent-color animate-pulse" aria-hidden="true" />
-                </div>
+              <div className="refined-glass-badge px-6 py-3 rounded-full backdrop-blur-xl">
+                <span className="font-paragraph text-sm md:text-base tracking-[0.3em] uppercase font-medium text-foreground/80">
+                  Heritage Crafted Since 1500s
+                </span>
               </div>
             </motion.div>
 
-            {/* Fluid Playfair/Cormorant Headline */}
+            {/* Centered Elegant Serif Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 60, scale: 0.95 }}
+              initial={{ opacity: 0, y: 80, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 
-                duration: 1.4, 
-                delay: 0.6, 
+                duration: 2, 
+                delay: 0.5, 
                 ease: [0.25, 0.46, 0.45, 0.94] 
               }}
-              className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] text-primary-foreground max-w-7xl leading-[0.85] tracking-tight heritage-text-shadow mb-6 md:mb-8"
+              className="font-heading text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] text-foreground max-w-6xl leading-[0.8] tracking-tight refined-headline-shadow mb-8 md:mb-12"
             >
-              <span className="block heritage-text-flow">Kalamkari</span>
-              <span className="block text-accent-color heritage-text-glow">Heritage</span>
+              <span className="block refined-fade-in">Kalamkari</span>
+              <span className="block refined-slide-up">Heritage</span>
             </motion.h1>
 
-            {/* Antique Gold Secondary Phrase */}
+            {/* Gold Gradient Subheading */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
-                duration: 1.2, 
-                delay: 0.9, 
+                duration: 1.8, 
+                delay: 0.8, 
                 ease: [0.25, 0.46, 0.45, 0.94] 
               }}
-              className="mb-8 md:mb-12"
+              className="mb-10 md:mb-14"
             >
-              <p className="font-heading text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-accent-color leading-tight tracking-wide heritage-antique-glow">
+              <p className="font-heading text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-tight tracking-wide refined-gold-gradient refined-shimmer-text">
                 Handcrafted Stories. Worn with Pride.
               </p>
             </motion.div>
 
-            {/* Inter/Lato Subtext */}
+            {/* Clean Sans-Serif Body Text */}
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
-                duration: 1, 
-                delay: 1.2, 
+                duration: 1.6, 
+                delay: 1.1, 
                 ease: "easeOut" 
               }}
-              className="font-paragraph text-lg md:text-xl lg:text-2xl xl:text-3xl text-primary-foreground/95 max-w-5xl leading-relaxed mb-12 md:mb-16 heritage-subtext"
+              className="font-paragraph text-lg md:text-xl lg:text-2xl text-foreground/75 max-w-4xl leading-relaxed mb-14 md:mb-18 refined-body-text"
             >
               Discover the timeless artistry of traditional Kalamkari sarees, where ancient techniques meet contemporary elegance. Each piece tells a story of cultural heritage, handcrafted with precision by master artisans.
             </motion.p>
 
-            {/* Premium CTA Buttons */}
+            {/* Luxury CTA Button Pair */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
-                duration: 1, 
-                delay: 1.5, 
+                duration: 1.4, 
+                delay: 1.4, 
                 ease: [0.25, 0.46, 0.45, 0.94] 
               }}
-              className="flex flex-col sm:flex-row gap-6 md:gap-8 mb-16 md:mb-20"
+              className="flex flex-col sm:flex-row gap-6 md:gap-8 mb-20 md:mb-24"
             >
               <Link to="/shop" className="group">
                 <Button 
                   size="lg" 
-                  className="heritage-primary-cta h-16 px-12 text-lg rounded-3xl font-paragraph bg-primary-foreground hover:bg-primary-foreground/95 font-bold shadow-2xl text-primary transition-all duration-500 hover:scale-105 hover:shadow-3xl group-focus:ring-4 group-focus:ring-primary-foreground/30"
+                  className="luxury-primary-cta h-16 px-14 text-lg rounded-full font-paragraph bg-primary hover:bg-primary/90 font-semibold shadow-luxury text-primary-foreground transition-all duration-700 hover:scale-105 hover:shadow-luxury-hover group-focus:ring-4 group-focus:ring-primary/30"
                   aria-label="Explore our complete Kalamkari saree collection"
                 >
-                  <span className="heritage-cta-text">Explore Collection</span>
-                  <ArrowRight className="ml-3 w-6 h-6 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  <span className="luxury-cta-text">Explore Collection</span>
+                  <ArrowRight className="ml-3 w-5 h-5 transition-transform group-hover:translate-x-2" aria-hidden="true" />
                 </Button>
               </Link>
               <Link to="/about" className="group">
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="heritage-secondary-cta h-16 px-12 text-lg rounded-3xl font-paragraph border-3 border-primary-foreground/90 text-primary-foreground hover:bg-primary-foreground/15 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:border-primary-foreground group-focus:ring-4 group-focus:ring-primary-foreground/30"
+                  className="luxury-secondary-cta h-16 px-14 text-lg rounded-full font-paragraph border-2 border-foreground/30 text-foreground hover:bg-foreground/5 backdrop-blur-xl transition-all duration-700 hover:scale-105 hover:border-foreground/50 group-focus:ring-4 group-focus:ring-foreground/20"
                   aria-label="Learn about our heritage and craftsmanship story"
                 >
-                  <span className="heritage-cta-text">Our Heritage Story</span>
+                  <span className="luxury-cta-text">Our Heritage Story</span>
                 </Button>
               </Link>
             </motion.div>
 
-            {/* Trust Indicators with Enhanced Accessibility */}
+            {/* Minimal Trust Indicators */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
-                duration: 0.8, 
-                delay: 1.8,
+                duration: 1.2, 
+                delay: 1.7,
                 ease: "easeOut" 
               }}
-              className="flex flex-wrap justify-center items-center gap-8 md:gap-12 text-primary-foreground/90"
+              className="flex flex-wrap justify-center items-center gap-10 md:gap-16 text-foreground/60"
               role="list"
               aria-label="Heritage credentials and achievements"
             >
-              <div className="flex items-center gap-3 heritage-trust-item" role="listitem">
-                <Star className="w-6 h-6 fill-accent-color text-accent-color" aria-hidden="true" />
+              <div className="flex items-center gap-3 refined-trust-item" role="listitem">
+                <Star className="w-5 h-5 fill-accent-color text-accent-color" aria-hidden="true" />
                 <span className="font-paragraph text-sm md:text-base font-medium">500+ Years Heritage</span>
               </div>
-              <div className="flex items-center gap-3 heritage-trust-item" role="listitem">
-                <Heart className="w-6 h-6 fill-red-400 text-red-400" aria-hidden="true" />
+              <div className="flex items-center gap-3 refined-trust-item" role="listitem">
+                <Heart className="w-5 h-5 fill-red-400 text-red-400" aria-hidden="true" />
                 <span className="font-paragraph text-sm md:text-base font-medium">10,000+ Happy Customers</span>
               </div>
-              <div className="flex items-center gap-3 heritage-trust-item" role="listitem">
-                <Award className="w-6 h-6 text-accent-color" aria-hidden="true" />
+              <div className="flex items-center gap-3 refined-trust-item" role="listitem">
+                <Award className="w-5 h-5 text-accent-color" aria-hidden="true" />
                 <span className="font-paragraph text-sm md:text-base font-medium">Award-Winning Artisans</span>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Enhanced Scroll Indicator */}
+          {/* Refined Scroll Indicator */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ 
-              duration: 1, 
-              delay: 2.1,
+              duration: 1.2, 
+              delay: 2,
               ease: "easeOut" 
             }}
-            className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 z-20"
+            className="absolute bottom-10 md:bottom-16 left-1/2 transform -translate-x-1/2 z-20"
             role="button"
             aria-label="Scroll to discover more content"
             tabIndex={0}
           >
             <motion.div
-              animate={{ y: [0, 12, 0] }}
+              animate={{ y: [0, 15, 0] }}
               transition={{ 
-                duration: 3, 
+                duration: 4, 
                 repeat: Infinity, 
                 ease: "easeInOut" 
               }}
-              className="flex flex-col items-center gap-4 text-primary-foreground/80 heritage-scroll-indicator"
+              className="flex flex-col items-center gap-4 text-foreground/50 refined-scroll-indicator"
             >
-              <span className="text-sm md:text-base font-paragraph uppercase tracking-[0.2em] font-medium">
+              <span className="text-xs md:text-sm font-paragraph uppercase tracking-[0.3em] font-medium">
                 Discover More
               </span>
-              <div className="w-7 h-12 border-2 border-primary-foreground/60 rounded-full flex justify-center heritage-scroll-mouse">
+              <div className="w-6 h-10 border border-foreground/30 rounded-full flex justify-center refined-scroll-mouse">
                 <motion.div
-                  animate={{ y: [0, 16, 0] }}
+                  animate={{ y: [0, 20, 0] }}
                   transition={{ 
-                    duration: 3, 
+                    duration: 4, 
                     repeat: Infinity, 
                     ease: "easeInOut", 
-                    delay: 0.5 
+                    delay: 0.8 
                   }}
-                  className="w-1.5 h-4 bg-primary-foreground/80 rounded-full mt-2"
+                  className="w-1 h-3 bg-foreground/50 rounded-full mt-2"
                 />
               </div>
             </motion.div>
