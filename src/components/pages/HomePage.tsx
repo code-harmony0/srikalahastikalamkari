@@ -51,6 +51,7 @@ export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Products[]>([]);
   const [promotions, setPromotions] = useState<Promotions[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const galleryScrollRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   
@@ -62,6 +63,16 @@ export default function HomePage() {
   
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  // Background carousel images
+  const heroBackgroundImages = [
+    "https://static.wixstatic.com/media/07221c_2e8d1f7395134585bcff6b528887e1bf~mv2.png?originWidth=256&originHeight=384",
+    "https://static.wixstatic.com/media/07221c_15fd999951a443999835d74bf92fb898~mv2.png?originWidth=256&originHeight=384",
+    "https://static.wixstatic.com/media/07221c_3d36b8d683e2438d894f2d49c2a94bc8~mv2.png?originWidth=256&originHeight=384",
+    "https://static.wixstatic.com/media/07221c_a78b35baed0346338ef87d17c80ad1ac~mv2.png?originWidth=256&originHeight=384",
+    "https://static.wixstatic.com/media/07221c_368c4f27dd3c4eed8474a970c9f26427~mv2.png?originWidth=256&originHeight=384",
+    "https://static.wixstatic.com/media/07221c_65523ec270d249ed8d41b15d97b29b87~mv2.png?originWidth=256&originHeight=384"
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,6 +96,17 @@ export default function HomePage() {
 
     fetchData();
   }, []);
+
+  // Background image carousel effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % heroBackgroundImages.length
+      );
+    }, 4000); // Change image every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [heroBackgroundImages.length]);
 
   // Auto-scroll gallery
   useEffect(() => {
@@ -343,7 +365,30 @@ export default function HomePage() {
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        /* Minimal Kalamkari-Inspired Background */
+        /* Background Image Carousel Styles */
+        .hero-carousel-container {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .hero-carousel-image {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: opacity 2s ease-in-out;
+          scale: 1.1;
+        }
+
+        .hero-carousel-image.active {
+          opacity: 1;
+        }
+
+        .hero-carousel-image.inactive {
+          opacity: 0;
+        }
         .kalamkari-pen-background {
           background: 
             radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.08) 0%, transparent 40%),
@@ -581,14 +626,27 @@ export default function HomePage() {
             style={{ y: heroY }}
             className="absolute inset-0 z-0"
           >
-            {/* Minimal Kalamkari-Inspired Background */}
-            <div className="absolute inset-0 kalamkari-pen-background"></div>
+            {/* Background Image Carousel */}
+            <div className="hero-carousel-container absolute inset-0">
+              {heroBackgroundImages.map((imageSrc, index) => (
+                <Image
+                  key={index}
+                  src={imageSrc}
+                  alt={`Handcrafted Kalamkari saree ${index + 1}`}
+                  width={1920}
+                  height={1080}
+                  className={`hero-carousel-image ${
+                    index === currentImageIndex ? 'active' : 'inactive'
+                  }`}
+                />
+              ))}
+            </div>
+            
+            {/* Overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50"></div>
             
             {/* Subtle Pen Stroke Animation */}
-            <div className="absolute inset-0 pen-stroke-animation opacity-30"></div>
-            
-            {/* Soft Fabric Texture */}
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/98 to-secondary/95"></div>
+            <div className="absolute inset-0 pen-stroke-animation opacity-20"></div>
           </motion.div>
           
           {/* Hero Content Container */}
@@ -634,13 +692,13 @@ export default function HomePage() {
                 delay: 0.5, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
-              className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-foreground leading-[0.9] tracking-tight mb-6 md:mb-8"
+              className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[0.9] tracking-tight mb-6 md:mb-8 drop-shadow-2xl"
             >
               <motion.span 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.8 }}
-                className="block"
+                className="block text-white drop-shadow-lg"
               >
                 Kalamkari
               </motion.span>
@@ -648,7 +706,7 @@ export default function HomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 1.2 }}
-                className="block text-primary font-light"
+                className="block text-accent-color font-light drop-shadow-lg"
               >
                 Heritage
               </motion.span>
@@ -665,7 +723,7 @@ export default function HomePage() {
               }}
               className="mb-12 md:mb-16"
             >
-              <p className="font-paragraph text-lg md:text-xl text-foreground/80 italic leading-relaxed max-w-2xl mx-auto">
+              <p className="font-paragraph text-lg md:text-xl text-white/90 italic leading-relaxed max-w-2xl mx-auto drop-shadow-md">
                 "Where ancient pen meets timeless silk"
               </p>
             </motion.div>
@@ -705,74 +763,6 @@ export default function HomePage() {
                   </span>
                 </Button>
               </Link>
-            </motion.div>
-
-            {/* Minimal Trust Indicators */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 1.2, 
-                delay: 1.7,
-                ease: "easeOut" 
-              }}
-              className="flex flex-wrap justify-center items-center gap-10 md:gap-16 text-foreground/60"
-              role="list"
-              aria-label="Heritage credentials and achievements"
-            >
-              <div className="flex items-center gap-3 refined-trust-item" role="listitem">
-                <Star className="w-5 h-5 fill-accent-color text-accent-color" aria-hidden="true" />
-                <span className="font-paragraph text-sm md:text-base font-medium">500+ Years Heritage</span>
-              </div>
-              <div className="flex items-center gap-3 refined-trust-item" role="listitem">
-                <Heart className="w-5 h-5 fill-red-400 text-red-400" aria-hidden="true" />
-                <span className="font-paragraph text-sm md:text-base font-medium">10,000+ Happy Customers</span>
-              </div>
-              <div className="flex items-center gap-3 refined-trust-item" role="listitem">
-                <Award className="w-5 h-5 text-accent-color" aria-hidden="true" />
-                <span className="font-paragraph text-sm md:text-base font-medium">Award-Winning Artisans</span>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Refined Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 1.2, 
-              delay: 2,
-              ease: "easeOut" 
-            }}
-            className="absolute bottom-10 md:bottom-16 left-1/2 transform -translate-x-1/2 z-20"
-            role="button"
-            aria-label="Scroll to discover more content"
-            tabIndex={0}
-          >
-            <motion.div
-              animate={{ y: [0, 15, 0] }}
-              transition={{ 
-                duration: 4, 
-                repeat: Infinity, 
-                ease: "easeInOut" 
-              }}
-              className="flex flex-col items-center gap-4 text-foreground/50 refined-scroll-indicator"
-            >
-              <span className="text-xs md:text-sm font-paragraph uppercase tracking-[0.3em] font-medium">
-                Discover More
-              </span>
-              <div className="w-6 h-10 border border-foreground/30 rounded-full flex justify-center refined-scroll-mouse">
-                <motion.div
-                  animate={{ y: [0, 20, 0] }}
-                  transition={{ 
-                    duration: 4, 
-                    repeat: Infinity, 
-                    ease: "easeInOut", 
-                    delay: 0.8 
-                  }}
-                  className="w-1 h-3 bg-foreground/50 rounded-full mt-2"
-                />
-              </div>
             </motion.div>
           </motion.div>
         </section>
