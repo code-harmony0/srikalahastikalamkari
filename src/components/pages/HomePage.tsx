@@ -649,86 +649,130 @@ export default function HomePage() {
             <div className="absolute inset-0 pen-stroke-animation opacity-20"></div>
           </motion.div>
           
-          {/* Hero Content Container */}
+          {/* Enhanced Hero Content with Smooth Animations */}
           <motion.div
             style={{ opacity: heroOpacity }}
             className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-5xl mx-auto w-full"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {/* Minimal Kalamkari Pen Art Elements */}
+            {/* Animated Kalamkari Pen Art Elements */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.8, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ 
-                duration: 2, 
-                delay: 0.2, 
+                duration: 2.2, 
+                delay: 0.3, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
               className="mb-8 md:mb-12 flex items-center justify-center gap-4"
             >
-              {/* Stylized Kalamkari Pen */}
+              {/* Enhanced Stylized Kalamkari Pen with Floating Animation */}
               <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="w-16 h-1 bg-gradient-to-r from-primary via-accent-color to-primary rounded-full"
+                animate={{ 
+                  rotate: [0, 5, -5, 0],
+                  y: [0, -3, 0, 3, 0]
+                }}
+                transition={{ 
+                  duration: 6, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="w-16 h-1 bg-gradient-to-r from-primary via-accent-color to-primary rounded-full shadow-lg"
               />
               <motion.div
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="w-2 h-2 bg-accent-color rounded-full"
+                animate={{ 
+                  opacity: [0.5, 1, 0.5],
+                  scale: [1, 1.2, 1]
+                }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="w-2 h-2 bg-accent-color rounded-full shadow-md"
               />
               <motion.div
-                animate={{ rotate: [0, -5, 5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                className="w-16 h-1 bg-gradient-to-r from-accent-color via-primary to-accent-color rounded-full"
+                animate={{ 
+                  rotate: [0, -5, 5, 0],
+                  y: [0, 3, 0, -3, 0]
+                }}
+                transition={{ 
+                  duration: 6, 
+                  repeat: Infinity, 
+                  ease: "easeInOut", 
+                  delay: 2 
+                }}
+                className="w-16 h-1 bg-gradient-to-r from-accent-color via-primary to-accent-color rounded-full shadow-lg"
               />
             </motion.div>
 
-            {/* Minimal Elegant Headline */}
+            {/* Enhanced Elegant Headline with Staggered Animation */}
             <motion.h1
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 80, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 
-                duration: 1.8, 
-                delay: 0.5, 
+                duration: 2.2, 
+                delay: 0.6, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
               className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[0.9] tracking-tight mb-6 md:mb-8 drop-shadow-2xl"
             >
               <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.8 }}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 1.2, 
+                  delay: 1.0,
+                  ease: "easeOut" 
+                }}
                 className="block text-white drop-shadow-lg"
               >
                 Kalamkari
               </motion.span>
               <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 1.2 }}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 1.2, 
+                  delay: 1.4,
+                  ease: "easeOut" 
+                }}
                 className="block text-accent-color font-light drop-shadow-lg"
               >
                 Heritage
               </motion.span>
             </motion.h1>
 
-            {/* Short Poetic Tagline */}
+            {/* Enhanced Poetic Tagline with Breathing Animation */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 
-                duration: 1.5, 
-                delay: 1.5, 
+                duration: 1.8, 
+                delay: 1.8, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
               className="mb-12 md:mb-16"
             >
-              <p className="font-paragraph text-lg md:text-xl text-white/90 italic leading-relaxed max-w-2xl mx-auto drop-shadow-md">
+              <motion.p 
+                animate={{ 
+                  opacity: [0.9, 1, 0.9],
+                  y: [0, -2, 0]
+                }}
+                transition={{ 
+                  duration: 4, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="font-paragraph text-lg md:text-xl text-white/90 italic leading-relaxed max-w-2xl mx-auto drop-shadow-md"
+              >
                 "Where ancient pen meets timeless silk"
-              </p>
+              </motion.p>
             </motion.div>
 
-            {/* Elegant Minimal CTA Buttons */}
+            {/* Premium Animated CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -740,28 +784,65 @@ export default function HomePage() {
               className="flex flex-col sm:flex-row gap-4 md:gap-6 mb-20 md:mb-24 max-w-lg mx-auto w-full"
             >
               <Link to="/shop" className="group flex-1">
-                <Button 
-                  size="lg" 
-                  className="minimal-primary-cta w-full h-14 px-8 text-base rounded-2xl font-paragraph bg-primary hover:bg-primary/90 font-medium text-primary-foreground transition-all duration-500 hover:scale-[1.02] group-focus:ring-4 group-focus:ring-primary/30"
-                  aria-label="Explore our Kalamkari saree collection"
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <span className="flex items-center justify-center gap-2">
-                    Explore Collection
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                  </span>
-                </Button>
+                  <Button 
+                    size="lg" 
+                    className="relative overflow-hidden bg-gradient-to-r from-accent-color to-accent-color/80 hover:from-accent-color/90 hover:to-accent-color/70 text-white px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-accent-color/25 transition-all duration-500 border border-accent-color/20 backdrop-blur-sm group w-full h-16"
+                    aria-label="Explore our Kalamkari saree collection"
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      Explore Collection
+                      <motion.span
+                        className="inline-block"
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        →
+                      </motion.span>
+                    </span>
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
+                      transition={{ duration: 0.6, ease: "easeInOut" }}
+                    />
+                  </Button>
+                </motion.div>
               </Link>
               <Link to="/about" className="group flex-1">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="minimal-secondary-cta w-full h-14 px-8 text-base rounded-2xl font-paragraph border-2 border-foreground/20 text-foreground hover:bg-foreground/5 hover:border-foreground/40 backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] group-focus:ring-4 group-focus:ring-foreground/20"
-                  aria-label="Learn about our heritage story"
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <span className="flex items-center justify-center">
-                    Our Story
-                  </span>
-                </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="relative overflow-hidden border-2 border-white/40 text-white hover:text-accent-color bg-white/10 hover:bg-white/20 backdrop-blur-md px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/25 transition-all duration-500 group w-full h-16"
+                    aria-label="Learn about our heritage story"
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      Our Heritage
+                      <motion.span
+                        className="inline-block"
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        ✨
+                      </motion.span>
+                    </span>
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent"
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
+                      transition={{ duration: 0.6, ease: "easeInOut" }}
+                    />
+                  </Button>
+                </motion.div>
               </Link>
             </motion.div>
           </motion.div>
