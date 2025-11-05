@@ -343,28 +343,44 @@ export default function HomePage() {
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        /* Enhanced Premium Button Styles */
-        .luxury-primary-cta {
-          background: linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #A0522D 100%);
-          background-size: 200% 200%;
+        /* Minimal Kalamkari-Inspired Background */
+        .kalamkari-pen-background {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.06) 0%, transparent 40%),
+            linear-gradient(135deg, rgba(245, 245, 220, 0.95) 0%, rgba(222, 184, 135, 0.98) 100%);
+          animation: kalamkariFlow 20s ease-in-out infinite;
+        }
+
+        @keyframes kalamkariFlow {
+          0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
+          50% { opacity: 0.95; filter: hue-rotate(2deg); }
+        }
+
+        /* Smooth Pen Stroke Animation */
+        .pen-stroke-animation {
+          background: linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.3) 50%, transparent 100%);
+          background-size: 200% 100%;
+          animation: penStroke 8s ease-in-out infinite;
+        }
+
+        @keyframes penStroke {
+          0%, 100% { background-position: -200% 0; }
+          50% { background-position: 200% 0; }
+        }
+
+        /* Minimal Button Styles */
+        .minimal-primary-cta {
+          background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
           box-shadow: 
-            0 12px 40px rgba(160, 82, 45, 0.4),
-            0 6px 20px rgba(0, 0, 0, 0.15),
-            inset 0 2px 0 rgba(255, 255, 255, 0.25),
-            0 0 0 1px rgba(184, 134, 11, 0.3);
-          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            0 4px 20px rgba(160, 82, 45, 0.25),
+            0 2px 8px rgba(0, 0, 0, 0.1);
+          transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
           position: relative;
           overflow: hidden;
-          backdrop-filter: blur(15px);
-          animation: luxuryGradientShift 6s ease-in-out infinite;
         }
 
-        @keyframes luxuryGradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-
-        .luxury-primary-cta::before {
+        .minimal-primary-cta::before {
           content: '';
           position: absolute;
           top: 0;
@@ -374,70 +390,41 @@ export default function HomePage() {
           background: linear-gradient(
             90deg,
             transparent 0%,
-            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0.2) 50%,
             transparent 100%
           );
-          transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: left 0.6s ease;
         }
 
-        .luxury-primary-cta:hover::before {
+        .minimal-primary-cta:hover::before {
           left: 100%;
         }
 
-        .luxury-primary-cta:hover {
-          background: linear-gradient(135deg, #8B4513 0%, #DAA520 50%, #8B4513 100%);
+        .minimal-primary-cta:hover {
+          background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
           box-shadow: 
-            0 0 50px rgba(218, 165, 32, 0.7),
-            0 0 100px rgba(218, 165, 32, 0.4),
-            0 16px 60px rgba(160, 82, 45, 0.5),
-            inset 0 2px 0 rgba(255, 255, 255, 0.35),
-            0 0 0 2px rgba(184, 134, 11, 0.6);
-          transform: translateY(-6px) scale(1.05);
-          border-color: rgba(218, 165, 32, 0.8);
+            0 6px 30px rgba(160, 82, 45, 0.35),
+            0 3px 12px rgba(0, 0, 0, 0.15);
+          transform: translateY(-2px);
         }
 
-        .luxury-secondary-cta {
-          background: rgba(255, 255, 255, 0.12);
-          backdrop-filter: blur(30px);
-          border: 2px solid rgba(184, 134, 11, 0.4);
+        .minimal-secondary-cta {
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(20px);
+          border: 2px solid rgba(51, 51, 51, 0.2);
           box-shadow: 
-            0 12px 40px rgba(0, 0, 0, 0.1),
-            inset 0 2px 0 rgba(255, 255, 255, 0.2),
-            0 0 0 1px rgba(184, 134, 11, 0.2);
-          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-          position: relative;
-          overflow: hidden;
+            0 4px 20px rgba(0, 0, 0, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .luxury-secondary-cta::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(184, 134, 11, 0.2) 50%,
-            transparent 100%
-          );
-          transition: left 0.8s ease;
-        }
-
-        .luxury-secondary-cta:hover::before {
-          left: 100%;
-        }
-
-        .luxury-secondary-cta:hover {
-          background: rgba(184, 134, 11, 0.15);
-          border-color: rgba(184, 134, 11, 0.8);
+        .minimal-secondary-cta:hover {
+          background: rgba(255, 255, 255, 0.95);
+          border-color: rgba(51, 51, 51, 0.4);
           box-shadow: 
-            0 16px 60px rgba(184, 134, 11, 0.3),
-            inset 0 2px 0 rgba(255, 255, 255, 0.3),
-            0 0 0 2px rgba(184, 134, 11, 0.4);
-          transform: translateY(-6px) scale(1.05);
-          color: #8B4513;
+            0 6px 30px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+          transform: translateY(-2px);
         }
 
         .luxury-cta-text {
@@ -594,144 +581,127 @@ export default function HomePage() {
             style={{ y: heroY }}
             className="absolute inset-0 z-0"
           >
-            {/* Soft Silk Fabric Base */}
-            <div className="absolute inset-0">
-              <Image
-                src="https://static.wixstatic.com/media/07221c_8c9ba02df4bf480f84fc9269eac079e8~mv2.png?originWidth=1920&originHeight=1024"
-                alt="Luxurious soft silk fabric with warm terracotta and gold undertones"
-                width={1920}
-                height={1080}
-                className="w-full h-full object-cover scale-105"
-              />
-            </div>
+            {/* Minimal Kalamkari-Inspired Background */}
+            <div className="absolute inset-0 kalamkari-pen-background"></div>
             
-            {/* Warm Terracotta & Gold Undertones */}
-            <div className="absolute inset-0 refined-terracotta-gold-overlay"></div>
+            {/* Subtle Pen Stroke Animation */}
+            <div className="absolute inset-0 pen-stroke-animation opacity-30"></div>
             
-            {/* Soft Gradient Overlay */}
-            <div className="absolute inset-0 refined-soft-gradient"></div>
-            
-            {/* Cinematic Lighting Enhancement */}
-            <div className="absolute inset-0 cinematic-lighting-2025"></div>
+            {/* Soft Fabric Texture */}
+            <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/98 to-secondary/95"></div>
           </motion.div>
           
           {/* Hero Content Container */}
           <motion.div
             style={{ opacity: heroOpacity }}
-            className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-[90rem] mx-auto w-full"
+            className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-5xl mx-auto w-full"
           >
-            {/* Luxury Heritage Badge */}
+            {/* Minimal Kalamkari Pen Art Elements */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 1.5, 
-                delay: 0.2, 
-                ease: [0.25, 0.46, 0.45, 0.94] 
-              }}
-              className="mb-12 md:mb-16"
-            >
-              <div className="refined-glass-badge px-8 py-4 rounded-full backdrop-blur-xl border border-accent-color/20">
-                <span className="font-paragraph text-sm md:text-base tracking-[0.3em] uppercase font-medium text-accent-color">
-                  ✨ Authentic Heritage Since 1500s
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Refined Luxury Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 80, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ 
                 duration: 2, 
-                delay: 0.5, 
-                ease: [0.25, 0.46, 0.45, 0.94] 
+                delay: 0.2, 
+                ease: [0.23, 1, 0.32, 1] 
               }}
-              className="font-heading text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] text-foreground max-w-6xl leading-[0.8] tracking-tight refined-headline-shadow mb-8 md:mb-12"
+              className="mb-8 md:mb-12 flex items-center justify-center gap-4"
             >
-              <span className="block refined-fade-in">Exquisite</span>
-              <span className="block refined-slide-up text-primary">Kalamkari</span>
-            </motion.h1>
-
-            {/* Luxury Descriptor */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 1.5, 
-                delay: 0.7, 
-                ease: [0.25, 0.46, 0.45, 0.94] 
-              }}
-              className="mb-8 md:mb-10"
-            >
-              <p className="font-heading text-2xl md:text-3xl lg:text-4xl text-foreground/90 font-light tracking-wide">
-                Handcrafted Heritage Sarees
-              </p>
+              {/* Stylized Kalamkari Pen */}
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="w-16 h-1 bg-gradient-to-r from-primary via-accent-color to-primary rounded-full"
+              />
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="w-2 h-2 bg-accent-color rounded-full"
+              />
+              <motion.div
+                animate={{ rotate: [0, -5, 5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                className="w-16 h-1 bg-gradient-to-r from-accent-color via-primary to-accent-color rounded-full"
+              />
             </motion.div>
 
-            {/* Poetic Gold Tagline */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
+            {/* Minimal Elegant Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
                 duration: 1.8, 
-                delay: 0.9, 
-                ease: [0.25, 0.46, 0.45, 0.94] 
+                delay: 0.5, 
+                ease: [0.23, 1, 0.32, 1] 
+              }}
+              className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-foreground leading-[0.9] tracking-tight mb-6 md:mb-8"
+            >
+              <motion.span 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.8 }}
+                className="block"
+              >
+                Kalamkari
+              </motion.span>
+              <motion.span 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 1.2 }}
+                className="block text-primary font-light"
+              >
+                Heritage
+              </motion.span>
+            </motion.h1>
+
+            {/* Short Poetic Tagline */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 1.5, 
+                delay: 1.5, 
+                ease: [0.23, 1, 0.32, 1] 
               }}
               className="mb-12 md:mb-16"
             >
-              <p className="font-paragraph text-lg md:text-xl lg:text-2xl leading-relaxed refined-gold-gradient refined-shimmer-text italic max-w-4xl mx-auto">
-                "Where centuries of artistry meet contemporary elegance,<br />
-                each saree tells a timeless story of cultural magnificence."
+              <p className="font-paragraph text-lg md:text-xl text-foreground/80 italic leading-relaxed max-w-2xl mx-auto">
+                "Where ancient pen meets timeless silk"
               </p>
             </motion.div>
 
-            {/* Enhanced Luxury Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 1.6, 
-                delay: 1.1, 
-                ease: "easeOut" 
-              }}
-              className="font-paragraph text-lg md:text-xl text-foreground/75 max-w-4xl leading-relaxed mb-16 md:mb-20 refined-body-text"
-            >
-              Immerse yourself in the extraordinary world of Kalamkari artistry. Each saree in our collection represents the pinnacle of traditional craftsmanship, meticulously hand-painted by master artisans who have inherited techniques spanning five centuries. Experience the luxury of authentic heritage, where every thread whispers stories of cultural pride and artistic excellence.
-            </motion.p>
-
-            {/* Premium Luxury CTA Buttons */}
+            {/* Elegant Minimal CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
                 duration: 1.4, 
-                delay: 1.4, 
-                ease: [0.25, 0.46, 0.45, 0.94] 
+                delay: 1.8, 
+                ease: [0.23, 1, 0.32, 1] 
               }}
-              className="flex flex-col sm:flex-row gap-6 md:gap-8 mb-20 md:mb-24"
+              className="flex flex-col sm:flex-row gap-4 md:gap-6 mb-20 md:mb-24 max-w-lg mx-auto w-full"
             >
-              <Link to="/shop" className="group">
+              <Link to="/shop" className="group flex-1">
                 <Button 
                   size="lg" 
-                  className="luxury-primary-cta h-18 px-16 text-lg rounded-full font-paragraph bg-gradient-to-r from-primary via-amber-800 to-primary hover:from-amber-800 hover:to-primary font-semibold shadow-luxury text-primary-foreground transition-all duration-700 hover:scale-105 hover:shadow-luxury-hover group-focus:ring-4 group-focus:ring-primary/30 border border-accent-color/30"
-                  aria-label="Explore our complete luxury Kalamkari saree collection"
+                  className="minimal-primary-cta w-full h-14 px-8 text-base rounded-2xl font-paragraph bg-primary hover:bg-primary/90 font-medium text-primary-foreground transition-all duration-500 hover:scale-[1.02] group-focus:ring-4 group-focus:ring-primary/30"
+                  aria-label="Explore our Kalamkari saree collection"
                 >
-                  <span className="luxury-cta-text flex items-center gap-3">
-                    ✨ Explore Luxury Collection
+                  <span className="flex items-center justify-center gap-2">
+                    Explore Collection
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </span>
-                  <ArrowRight className="ml-3 w-5 h-5 transition-transform group-hover:translate-x-2" aria-hidden="true" />
                 </Button>
               </Link>
-              <Link to="/about" className="group">
+              <Link to="/about" className="group flex-1">
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="luxury-secondary-cta h-18 px-16 text-lg rounded-full font-paragraph border-2 border-accent-color/40 text-foreground hover:bg-accent-color/10 hover:border-accent-color backdrop-blur-xl transition-all duration-700 hover:scale-105 group-focus:ring-4 group-focus:ring-accent-color/20 bg-white/10"
-                  aria-label="Discover our rich heritage and master craftsmanship story"
+                  className="minimal-secondary-cta w-full h-14 px-8 text-base rounded-2xl font-paragraph border-2 border-foreground/20 text-foreground hover:bg-foreground/5 hover:border-foreground/40 backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] group-focus:ring-4 group-focus:ring-foreground/20"
+                  aria-label="Learn about our heritage story"
                 >
-                  <span className="luxury-cta-text flex items-center gap-2">
-                    🏛️ Heritage Story
+                  <span className="flex items-center justify-center">
+                    Our Story
                   </span>
                 </Button>
               </Link>
