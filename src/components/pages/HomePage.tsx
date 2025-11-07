@@ -222,7 +222,35 @@ export default function HomePage() {
           transform: translateY(0);
         }
 
-        /* Refined 2025 Hero Background System */
+        /* Enhanced 2025 Hero Background System with Silk Texture */
+        .silk-fabric-texture {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.06) 0%, transparent 40%),
+            linear-gradient(135deg, rgba(245, 245, 220, 0.15) 0%, rgba(222, 184, 135, 0.12) 100%);
+          position: relative;
+        }
+
+        .silk-fabric-texture::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: 
+            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.03) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.02) 0.5px, transparent 0.5px),
+            linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.02) 50%, transparent 52%);
+          background-size: 32px 32px, 16px 16px, 8px 8px;
+          animation: silkShimmer 12s ease-in-out infinite;
+        }
+
+        @keyframes silkShimmer {
+          0%, 100% { opacity: 0.6; transform: translateX(0px); }
+          50% { opacity: 0.8; transform: translateX(2px); }
+        }
+
         .refined-terracotta-gold-overlay {
           background: linear-gradient(
             135deg,
@@ -239,6 +267,26 @@ export default function HomePage() {
           0%, 100% { opacity: 0.25; filter: hue-rotate(0deg) saturate(1.1); }
           33% { opacity: 0.30; filter: hue-rotate(3deg) saturate(1.15); }
           66% { opacity: 0.20; filter: hue-rotate(-2deg) saturate(1.05); }
+        }
+
+        /* Slow Left-to-Right Gradient Light Movement */
+        .gradient-light-movement {
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(184, 134, 11, 0.15) 20%,
+            rgba(255, 215, 0, 0.08) 40%,
+            rgba(184, 134, 11, 0.12) 60%,
+            transparent 100%
+          );
+          background-size: 300% 100%;
+          animation: gradientLightMove 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientLightMove {
+          0% { background-position: -300% 0; }
+          50% { background-position: 100% 0; }
+          100% { background-position: -300% 0; }
         }
 
         .refined-soft-gradient {
@@ -272,12 +320,68 @@ export default function HomePage() {
           75% { opacity: 0.9; }
         }
 
-        /* Refined Typography System */
+        /* Enhanced Typography with Letter Spacing Animation */
+        .animated-letter-spacing {
+          animation: letterSpacingPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes letterSpacingPulse {
+          0%, 100% { letter-spacing: 0.02em; }
+          50% { letter-spacing: 0.08em; }
+        }
+
+        .fade-slide-text {
+          animation: fadeSlideIn 3s ease-out;
+        }
+
+        @keyframes fadeSlideIn {
+          0% { 
+            opacity: 0; 
+            transform: translateY(40px) scale(0.95);
+            letter-spacing: 0.1em;
+          }
+          100% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+            letter-spacing: 0.02em;
+          }
+        }
+
         .refined-headline-shadow {
           text-shadow: 
             0 2px 8px rgba(0, 0, 0, 0.15),
             0 4px 16px rgba(0, 0, 0, 0.1),
             0 1px 2px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Gold Divider Line Animation */
+        .animated-gold-divider {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .animated-gold-divider::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(184, 134, 11, 0.8) 30%,
+            rgba(255, 215, 0, 1) 50%,
+            rgba(184, 134, 11, 0.8) 70%,
+            transparent 100%
+          );
+          animation: goldDividerFlow 6s ease-in-out infinite;
+        }
+
+        @keyframes goldDividerFlow {
+          0% { left: -100%; }
+          50% { left: 100%; }
+          100% { left: -100%; }
         }
 
         .refined-fade-in {
@@ -355,6 +459,42 @@ export default function HomePage() {
           50% { transform: translateY(-2px); opacity: 1; }
         }
 
+        /* Premium Button Micro-Interactions */
+        .premium-button-hover {
+          position: relative;
+          overflow: hidden;
+          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .premium-button-hover::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+        }
+
+        .premium-button-hover:hover::before {
+          width: 300px;
+          height: 300px;
+        }
+
+        .premium-button-hover:hover {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 
+            0 10px 40px rgba(184, 134, 11, 0.4),
+            0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .premium-button-hover:active {
+          transform: translateY(-1px) scale(0.98);
+        }
+
         /* Refined UI Components */
         .refined-glass-badge {
           background: rgba(255, 255, 255, 0.08);
@@ -363,6 +503,23 @@ export default function HomePage() {
           box-shadow: 
             0 8px 32px rgba(0, 0, 0, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Handcrafted Luxury Lighting Effects */
+        .luxury-lighting {
+          background: 
+            radial-gradient(circle at 30% 20%, rgba(184, 134, 11, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 70% 80%, rgba(160, 82, 45, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.04) 0%, transparent 60%),
+            linear-gradient(45deg, transparent 40%, rgba(245, 245, 220, 0.06) 50%, transparent 60%);
+          animation: luxuryLightingFlow 25s ease-in-out infinite;
+        }
+
+        @keyframes luxuryLightingFlow {
+          0%, 100% { opacity: 0.8; filter: brightness(1) contrast(1.05); }
+          25% { opacity: 0.9; filter: brightness(1.1) contrast(1.1); }
+          50% { opacity: 0.85; filter: brightness(1.05) contrast(1.08); }
+          75% { opacity: 0.95; filter: brightness(1.15) contrast(1.12); }
         }
 
         /* Background Image Carousel Styles */
@@ -621,7 +778,7 @@ export default function HomePage() {
           role="banner"
           aria-label="Kalamkari Heritage - Handcrafted Stories"
         >
-          {/* Refined Background System */}
+          {/* Enhanced Background System with Silk Texture and Luxury Lighting */}
           <motion.div 
             style={{ y: heroY }}
             className="absolute inset-0 z-0"
@@ -642,11 +799,17 @@ export default function HomePage() {
               ))}
             </div>
             
+            {/* Silk Fabric Texture Overlay */}
+            <div className="absolute inset-0 silk-fabric-texture"></div>
+            
+            {/* Gradient Light Movement */}
+            <div className="absolute inset-0 gradient-light-movement"></div>
+            
+            {/* Luxury Lighting Effects */}
+            <div className="absolute inset-0 luxury-lighting"></div>
+            
             {/* Overlay for text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50"></div>
-            
-            {/* Subtle Pen Stroke Animation */}
-            <div className="absolute inset-0 pen-stroke-animation opacity-20"></div>
           </motion.div>
           
           {/* Enhanced Hero Content with Smooth Animations */}
@@ -657,7 +820,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {/* Animated Kalamkari Pen Art Elements */}
+            {/* Enhanced Animated Kalamkari Pen Art Elements with Gold Divider */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -679,7 +842,7 @@ export default function HomePage() {
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="w-16 h-1 bg-gradient-to-r from-primary via-accent-color to-primary rounded-full shadow-lg"
+                className="w-16 h-1 bg-gradient-to-r from-primary via-accent-color to-primary rounded-full shadow-lg animated-gold-divider"
               />
               <motion.div
                 animate={{ 
@@ -704,11 +867,11 @@ export default function HomePage() {
                   ease: "easeInOut", 
                   delay: 2 
                 }}
-                className="w-16 h-1 bg-gradient-to-r from-accent-color via-primary to-accent-color rounded-full shadow-lg"
+                className="w-16 h-1 bg-gradient-to-r from-accent-color via-primary to-accent-color rounded-full shadow-lg animated-gold-divider"
               />
             </motion.div>
 
-            {/* Enhanced Elegant Headline with Staggered Animation */}
+            {/* Enhanced Elegant Headline with Refined Serif Typography and Animations */}
             <motion.h1
               initial={{ opacity: 0, y: 80, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -727,7 +890,7 @@ export default function HomePage() {
                   delay: 1.0,
                   ease: "easeOut" 
                 }}
-                className="block text-white drop-shadow-lg"
+                className="block text-white drop-shadow-lg fade-slide-text animated-letter-spacing"
               >
                 Kalamkari
               </motion.span>
@@ -739,7 +902,7 @@ export default function HomePage() {
                   delay: 1.4,
                   ease: "easeOut" 
                 }}
-                className="block text-accent-color font-light drop-shadow-lg"
+                className="block text-accent-color font-light drop-shadow-lg fade-slide-text animated-letter-spacing"
               >
                 Heritage
               </motion.span>
@@ -772,7 +935,7 @@ export default function HomePage() {
               </motion.p>
             </motion.div>
 
-            {/* Premium Animated CTA Buttons */}
+            {/* Premium Animated CTA Buttons with Micro-Interactions */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -791,7 +954,7 @@ export default function HomePage() {
                 >
                   <Button 
                     size="lg" 
-                    className="relative overflow-hidden bg-gradient-to-r from-accent-color to-accent-color/80 hover:from-accent-color/90 hover:to-accent-color/70 text-white px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-accent-color/25 transition-all duration-500 border border-accent-color/20 backdrop-blur-sm group w-full h-16"
+                    className="premium-button-hover relative overflow-hidden bg-gradient-to-r from-accent-color to-accent-color/80 hover:from-accent-color/90 hover:to-accent-color/70 text-white px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-accent-color/25 transition-all duration-500 border border-accent-color/20 backdrop-blur-sm group w-full h-16"
                     aria-label="Explore our Kalamkari saree collection"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">
@@ -804,12 +967,6 @@ export default function HomePage() {
                         →
                       </motion.span>
                     </span>
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.6, ease: "easeInOut" }}
-                    />
                   </Button>
                 </motion.div>
               </Link>
@@ -822,7 +979,7 @@ export default function HomePage() {
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="relative overflow-hidden border-2 border-white/40 text-white hover:text-accent-color bg-white/10 hover:bg-white/20 backdrop-blur-md px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/25 transition-all duration-500 group w-full h-16"
+                    className="premium-button-hover relative overflow-hidden border-2 border-white/40 text-white hover:text-accent-color bg-white/10 hover:bg-white/20 backdrop-blur-md px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/25 transition-all duration-500 group w-full h-16"
                     aria-label="Learn about our heritage story"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">
@@ -835,12 +992,6 @@ export default function HomePage() {
                         ✨
                       </motion.span>
                     </span>
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.6, ease: "easeInOut" }}
-                    />
                   </Button>
                 </motion.div>
               </Link>
