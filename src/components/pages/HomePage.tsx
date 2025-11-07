@@ -66,7 +66,7 @@ export default function HomePage() {
 
   // Background carousel images
   const heroBackgroundImages = [
-    "https://static.wixstatic.com/media/07221c_2e8d1f7395134585bcff6b528887e1bf~mv2.png?originWidth=256&originHeight=384",
+    'https://static.wixstatic.com/media/07221c_0d3b35026e9e4ff69cf759cd73cd2282~mv2.png?originWidth=1920&originHeight=1024',
     "https://static.wixstatic.com/media/07221c_15fd999951a443999835d74bf92fb898~mv2.png?originWidth=256&originHeight=384",
     "https://static.wixstatic.com/media/07221c_3d36b8d683e2438d894f2d49c2a94bc8~mv2.png?originWidth=256&originHeight=384",
     "https://static.wixstatic.com/media/07221c_a78b35baed0346338ef87d17c80ad1ac~mv2.png?originWidth=256&originHeight=384",
