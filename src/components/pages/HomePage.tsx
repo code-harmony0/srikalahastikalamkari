@@ -254,6 +254,7 @@ export default function HomePage() {
             );
           position: relative;
           animation: silkFabricFlow 25s ease-in-out infinite;
+          z-index: 2;
         }
 
         @keyframes silkFabricFlow {
@@ -284,6 +285,7 @@ export default function HomePage() {
             transparent 100%
           );
           animation: gradientBreathing 20s ease-in-out infinite;
+          z-index: 3;
         }
 
         @keyframes gradientBreathing {
@@ -298,6 +300,7 @@ export default function HomePage() {
           height: 100%;
           overflow: hidden;
           pointer-events: none;
+          z-index: 4;
         }
 
         .bokeh-particle {
@@ -720,6 +723,8 @@ export default function HomePage() {
         .hero-carousel-container {
           position: relative;
           overflow: hidden;
+          width: 100%;
+          height: 100%;
         }
 
         .hero-carousel-image {
@@ -730,7 +735,8 @@ export default function HomePage() {
           height: 100%;
           object-fit: cover;
           transition: opacity 2s ease-in-out;
-          scale: 1.1;
+          transform: scale(1.1);
+          z-index: 1;
         }
 
         .hero-carousel-image.active {
