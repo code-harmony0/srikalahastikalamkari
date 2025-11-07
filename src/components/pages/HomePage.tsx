@@ -222,51 +222,154 @@ export default function HomePage() {
           transform: translateY(0);
         }
 
-        /* Enhanced 2025 Hero Background System with Silk Texture */
-        .silk-fabric-texture {
+        /* High-Quality Silk/Kalamkari Fabric Background */
+        .kalamkari-silk-fabric {
           background: 
-            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.08) 0%, transparent 40%),
-            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.06) 0%, transparent 40%),
-            linear-gradient(135deg, rgba(245, 245, 220, 0.15) 0%, rgba(222, 184, 135, 0.12) 100%);
+            /* Kalamkari pattern simulation */
+            radial-gradient(ellipse at 15% 20%, rgba(184, 134, 11, 0.12) 0%, transparent 35%),
+            radial-gradient(ellipse at 85% 80%, rgba(160, 82, 45, 0.08) 0%, transparent 40%),
+            radial-gradient(ellipse at 50% 30%, rgba(139, 69, 19, 0.06) 0%, transparent 45%),
+            /* Silk weave texture */
+            repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 1px,
+              rgba(255, 255, 255, 0.015) 1px,
+              rgba(255, 255, 255, 0.015) 2px
+            ),
+            repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 1px,
+              rgba(184, 134, 11, 0.01) 1px,
+              rgba(184, 134, 11, 0.01) 2px
+            ),
+            /* Base silk gradient */
+            linear-gradient(135deg, 
+              rgba(245, 245, 220, 0.08) 0%, 
+              rgba(222, 184, 135, 0.12) 25%,
+              rgba(160, 82, 45, 0.06) 50%,
+              rgba(139, 69, 19, 0.08) 75%,
+              rgba(101, 67, 33, 0.04) 100%
+            );
           position: relative;
+          animation: silkFabricFlow 25s ease-in-out infinite;
         }
 
-        .silk-fabric-texture::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: 
-            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.03) 1px, transparent 1px),
-            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.02) 0.5px, transparent 0.5px),
-            linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.02) 50%, transparent 52%);
-          background-size: 32px 32px, 16px 16px, 8px 8px;
-          animation: silkShimmer 12s ease-in-out infinite;
+        @keyframes silkFabricFlow {
+          0%, 100% { 
+            opacity: 0.7; 
+            filter: brightness(1) contrast(1.05) saturate(1.1); 
+          }
+          33% { 
+            opacity: 0.8; 
+            filter: brightness(1.05) contrast(1.08) saturate(1.15); 
+          }
+          66% { 
+            opacity: 0.75; 
+            filter: brightness(1.02) contrast(1.06) saturate(1.12); 
+          }
         }
 
-        @keyframes silkShimmer {
-          0%, 100% { opacity: 0.6; transform: translateX(0px); }
-          50% { opacity: 0.8; transform: translateX(2px); }
-        }
-
-        .refined-terracotta-gold-overlay {
+        /* Dark-to-Light Gradient Overlay */
+        .dark-to-light-gradient {
           background: linear-gradient(
-            135deg,
-            rgba(205, 133, 63, 0.25) 0%,
-            rgba(184, 134, 11, 0.20) 25%,
-            rgba(160, 82, 45, 0.15) 50%,
-            rgba(222, 184, 135, 0.20) 75%,
-            rgba(245, 245, 220, 0.25) 100%
+            180deg,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(0, 0, 0, 0.65) 15%,
+            rgba(0, 0, 0, 0.45) 35%,
+            rgba(0, 0, 0, 0.25) 55%,
+            rgba(0, 0, 0, 0.15) 75%,
+            rgba(0, 0, 0, 0.05) 90%,
+            transparent 100%
           );
-          animation: refinedTerracottaFlow 18s ease-in-out infinite;
+          animation: gradientBreathing 20s ease-in-out infinite;
         }
 
-        @keyframes refinedTerracottaFlow {
-          0%, 100% { opacity: 0.25; filter: hue-rotate(0deg) saturate(1.1); }
-          33% { opacity: 0.30; filter: hue-rotate(3deg) saturate(1.15); }
-          66% { opacity: 0.20; filter: hue-rotate(-2deg) saturate(1.05); }
+        @keyframes gradientBreathing {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.9; }
+        }
+
+        /* Moving Bokeh Shimmer Effects */
+        .bokeh-shimmer {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          pointer-events: none;
+        }
+
+        .bokeh-particle {
+          position: absolute;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(184, 134, 11, 0.4) 0%, rgba(255, 215, 0, 0.2) 50%, transparent 100%);
+          animation: bokehFloat 15s ease-in-out infinite;
+          filter: blur(1px);
+        }
+
+        .bokeh-particle:nth-child(1) {
+          width: 8px;
+          height: 8px;
+          top: 20%;
+          left: 10%;
+          animation-delay: 0s;
+          animation-duration: 18s;
+        }
+
+        .bokeh-particle:nth-child(2) {
+          width: 12px;
+          height: 12px;
+          top: 60%;
+          left: 80%;
+          animation-delay: 3s;
+          animation-duration: 22s;
+        }
+
+        .bokeh-particle:nth-child(3) {
+          width: 6px;
+          height: 6px;
+          top: 40%;
+          left: 30%;
+          animation-delay: 6s;
+          animation-duration: 16s;
+        }
+
+        .bokeh-particle:nth-child(4) {
+          width: 10px;
+          height: 10px;
+          top: 80%;
+          left: 60%;
+          animation-delay: 9s;
+          animation-duration: 20s;
+        }
+
+        .bokeh-particle:nth-child(5) {
+          width: 14px;
+          height: 14px;
+          top: 15%;
+          left: 70%;
+          animation-delay: 12s;
+          animation-duration: 24s;
+        }
+
+        @keyframes bokehFloat {
+          0%, 100% {
+            transform: translateY(0px) translateX(0px) scale(1);
+            opacity: 0.3;
+          }
+          25% {
+            transform: translateY(-30px) translateX(20px) scale(1.2);
+            opacity: 0.6;
+          }
+          50% {
+            transform: translateY(-15px) translateX(-15px) scale(0.8);
+            opacity: 0.4;
+          }
+          75% {
+            transform: translateY(-40px) translateX(25px) scale(1.1);
+            opacity: 0.7;
+          }
         }
 
         /* Slow Left-to-Right Gradient Light Movement */
@@ -320,47 +423,88 @@ export default function HomePage() {
           75% { opacity: 0.9; }
         }
 
-        /* Enhanced Typography with Letter Spacing Animation */
-        .animated-letter-spacing {
-          animation: letterSpacingPulse 8s ease-in-out infinite;
+        /* Elegant Serif Headlines with Cinematic Typography */
+        .elegant-serif-headline {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 400;
+          text-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.6),
+            0 8px 24px rgba(0, 0, 0, 0.4),
+            0 2px 4px rgba(255, 255, 255, 0.1);
+          animation: cinematicEntrance 3.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        @keyframes letterSpacingPulse {
-          0%, 100% { letter-spacing: 0.02em; }
-          50% { letter-spacing: 0.08em; }
-        }
-
-        .fade-slide-text {
-          animation: fadeSlideIn 3s ease-out;
-        }
-
-        @keyframes fadeSlideIn {
-          0% { 
-            opacity: 0; 
-            transform: translateY(40px) scale(0.95);
-            letter-spacing: 0.1em;
+        @keyframes cinematicEntrance {
+          0% {
+            opacity: 0;
+            transform: translateY(60px) scale(0.9);
+            letter-spacing: 0.15em;
+            filter: blur(2px);
           }
-          100% { 
-            opacity: 1; 
+          60% {
+            opacity: 0.8;
+            transform: translateY(10px) scale(0.98);
+            letter-spacing: 0.05em;
+            filter: blur(0.5px);
+          }
+          100% {
+            opacity: 1;
             transform: translateY(0) scale(1);
             letter-spacing: 0.02em;
+            filter: blur(0);
           }
         }
 
-        .refined-headline-shadow {
-          text-shadow: 
-            0 2px 8px rgba(0, 0, 0, 0.15),
-            0 4px 16px rgba(0, 0, 0, 0.1),
-            0 1px 2px rgba(255, 255, 255, 0.1);
+        /* Gold Italic Tagline */
+        .gold-italic-tagline {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          background: linear-gradient(
+            135deg,
+            #B8860B 0%,
+            #DAA520 25%,
+            #FFD700 50%,
+            #F4A460 75%,
+            #B8860B 100%
+          );
+          background-size: 200% 200%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: goldTaglineFlow 8s ease-in-out infinite;
+          text-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
         }
 
-        /* Gold Divider Line Animation */
-        .animated-gold-divider {
+        @keyframes goldTaglineFlow {
+          0%, 100% { 
+            background-position: 0% 50%; 
+            filter: brightness(1) saturate(1.1);
+          }
+          50% { 
+            background-position: 100% 50%; 
+            filter: brightness(1.2) saturate(1.3);
+          }
+        }
+
+        /* Animated Divider with Cinematic Flow */
+        .cinematic-divider {
           position: relative;
+          width: 120px;
+          height: 2px;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(184, 134, 11, 0.3) 20%,
+            rgba(255, 215, 0, 0.8) 50%,
+            rgba(184, 134, 11, 0.3) 80%,
+            transparent 100%
+          );
           overflow: hidden;
+          animation: dividerPulse 6s ease-in-out infinite;
         }
 
-        .animated-gold-divider::before {
+        .cinematic-divider::before {
           content: '';
           position: absolute;
           top: 0;
@@ -370,18 +514,52 @@ export default function HomePage() {
           background: linear-gradient(
             90deg,
             transparent 0%,
-            rgba(184, 134, 11, 0.8) 30%,
-            rgba(255, 215, 0, 1) 50%,
-            rgba(184, 134, 11, 0.8) 70%,
+            rgba(255, 215, 0, 0.9) 30%,
+            rgba(255, 255, 255, 0.6) 50%,
+            rgba(255, 215, 0, 0.9) 70%,
             transparent 100%
           );
-          animation: goldDividerFlow 6s ease-in-out infinite;
+          animation: dividerShine 4s ease-in-out infinite;
         }
 
-        @keyframes goldDividerFlow {
+        @keyframes dividerPulse {
+          0%, 100% { 
+            opacity: 0.7; 
+            transform: scaleX(1); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: scaleX(1.1); 
+          }
+        }
+
+        @keyframes dividerShine {
           0% { left: -100%; }
           50% { left: 100%; }
           100% { left: -100%; }
+        }
+
+        /* Cinematic Entrance Animations */
+        .cinematic-entrance {
+          animation: cinematicSlideIn 2.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes cinematicSlideIn {
+          0% {
+            opacity: 0;
+            transform: translateY(80px) scale(0.95);
+            filter: blur(3px);
+          }
+          40% {
+            opacity: 0.6;
+            transform: translateY(20px) scale(0.98);
+            filter: blur(1px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
         }
 
         .refined-fade-in {
@@ -459,40 +637,56 @@ export default function HomePage() {
           50% { transform: translateY(-2px); opacity: 1; }
         }
 
-        /* Premium Button Micro-Interactions */
-        .premium-button-hover {
+        /* Premium Button Interactions with Luxury Feel */
+        .luxury-button {
           position: relative;
           overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(184, 134, 11, 0.3);
         }
 
-        .premium-button-hover::before {
+        .luxury-button::before {
           content: '';
           position: absolute;
           top: 50%;
           left: 50%;
           width: 0;
           height: 0;
-          background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          background: radial-gradient(
+            circle,
+            rgba(255, 215, 0, 0.4) 0%,
+            rgba(184, 134, 11, 0.2) 50%,
+            transparent 100%
+          );
+          transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
           transform: translate(-50%, -50%);
           border-radius: 50%;
         }
 
-        .premium-button-hover:hover::before {
-          width: 300px;
-          height: 300px;
+        .luxury-button:hover::before {
+          width: 400px;
+          height: 400px;
         }
 
-        .premium-button-hover:hover {
-          transform: translateY(-3px) scale(1.02);
+        .luxury-button:hover {
+          transform: translateY(-4px) scale(1.03);
           box-shadow: 
-            0 10px 40px rgba(184, 134, 11, 0.4),
-            0 4px 20px rgba(0, 0, 0, 0.15);
+            0 15px 50px rgba(184, 134, 11, 0.4),
+            0 8px 25px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          border-color: rgba(184, 134, 11, 0.6);
         }
 
-        .premium-button-hover:active {
-          transform: translateY(-1px) scale(0.98);
+        .luxury-button:active {
+          transform: translateY(-2px) scale(1.01);
+          transition: all 0.2s ease;
+        }
+
+        /* Parallax Enhancement */
+        .parallax-enhanced {
+          transform-style: preserve-3d;
+          will-change: transform;
         }
 
         /* Refined UI Components */
@@ -778,10 +972,10 @@ export default function HomePage() {
           role="banner"
           aria-label="Kalamkari Heritage - Handcrafted Stories"
         >
-          {/* Enhanced Background System with Silk Texture and Luxury Lighting */}
+          {/* High-Quality Kalamkari Silk Background with Cinematic Layers */}
           <motion.div 
             style={{ y: heroY }}
-            className="absolute inset-0 z-0"
+            className="absolute inset-0 z-0 parallax-enhanced"
           >
             {/* Background Image Carousel */}
             <div className="hero-carousel-container absolute inset-0">
@@ -799,17 +993,20 @@ export default function HomePage() {
               ))}
             </div>
             
-            {/* Silk Fabric Texture Overlay */}
-            <div className="absolute inset-0 silk-fabric-texture"></div>
+            {/* High-Quality Silk/Kalamkari Fabric Overlay */}
+            <div className="absolute inset-0 kalamkari-silk-fabric"></div>
             
-            {/* Gradient Light Movement */}
-            <div className="absolute inset-0 gradient-light-movement"></div>
+            {/* Dark-to-Light Gradient Overlay */}
+            <div className="absolute inset-0 dark-to-light-gradient"></div>
             
-            {/* Luxury Lighting Effects */}
-            <div className="absolute inset-0 luxury-lighting"></div>
-            
-            {/* Overlay for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50"></div>
+            {/* Moving Bokeh Shimmer Effects */}
+            <div className="absolute inset-0 bokeh-shimmer">
+              <div className="bokeh-particle"></div>
+              <div className="bokeh-particle"></div>
+              <div className="bokeh-particle"></div>
+              <div className="bokeh-particle"></div>
+              <div className="bokeh-particle"></div>
+            </div>
           </motion.div>
           
           {/* Enhanced Hero Content with Smooth Animations */}
@@ -820,149 +1017,101 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {/* Enhanced Animated Kalamkari Pen Art Elements with Gold Divider */}
+            {/* Cinematic Animated Divider */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
               transition={{ 
-                duration: 2.2, 
-                delay: 0.3, 
+                duration: 2.5, 
+                delay: 0.8, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
-              className="mb-8 md:mb-12 flex items-center justify-center gap-4"
+              className="mb-12 md:mb-16 flex items-center justify-center"
             >
-              {/* Enhanced Stylized Kalamkari Pen with Floating Animation */}
-              <motion.div
-                animate={{ 
-                  rotate: [0, 5, -5, 0],
-                  y: [0, -3, 0, 3, 0]
-                }}
-                transition={{ 
-                  duration: 6, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-                className="w-16 h-1 bg-gradient-to-r from-primary via-accent-color to-primary rounded-full shadow-lg animated-gold-divider"
-              />
-              <motion.div
-                animate={{ 
-                  opacity: [0.5, 1, 0.5],
-                  scale: [1, 1.2, 1]
-                }}
-                transition={{ 
-                  duration: 3, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-                className="w-2 h-2 bg-accent-color rounded-full shadow-md"
-              />
-              <motion.div
-                animate={{ 
-                  rotate: [0, -5, 5, 0],
-                  y: [0, 3, 0, -3, 0]
-                }}
-                transition={{ 
-                  duration: 6, 
-                  repeat: Infinity, 
-                  ease: "easeInOut", 
-                  delay: 2 
-                }}
-                className="w-16 h-1 bg-gradient-to-r from-accent-color via-primary to-accent-color rounded-full shadow-lg animated-gold-divider"
-              />
+              <div className="cinematic-divider"></div>
             </motion.div>
 
-            {/* Enhanced Elegant Headline with Refined Serif Typography and Animations */}
+            {/* Elegant Serif Headlines with Cinematic Entrance */}
             <motion.h1
-              initial={{ opacity: 0, y: 80, scale: 0.9 }}
+              initial={{ opacity: 0, y: 100, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 
-                duration: 2.2, 
-                delay: 0.6, 
+                duration: 3.5, 
+                delay: 1.2, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
-              className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[0.9] tracking-tight mb-6 md:mb-8 drop-shadow-2xl"
+              className="elegant-serif-headline text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white leading-[0.85] tracking-tight mb-8 md:mb-12"
             >
               <motion.span 
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 60 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ 
-                  duration: 1.2, 
-                  delay: 1.0,
-                  ease: "easeOut" 
+                  duration: 2.5, 
+                  delay: 1.8,
+                  ease: [0.23, 1, 0.32, 1] 
                 }}
-                className="block text-white drop-shadow-lg fade-slide-text animated-letter-spacing"
+                className="block text-white"
               >
                 Kalamkari
               </motion.span>
               <motion.span 
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 60 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ 
-                  duration: 1.2, 
-                  delay: 1.4,
-                  ease: "easeOut" 
+                  duration: 2.5, 
+                  delay: 2.2,
+                  ease: [0.23, 1, 0.32, 1] 
                 }}
-                className="block text-accent-color font-light drop-shadow-lg fade-slide-text animated-letter-spacing"
+                className="block text-white font-light"
               >
                 Heritage
               </motion.span>
             </motion.h1>
 
-            {/* Enhanced Poetic Tagline with Breathing Animation */}
+            {/* Gold Italic Tagline with Emotional Appeal */}
             <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 
-                duration: 1.8, 
-                delay: 1.8, 
+                duration: 2.5, 
+                delay: 2.8, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
-              className="mb-12 md:mb-16"
+              className="mb-16 md:mb-20"
             >
-              <motion.p 
-                animate={{ 
-                  opacity: [0.9, 1, 0.9],
-                  y: [0, -2, 0]
-                }}
-                transition={{ 
-                  duration: 4, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-                className="font-paragraph text-lg md:text-xl text-white/90 italic leading-relaxed max-w-2xl mx-auto drop-shadow-md"
-              >
-                "Where ancient pen meets timeless silk"
-              </motion.p>
+              <p className="gold-italic-tagline text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl mx-auto text-center">
+                "Where ancient artistry meets timeless elegance, each thread whispers stories of heritage"
+              </p>
             </motion.div>
 
-            {/* Premium Animated CTA Buttons with Micro-Interactions */}
+            {/* Premium Luxury Buttons with Enhanced Interactions */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
-                duration: 1.4, 
-                delay: 1.8, 
+                duration: 2.5, 
+                delay: 3.5, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
-              className="flex flex-col sm:flex-row gap-4 md:gap-6 mb-20 md:mb-24 max-w-lg mx-auto w-full"
+              className="flex flex-col sm:flex-row gap-6 md:gap-8 max-w-2xl mx-auto w-full"
             >
               <Link to="/shop" className="group flex-1">
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={{ scale: 1.05, y: -4 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Button 
                     size="lg" 
-                    className="premium-button-hover relative overflow-hidden bg-gradient-to-r from-accent-color to-accent-color/80 hover:from-accent-color/90 hover:to-accent-color/70 text-white px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-accent-color/25 transition-all duration-500 border border-accent-color/20 backdrop-blur-sm group w-full h-16"
+                    className="luxury-button cinematic-entrance bg-gradient-to-r from-accent-color via-yellow-600 to-accent-color hover:from-yellow-600 hover:via-accent-color hover:to-yellow-600 text-white px-12 py-6 text-xl font-medium rounded-2xl shadow-2xl w-full h-20"
                     aria-label="Explore our Kalamkari saree collection"
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
                       Explore Collection
                       <motion.span
-                        className="inline-block"
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        className="inline-block text-2xl"
+                        animate={{ x: [0, 6, 0] }}
+                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                       >
                         →
                       </motion.span>
@@ -972,22 +1121,22 @@ export default function HomePage() {
               </Link>
               <Link to="/about" className="group flex-1">
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={{ scale: 1.05, y: -4 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="premium-button-hover relative overflow-hidden border-2 border-white/40 text-white hover:text-accent-color bg-white/10 hover:bg-white/20 backdrop-blur-md px-10 py-5 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/25 transition-all duration-500 group w-full h-16"
+                    className="luxury-button cinematic-entrance border-2 border-white/50 text-white hover:text-accent-color bg-white/10 hover:bg-white/20 backdrop-blur-xl px-12 py-6 text-xl font-medium rounded-2xl shadow-2xl w-full h-20"
                     aria-label="Learn about our heritage story"
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
                       Our Heritage
                       <motion.span
-                        className="inline-block"
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        className="inline-block text-xl"
+                        animate={{ rotate: [0, 15, -15, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                       >
                         ✨
                       </motion.span>
