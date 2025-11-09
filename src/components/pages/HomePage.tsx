@@ -1787,10 +1787,10 @@ export default function HomePage() {
                               viewport={{ once: true }}
                               className="flex flex-col"
                             >
-                              <span className="font-heading font-bold text-primary text-lg leading-none">
+                              <span className="font-heading font-bold text-primary text-xl leading-tight tracking-wide">
                                 ₹{product.price?.toLocaleString('en-IN')}
                               </span>
-                              <span className="text-xs text-foreground/50 font-paragraph mt-0.5">
+                              <span className="text-xs text-foreground/60 font-paragraph mt-1 font-medium">
                                 Free Shipping
                               </span>
                             </motion.div>
@@ -1803,15 +1803,15 @@ export default function HomePage() {
                               viewport={{ once: true }}
                               className="flex flex-col items-end"
                             >
-                              <div className="flex items-center gap-0.5 mb-0.5">
+                              <div className="flex items-center gap-1 mb-1">
                                 {[...Array(5)].map((_, i) => (
                                   <Star 
                                     key={i} 
-                                    className="w-3 h-3 fill-accent-color text-accent-color" 
+                                    className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-sm" 
                                   />
                                 ))}
                               </div>
-                              <span className="text-xs text-foreground/60 font-medium leading-none">
+                              <span className="text-xs text-foreground/70 font-semibold leading-tight tracking-wide">
                                 4.9 (127)
                               </span>
                             </motion.div>
@@ -1895,8 +1895,8 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   className="absolute -bottom-8 -right-8 glass-morphism rounded-2xl p-6 text-center"
                 >
-                  <div className="text-2xl font-heading font-bold text-primary mb-1">500+</div>
-                  <div className="text-sm font-paragraph text-foreground/70">Years of Heritage</div>
+                  <div className="text-3xl font-heading font-bold text-primary mb-1 tracking-tight">500+</div>
+                  <div className="text-sm font-paragraph text-foreground/80 font-medium">Years of Heritage</div>
                 </motion.div>
               </div>
             </motion.div>
@@ -1931,13 +1931,13 @@ export default function HomePage() {
                 
                 {/* Heritage Stats */}
                 <div className="grid grid-cols-2 gap-6 my-8">
-                  <div className="text-center p-4 bg-white/50 rounded-2xl">
-                    <div className="text-2xl font-heading font-bold text-primary mb-1">200+</div>
-                    <div className="text-sm font-paragraph text-foreground/70">Master Artisans</div>
+                  <div className="text-center p-4 bg-white/60 rounded-2xl shadow-sm">
+                    <div className="text-3xl font-heading font-bold text-primary mb-1 tracking-tight">200+</div>
+                    <div className="text-sm font-paragraph text-foreground/80 font-medium">Master Artisans</div>
                   </div>
-                  <div className="text-center p-4 bg-white/50 rounded-2xl">
-                    <div className="text-2xl font-heading font-bold text-primary mb-1">100%</div>
-                    <div className="text-sm font-paragraph text-foreground/70">Natural Dyes</div>
+                  <div className="text-center p-4 bg-white/60 rounded-2xl shadow-sm">
+                    <div className="text-3xl font-heading font-bold text-primary mb-1 tracking-tight">100%</div>
+                    <div className="text-sm font-paragraph text-foreground/80 font-medium">Natural Dyes</div>
                   </div>
                 </div>
                 
@@ -2136,16 +2136,16 @@ export default function HomePage() {
             >
               <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 text-foreground/70">
                 <div className="flex items-center gap-3">
-                  <Star className="w-6 h-6 fill-accent-color text-accent-color" />
-                  <span className="font-paragraph text-sm lg:text-base">4.9/5 Customer Rating</span>
+                  <Star className="w-6 h-6 fill-amber-400 text-amber-400 drop-shadow-sm" />
+                  <span className="font-paragraph text-sm lg:text-base font-semibold">4.9/5 Customer Rating</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Scissors className="w-6 h-6 text-primary" />
-                  <span className="font-paragraph text-sm lg:text-base">Handcrafted Excellence</span>
+                  <span className="font-paragraph text-sm lg:text-base font-semibold">Handcrafted Excellence</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Users className="w-6 h-6 text-primary" />
-                  <span className="font-paragraph text-sm lg:text-base">10,000+ Happy Customers</span>
+                  <span className="font-paragraph text-sm lg:text-base font-semibold">10,000+ Happy Customers</span>
                 </div>
               </div>
             </motion.div>
@@ -2291,18 +2291,18 @@ export default function HomePage() {
                 </form>
                 
                 {/* Trust Indicators */}
-                <div className="flex flex-wrap justify-center items-center gap-6 text-primary-foreground/80 text-sm font-paragraph mb-6">
+                <div className="flex flex-wrap justify-center items-center gap-6 text-primary-foreground/90 text-sm font-paragraph mb-6 font-medium">
                   <div className="flex items-center gap-2">
                     <Heart className="w-4 h-4 fill-red-400 text-red-400" />
-                    <span>5,000+ Subscribers</span>
+                    <span className="font-semibold">5,000+ Subscribers</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4 fill-accent-color text-accent-color" />
-                    <span>Exclusive Content</span>
+                    <Star className="w-4 h-4 fill-amber-400 text-amber-400 drop-shadow-sm" />
+                    <span className="font-semibold">Exclusive Content</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Award className="w-4 h-4 text-accent-color" />
-                    <span>Member Benefits</span>
+                    <span className="font-semibold">Member Benefits</span>
                   </div>
                 </div>
                 
