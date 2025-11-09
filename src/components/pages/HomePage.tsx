@@ -1638,81 +1638,86 @@ export default function HomePage() {
         </section>
 
         {/* Featured Products Section - Premium Showcase */}
-        <section className="w-full py-20 md:py-28 bg-background relative overflow-hidden">
+        <section className="w-full py-16 md:py-20 bg-background relative overflow-hidden">
           <div className="absolute inset-0 heritage-texture opacity-30"></div>
           <DecorativePattern className="text-primary/3 premium-shimmer heritage-float" animated={true} />
           
-          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+          <div className="max-w-[120rem] mx-auto px-4 md:px-6 lg:px-8 relative z-10">
             <AnimatedElement>
-              <div className="text-center mb-16">
+              <div className="text-center mb-12">
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.6 }}
                   viewport={{ once: true }}
-                  className="flex items-center justify-center gap-4 mb-6"
+                  className="flex items-center justify-center gap-3 mb-4"
                 >
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                  <span className="font-paragraph text-sm font-semibold text-accent-color uppercase tracking-[0.2em]">
+                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+                  <span className="font-paragraph text-xs font-semibold text-accent-color uppercase tracking-[0.15em]">
                     Curated Collection
                   </span>
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
                 </motion.div>
                 
-                <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
+                <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl text-foreground mb-4 leading-tight">
                   Masterpieces of Heritage
                 </h2>
                 
-                <p className="font-paragraph text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
+                <p className="font-paragraph text-base md:text-lg text-foreground/70 max-w-2xl mx-auto leading-relaxed">
                   A carefully curated selection of our finest handcrafted sarees, each piece telling a unique story of tradition, artistry, and timeless elegance.
                 </p>
               </div>
             </AnimatedElement>
 
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="bg-white/80 rounded-3xl overflow-hidden animate-pulse shadow-lg">
-                    <div className="w-full aspect-[3/4] bg-secondary/30" />
-                    <div className="p-6 space-y-4">
-                      <div className="h-6 bg-secondary/30 rounded-lg w-3/4" />
-                      <div className="h-4 bg-secondary/30 rounded-lg w-1/2" />
-                      <div className="h-5 bg-secondary/30 rounded-lg w-1/3" />
+                  <div key={i} className="bg-white/80 rounded-2xl overflow-hidden animate-pulse shadow-md">
+                    <div className="w-full aspect-[4/5] bg-secondary/30" />
+                    <div className="p-4 space-y-3">
+                      <div className="h-4 bg-secondary/30 rounded w-3/4" />
+                      <div className="h-3 bg-secondary/30 rounded w-1/2" />
+                      <div className="h-4 bg-secondary/30 rounded w-1/3" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {featuredProducts.map((product, index) => (
-                  <AnimatedElement key={product._id} delay={index * 150}>
-                    <Link to={`/product/${product._id}`} className="group block h-full">
-                      <motion.div
-                        whileHover={{ y: -12, scale: 1.02 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 group"
+                  <AnimatedElement key={product._id} delay={index * 100}>
+                    <Link 
+                      to={`/product/${product._id}`} 
+                      className="group block h-full"
+                      aria-label={`View details for ${product.title || 'Handcrafted Kalamkari Saree'}`}
+                    >
+                      <motion.article
+                        whileHover={{ y: -6, scale: 1.01 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="relative overflow-hidden bg-white/95 backdrop-blur-sm rounded-2xl shadow-md hover:shadow-xl transition-all duration-400 group h-full flex flex-col"
                       >
                         {/* Product Image */}
-                        <div className="relative overflow-hidden">
+                        <div className="relative overflow-hidden flex-shrink-0">
                           <Image
                             src={product.mainImage || "https://static.wixstatic.com/media/07221c_a745fb56ce03452288286aef2ba62a22~mv2.png?originWidth=384&originHeight=512"}
                             alt={product.title || 'Handcrafted Kalamkari Saree'}
-                            className="w-full aspect-[3/4] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                            width={400}
-                            height={533}
+                            className="w-full aspect-[4/5] object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                            width={320}
+                            height={400}
+                            loading={index < 2 ? "eager" : "lazy"}
                           />
                           
-                          {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          {/* Subtle Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           
                           {/* Featured Badge */}
                           {product.isFeatured && (
                             <motion.div
-                              initial={{ opacity: 0, scale: 0.8 }}
+                              initial={{ opacity: 0, scale: 0.9 }}
                               whileInView={{ opacity: 1, scale: 1 }}
-                              transition={{ duration: 0.5 }}
+                              transition={{ duration: 0.4 }}
                               viewport={{ once: true }}
-                              className="absolute top-4 right-4 glass-morphism text-primary px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md"
+                              className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-primary px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm"
                             >
                               ✨ Featured
                             </motion.div>
@@ -1720,36 +1725,38 @@ export default function HomePage() {
                           
                           {/* Hover Actions */}
                           <motion.div
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 15 }}
                             whileHover={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100"
+                            transition={{ duration: 0.25 }}
+                            className="absolute bottom-3 left-3 right-3 flex justify-between items-center opacity-0 group-hover:opacity-100"
                           >
                             <Button 
                               size="sm" 
-                              className="h-10 px-4 text-sm rounded-2xl bg-primary-foreground/95 hover:bg-primary-foreground text-primary font-semibold shadow-xl backdrop-blur-sm"
+                              className="h-8 px-3 text-xs rounded-xl bg-white/95 hover:bg-white text-primary font-medium shadow-md backdrop-blur-sm border-0"
+                              onClick={(e) => e.preventDefault()}
                             >
-                              <ShoppingBag className="h-4 w-4 mr-2" />
+                              <ShoppingBag className="h-3 w-3 mr-1.5" />
                               Quick View
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
-                              className="h-10 w-10 p-0 rounded-full glass-morphism border-primary-foreground/30 hover:bg-primary-foreground/10"
+                              className="h-8 w-8 p-0 rounded-full bg-white/90 hover:bg-white border-white/50 hover:border-white shadow-md"
+                              onClick={(e) => e.preventDefault()}
                             >
-                              <Heart className="w-4 h-4 text-primary-foreground" />
+                              <Heart className="w-3 h-3 text-primary" />
                             </Button>
                           </motion.div>
                         </div>
 
                         {/* Product Info */}
-                        <div className="p-6">
+                        <div className="p-4 flex-grow flex flex-col">
                           <motion.h3
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
                             viewport={{ once: true }}
-                            className="font-heading text-xl text-foreground group-hover:text-primary transition-colors duration-300 mb-3 line-clamp-2 leading-tight"
+                            className="font-heading text-lg text-foreground group-hover:text-primary transition-colors duration-300 mb-2 line-clamp-2 leading-snug flex-grow"
                           >
                             {product.title}
                           </motion.h3>
@@ -1757,52 +1764,52 @@ export default function HomePage() {
                           <motion.p
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
-                            transition={{ duration: 0.6, delay: 0.15 }}
+                            transition={{ duration: 0.5, delay: 0.15 }}
                             viewport={{ once: true }}
-                            className="text-foreground/60 font-paragraph text-sm mb-4 line-clamp-2 leading-relaxed"
+                            className="text-foreground/60 font-paragraph text-sm mb-3 line-clamp-2 leading-relaxed"
                           >
                             {product.description}
                           </motion.p>
 
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between mt-auto">
                             <motion.p
                               initial={{ opacity: 0 }}
                               whileInView={{ opacity: 1 }}
-                              transition={{ duration: 0.6, delay: 0.2 }}
+                              transition={{ duration: 0.5, delay: 0.2 }}
                               viewport={{ once: true }}
-                              className="font-heading font-bold text-primary text-xl"
+                              className="font-heading font-bold text-primary text-lg"
                             >
                               ₹{product.price?.toLocaleString('en-IN')}
                             </motion.p>
 
                             {/* Rating */}
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-0.5">
                               {[...Array(5)].map((_, i) => (
                                 <Star 
                                   key={i} 
-                                  className="w-4 h-4 fill-accent-color text-accent-color" 
+                                  className="w-3.5 h-3.5 fill-accent-color text-accent-color" 
                                 />
                               ))}
                               <span className="text-xs text-foreground/60 ml-1 font-medium">(4.9)</span>
                             </div>
                           </div>
                         </div>
-                      </motion.div>
+                      </motion.article>
                     </Link>
                   </AnimatedElement>
                 ))}
               </div>
             )}
 
-            <AnimatedElement className="text-center mt-16">
+            <AnimatedElement className="text-center mt-12">
               <Link to="/shop">
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="h-14 px-10 text-base rounded-2xl border-2 border-primary/30 hover:bg-primary/5 hover:border-primary group transition-all duration-300 hover:scale-105"
+                  className="h-12 px-8 text-base rounded-xl border-2 border-primary/30 hover:bg-primary/5 hover:border-primary group transition-all duration-300 hover:scale-105"
                 >
                   View Complete Collection 
-                  <ArrowRight className="h-5 w-5 ml-3 transition-transform group-hover:translate-x-1"/>
+                  <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1"/>
                 </Button>
               </Link>
             </AnimatedElement>
