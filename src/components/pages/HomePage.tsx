@@ -2216,320 +2216,481 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Seasonal Offerings Section - Modern Horizontal Cards with Parallax */}
+        {/* Seasonal Offerings Section - Modern Tactile Cards with Editorial Feel */}
         {promotions.length > 0 && (
-          <section className="w-full py-20 md:py-28 bg-gradient-to-br from-background via-secondary/5 to-background relative overflow-hidden">
-            {/* Parallax Background Elements */}
+          <section className="w-full py-24 md:py-32 bg-gradient-to-br from-background via-secondary/8 to-background relative overflow-hidden">
+            {/* Kalamkari Motif Background */}
             <motion.div 
-              className="absolute inset-0 opacity-3"
+              className="absolute inset-0 opacity-4"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M50 50c13.807 0 25-11.193 25-25S63.807 0 50 0 25 11.193 25 25s11.193 25 25 25z'/%3E%3Cpath d='M50 35c8.284 0 15-6.716 15-15s-6.716-15-15-15-15 6.716-15 15 6.716 15 15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M60 10c27.614 0 50 22.386 50 50s-22.386 50-50 50S10 87.614 10 60 32.386 10 60 10zm0 15c-19.33 0-35 15.67-35 35s15.67 35 35 35 35-15.67 35-35-15.67-35-35-35z'/%3E%3Cpath d='M60 35c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25zm0 8c-9.389 0-17 7.611-17 17s7.611 17 17 17 17-7.611 17-17-7.611-17-17-17z'/%3E%3Ccircle cx='60' cy='60' r='4' fill='%23B8860B' fill-opacity='0.3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
+            
+            {/* Floating Kalamkari Elements */}
+            <motion.div
+              animate={{ 
+                rotate: [0, 360],
+                scale: [1, 1.05, 1]
+              }}
+              transition={{ 
+                duration: 40, 
+                repeat: Infinity, 
+                ease: "linear" 
+              }}
+              className="absolute top-16 right-16 w-32 h-32 opacity-6"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 5c24.853 0 45 20.147 45 45S74.853 95 50 95 5 74.853 5 50 25.147 5 50 5z' fill='none' stroke='%23B8860B' stroke-width='1.5'/%3E%3Cpath d='M50 20c16.569 0 30 13.431 30 30s-13.431 30-30 30-30-13.431-30-30 13.431-30 30-30z' fill='%23A0522D' fill-opacity='0.1'/%3E%3Cpath d='M50 35c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23B8860B' fill-opacity='0.2'/%3E%3C/svg%3E")`,
               }}
             />
             
             <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-              {/* Enhanced Section Header */}
+              {/* Editorial Header with Luxury Typography */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
                 viewport={{ once: true }}
-                className="text-center mb-16"
+                className="text-center mb-20"
               >
-                <div className="flex items-center justify-center gap-4 mb-6">
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                  <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.2em]">
+                <div className="flex items-center justify-center gap-6 mb-8">
+                  <motion.div 
+                    className="w-24 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    transition={{ duration: 1.2, delay: 0.3 }}
+                    viewport={{ once: true }}
+                  />
+                  <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] relative">
                     Limited Time
+                    <motion.div
+                      className="absolute -bottom-1 left-0 right-0 h-px bg-accent-color/30"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                      viewport={{ once: true }}
+                    />
                   </span>
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+                  <motion.div 
+                    className="w-24 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    transition={{ duration: 1.2, delay: 0.3 }}
+                    viewport={{ once: true }}
+                  />
                 </div>
                 
-                <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
-                  Seasonal Offerings
-                </h2>
+                <motion.h2 
+                  className="font-heading text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[0.9] tracking-tight font-light"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.4 }}
+                  viewport={{ once: true }}
+                >
+                  Seasonal
+                  <span className="block text-primary font-normal italic">Offerings</span>
+                </motion.h2>
                 
-                <p className="font-paragraph text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
+                <motion.p 
+                  className="font-paragraph text-xl md:text-2xl text-foreground/75 max-w-4xl mx-auto leading-relaxed font-light"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.6 }}
+                  viewport={{ once: true }}
+                >
                   Discover our curated seasonal collections featuring exclusive designs and limited-edition pieces that celebrate the artistry of each season.
-                </p>
+                </motion.p>
               </motion.div>
 
-              {/* Modern Horizontal Cards Layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              {/* Modern Tactile Cards with Editorial Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
                 {promotions[0] && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -50, scale: 0.95 }}
+                  <motion.article
+                    initial={{ opacity: 0, x: -60, scale: 0.9 }}
                     whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                    transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                     viewport={{ once: true }}
-                    className="group"
+                    className="group relative"
                   >
+                    {/* Tactile Card Container */}
                     <motion.div
-                      whileHover={{ y: -8, scale: 1.02 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/90 backdrop-blur-sm"
+                      whileHover={{ y: -12, scale: 1.02 }}
+                      transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      className="relative overflow-hidden rounded-[2rem] shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/95 backdrop-blur-md border border-white/60"
                     >
-                      {/* Parallax Image Container */}
-                      <div className="relative h-[400px] md:h-[450px] overflow-hidden">
+                      {/* Kalamkari Motif Overlay on Card */}
+                      <div className="absolute inset-0 opacity-3 pointer-events-none"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        }}
+                      />
+                      
+                      {/* Image Container with Parallax */}
+                      <div className="relative h-[480px] md:h-[520px] overflow-hidden">
                         <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          transition={{ duration: 0.7, ease: "easeOut" }}
+                          whileHover={{ scale: 1.08 }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
                           className="w-full h-full"
                         >
                           <Image
                             src={promotions[0].bannerImage || "https://static.wixstatic.com/media/07221c_a7a400975312440d932b7a737b5ebebf~mv2.png?originWidth=896&originHeight=448"}
                             alt={promotions[0].title || 'Seasonal Promotion'}
                             className="w-full h-full object-cover"
-                            width={700}
-                            height={450}
+                            width={800}
+                            height={520}
                           />
                         </motion.div>
                         
-                        {/* Enhanced Hover Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                        {/* Sophisticated Hover Overlay */}
+                        <motion.div 
+                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
+                          initial={{ opacity: 0.7 }}
+                          whileHover={{ opacity: 0.9 }}
+                          transition={{ duration: 0.5 }}
+                        />
                         
-                        {/* Floating Content */}
+                        {/* Editorial Content Overlay */}
                         <motion.div
-                          initial={{ opacity: 0, y: 30 }}
+                          initial={{ opacity: 0, y: 40 }}
                           whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.8, delay: 0.3 }}
+                          transition={{ duration: 1, delay: 0.3 }}
                           viewport={{ once: true }}
-                          className="absolute bottom-0 left-0 right-0 p-8 md:p-10 text-white"
+                          className="absolute bottom-0 left-0 right-0 p-10 md:p-12 text-white"
                         >
                           <motion.h3 
-                            className="font-heading text-3xl md:text-4xl mb-4 font-bold text-white drop-shadow-lg leading-tight"
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.2 }}
+                            className="font-heading text-4xl md:text-5xl mb-6 font-light text-white leading-tight tracking-tight"
+                            whileHover={{ scale: 1.02, x: 4 }}
+                            transition={{ duration: 0.3 }}
                           >
                             {promotions[0].title}
                           </motion.h3>
                           
-                          <p className="font-paragraph text-base md:text-lg mb-6 text-white/95 drop-shadow-md leading-relaxed max-w-md">
+                          <p className="font-paragraph text-lg md:text-xl mb-8 text-white/95 leading-relaxed max-w-lg font-light">
                             {promotions[0].description}
                           </p>
                           
-                          {/* Clear CTA */}
+                          {/* Editorial CTA */}
                           <motion.div
-                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileHover={{ scale: 1.05, y: -3 }}
                             whileTap={{ scale: 0.98 }}
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.3 }}
                           >
                             <Button 
                               size="lg" 
-                              className="h-12 px-8 text-base rounded-2xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground font-semibold group transition-all duration-400 shadow-lg hover:shadow-xl border-0"
+                              className="h-14 px-10 text-lg rounded-2xl bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground font-medium group transition-all duration-500 shadow-xl hover:shadow-2xl border-0 tracking-wide"
                               asChild
                             >
                               <a href={promotions[0].callToActionUrl}>
                                 Shop Collection
-                                <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1"/>
+                                <motion.span
+                                  className="inline-block ml-3"
+                                  animate={{ x: [0, 4, 0] }}
+                                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                >
+                                  <ArrowRight className="h-6 w-6" />
+                                </motion.span>
                               </a>
                             </Button>
                           </motion.div>
                         </motion.div>
                       </div>
                     </motion.div>
-                  </motion.div>
+                  </motion.article>
                 )}
 
                 {promotions[1] && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 50, scale: 0.95 }}
+                  <motion.article
+                    initial={{ opacity: 0, x: 60, scale: 0.9 }}
                     whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{ duration: 1.2, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                     viewport={{ once: true }}
-                    className="group"
+                    className="group relative"
                   >
+                    {/* Tactile Card Container */}
                     <motion.div
-                      whileHover={{ y: -8, scale: 1.02 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/90 backdrop-blur-sm"
+                      whileHover={{ y: -12, scale: 1.02 }}
+                      transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      className="relative overflow-hidden rounded-[2rem] shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/95 backdrop-blur-md border border-white/60"
                     >
-                      {/* Parallax Image Container */}
-                      <div className="relative h-[400px] md:h-[450px] overflow-hidden">
+                      {/* Kalamkari Motif Overlay on Card */}
+                      <div className="absolute inset-0 opacity-3 pointer-events-none"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.06'%3E%3Cpath d='M40 15c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z'/%3E%3Cpath d='M40 25c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        }}
+                      />
+                      
+                      {/* Image Container with Parallax */}
+                      <div className="relative h-[480px] md:h-[520px] overflow-hidden">
                         <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          transition={{ duration: 0.7, ease: "easeOut" }}
+                          whileHover={{ scale: 1.08 }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
                           className="w-full h-full"
                         >
                           <Image
                             src={promotions[1].bannerImage || "https://static.wixstatic.com/media/07221c_13a941c0dfd84492b785af619b1d7ae3~mv2.png?originWidth=896&originHeight=448"}
                             alt={promotions[1].title || 'Special Offer'}
                             className="w-full h-full object-cover"
-                            width={700}
-                            height={450}
+                            width={800}
+                            height={520}
                           />
                         </motion.div>
                         
-                        {/* Enhanced Hover Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                        {/* Sophisticated Hover Overlay */}
+                        <motion.div 
+                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
+                          initial={{ opacity: 0.7 }}
+                          whileHover={{ opacity: 0.9 }}
+                          transition={{ duration: 0.5 }}
+                        />
                         
-                        {/* Floating Content */}
+                        {/* Editorial Content Overlay */}
                         <motion.div
-                          initial={{ opacity: 0, y: 30 }}
+                          initial={{ opacity: 0, y: 40 }}
                           whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.8, delay: 0.5 }}
+                          transition={{ duration: 1, delay: 0.5 }}
                           viewport={{ once: true }}
-                          className="absolute bottom-0 left-0 right-0 p-8 md:p-10 text-white"
+                          className="absolute bottom-0 left-0 right-0 p-10 md:p-12 text-white"
                         >
                           <motion.h3 
-                            className="font-heading text-3xl md:text-4xl mb-4 font-bold text-white drop-shadow-lg leading-tight"
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.2 }}
+                            className="font-heading text-4xl md:text-5xl mb-6 font-light text-white leading-tight tracking-tight"
+                            whileHover={{ scale: 1.02, x: 4 }}
+                            transition={{ duration: 0.3 }}
                           >
                             {promotions[1].title}
                           </motion.h3>
                           
-                          <p className="font-paragraph text-base md:text-lg mb-6 text-white/95 drop-shadow-md leading-relaxed max-w-md">
+                          <p className="font-paragraph text-lg md:text-xl mb-8 text-white/95 leading-relaxed max-w-lg font-light">
                             {promotions[1].description}
                           </p>
                           
-                          {/* Clear CTA */}
+                          {/* Editorial CTA */}
                           <motion.div
-                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileHover={{ scale: 1.05, y: -3 }}
                             whileTap={{ scale: 0.98 }}
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.3 }}
                           >
                             <Button 
                               variant="outline"
                               size="lg" 
-                              className="h-12 px-8 text-base rounded-2xl border-2 border-white/80 hover:bg-white/20 hover:border-white text-white font-semibold transition-all duration-400 backdrop-blur-md bg-white/10 shadow-lg hover:shadow-xl"
+                              className="h-14 px-10 text-lg rounded-2xl border-2 border-white/90 hover:bg-white/25 hover:border-white text-white font-medium transition-all duration-500 backdrop-blur-md bg-white/15 shadow-xl hover:shadow-2xl tracking-wide"
                               asChild
                             >
                               <a href={promotions[1].callToActionUrl}>
                                 Explore Offers
-                                <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1"/>
+                                <motion.span
+                                  className="inline-block ml-3"
+                                  animate={{ x: [0, 4, 0] }}
+                                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                >
+                                  <ArrowRight className="h-6 w-6" />
+                                </motion.span>
                               </a>
                             </Button>
                           </motion.div>
                         </motion.div>
                       </div>
                     </motion.div>
-                  </motion.div>
+                  </motion.article>
                 )}
               </div>
             </div>
           </section>
         )}
 
-        {/* The Kalamkari Promise Section - Promise Cards with Gold Icons */}
-        <section className="w-full py-20 md:py-28 bg-gradient-to-br from-background via-secondary/8 to-background relative overflow-hidden">
-          {/* Enhanced Background Pattern */}
+        {/* The Kalamkari Promise Section - Luxury Tactile Cards with Editorial Typography */}
+        <section className="w-full py-24 md:py-32 bg-gradient-to-br from-background via-secondary/10 to-background relative overflow-hidden">
+          {/* Sophisticated Kalamkari Background Motifs */}
           <motion.div 
-            className="absolute inset-0 opacity-4"
+            className="absolute inset-0 opacity-5"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B8860B' fill-opacity='0.08'%3E%3Cpath d='M60 60c16.569 0 30-13.431 30-30S76.569 0 60 0 30 13.431 30 30s13.431 30 30 30z'/%3E%3Cpath d='M60 45c8.284 0 15-6.716 15-15s-6.716-15-15-15-15 6.716-15 15 6.716 15 15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M70 15c30.376 0 55 24.624 55 55s-24.624 55-55 55S15 100.376 15 70 39.624 15 70 15zm0 20c-19.33 0-35 15.67-35 35s15.67 35 35 35 35-15.67 35-35-15.67-35-35-35z'/%3E%3Cpath d='M70 40c16.569 0 30 13.431 30 30s-13.431 30-30 30-30-13.431-30-30 13.431-30 30-30zm0 10c-11.046 0-20 8.954-20 20s8.954 20 20 20 20-8.954 20-20-8.954-20-20-20z'/%3E%3Ccircle cx='70' cy='70' r='6' fill='%23B8860B' fill-opacity='0.4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}
           />
           
-          {/* Floating Gold Accent Elements */}
+          {/* Floating Kalamkari Elements with Smooth Animation */}
           <motion.div
             animate={{ 
               rotate: [0, 360],
-              scale: [1, 1.1, 1]
+              scale: [1, 1.08, 1],
+              opacity: [0.4, 0.6, 0.4]
             }}
             transition={{ 
-              duration: 30, 
+              duration: 45, 
               repeat: Infinity, 
               ease: "linear" 
             }}
-            className="absolute top-20 right-20 w-24 h-24 opacity-6"
+            className="absolute top-20 right-20 w-40 h-40 opacity-5"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10c16.569 0 30 13.431 30 30s-13.431 30-30 30S10 56.569 10 40 23.431 10 40 10z' fill='none' stroke='%23B8860B' stroke-width='2'/%3E%3Cpath d='M40 25c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23B8860B' fill-opacity='0.3'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 10c27.614 0 50 22.386 50 50s-22.386 50-50 50S10 87.614 10 60 32.386 10 60 10z' fill='none' stroke='%23B8860B' stroke-width='2'/%3E%3Cpath d='M60 25c19.33 0 35 15.67 35 35s-15.67 35-35 35-35-15.67-35-35 15.67-35 35-35z' fill='%23A0522D' fill-opacity='0.15'/%3E%3Cpath d='M60 40c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23B8860B' fill-opacity='0.25'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23B8860B' fill-opacity='0.3'/%3E%3C/svg%3E")`,
+            }}
+          />
+          
+          <motion.div
+            animate={{ 
+              rotate: [360, 0],
+              y: [0, -20, 0],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ 
+              duration: 35, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="absolute bottom-24 left-16 w-32 h-32 opacity-4"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 5c24.853 0 45 20.147 45 45S74.853 95 50 95 5 74.853 5 50 25.147 5 50 5z' fill='none' stroke='%23A0522D' stroke-width='1.5'/%3E%3Cpath d='M50 20c16.569 0 30 13.431 30 30s-13.431 30-30 30-30-13.431-30-30 13.431-30 30-30z' fill='%23B8860B' fill-opacity='0.2'/%3E%3C/svg%3E")`,
             }}
           />
           
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-            {/* Enhanced Section Header */}
+            {/* Editorial Header with Luxury Typography */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               viewport={{ once: true }}
-              className="text-center max-w-5xl mx-auto mb-20"
+              className="text-center max-w-6xl mx-auto mb-24"
             >
-              <div className="flex items-center justify-center gap-6 mb-8">
-                <div className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.25em]">
+              <div className="flex items-center justify-center gap-8 mb-10">
+                <motion.div 
+                  className="w-28 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  transition={{ duration: 1.5, delay: 0.3 }}
+                  viewport={{ once: true }}
+                />
+                <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.35em] relative">
                   Our Promise
+                  <motion.div
+                    className="absolute -bottom-2 left-0 right-0 h-px bg-accent-color/40"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    transition={{ duration: 1, delay: 0.8 }}
+                    viewport={{ once: true }}
+                  />
                 </span>
-                <div className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+                <motion.div 
+                  className="w-28 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  transition={{ duration: 1.5, delay: 0.3 }}
+                  viewport={{ once: true }}
+                />
               </div>
               
-              <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-8 leading-tight">
-                The Kalamkari Promise
-              </h2>
+              <motion.h2 
+                className="font-heading text-5xl md:text-6xl lg:text-7xl text-foreground mb-10 leading-[0.85] tracking-tight font-light"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, delay: 0.4 }}
+                viewport={{ once: true }}
+              >
+                The Kalamkari
+                <span className="block text-primary font-normal italic mt-2">Promise</span>
+              </motion.h2>
               
-              <p className="font-paragraph text-lg md:text-xl text-foreground/80 leading-relaxed max-w-4xl mx-auto">
+              <motion.p 
+                className="font-paragraph text-xl md:text-2xl text-foreground/80 leading-relaxed max-w-5xl mx-auto font-light"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, delay: 0.6 }}
+                viewport={{ once: true }}
+              >
                 We are committed to delivering not just a product, but an experience steeped in authenticity, quality, and respect for tradition. Every purchase supports artisan families and preserves cultural heritage.
-              </p>
+              </motion.p>
             </motion.div>
 
-            {/* Promise Cards with Gold Icons and Count-up */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-16">
+            {/* Luxury Tactile Promise Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16 mb-20">
               {whyChooseUsItems.map((item, index) => (
-                <motion.div
+                <motion.article
                   key={index}
-                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 60, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.8, delay: index * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ duration: 1, delay: index * 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
                   viewport={{ once: true }}
                   className="group relative"
                 >
-                  {/* Enhanced Hover Glow Effect */}
-                  <div className="absolute -inset-4 bg-gradient-to-r from-accent-color/15 via-primary/15 to-accent-color/15 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-700 blur-2xl"></div>
+                  {/* Sophisticated Hover Glow */}
+                  <motion.div 
+                    className="absolute -inset-6 bg-gradient-to-r from-accent-color/10 via-primary/10 to-accent-color/10 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-all duration-1000 blur-2xl"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.8 }}
+                  />
                   
-                  {/* Promise Card */}
+                  {/* Tactile Card Container */}
                   <motion.div
-                    whileHover={{ y: -12, scale: 1.03 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="relative bg-white/95 backdrop-blur-md rounded-3xl p-8 lg:p-10 shadow-xl hover:shadow-3xl transition-all duration-700 border border-white/60 group-hover:border-accent-color/30"
+                    whileHover={{ y: -16, scale: 1.03 }}
+                    transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="relative bg-white/96 backdrop-blur-xl rounded-[2rem] p-10 lg:p-12 shadow-2xl hover:shadow-3xl transition-all duration-700 border border-white/70 group-hover:border-accent-color/30 overflow-hidden"
                   >
-                    {/* Gold Icon Container */}
+                    {/* Kalamkari Motif on Card */}
+                    <div className="absolute top-0 right-0 w-24 h-24 opacity-3 pointer-events-none"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='96' height='96' viewBox='0 0 96 96' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M48 24c13.255 0 24 10.745 24 24s-10.745 24-24 24-24-10.745-24-24 10.745-24 24-24z'/%3E%3Cpath d='M48 36c6.627 0 12 5.373 12 12s-5.373 12-12 12-12-5.373-12-12 5.373-12 12-12z'/%3E%3C/g%3E%3C/svg%3E")`,
+                      }}
+                    />
+                    
+                    {/* Luxury Gold Icon Container */}
                     <motion.div 
-                      className="flex items-center justify-center w-24 h-24 mx-auto mb-8 relative"
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      transition={{ duration: 0.3 }}
+                      className="flex items-center justify-center w-28 h-28 mx-auto mb-10 relative"
+                      whileHover={{ scale: 1.15, rotate: 8 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
                     >
-                      {/* Gold Background with Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/20 via-accent-color/30 to-accent-color/20 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-500"></div>
-                      <div className="absolute inset-1 bg-gradient-to-br from-accent-color/10 to-transparent rounded-xl"></div>
+                      {/* Multi-layered Gold Background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/25 via-accent-color/35 to-accent-color/25 rounded-3xl shadow-xl group-hover:shadow-2xl transition-all duration-700"></div>
+                      <div className="absolute inset-2 bg-gradient-to-br from-accent-color/15 via-white/20 to-transparent rounded-2xl"></div>
+                      <div className="absolute inset-4 bg-gradient-to-br from-white/30 to-transparent rounded-xl"></div>
                       
-                      {/* Icon with Gold Color */}
-                      <item.icon className="w-12 h-12 text-accent-color relative z-10 drop-shadow-sm" />
+                      {/* Icon with Enhanced Gold Styling */}
+                      <item.icon className="w-14 h-14 text-accent-color relative z-10 drop-shadow-lg" />
                       
-                      {/* Subtle Shimmer Effect */}
+                      {/* Luxury Shimmer Effect */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-2xl"
-                        animate={{ x: [-100, 100] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-3xl"
+                        animate={{ x: [-120, 120] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                       />
                     </motion.div>
                     
-                    {/* Content */}
-                    <h3 className="font-heading text-xl lg:text-2xl text-foreground mb-6 text-center leading-tight group-hover:text-primary transition-colors duration-300">
+                    {/* Editorial Content */}
+                    <motion.h3 
+                      className="font-heading text-2xl lg:text-3xl text-foreground mb-8 text-center leading-tight group-hover:text-primary transition-colors duration-500 font-light tracking-tight"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: index * 0.3 + 0.2 }}
+                      viewport={{ once: true }}
+                    >
                       {item.title}
-                    </h3>
+                    </motion.h3>
                     
-                    <p className="font-paragraph text-base text-foreground/75 leading-relaxed text-center mb-8">
+                    <motion.p 
+                      className="font-paragraph text-lg text-foreground/75 leading-relaxed text-center mb-10 font-light"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: index * 0.3 + 0.4 }}
+                      viewport={{ once: true }}
+                    >
                       {item.description}
-                    </p>
+                    </motion.p>
                     
-                    {/* Count-up Highlight Badge */}
+                    {/* Count-up Highlight Badge with Editorial Styling */}
                     <div className="text-center">
                       <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: index * 0.3 + 0.5 }}
+                        transition={{ duration: 0.8, delay: index * 0.3 + 0.6 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-color/15 via-accent-color/20 to-accent-color/15 text-primary rounded-full border border-accent-color/30 shadow-lg group-hover:shadow-xl transition-all duration-500"
+                        className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-accent-color/12 via-accent-color/18 to-accent-color/12 text-primary rounded-2xl border border-accent-color/25 shadow-lg group-hover:shadow-xl transition-all duration-700 backdrop-blur-sm"
                       >
-                        <Sparkles className="w-4 h-4 text-accent-color mr-2" />
-                        <span className="font-semibold text-sm">
+                        <Sparkles className="w-5 h-5 text-accent-color mr-3" />
+                        <span className="font-heading font-light text-base tracking-wide">
                           {index === 0 && (
                             <>
                               <CountUpNumber 
                                 end={500} 
-                                duration={2000}
-                                className="font-bold"
+                                duration={2500}
+                                className="font-medium text-lg"
                                 suffix="+ "
                               />
                               Years Heritage
@@ -2539,8 +2700,8 @@ export default function HomePage() {
                             <>
                               <CountUpNumber 
                                 end={100} 
-                                duration={2000}
-                                className="font-bold"
+                                duration={2500}
+                                className="font-medium text-lg"
                                 suffix="% "
                               />
                               Natural & Sustainable
@@ -2550,8 +2711,8 @@ export default function HomePage() {
                             <>
                               <CountUpNumber 
                                 end={200} 
-                                duration={2000}
-                                className="font-bold"
+                                duration={2500}
+                                className="font-medium text-lg"
                                 suffix="+ "
                               />
                               Artisan Families
@@ -2561,79 +2722,79 @@ export default function HomePage() {
                       </motion.div>
                     </div>
                   </motion.div>
-                </motion.div>
+                </motion.article>
               ))}
             </div>
 
-            {/* Enhanced Trust Indicators with Count-up */}
+            {/* Enhanced Stats Row with Count-up and Editorial Feel */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 1, delay: 0.8 }}
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16 text-foreground/70">
+              <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-20">
                 <motion.div 
-                  className="flex items-center gap-4"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-6 group"
+                  whileHover={{ scale: 1.08, y: -4 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400/20 to-amber-400/10 rounded-xl flex items-center justify-center">
-                    <Star className="w-6 h-6 fill-amber-400 text-amber-400 drop-shadow-sm" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-amber-400/20 via-amber-400/30 to-amber-400/20 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500">
+                    <Star className="w-8 h-8 fill-amber-400 text-amber-400 drop-shadow-md" />
                   </div>
                   <div className="text-left">
-                    <div className="font-heading font-bold text-xl text-primary">
+                    <div className="font-heading font-light text-3xl text-primary tracking-tight">
                       <CountUpNumber 
                         end={4.9} 
-                        duration={2000}
-                        className="font-bold"
+                        duration={2500}
+                        className="font-medium"
                         suffix="/5"
                       />
                     </div>
-                    <span className="font-paragraph text-sm font-medium">Customer Rating</span>
+                    <span className="font-paragraph text-base font-medium text-foreground/70 tracking-wide">Customer Rating</span>
                   </div>
                 </motion.div>
                 
                 <motion.div 
-                  className="flex items-center gap-4"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-6 group"
+                  whileHover={{ scale: 1.08, y: -4 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl flex items-center justify-center">
-                    <Scissors className="w-6 h-6 text-primary" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary/20 via-primary/30 to-primary/20 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500">
+                    <Scissors className="w-8 h-8 text-primary" />
                   </div>
                   <div className="text-left">
-                    <div className="font-heading font-bold text-xl text-primary">
+                    <div className="font-heading font-light text-3xl text-primary tracking-tight">
                       <CountUpNumber 
                         end={100} 
-                        duration={2000}
-                        className="font-bold"
+                        duration={2500}
+                        className="font-medium"
                         suffix="%"
                       />
                     </div>
-                    <span className="font-paragraph text-sm font-medium">Handcrafted</span>
+                    <span className="font-paragraph text-base font-medium text-foreground/70 tracking-wide">Handcrafted</span>
                   </div>
                 </motion.div>
                 
                 <motion.div 
-                  className="flex items-center gap-4"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-6 group"
+                  whileHover={{ scale: 1.08, y: -4 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-accent-color/20 to-accent-color/10 rounded-xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-accent-color" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-accent-color/20 via-accent-color/30 to-accent-color/20 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500">
+                    <Users className="w-8 h-8 text-accent-color" />
                   </div>
                   <div className="text-left">
-                    <div className="font-heading font-bold text-xl text-primary">
+                    <div className="font-heading font-light text-3xl text-primary tracking-tight">
                       <CountUpNumber 
                         end={10000} 
-                        duration={2500}
-                        className="font-bold"
+                        duration={3000}
+                        className="font-medium"
                         suffix="+"
                       />
                     </div>
-                    <span className="font-paragraph text-sm font-medium">Happy Customers</span>
+                    <span className="font-paragraph text-base font-medium text-foreground/70 tracking-wide">Happy Customers</span>
                   </div>
                 </motion.div>
               </div>
