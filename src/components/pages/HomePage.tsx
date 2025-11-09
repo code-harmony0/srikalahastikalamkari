@@ -52,7 +52,7 @@ export default function HomePage() {
   const [promotions, setPromotions] = useState<Promotions[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [textColor, setTextColor] = useState('text-white');
+  const [textColor] = useState('text-white'); // Fixed to white for maximum clarity
   const galleryScrollRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroControls = useAnimation();
@@ -117,18 +117,6 @@ export default function HomePage() {
 
     fetchData();
   }, []);
-
-  // Adaptive text color based on background brightness
-  useEffect(() => {
-    const currentImage = heroBackgroundImages[currentImageIndex];
-    if (currentImage.brightness === 'light') {
-      setTextColor('text-gray-900');
-    } else if (currentImage.brightness === 'dark') {
-      setTextColor('text-white');
-    } else {
-      setTextColor('text-gray-100');
-    }
-  }, [currentImageIndex]);
 
   // Enhanced background image carousel with smoother transitions
   useEffect(() => {
@@ -314,14 +302,15 @@ export default function HomePage() {
           }
         }
 
-        /* Premium Typography with Perfect Visibility */
+        /* Premium Typography with Maximum Clarity - All White Text */
         .luxury-headline {
           font-family: 'Cormorant Garamond', serif;
           font-weight: 300;
+          color: #ffffff !important;
           text-shadow: 
-            0 2px 8px rgba(0, 0, 0, 0.8),
-            0 4px 16px rgba(0, 0, 0, 0.6),
-            0 8px 24px rgba(0, 0, 0, 0.4);
+            0 3px 12px rgba(0, 0, 0, 0.9),
+            0 6px 24px rgba(0, 0, 0, 0.7),
+            0 12px 36px rgba(0, 0, 0, 0.5);
           letter-spacing: -0.02em;
           line-height: 0.85;
           animation: gsapHeadlineEntrance 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -345,37 +334,16 @@ export default function HomePage() {
           }
         }
 
-        /* Adaptive Text Color Classes */
-        .adaptive-text-light {
-          color: #1a1a1a;
-          text-shadow: 
-            0 1px 3px rgba(255, 255, 255, 0.8),
-            0 2px 6px rgba(255, 255, 255, 0.6);
-        }
-
-        .adaptive-text-dark {
-          color: #ffffff;
-          text-shadow: 
-            0 2px 8px rgba(0, 0, 0, 0.8),
-            0 4px 16px rgba(0, 0, 0, 0.6);
-        }
-
-        .adaptive-text-medium {
-          color: #f5f5f5;
-          text-shadow: 
-            0 2px 6px rgba(0, 0, 0, 0.7),
-            0 4px 12px rgba(0, 0, 0, 0.5);
-        }
-
         .luxury-tagline {
           font-family: 'Cormorant Garamond', serif;
           font-style: italic;
           font-weight: 300;
-          color: #e5e5e5;
+          color: #ffffff !important;
           letter-spacing: 0.01em;
           text-shadow: 
-            0 1px 4px rgba(0, 0, 0, 0.6),
-            0 2px 8px rgba(0, 0, 0, 0.4);
+            0 2px 8px rgba(0, 0, 0, 0.8),
+            0 4px 16px rgba(0, 0, 0, 0.6),
+            0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
         /* Enhanced Button Styles */
@@ -1559,9 +1527,9 @@ export default function HomePage() {
               <div className="cinematic-divider"></div>
             </motion.div>
 
-            {/* Enhanced Headlines with Adaptive Text Color */}
+            {/* Enhanced Headlines with Fixed White Text Color */}
             <motion.h1
-              className={`luxury-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl ${textColor} leading-[0.85] tracking-tight mb-10 md:mb-12`}
+              className={`luxury-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[0.85] tracking-tight mb-10 md:mb-12`}
             >
               <motion.span 
                 initial={{ opacity: 0, y: 120 }}
@@ -1571,7 +1539,7 @@ export default function HomePage() {
                   delay: 1.2,
                   ease: [0.25, 0.46, 0.45, 0.94]
                 }}
-                className={`block ${textColor}`}
+                className="block text-white"
               >
                 Kalamkari
               </motion.span>
@@ -1583,13 +1551,13 @@ export default function HomePage() {
                   delay: 1.6,
                   ease: [0.25, 0.46, 0.45, 0.94]
                 }}
-                className={`block ${textColor} font-light`}
+                className="block text-white font-light"
               >
                 Heritage
               </motion.span>
             </motion.h1>
 
-            {/* Enhanced Tagline with Perfect Visibility */}
+            {/* Enhanced Tagline with Fixed White Text */}
             <motion.div
               initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1600,7 +1568,7 @@ export default function HomePage() {
               }}
               className="mb-16 md:mb-18"
             >
-              <p className="luxury-tagline text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto text-center">
+              <p className="luxury-tagline text-white text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto text-center">
                 "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
               </p>
             </motion.div>
