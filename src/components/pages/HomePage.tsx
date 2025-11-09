@@ -269,20 +269,7 @@ export default function HomePage() {
           font-family: 'Cormorant Garamond', serif;
           font-style: italic;
           font-weight: 300;
-          background: linear-gradient(
-            135deg,
-            #B8860B 0%,
-            #DAA520 25%,
-            #FFD700 50%,
-            #DAA520 75%,
-            #B8860B 100%
-          );
-          background-size: 200% 200%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: luxuryGoldFlow 12s ease-in-out infinite;
-          text-shadow: 0 1px 3px rgba(184, 134, 11, 0.2);
+          color: #666666;
           letter-spacing: 0.01em;
         }
 
@@ -300,10 +287,6 @@ export default function HomePage() {
         /* Enhanced Button Styles with Luxury Feel */
         .luxury-primary-button {
           background: linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #654321 100%);
-          box-shadow: 
-            0 8px 32px rgba(160, 82, 45, 0.4),
-            0 4px 16px rgba(0, 0, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
           border: 1px solid rgba(255, 255, 255, 0.2);
           backdrop-filter: blur(20px);
           transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -333,10 +316,6 @@ export default function HomePage() {
 
         .luxury-primary-button:hover {
           background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
-          box-shadow: 
-            0 8px 32px rgba(160, 82, 45, 0.4),
-            0 4px 16px rgba(0, 0, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
           transform: translateY(-3px) scale(1.02);
         }
 
@@ -344,18 +323,12 @@ export default function HomePage() {
           background: rgba(255, 255, 255, 0.15);
           backdrop-filter: blur(30px);
           border: 2px solid rgba(255, 255, 255, 0.3);
-          box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
           transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .luxury-secondary-button:hover {
           background: rgba(255, 255, 255, 0.25);
           border-color: rgba(51, 51, 51, 0.4);
-          box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
           transform: translateY(-3px) scale(1.02);
         }
 
@@ -1251,7 +1224,7 @@ export default function HomePage() {
               }}
               className="mb-16 md:mb-18 fade-in-delayed"
             >
-              <p className="luxury-tagline text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto text-center text-shadow-soft">
+              <p className="luxury-tagline text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto text-center">
                 "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
               </p>
             </motion.div>
@@ -1275,7 +1248,7 @@ export default function HomePage() {
                 >
                   <Button 
                     size="lg" 
-                    className="luxury-primary-button text-white px-10 py-5 text-lg font-medium rounded-2xl w-full h-16 text-shadow-soft"
+                    className="luxury-primary-button text-white px-10 py-5 text-lg font-medium rounded-2xl w-full h-16"
                     aria-label="Explore our Kalamkari saree collection"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
@@ -1300,7 +1273,7 @@ export default function HomePage() {
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="luxury-secondary-button text-foreground px-10 py-5 text-lg font-medium rounded-2xl w-full h-16 text-shadow-soft"
+                    className="luxury-secondary-button text-foreground px-10 py-5 text-lg font-medium rounded-2xl w-full h-16"
                     aria-label="Learn about our heritage story"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
