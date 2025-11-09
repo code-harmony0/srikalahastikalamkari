@@ -2216,84 +2216,193 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Promotions Section */}
+        {/* Seasonal Offerings Section - Modern Horizontal Cards with Parallax */}
         {promotions.length > 0 && (
-          <section className="w-full py-16 md:py-20 bg-background relative">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
-              <AnimatedElement>
-                <div className="mb-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                    className="flex items-center gap-3 mb-3"
-                  >
-                    <div className="w-1 h-6 bg-accent-color rounded-full"></div>
-                    <span className="font-paragraph text-xs font-semibold text-accent-color uppercase tracking-widest">Limited Time</span>
-                  </motion.div>
-                  <h2 className="font-heading text-3xl md:text-4xl text-foreground mb-3">Seasonal Offerings</h2>
+          <section className="w-full py-20 md:py-28 bg-gradient-to-br from-background via-secondary/5 to-background relative overflow-hidden">
+            {/* Parallax Background Elements */}
+            <motion.div 
+              className="absolute inset-0 opacity-3"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M50 50c13.807 0 25-11.193 25-25S63.807 0 50 0 25 11.193 25 25s11.193 25 25 25z'/%3E%3Cpath d='M50 35c8.284 0 15-6.716 15-15s-6.716-15-15-15-15 6.716-15 15 6.716 15 15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
+            
+            <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+              {/* Enhanced Section Header */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+              >
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+                  <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.2em]">
+                    Limited Time
+                  </span>
+                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
                 </div>
-              </AnimatedElement>
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                
+                <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
+                  Seasonal Offerings
+                </h2>
+                
+                <p className="font-paragraph text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
+                  Discover our curated seasonal collections featuring exclusive designs and limited-edition pieces that celebrate the artistry of each season.
+                </p>
+              </motion.div>
+
+              {/* Modern Horizontal Cards Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 {promotions[0] && (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
+                    initial={{ opacity: 0, x: -50, scale: 0.95 }}
+                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                    transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
                     viewport={{ once: true }}
-                    className="lg:col-span-3"
+                    className="group"
                   >
-                    <a href={promotions[0].callToActionUrl} className="group relative block overflow-hidden h-[350px] rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                      <Image
-                        src={promotions[0].bannerImage || "https://static.wixstatic.com/media/07221c_a7a400975312440d932b7a737b5ebebf~mv2.png?originWidth=896&originHeight=448"}
-                        alt={promotions[0].title || 'Seasonal Promotion'}
-                        className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                        width={600}
-                        height={350}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileHover={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute bottom-0 left-0 p-6 md:p-8 text-primary-foreground w-full"
-                      >
-                        <h3 className="font-heading text-2xl md:text-3xl mb-2 font-bold text-white drop-shadow-lg">{promotions[0].title}</h3>
-                        <p className="font-paragraph text-sm md:text-base max-w-md mb-4 text-white/95 drop-shadow-md">{promotions[0].description}</p>
-                        <Button size="sm" className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold rounded-sm shadow-lg text-sm">Shop Now</Button>
-                      </motion.div>
-                    </a>
+                    <motion.div
+                      whileHover={{ y: -8, scale: 1.02 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/90 backdrop-blur-sm"
+                    >
+                      {/* Parallax Image Container */}
+                      <div className="relative h-[400px] md:h-[450px] overflow-hidden">
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          transition={{ duration: 0.7, ease: "easeOut" }}
+                          className="w-full h-full"
+                        >
+                          <Image
+                            src={promotions[0].bannerImage || "https://static.wixstatic.com/media/07221c_a7a400975312440d932b7a737b5ebebf~mv2.png?originWidth=896&originHeight=448"}
+                            alt={promotions[0].title || 'Seasonal Promotion'}
+                            className="w-full h-full object-cover"
+                            width={700}
+                            height={450}
+                          />
+                        </motion.div>
+                        
+                        {/* Enhanced Hover Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                        
+                        {/* Floating Content */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.8, delay: 0.3 }}
+                          viewport={{ once: true }}
+                          className="absolute bottom-0 left-0 right-0 p-8 md:p-10 text-white"
+                        >
+                          <motion.h3 
+                            className="font-heading text-3xl md:text-4xl mb-4 font-bold text-white drop-shadow-lg leading-tight"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {promotions[0].title}
+                          </motion.h3>
+                          
+                          <p className="font-paragraph text-base md:text-lg mb-6 text-white/95 drop-shadow-md leading-relaxed max-w-md">
+                            {promotions[0].description}
+                          </p>
+                          
+                          {/* Clear CTA */}
+                          <motion.div
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Button 
+                              size="lg" 
+                              className="h-12 px-8 text-base rounded-2xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground font-semibold group transition-all duration-400 shadow-lg hover:shadow-xl border-0"
+                              asChild
+                            >
+                              <a href={promotions[0].callToActionUrl}>
+                                Shop Collection
+                                <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1"/>
+                              </a>
+                            </Button>
+                          </motion.div>
+                        </motion.div>
+                      </div>
+                    </motion.div>
                   </motion.div>
                 )}
+
                 {promotions[1] && (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
+                    initial={{ opacity: 0, x: 50, scale: 0.95 }}
+                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                    transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                     viewport={{ once: true }}
-                    className="lg:col-span-2"
+                    className="group"
                   >
-                    <a href={promotions[1].callToActionUrl} className="group relative block overflow-hidden h-[350px] bg-secondary/30 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                      <Image
-                        src={promotions[1].bannerImage || "https://static.wixstatic.com/media/07221c_13a941c0dfd84492b785af619b1d7ae3~mv2.png?originWidth=896&originHeight=448"}
-                        alt={promotions[1].title || 'Special Offer'}
-                        className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                        width={400}
-                        height={350}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileHover={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute bottom-0 left-0 p-6 text-primary-foreground w-full"
-                      >
-                        <h3 className="font-heading text-xl md:text-2xl mb-2 font-bold text-white drop-shadow-lg">{promotions[1].title}</h3>
-                        <p className="font-paragraph text-sm mb-3 text-white/95 drop-shadow-md">{promotions[1].description}</p>
-                        <Button variant="secondary" className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold rounded-sm shadow-lg text-sm">Explore</Button>
-                      </motion.div>
-                    </a>
+                    <motion.div
+                      whileHover={{ y: -8, scale: 1.02 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/90 backdrop-blur-sm"
+                    >
+                      {/* Parallax Image Container */}
+                      <div className="relative h-[400px] md:h-[450px] overflow-hidden">
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          transition={{ duration: 0.7, ease: "easeOut" }}
+                          className="w-full h-full"
+                        >
+                          <Image
+                            src={promotions[1].bannerImage || "https://static.wixstatic.com/media/07221c_13a941c0dfd84492b785af619b1d7ae3~mv2.png?originWidth=896&originHeight=448"}
+                            alt={promotions[1].title || 'Special Offer'}
+                            className="w-full h-full object-cover"
+                            width={700}
+                            height={450}
+                          />
+                        </motion.div>
+                        
+                        {/* Enhanced Hover Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                        
+                        {/* Floating Content */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.8, delay: 0.5 }}
+                          viewport={{ once: true }}
+                          className="absolute bottom-0 left-0 right-0 p-8 md:p-10 text-white"
+                        >
+                          <motion.h3 
+                            className="font-heading text-3xl md:text-4xl mb-4 font-bold text-white drop-shadow-lg leading-tight"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {promotions[1].title}
+                          </motion.h3>
+                          
+                          <p className="font-paragraph text-base md:text-lg mb-6 text-white/95 drop-shadow-md leading-relaxed max-w-md">
+                            {promotions[1].description}
+                          </p>
+                          
+                          {/* Clear CTA */}
+                          <motion.div
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Button 
+                              variant="outline"
+                              size="lg" 
+                              className="h-12 px-8 text-base rounded-2xl border-2 border-white/80 hover:bg-white/20 hover:border-white text-white font-semibold transition-all duration-400 backdrop-blur-md bg-white/10 shadow-lg hover:shadow-xl"
+                              asChild
+                            >
+                              <a href={promotions[1].callToActionUrl}>
+                                Explore Offers
+                                <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1"/>
+                              </a>
+                            </Button>
+                          </motion.div>
+                        </motion.div>
+                      </div>
+                    </motion.div>
                   </motion.div>
                 )}
               </div>
@@ -2301,98 +2410,232 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* Why Choose Us Section - Premium Value Proposition */}
-        <section className="w-full py-20 md:py-28 bg-gradient-to-b from-background to-secondary/15 relative overflow-hidden">
-          <div className="absolute inset-0 heritage-texture opacity-20"></div>
-          <DecorativePattern className="text-primary/3 premium-shimmer heritage-float" animated={true} />
+        {/* The Kalamkari Promise Section - Promise Cards with Gold Icons */}
+        <section className="w-full py-20 md:py-28 bg-gradient-to-br from-background via-secondary/8 to-background relative overflow-hidden">
+          {/* Enhanced Background Pattern */}
+          <motion.div 
+            className="absolute inset-0 opacity-4"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B8860B' fill-opacity='0.08'%3E%3Cpath d='M60 60c16.569 0 30-13.431 30-30S76.569 0 60 0 30 13.431 30 30s13.431 30 30 30z'/%3E%3Cpath d='M60 45c8.284 0 15-6.716 15-15s-6.716-15-15-15-15 6.716-15 15 6.716 15 15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+          
+          {/* Floating Gold Accent Elements */}
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              duration: 30, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+            className="absolute top-20 right-20 w-24 h-24 opacity-6"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10c16.569 0 30 13.431 30 30s-13.431 30-30 30S10 56.569 10 40 23.431 10 40 10z' fill='none' stroke='%23B8860B' stroke-width='2'/%3E%3Cpath d='M40 25c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23B8860B' fill-opacity='0.3'/%3E%3C/svg%3E")`,
+            }}
+          />
           
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-            <AnimatedElement className="text-center max-w-4xl mx-auto mb-20">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex items-center justify-center gap-4 mb-8">
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                  <span className="font-paragraph text-sm font-semibold text-accent-color uppercase tracking-[0.2em]">
-                    Why Choose Us
-                  </span>
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                </div>
-                
-                <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
-                  The Kalamkari Promise
-                </h2>
-                
-                <p className="font-paragraph text-lg md:text-xl text-foreground/80 leading-relaxed">
-                  We are committed to delivering not just a product, but an experience steeped in authenticity, quality, and respect for tradition. Every purchase supports artisan families and preserves cultural heritage.
-                </p>
-              </motion.div>
-            </AnimatedElement>
+            {/* Enhanced Section Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              viewport={{ once: true }}
+              className="text-center max-w-5xl mx-auto mb-20"
+            >
+              <div className="flex items-center justify-center gap-6 mb-8">
+                <div className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+                <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.25em]">
+                  Our Promise
+                </span>
+                <div className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+              </div>
+              
+              <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-8 leading-tight">
+                The Kalamkari Promise
+              </h2>
+              
+              <p className="font-paragraph text-lg md:text-xl text-foreground/80 leading-relaxed max-w-4xl mx-auto">
+                We are committed to delivering not just a product, but an experience steeped in authenticity, quality, and respect for tradition. Every purchase supports artisan families and preserves cultural heritage.
+              </p>
+            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            {/* Promise Cards with Gold Icons and Count-up */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-16">
               {whyChooseUsItems.map((item, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.2 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.8, delay: index * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                   viewport={{ once: true }}
-                  className="relative group"
+                  className="group relative"
                 >
-                  {/* Hover Glow Effect */}
-                  <div className="absolute -inset-2 bg-gradient-to-r from-accent-color/20 via-primary/20 to-accent-color/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-700 blur-xl"></div>
+                  {/* Enhanced Hover Glow Effect */}
+                  <div className="absolute -inset-4 bg-gradient-to-r from-accent-color/15 via-primary/15 to-accent-color/15 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-700 blur-2xl"></div>
                   
-                  {/* Card Content */}
-                  <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-2xl transition-all duration-500 transform group-hover:-translate-y-4 border border-white/50">
-                    {/* Icon */}
-                    <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-accent-color/20 to-primary/20 rounded-2xl mb-6 mx-auto group-hover:scale-110 transition-transform duration-300">
-                      <item.icon className="w-10 h-10 text-primary" />
-                    </div>
+                  {/* Promise Card */}
+                  <motion.div
+                    whileHover={{ y: -12, scale: 1.03 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="relative bg-white/95 backdrop-blur-md rounded-3xl p-8 lg:p-10 shadow-xl hover:shadow-3xl transition-all duration-700 border border-white/60 group-hover:border-accent-color/30"
+                  >
+                    {/* Gold Icon Container */}
+                    <motion.div 
+                      className="flex items-center justify-center w-24 h-24 mx-auto mb-8 relative"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {/* Gold Background with Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/20 via-accent-color/30 to-accent-color/20 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-500"></div>
+                      <div className="absolute inset-1 bg-gradient-to-br from-accent-color/10 to-transparent rounded-xl"></div>
+                      
+                      {/* Icon with Gold Color */}
+                      <item.icon className="w-12 h-12 text-accent-color relative z-10 drop-shadow-sm" />
+                      
+                      {/* Subtle Shimmer Effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-2xl"
+                        animate={{ x: [-100, 100] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                    </motion.div>
                     
                     {/* Content */}
-                    <h3 className="font-heading text-xl lg:text-2xl text-foreground mb-4 text-center leading-tight">
+                    <h3 className="font-heading text-xl lg:text-2xl text-foreground mb-6 text-center leading-tight group-hover:text-primary transition-colors duration-300">
                       {item.title}
                     </h3>
                     
-                    <p className="font-paragraph text-base text-foreground/70 leading-relaxed text-center mb-6">
+                    <p className="font-paragraph text-base text-foreground/75 leading-relaxed text-center mb-8">
                       {item.description}
                     </p>
                     
-                    {/* Highlight Badge */}
+                    {/* Count-up Highlight Badge */}
                     <div className="text-center">
-                      <span className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-accent-color/10 to-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20">
-                        ✨ {item.highlight}
-                      </span>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, delay: index * 0.3 + 0.5 }}
+                        viewport={{ once: true }}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-color/15 via-accent-color/20 to-accent-color/15 text-primary rounded-full border border-accent-color/30 shadow-lg group-hover:shadow-xl transition-all duration-500"
+                      >
+                        <Sparkles className="w-4 h-4 text-accent-color mr-2" />
+                        <span className="font-semibold text-sm">
+                          {index === 0 && (
+                            <>
+                              <CountUpNumber 
+                                end={500} 
+                                duration={2000}
+                                className="font-bold"
+                                suffix="+ "
+                              />
+                              Years Heritage
+                            </>
+                          )}
+                          {index === 1 && (
+                            <>
+                              <CountUpNumber 
+                                end={100} 
+                                duration={2000}
+                                className="font-bold"
+                                suffix="% "
+                              />
+                              Natural & Sustainable
+                            </>
+                          )}
+                          {index === 2 && (
+                            <>
+                              <CountUpNumber 
+                                end={200} 
+                                duration={2000}
+                                className="font-bold"
+                                suffix="+ "
+                              />
+                              Artisan Families
+                            </>
+                          )}
+                        </span>
+                      </motion.div>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Trust Indicators */}
+            {/* Enhanced Trust Indicators with Count-up */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
               viewport={{ once: true }}
-              className="mt-20 text-center"
+              className="text-center"
             >
-              <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 text-foreground/70">
-                <div className="flex items-center gap-3">
-                  <Star className="w-6 h-6 fill-amber-400 text-amber-400 drop-shadow-sm" />
-                  <span className="font-paragraph text-sm lg:text-base font-semibold">4.9/5 Customer Rating</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Scissors className="w-6 h-6 text-primary" />
-                  <span className="font-paragraph text-sm lg:text-base font-semibold">Handcrafted Excellence</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Users className="w-6 h-6 text-primary" />
-                  <span className="font-paragraph text-sm lg:text-base font-semibold">10,000+ Happy Customers</span>
-                </div>
+              <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16 text-foreground/70">
+                <motion.div 
+                  className="flex items-center gap-4"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400/20 to-amber-400/10 rounded-xl flex items-center justify-center">
+                    <Star className="w-6 h-6 fill-amber-400 text-amber-400 drop-shadow-sm" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-heading font-bold text-xl text-primary">
+                      <CountUpNumber 
+                        end={4.9} 
+                        duration={2000}
+                        className="font-bold"
+                        suffix="/5"
+                      />
+                    </div>
+                    <span className="font-paragraph text-sm font-medium">Customer Rating</span>
+                  </div>
+                </motion.div>
+                
+                <motion.div 
+                  className="flex items-center gap-4"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl flex items-center justify-center">
+                    <Scissors className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-heading font-bold text-xl text-primary">
+                      <CountUpNumber 
+                        end={100} 
+                        duration={2000}
+                        className="font-bold"
+                        suffix="%"
+                      />
+                    </div>
+                    <span className="font-paragraph text-sm font-medium">Handcrafted</span>
+                  </div>
+                </motion.div>
+                
+                <motion.div 
+                  className="flex items-center gap-4"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="w-12 h-12 bg-gradient-to-br from-accent-color/20 to-accent-color/10 rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-accent-color" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-heading font-bold text-xl text-primary">
+                      <CountUpNumber 
+                        end={10000} 
+                        duration={2500}
+                        className="font-bold"
+                        suffix="+"
+                      />
+                    </div>
+                    <span className="font-paragraph text-sm font-medium">Happy Customers</span>
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
           </div>
