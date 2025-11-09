@@ -64,14 +64,11 @@ export default function HomePage() {
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Background carousel images
+  // Premium fabric background images - Modern luxury textures
   const heroBackgroundImages = [
-    'https://static.wixstatic.com/media/07221c_0d3b35026e9e4ff69cf759cd73cd2282~mv2.png?originWidth=1920&originHeight=1024',
-    "https://static.wixstatic.com/media/07221c_15fd999951a443999835d74bf92fb898~mv2.png?originWidth=256&originHeight=384",
-    "https://static.wixstatic.com/media/07221c_3d36b8d683e2438d894f2d49c2a94bc8~mv2.png?originWidth=256&originHeight=384",
-    "https://static.wixstatic.com/media/07221c_a78b35baed0346338ef87d17c80ad1ac~mv2.png?originWidth=256&originHeight=384",
-    "https://static.wixstatic.com/media/07221c_368c4f27dd3c4eed8474a970c9f26427~mv2.png?originWidth=256&originHeight=384",
-    "https://static.wixstatic.com/media/07221c_65523ec270d249ed8d41b15d97b29b87~mv2.png?originWidth=256&originHeight=384"
+    'https://static.wixstatic.com/media/07221c_8c254152d05448f6aa62d467927e2aa6~mv2.png?originWidth=1920&originHeight=1024',
+    'https://static.wixstatic.com/media/07221c_4c0a4ef13532467c93fb6e3df790e585~mv2.png?originWidth=1920&originHeight=1024',
+    'https://static.wixstatic.com/media/07221c_5c00fac85f3a4402aac0dbb6d9cfabdb~mv2.png?originWidth=1920&originHeight=1024'
   ];
 
   useEffect(() => {
@@ -97,13 +94,13 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  // Background image carousel effect
+  // Background image carousel effect - Slower transition for luxury feel
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % heroBackgroundImages.length
       );
-    }, 4000); // Change image every 4 seconds
+    }, 6000); // Change image every 6 seconds for more elegant pacing
 
     return () => clearInterval(interval);
   }, [heroBackgroundImages.length]);
@@ -222,75 +219,254 @@ export default function HomePage() {
           transform: translateY(0);
         }
 
-        /* High-Quality Silk/Kalamkari Fabric Background */
-        .kalamkari-silk-fabric {
+        /* Modern Luxury Fabric Textures with Frosted Glass Effects */
+        .luxury-fabric-overlay {
           background: 
-            /* Kalamkari pattern simulation */
-            radial-gradient(ellipse at 15% 20%, rgba(184, 134, 11, 0.12) 0%, transparent 35%),
-            radial-gradient(ellipse at 85% 80%, rgba(160, 82, 45, 0.08) 0%, transparent 40%),
-            radial-gradient(ellipse at 50% 30%, rgba(139, 69, 19, 0.06) 0%, transparent 45%),
-            /* Silk weave texture */
-            repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 1px,
-              rgba(255, 255, 255, 0.015) 1px,
-              rgba(255, 255, 255, 0.015) 2px
+            /* Frosted glass effect */
+            linear-gradient(
+              135deg,
+              rgba(255, 255, 255, 0.15) 0%,
+              rgba(255, 255, 255, 0.08) 25%,
+              rgba(255, 255, 255, 0.12) 50%,
+              rgba(255, 255, 255, 0.06) 75%,
+              rgba(255, 255, 255, 0.10) 100%
             ),
-            repeating-linear-gradient(
-              90deg,
-              transparent,
-              transparent 1px,
-              rgba(184, 134, 11, 0.01) 1px,
-              rgba(184, 134, 11, 0.01) 2px
-            ),
-            /* Base silk gradient */
-            linear-gradient(135deg, 
-              rgba(245, 245, 220, 0.08) 0%, 
-              rgba(222, 184, 135, 0.12) 25%,
-              rgba(160, 82, 45, 0.06) 50%,
-              rgba(139, 69, 19, 0.08) 75%,
-              rgba(101, 67, 33, 0.04) 100%
+            /* Vignette effect */
+            radial-gradient(
+              ellipse at center,
+              transparent 0%,
+              rgba(0, 0, 0, 0.15) 70%,
+              rgba(0, 0, 0, 0.35) 100%
             );
-          position: relative;
-          animation: silkFabricFlow 25s ease-in-out infinite;
-          z-index: 2;
+          backdrop-filter: blur(2px) saturate(1.2);
+          animation: luxuryFabricFlow 20s ease-in-out infinite;
         }
 
-        @keyframes silkFabricFlow {
+        @keyframes luxuryFabricFlow {
           0%, 100% { 
-            opacity: 0.7; 
+            opacity: 0.9; 
             filter: brightness(1) contrast(1.05) saturate(1.1); 
           }
-          33% { 
-            opacity: 0.8; 
+          50% { 
+            opacity: 0.95; 
             filter: brightness(1.05) contrast(1.08) saturate(1.15); 
-          }
-          66% { 
-            opacity: 0.75; 
-            filter: brightness(1.02) contrast(1.06) saturate(1.12); 
           }
         }
 
-        /* Dark-to-Light Gradient Overlay */
-        .dark-to-light-gradient {
+        /* Premium Typography with Enhanced Readability */
+        .luxury-headline {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          text-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.8),
+            0 4px 16px rgba(0, 0, 0, 0.6),
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            0 1px 2px rgba(255, 255, 255, 0.1);
+          letter-spacing: -0.02em;
+          line-height: 0.85;
+        }
+
+        .luxury-tagline {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
           background: linear-gradient(
-            180deg,
-            rgba(0, 0, 0, 0.85) 0%,
-            rgba(0, 0, 0, 0.65) 15%,
-            rgba(0, 0, 0, 0.45) 35%,
-            rgba(0, 0, 0, 0.25) 55%,
-            rgba(0, 0, 0, 0.15) 75%,
-            rgba(0, 0, 0, 0.05) 90%,
+            135deg,
+            #FFD700 0%,
+            #FFA500 25%,
+            #FF8C00 50%,
+            #DAA520 75%,
+            #B8860B 100%
+          );
+          background-size: 200% 200%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: luxuryGoldFlow 12s ease-in-out infinite;
+          text-shadow: 0 2px 8px rgba(184, 134, 11, 0.4);
+          letter-spacing: 0.01em;
+        }
+
+        @keyframes luxuryGoldFlow {
+          0%, 100% { 
+            background-position: 0% 50%; 
+            filter: brightness(1) saturate(1.2);
+          }
+          50% { 
+            background-position: 100% 50%; 
+            filter: brightness(1.3) saturate(1.5);
+          }
+        }
+
+        /* Enhanced Button Styles with Luxury Feel */
+        .luxury-primary-button {
+          background: linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #654321 100%);
+          box-shadow: 
+            0 8px 32px rgba(160, 82, 45, 0.4),
+            0 4px 16px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(20px);
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .luxury-primary-button::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%,
             transparent 100%
           );
-          animation: gradientBreathing 20s ease-in-out infinite;
-          z-index: 3;
+          transition: left 0.8s ease;
+        }
+
+        .luxury-primary-button:hover::before {
+          left: 100%;
+        }
+
+        .luxury-primary-button:hover {
+          background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
+          box-shadow: 
+            0 12px 48px rgba(160, 82, 45, 0.5),
+            0 6px 24px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          transform: translateY(-4px) scale(1.02);
+        }
+
+        .luxury-secondary-button {
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(30px);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .luxury-secondary-button:hover {
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.5);
+          box-shadow: 
+            0 12px 48px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          transform: translateY(-4px) scale(1.02);
+        }
+
+        /* Smooth Fade-in Animations */
+        .fade-in-up {
+          animation: fadeInUp 2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            filter: blur(4px);
+          }
+          60% {
+            opacity: 0.8;
+            transform: translateY(15px) scale(0.98);
+            filter: blur(1px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        .fade-in-delayed {
+          animation: fadeInDelayed 2.5s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInDelayed {
+          0% {
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        /* Parallax Enhancement */
+        .parallax-layer {
+          transform-style: preserve-3d;
+          will-change: transform;
+        }
+
+        /* Background Image Transitions */
+        .hero-background-image {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: opacity 3s ease-in-out, transform 20s ease-in-out;
+          transform: scale(1.05);
+        }
+
+        .hero-background-image.active {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+
+        .hero-background-image.inactive {
+          opacity: 0;
+          transform: scale(1.1);
+        }
+
+        /* Text Legibility Enhancements */
+        .text-shadow-luxury {
+          text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.8),
+            0 4px 8px rgba(0, 0, 0, 0.6),
+            0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .text-shadow-soft {
+          text-shadow: 
+            0 1px 3px rgba(0, 0, 0, 0.6),
+            0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Modern Dark-to-Light Gradient with Vignette */
+        .modern-gradient-overlay {
+          background: 
+            /* Vignette effect */
+            radial-gradient(
+              ellipse at center,
+              transparent 0%,
+              rgba(0, 0, 0, 0.1) 40%,
+              rgba(0, 0, 0, 0.3) 70%,
+              rgba(0, 0, 0, 0.6) 100%
+            ),
+            /* Main gradient */
+            linear-gradient(
+              180deg,
+              rgba(0, 0, 0, 0.7) 0%,
+              rgba(0, 0, 0, 0.5) 20%,
+              rgba(0, 0, 0, 0.3) 40%,
+              rgba(0, 0, 0, 0.15) 60%,
+              rgba(0, 0, 0, 0.05) 80%,
+              transparent 100%
+            );
+          animation: gradientBreathing 25s ease-in-out infinite;
         }
 
         @keyframes gradientBreathing {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.9; }
+          50% { opacity: 0.85; }
         }
 
         /* Moving Bokeh Shimmer Effects */
@@ -971,102 +1147,93 @@ export default function HomePage() {
         }
       `}</style>
       <main className="w-full bg-background text-foreground overflow-hidden">
-        {/* Hero Section - Refined Kalamkari Heritage with Soft Silk Background */}
+        {/* Modern Luxury Hero Section - Kalamkari Heritage Reimagined */}
         <section 
           ref={heroRef}
           className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
           role="banner"
-          aria-label="Kalamkari Heritage - Handcrafted Stories"
+          aria-label="Kalamkari Heritage - Modern Luxury Collection"
         >
-          {/* High-Quality Kalamkari Silk Background with Cinematic Layers */}
+          {/* Premium Fabric Background Layers with Parallax */}
           <motion.div 
             style={{ y: heroY }}
-            className="absolute inset-0 z-0 parallax-enhanced"
+            className="absolute inset-0 z-0 parallax-layer"
           >
-            {/* Background Image Carousel */}
-            <div className="hero-carousel-container absolute inset-0">
+            {/* Background Image Carousel - Premium Fabric Textures */}
+            <div className="absolute inset-0">
               {heroBackgroundImages.map((imageSrc, index) => (
                 <Image
                   key={index}
                   src={imageSrc}
-                  alt={`Handcrafted Kalamkari saree ${index + 1}`}
+                  alt={`Premium ${index === 0 ? 'warm gold' : index === 1 ? 'neutral ivory' : 'deep terracotta'} fabric texture`}
                   width={1920}
                   height={1080}
-                  className={`hero-carousel-image ${
+                  className={`hero-background-image ${
                     index === currentImageIndex ? 'active' : 'inactive'
                   }`}
                 />
               ))}
             </div>
             
-            {/* High-Quality Silk/Kalamkari Fabric Overlay */}
-            <div className="absolute inset-0 kalamkari-silk-fabric"></div>
+            {/* Luxury Fabric Overlay with Frosted Glass Effect */}
+            <div className="absolute inset-0 luxury-fabric-overlay"></div>
             
-            {/* Dark-to-Light Gradient Overlay */}
-            <div className="absolute inset-0 dark-to-light-gradient"></div>
+            {/* Modern Gradient with Vignette */}
+            <div className="absolute inset-0 modern-gradient-overlay"></div>
             
-            {/* Moving Bokeh Shimmer Effects */}
+            {/* Subtle Bokeh Effects for Luxury Feel */}
             <div className="absolute inset-0 bokeh-shimmer">
-              <div className="bokeh-particle"></div>
-              <div className="bokeh-particle"></div>
               <div className="bokeh-particle"></div>
               <div className="bokeh-particle"></div>
               <div className="bokeh-particle"></div>
             </div>
           </motion.div>
           
-          {/* Enhanced Hero Content with Smooth Animations */}
+          {/* Minimalist Hero Content with Smooth Fade-in */}
           <motion.div
             style={{ opacity: heroOpacity }}
-            className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-5xl mx-auto w-full"
-            initial={{ opacity: 0, y: 60 }}
+            className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-6xl mx-auto w-full"
+            initial={{ opacity: 0, y: 80 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            transition={{ duration: 2, ease: "easeOut" }}
           >
-            {/* Cinematic Animated Divider */}
+            {/* Elegant Divider */}
             <motion.div
               initial={{ opacity: 0, scaleX: 0 }}
               animate={{ opacity: 1, scaleX: 1 }}
               transition={{ 
-                duration: 2.5, 
-                delay: 0.8, 
-                ease: [0.23, 1, 0.32, 1] 
+                duration: 1.5, 
+                delay: 0.5, 
+                ease: "easeOut" 
               }}
-              className="mb-12 md:mb-16 flex items-center justify-center"
+              className="mb-16 md:mb-20 flex items-center justify-center"
             >
               <div className="cinematic-divider"></div>
             </motion.div>
 
-            {/* Elegant Serif Headlines with Cinematic Entrance */}
+            {/* Modern Luxury Headlines */}
             <motion.h1
-              initial={{ opacity: 0, y: 100, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ 
-                duration: 3.5, 
-                delay: 1.2, 
-                ease: [0.23, 1, 0.32, 1] 
-              }}
-              className="elegant-serif-headline text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white leading-[0.85] tracking-tight mb-8 md:mb-12"
+              className="luxury-headline text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] text-white leading-[0.8] tracking-tight mb-12 md:mb-16 fade-in-up"
             >
               <motion.span 
-                initial={{ opacity: 0, y: 60 }}
+                initial={{ opacity: 0, y: 80 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ 
-                  duration: 2.5, 
-                  delay: 1.8,
-                  ease: [0.23, 1, 0.32, 1] 
+                  duration: 1.8, 
+                  delay: 1,
+                  ease: "easeOut" 
                 }}
                 className="block text-white"
               >
                 Kalamkari
               </motion.span>
               <motion.span 
-                initial={{ opacity: 0, y: 60 }}
+                initial={{ opacity: 0, y: 80 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ 
-                  duration: 2.5, 
-                  delay: 2.2,
-                  ease: [0.23, 1, 0.32, 1] 
+                  duration: 1.8, 
+                  delay: 1.3,
+                  ease: "easeOut" 
                 }}
                 className="block text-white font-light"
               >
@@ -1074,50 +1241,50 @@ export default function HomePage() {
               </motion.span>
             </motion.h1>
 
-            {/* Gold Italic Tagline with Emotional Appeal */}
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ 
-                duration: 2.5, 
-                delay: 2.8, 
-                ease: [0.23, 1, 0.32, 1] 
-              }}
-              className="mb-16 md:mb-20"
-            >
-              <p className="gold-italic-tagline text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-4xl mx-auto text-center">
-                "Where ancient artistry meets timeless elegance, each thread whispers stories of heritage"
-              </p>
-            </motion.div>
-
-            {/* Premium Luxury Buttons with Enhanced Interactions */}
+            {/* Luxury Tagline */}
             <motion.div
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ 
-                duration: 2.5, 
-                delay: 3.5, 
-                ease: [0.23, 1, 0.32, 1] 
+                duration: 1.8, 
+                delay: 1.8, 
+                ease: "easeOut" 
               }}
-              className="flex flex-col sm:flex-row gap-6 md:gap-8 max-w-2xl mx-auto w-full"
+              className="mb-20 md:mb-24 fade-in-delayed"
+            >
+              <p className="luxury-tagline text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-5xl mx-auto text-center text-shadow-soft">
+                "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
+              </p>
+            </motion.div>
+
+            {/* Premium Button Design */}
+            <motion.div
+              initial={{ opacity: 0, y: 80 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 1.8, 
+                delay: 2.3, 
+                ease: "easeOut" 
+              }}
+              className="flex flex-col sm:flex-row gap-6 md:gap-8 max-w-3xl mx-auto w-full"
             >
               <Link to="/shop" className="group flex-1">
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -4 }}
+                  whileHover={{ scale: 1.03, y: -6 }}
                   whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                   <Button 
                     size="lg" 
-                    className="luxury-button cinematic-entrance bg-gradient-to-r from-accent-color via-yellow-600 to-accent-color hover:from-yellow-600 hover:via-accent-color hover:to-yellow-600 text-white px-12 py-6 text-xl font-medium rounded-2xl shadow-2xl w-full h-20"
+                    className="luxury-primary-button text-white px-16 py-8 text-xl font-medium rounded-3xl w-full h-24 text-shadow-soft"
                     aria-label="Explore our Kalamkari saree collection"
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
+                    <span className="relative z-10 flex items-center justify-center gap-4 font-serif">
                       Explore Collection
                       <motion.span
                         className="inline-block text-2xl"
-                        animate={{ x: [0, 6, 0] }}
-                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                        animate={{ x: [0, 8, 0] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                       >
                         →
                       </motion.span>
@@ -1127,22 +1294,22 @@ export default function HomePage() {
               </Link>
               <Link to="/about" className="group flex-1">
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -4 }}
+                  whileHover={{ scale: 1.03, y: -6 }}
                   whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="luxury-button cinematic-entrance border-2 border-white/50 text-white hover:text-accent-color bg-white/10 hover:bg-white/20 backdrop-blur-xl px-12 py-6 text-xl font-medium rounded-2xl shadow-2xl w-full h-20"
+                    className="luxury-secondary-button text-white px-16 py-8 text-xl font-medium rounded-3xl w-full h-24 text-shadow-soft"
                     aria-label="Learn about our heritage story"
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
+                    <span className="relative z-10 flex items-center justify-center gap-4 font-serif">
                       Our Heritage
                       <motion.span
                         className="inline-block text-xl"
-                        animate={{ rotate: [0, 15, -15, 0] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        animate={{ rotate: [0, 12, -12, 0] }}
+                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                       >
                         ✨
                       </motion.span>
