@@ -258,10 +258,9 @@ export default function HomePage() {
           font-family: 'Cormorant Garamond', serif;
           font-weight: 300;
           text-shadow: 
-            0 2px 8px rgba(0, 0, 0, 0.8),
-            0 4px 16px rgba(0, 0, 0, 0.6),
-            0 8px 32px rgba(0, 0, 0, 0.4),
-            0 1px 2px rgba(255, 255, 255, 0.1);
+            0 1px 3px rgba(0, 0, 0, 0.3),
+            0 2px 6px rgba(0, 0, 0, 0.2),
+            0 4px 12px rgba(0, 0, 0, 0.1);
           letter-spacing: -0.02em;
           line-height: 0.85;
         }
@@ -272,9 +271,9 @@ export default function HomePage() {
           font-weight: 300;
           background: linear-gradient(
             135deg,
-            #FFD700 0%,
-            #FFA500 25%,
-            #FF8C00 50%,
+            #B8860B 0%,
+            #DAA520 25%,
+            #FFD700 50%,
             #DAA520 75%,
             #B8860B 100%
           );
@@ -283,7 +282,7 @@ export default function HomePage() {
           -webkit-text-fill-color: transparent;
           background-clip: text;
           animation: luxuryGoldFlow 12s ease-in-out infinite;
-          text-shadow: 0 2px 8px rgba(184, 134, 11, 0.4);
+          text-shadow: 0 1px 3px rgba(184, 134, 11, 0.2);
           letter-spacing: 0.01em;
         }
 
@@ -335,10 +334,10 @@ export default function HomePage() {
         .luxury-primary-button:hover {
           background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
           box-shadow: 
-            0 12px 48px rgba(160, 82, 45, 0.5),
-            0 6px 24px rgba(0, 0, 0, 0.25),
+            0 8px 32px rgba(160, 82, 45, 0.4),
+            0 4px 16px rgba(0, 0, 0, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          transform: translateY(-4px) scale(1.02);
+          transform: translateY(-3px) scale(1.02);
         }
 
         .luxury-secondary-button {
@@ -353,11 +352,11 @@ export default function HomePage() {
 
         .luxury-secondary-button:hover {
           background: rgba(255, 255, 255, 0.25);
-          border-color: rgba(255, 255, 255, 0.5);
+          border-color: rgba(51, 51, 51, 0.4);
           box-shadow: 
-            0 12px 48px rgba(0, 0, 0, 0.15),
+            0 8px 32px rgba(0, 0, 0, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.3);
-          transform: translateY(-4px) scale(1.02);
+          transform: translateY(-3px) scale(1.02);
         }
 
         /* Smooth Fade-in Animations */
@@ -1211,9 +1210,9 @@ export default function HomePage() {
               <div className="cinematic-divider"></div>
             </motion.div>
 
-            {/* Modern Luxury Headlines */}
+            {/* Elegant Headlines - Refined Size */}
             <motion.h1
-              className="luxury-headline text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] text-white leading-[0.8] tracking-tight mb-12 md:mb-16 fade-in-up"
+              className="luxury-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-foreground leading-[0.85] tracking-tight mb-10 md:mb-12 fade-in-up"
             >
               <motion.span 
                 initial={{ opacity: 0, y: 80 }}
@@ -1223,7 +1222,7 @@ export default function HomePage() {
                   delay: 1,
                   ease: "easeOut" 
                 }}
-                className="block text-white"
+                className="block text-foreground"
               >
                 Kalamkari
               </motion.span>
@@ -1235,13 +1234,13 @@ export default function HomePage() {
                   delay: 1.3,
                   ease: "easeOut" 
                 }}
-                className="block text-white font-light"
+                className="block text-foreground font-light"
               >
                 Heritage
               </motion.span>
             </motion.h1>
 
-            {/* Luxury Tagline */}
+            {/* Refined Tagline */}
             <motion.div
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1250,14 +1249,14 @@ export default function HomePage() {
                 delay: 1.8, 
                 ease: "easeOut" 
               }}
-              className="mb-20 md:mb-24 fade-in-delayed"
+              className="mb-16 md:mb-18 fade-in-delayed"
             >
-              <p className="luxury-tagline text-2xl md:text-3xl lg:text-4xl leading-relaxed max-w-5xl mx-auto text-center text-shadow-soft">
+              <p className="luxury-tagline text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto text-center text-shadow-soft">
                 "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
               </p>
             </motion.div>
 
-            {/* Premium Button Design */}
+            {/* Refined Button Design */}
             <motion.div
               initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1266,24 +1265,24 @@ export default function HomePage() {
                 delay: 2.3, 
                 ease: "easeOut" 
               }}
-              className="flex flex-col sm:flex-row gap-6 md:gap-8 max-w-3xl mx-auto w-full"
+              className="flex flex-col sm:flex-row gap-5 md:gap-6 max-w-2xl mx-auto w-full"
             >
               <Link to="/shop" className="group flex-1">
                 <motion.div
-                  whileHover={{ scale: 1.03, y: -6 }}
+                  whileHover={{ scale: 1.02, y: -3 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                   <Button 
                     size="lg" 
-                    className="luxury-primary-button text-white px-16 py-8 text-xl font-medium rounded-3xl w-full h-24 text-shadow-soft"
+                    className="luxury-primary-button text-white px-10 py-5 text-lg font-medium rounded-2xl w-full h-16 text-shadow-soft"
                     aria-label="Explore our Kalamkari saree collection"
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-4 font-serif">
+                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
                       Explore Collection
                       <motion.span
-                        className="inline-block text-2xl"
-                        animate={{ x: [0, 8, 0] }}
+                        className="inline-block text-xl"
+                        animate={{ x: [0, 6, 0] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                       >
                         →
@@ -1294,20 +1293,20 @@ export default function HomePage() {
               </Link>
               <Link to="/about" className="group flex-1">
                 <motion.div
-                  whileHover={{ scale: 1.03, y: -6 }}
+                  whileHover={{ scale: 1.02, y: -3 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="luxury-secondary-button text-white px-16 py-8 text-xl font-medium rounded-3xl w-full h-24 text-shadow-soft"
+                    className="luxury-secondary-button text-foreground px-10 py-5 text-lg font-medium rounded-2xl w-full h-16 text-shadow-soft"
                     aria-label="Learn about our heritage story"
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-4 font-serif">
+                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
                       Our Heritage
                       <motion.span
-                        className="inline-block text-xl"
+                        className="inline-block text-lg"
                         animate={{ rotate: [0, 12, -12, 0] }}
                         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                       >
