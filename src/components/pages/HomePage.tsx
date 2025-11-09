@@ -1670,11 +1670,11 @@ export default function HomePage() {
             </AnimatedElement>
 
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="bg-white/80 rounded-2xl overflow-hidden animate-pulse shadow-md">
-                    <div className="w-full aspect-[4/5] bg-secondary/30" />
-                    <div className="p-4 space-y-3">
+                  <div key={i} className="bg-white/85 rounded-xl overflow-hidden animate-pulse shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+                    <div className="w-full aspect-[5/6] bg-secondary/30" />
+                    <div className="p-3.5 space-y-2.5">
                       <div className="h-4 bg-secondary/30 rounded w-3/4" />
                       <div className="h-3 bg-secondary/30 rounded w-1/2" />
                       <div className="h-4 bg-secondary/30 rounded w-1/3" />
@@ -1683,115 +1683,138 @@ export default function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
                 {featuredProducts.map((product, index) => (
-                  <AnimatedElement key={product._id} delay={index * 100}>
+                  <AnimatedElement key={product._id} delay={index * 80}>
                     <Link 
                       to={`/product/${product._id}`} 
-                      className="group block h-full"
-                      aria-label={`View details for ${product.title || 'Handcrafted Kalamkari Saree'}`}
+                      className="group block h-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 rounded-xl"
+                      aria-label={`View ${product.title || 'Handcrafted Kalamkari Saree'} - ₹${product.price?.toLocaleString('en-IN') || 'Price on request'}`}
                     >
                       <motion.article
-                        whileHover={{ y: -6, scale: 1.01 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        className="relative overflow-hidden bg-white/95 backdrop-blur-sm rounded-2xl shadow-md hover:shadow-xl transition-all duration-400 group h-full flex flex-col"
+                        whileHover={{ 
+                          y: -8, 
+                          scale: 1.02,
+                          transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                        className="relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] transition-all duration-500 group h-full flex flex-col"
                       >
-                        {/* Product Image */}
+                        {/* Product Image - Reduced Height */}
                         <div className="relative overflow-hidden flex-shrink-0">
                           <Image
                             src={product.mainImage || "https://static.wixstatic.com/media/07221c_a745fb56ce03452288286aef2ba62a22~mv2.png?originWidth=384&originHeight=512"}
-                            alt={product.title || 'Handcrafted Kalamkari Saree'}
-                            className="w-full aspect-[4/5] object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-                            width={320}
-                            height={400}
+                            alt={`${product.title || 'Handcrafted Kalamkari Saree'} - Premium handwoven saree with traditional motifs`}
+                            className="w-full aspect-[5/6] object-cover object-[center_20%] transition-all duration-700 ease-out group-hover:scale-108 group-hover:brightness-105"
+                            width={300}
+                            height={360}
                             loading={index < 2 ? "eager" : "lazy"}
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                           />
                           
-                          {/* Subtle Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          {/* Enhanced Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                           
                           {/* Featured Badge */}
                           {product.isFeatured && (
                             <motion.div
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              whileInView={{ opacity: 1, scale: 1 }}
-                              transition={{ duration: 0.4 }}
+                              initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ duration: 0.5, delay: 0.2 }}
                               viewport={{ once: true }}
-                              className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-primary px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm"
+                              className="absolute top-2.5 right-2.5 bg-gradient-to-r from-accent-color to-accent-color/90 text-white px-2 py-1 rounded-lg text-xs font-bold shadow-lg backdrop-blur-sm"
                             >
                               ✨ Featured
                             </motion.div>
                           )}
                           
-                          {/* Hover Actions */}
+                          {/* Enhanced Hover Actions */}
                           <motion.div
-                            initial={{ opacity: 0, y: 15 }}
+                            initial={{ opacity: 0, y: 20 }}
                             whileHover={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.25 }}
-                            className="absolute bottom-3 left-3 right-3 flex justify-between items-center opacity-0 group-hover:opacity-100"
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="absolute bottom-2.5 left-2.5 right-2.5 flex justify-between items-center opacity-0 group-hover:opacity-100"
                           >
                             <Button 
                               size="sm" 
-                              className="h-8 px-3 text-xs rounded-xl bg-white/95 hover:bg-white text-primary font-medium shadow-md backdrop-blur-sm border-0"
+                              className="h-7 px-2.5 text-xs rounded-lg bg-white/95 hover:bg-white text-primary font-semibold shadow-lg backdrop-blur-sm border-0 transition-all duration-200 hover:scale-105"
                               onClick={(e) => e.preventDefault()}
+                              tabIndex={-1}
                             >
-                              <ShoppingBag className="h-3 w-3 mr-1.5" />
-                              Quick View
+                              <ShoppingBag className="h-3 w-3 mr-1" />
+                              View
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
-                              className="h-8 w-8 p-0 rounded-full bg-white/90 hover:bg-white border-white/50 hover:border-white shadow-md"
+                              className="h-7 w-7 p-0 rounded-lg bg-white/90 hover:bg-white border-white/60 hover:border-white shadow-lg transition-all duration-200 hover:scale-105"
                               onClick={(e) => e.preventDefault()}
+                              tabIndex={-1}
                             >
                               <Heart className="w-3 h-3 text-primary" />
                             </Button>
                           </motion.div>
                         </div>
 
-                        {/* Product Info */}
-                        <div className="p-4 flex-grow flex flex-col">
+                        {/* Product Info - Reduced Padding */}
+                        <div className="p-3.5 flex-grow flex flex-col">
                           <motion.h3
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.1 }}
                             viewport={{ once: true }}
-                            className="font-heading text-lg text-foreground group-hover:text-primary transition-colors duration-300 mb-2 line-clamp-2 leading-snug flex-grow"
+                            className="font-heading text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mb-1.5 line-clamp-2 leading-tight"
                           >
                             {product.title}
                           </motion.h3>
                           
                           <motion.p
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            transition={{ duration: 0.5, delay: 0.15 }}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.15 }}
                             viewport={{ once: true }}
-                            className="text-foreground/60 font-paragraph text-sm mb-3 line-clamp-2 leading-relaxed"
+                            className="text-foreground/65 font-paragraph text-xs mb-2.5 line-clamp-2 leading-relaxed flex-grow"
                           >
                             {product.description}
                           </motion.p>
 
-                          <div className="flex items-center justify-between mt-auto">
-                            <motion.p
-                              initial={{ opacity: 0 }}
-                              whileInView={{ opacity: 1 }}
-                              transition={{ duration: 0.5, delay: 0.2 }}
+                          {/* Aligned Price and Rating */}
+                          <div className="flex items-end justify-between mt-auto pt-1">
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.4, delay: 0.2 }}
                               viewport={{ once: true }}
-                              className="font-heading font-bold text-primary text-lg"
+                              className="flex flex-col"
                             >
-                              ₹{product.price?.toLocaleString('en-IN')}
-                            </motion.p>
+                              <span className="font-heading font-bold text-primary text-lg leading-none">
+                                ₹{product.price?.toLocaleString('en-IN')}
+                              </span>
+                              <span className="text-xs text-foreground/50 font-paragraph mt-0.5">
+                                Free Shipping
+                              </span>
+                            </motion.div>
 
-                            {/* Rating */}
-                            <div className="flex items-center gap-0.5">
-                              {[...Array(5)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className="w-3.5 h-3.5 fill-accent-color text-accent-color" 
-                                />
-                              ))}
-                              <span className="text-xs text-foreground/60 ml-1 font-medium">(4.9)</span>
-                            </div>
+                            {/* Aligned Rating */}
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.4, delay: 0.25 }}
+                              viewport={{ once: true }}
+                              className="flex flex-col items-end"
+                            >
+                              <div className="flex items-center gap-0.5 mb-0.5">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star 
+                                    key={i} 
+                                    className="w-3 h-3 fill-accent-color text-accent-color" 
+                                  />
+                                ))}
+                              </div>
+                              <span className="text-xs text-foreground/60 font-medium leading-none">
+                                4.9 (127)
+                              </span>
+                            </motion.div>
                           </div>
                         </div>
                       </motion.article>
@@ -1801,16 +1824,24 @@ export default function HomePage() {
               </div>
             )}
 
-            <AnimatedElement className="text-center mt-12">
+            {/* Enhanced CTA */}
+            <AnimatedElement className="text-center mt-14">
               <Link to="/shop">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="h-12 px-8 text-base rounded-xl border-2 border-primary/30 hover:bg-primary/5 hover:border-primary group transition-all duration-300 hover:scale-105"
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  View Complete Collection 
-                  <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1"/>
-                </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="h-12 px-8 text-base font-semibold rounded-xl border-2 border-primary/40 hover:bg-primary/8 hover:border-primary group transition-all duration-400 shadow-[0_4px_20px_rgba(160,82,45,0.15)] hover:shadow-[0_8px_30px_rgba(160,82,45,0.25)]"
+                    aria-label="View complete collection of handcrafted Kalamkari sarees"
+                  >
+                    View Complete Collection 
+                    <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1"/>
+                  </Button>
+                </motion.div>
               </Link>
             </AnimatedElement>
           </div>
