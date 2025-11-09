@@ -1637,97 +1637,121 @@ export default function HomePage() {
           </motion.div>
         </section>
 
-        {/* Featured Products Section - Premium Showcase */}
-        <section className="w-full py-20 md:py-28 bg-background relative overflow-hidden">
-          <div className="absolute inset-0 heritage-texture opacity-30"></div>
-          <DecorativePattern className="text-primary/3 premium-shimmer heritage-float" animated={true} />
+        {/* Masterpieces of Heritage Section - Luxury Redesign */}
+        <section className="w-full py-24 md:py-32 relative overflow-hidden">
+          {/* Textured Background with Teal/Lavender Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-purple-50/30 to-teal-50/40"></div>
+          <div className="absolute inset-0 opacity-20" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B8860B' fill-opacity='0.1'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
           
-          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10">
+            {/* Enhanced Header Section */}
             <AnimatedElement>
-              <div className="text-center mb-16">
+              <div className="text-center mb-20">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                   viewport={{ once: true }}
-                  className="flex items-center justify-center gap-4 mb-6"
+                  className="flex items-center justify-center gap-6 mb-8"
                 >
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                  <span className="font-paragraph text-sm font-semibold text-accent-color uppercase tracking-[0.2em]">
+                  <div className="w-20 h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent"></div>
+                  <span className="font-paragraph text-sm font-bold text-teal-600 uppercase tracking-[0.25em] px-4 py-2 bg-teal-50 rounded-full border border-teal-200">
                     Curated Collection
                   </span>
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
+                  <div className="w-20 h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent"></div>
                 </motion.div>
                 
-                <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
+                <motion.h2 
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-tight bg-gradient-to-r from-slate-800 via-purple-800 to-teal-700 bg-clip-text text-transparent"
+                >
                   Masterpieces of Heritage
-                </h2>
+                </motion.h2>
                 
-                <p className="font-paragraph text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
+                <motion.p 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.4 }}
+                  viewport={{ once: true }}
+                  className="font-paragraph text-lg md:text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed"
+                >
                   A carefully curated selection of our finest handcrafted sarees, each piece telling a unique story of tradition, artistry, and timeless elegance.
-                </p>
+                </motion.p>
               </div>
             </AnimatedElement>
 
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="bg-white/80 rounded-3xl overflow-hidden animate-pulse shadow-lg">
-                    <div className="w-full aspect-[3/4] bg-secondary/30" />
+                  <div key={i} className="bg-white/90 rounded-2xl overflow-hidden animate-pulse shadow-lg border border-purple-100">
+                    <div className="w-full aspect-[3/4] bg-gradient-to-br from-teal-100 to-purple-100" />
                     <div className="p-6 space-y-4">
-                      <div className="h-6 bg-secondary/30 rounded-lg w-3/4" />
-                      <div className="h-4 bg-secondary/30 rounded-lg w-1/2" />
-                      <div className="h-5 bg-secondary/30 rounded-lg w-1/3" />
+                      <div className="h-6 bg-gradient-to-r from-teal-200 to-purple-200 rounded-lg w-3/4" />
+                      <div className="h-4 bg-gradient-to-r from-purple-200 to-teal-200 rounded-lg w-1/2" />
+                      <div className="h-5 bg-gradient-to-r from-teal-200 to-purple-200 rounded-lg w-1/3" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                 {featuredProducts.map((product, index) => (
-                  <AnimatedElement key={product._id} delay={index * 150}>
+                  <AnimatedElement key={product._id} delay={index * 100}>
                     <Link to={`/product/${product._id}`} className="group block h-full">
                       <motion.div
-                        whileHover={{ y: -12, scale: 1.02 }}
+                        whileHover={{ y: -8, scale: 1.02 }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 group"
+                        className="relative overflow-hidden bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 group border-2 border-transparent hover:border-gradient-to-r hover:from-teal-300 hover:to-purple-300"
+                        style={{
+                          background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #14b8a6, #a855f7) border-box'
+                        }}
                       >
-                        {/* Product Image */}
-                        <div className="relative overflow-hidden">
+                        {/* Gold Border Effect */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
+                        
+                        {/* Product Image Container */}
+                        <div className="relative overflow-hidden rounded-t-2xl">
+                          <div className="absolute inset-0 bg-gradient-to-br from-teal-400/10 to-purple-400/10 z-10"></div>
                           <Image
-                            src={product.mainImage || "https://static.wixstatic.com/media/07221c_a745fb56ce03452288286aef2ba62a22~mv2.png?originWidth=384&originHeight=512"}
-                            alt={product.title || 'Handcrafted Kalamkari Saree'}
-                            className="w-full aspect-[3/4] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                            src={product.mainImage || "https://static.wixstatic.com/media/07221c_ae601decedb44334ac9850a5b83a11e6~mv2.png?originWidth=576&originHeight=576"}
+                            alt={`${product.title} - Handcrafted Kalamkari Heritage Saree with Traditional Motifs`}
+                            className="w-full aspect-[3/4] object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:brightness-110"
                             width={400}
                             height={533}
+                            loading="lazy"
                           />
                           
-                          {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          {/* Luxury Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
                           
-                          {/* Featured Badge */}
+                          {/* Featured Badge with Teal/Purple Gradient */}
                           {product.isFeatured && (
                             <motion.div
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              whileInView={{ opacity: 1, scale: 1 }}
-                              transition={{ duration: 0.5 }}
+                              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                              transition={{ duration: 0.6, type: "spring" }}
                               viewport={{ once: true }}
-                              className="absolute top-4 right-4 glass-morphism text-primary px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md"
+                              className="absolute top-4 right-4 bg-gradient-to-r from-teal-500 to-purple-600 text-white px-3 py-2 rounded-full text-xs font-bold shadow-lg backdrop-blur-md border border-white/20"
                             >
-                              ✨ Featured
+                              ✨ Heritage
                             </motion.div>
                           )}
                           
-                          {/* Hover Actions */}
+                          {/* Enhanced Hover Actions */}
                           <motion.div
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 30 }}
                             whileHover={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3 }}
                             className="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100"
                           >
                             <Button 
                               size="sm" 
-                              className="h-10 px-4 text-sm rounded-2xl bg-primary-foreground/95 hover:bg-primary-foreground text-primary font-semibold shadow-xl backdrop-blur-sm"
+                              className="h-11 px-5 text-sm rounded-xl bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-700 hover:to-purple-700 text-white font-semibold shadow-xl backdrop-blur-sm border border-white/20 transition-all duration-300"
                             >
                               <ShoppingBag className="h-4 w-4 mr-2" />
                               Quick View
@@ -1735,21 +1759,21 @@ export default function HomePage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="h-10 w-10 p-0 rounded-full glass-morphism border-primary-foreground/30 hover:bg-primary-foreground/10"
+                              className="h-11 w-11 p-0 rounded-xl bg-white/90 border-2 border-purple-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-300"
                             >
-                              <Heart className="w-4 h-4 text-primary-foreground" />
+                              <Heart className="w-4 h-4 text-purple-600" />
                             </Button>
                           </motion.div>
                         </div>
 
-                        {/* Product Info */}
-                        <div className="p-6">
+                        {/* Enhanced Product Info */}
+                        <div className="p-6 bg-gradient-to-br from-white to-slate-50/50">
                           <motion.h3
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             transition={{ duration: 0.6, delay: 0.1 }}
                             viewport={{ once: true }}
-                            className="font-heading text-xl text-foreground group-hover:text-primary transition-colors duration-300 mb-3 line-clamp-2 leading-tight"
+                            className="font-heading text-xl text-slate-800 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-teal-700 group-hover:to-purple-700 group-hover:bg-clip-text transition-all duration-300 mb-3 line-clamp-2 leading-tight font-semibold"
                           >
                             {product.title}
                           </motion.h3>
@@ -1759,7 +1783,7 @@ export default function HomePage() {
                             whileInView={{ opacity: 1 }}
                             transition={{ duration: 0.6, delay: 0.15 }}
                             viewport={{ once: true }}
-                            className="text-foreground/60 font-paragraph text-sm mb-4 line-clamp-2 leading-relaxed"
+                            className="text-slate-600 font-paragraph text-sm mb-5 line-clamp-2 leading-relaxed"
                           >
                             {product.description}
                           </motion.p>
@@ -1770,20 +1794,20 @@ export default function HomePage() {
                               whileInView={{ opacity: 1 }}
                               transition={{ duration: 0.6, delay: 0.2 }}
                               viewport={{ once: true }}
-                              className="font-heading font-bold text-primary text-xl"
+                              className="font-heading font-bold text-transparent bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-xl"
                             >
                               ₹{product.price?.toLocaleString('en-IN')}
                             </motion.p>
 
-                            {/* Rating */}
+                            {/* Enhanced Rating with Teal Stars */}
                             <div className="flex items-center gap-1">
                               {[...Array(5)].map((_, i) => (
                                 <Star 
                                   key={i} 
-                                  className="w-4 h-4 fill-accent-color text-accent-color" 
+                                  className="w-4 h-4 fill-teal-400 text-teal-400" 
                                 />
                               ))}
-                              <span className="text-xs text-foreground/60 ml-1 font-medium">(4.9)</span>
+                              <span className="text-xs text-slate-500 ml-2 font-medium bg-slate-100 px-2 py-1 rounded-full">(4.9)</span>
                             </div>
                           </div>
                         </div>
@@ -1794,17 +1818,40 @@ export default function HomePage() {
               </div>
             )}
 
-            <AnimatedElement className="text-center mt-16">
-              <Link to="/shop">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="h-14 px-10 text-base rounded-2xl border-2 border-primary/30 hover:bg-primary/5 hover:border-primary group transition-all duration-300 hover:scale-105"
+            {/* Enhanced CTA Section with Gradient Button */}
+            <AnimatedElement className="text-center mt-20">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <Link to="/shop">
+                  <Button 
+                    size="lg" 
+                    className="h-16 px-12 text-lg rounded-2xl bg-gradient-to-r from-teal-600 via-purple-600 to-indigo-600 hover:from-teal-700 hover:via-purple-700 hover:to-indigo-700 text-white font-bold shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-3xl border-2 border-white/20 backdrop-blur-sm group relative overflow-hidden"
+                  >
+                    {/* Shimmer Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    
+                    <span className="relative z-10 flex items-center gap-4">
+                      <span className="font-serif">Explore Complete Heritage Collection</span>
+                      <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-2"/>
+                    </span>
+                  </Button>
+                </Link>
+                
+                {/* Supporting Text */}
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  viewport={{ once: true }}
+                  className="mt-6 text-slate-600 font-paragraph text-sm max-w-md mx-auto"
                 >
-                  View Complete Collection 
-                  <ArrowRight className="h-5 w-5 ml-3 transition-transform group-hover:translate-x-1"/>
-                </Button>
-              </Link>
+                  Discover over 200+ handcrafted masterpieces, each telling a unique story of heritage and artistry
+                </motion.p>
+              </motion.div>
             </AnimatedElement>
           </div>
         </section>
