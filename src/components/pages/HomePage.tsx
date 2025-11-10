@@ -2497,200 +2497,209 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* The Kalamkari Promise Section - Luxury Tactile Cards with Editorial Typography */}
-        <section className="w-full py-24 md:py-32 bg-gradient-to-br from-background via-secondary/10 to-background relative overflow-hidden">
-          {/* Sophisticated Kalamkari Background Motifs */}
+        {/* The Kalamkari Promise Section - Compact Tactile Cards with Premium Motion */}
+        <section className="w-full py-20 md:py-24 bg-gradient-to-br from-background via-secondary/8 to-background relative overflow-hidden">
+          {/* Subtle Kalamkari Background Motifs */}
           <motion.div 
-            className="absolute inset-0 opacity-5"
+            className="absolute inset-0 opacity-4"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M70 15c30.376 0 55 24.624 55 55s-24.624 55-55 55S15 100.376 15 70 39.624 15 70 15zm0 20c-19.33 0-35 15.67-35 35s15.67 35 35 35 35-15.67 35-35-15.67-35-35-35z'/%3E%3Cpath d='M70 40c16.569 0 30 13.431 30 30s-13.431 30-30 30-30-13.431-30-30 13.431-30 30-30zm0 10c-11.046 0-20 8.954-20 20s8.954 20 20 20 20-8.954 20-20-8.954-20-20-20z'/%3E%3Ccircle cx='70' cy='70' r='6' fill='%23B8860B' fill-opacity='0.4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M60 12c26.51 0 48 21.49 48 48s-21.49 48-48 48S12 86.51 12 60 33.49 12 60 12zm0 16c-17.673 0-32 14.327-32 32s14.327 32 32 32 32-14.327 32-32-14.327-32-32-32z'/%3E%3Cpath d='M60 36c13.255 0 24 10.745 24 24s-10.745 24-24 24-24-10.745-24-24 10.745-24 24-24z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}
           />
           
-          {/* Floating Kalamkari Elements with Smooth Animation */}
+          {/* Floating Gold Accents */}
           <motion.div
             animate={{ 
               rotate: [0, 360],
-              scale: [1, 1.08, 1],
-              opacity: [0.4, 0.6, 0.4]
-            }}
-            transition={{ 
-              duration: 45, 
-              repeat: Infinity, 
-              ease: "linear" 
-            }}
-            className="absolute top-20 right-20 w-40 h-40 opacity-5"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 10c27.614 0 50 22.386 50 50s-22.386 50-50 50S10 87.614 10 60 32.386 10 60 10z' fill='none' stroke='%23B8860B' stroke-width='2'/%3E%3Cpath d='M60 25c19.33 0 35 15.67 35 35s-15.67 35-35 35-35-15.67-35-35 15.67-35 35-35z' fill='%23A0522D' fill-opacity='0.15'/%3E%3Cpath d='M60 40c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23B8860B' fill-opacity='0.25'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23B8860B' fill-opacity='0.3'/%3E%3C/svg%3E")`,
-            }}
-          />
-          
-          <motion.div
-            animate={{ 
-              rotate: [360, 0],
-              y: [0, -20, 0],
+              scale: [1, 1.05, 1],
               opacity: [0.3, 0.5, 0.3]
             }}
             transition={{ 
-              duration: 35, 
+              duration: 40, 
               repeat: Infinity, 
-              ease: "easeInOut" 
+              ease: "linear" 
             }}
-            className="absolute bottom-24 left-16 w-32 h-32 opacity-4"
+            className="absolute top-16 right-16 w-24 h-24 opacity-4"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 5c24.853 0 45 20.147 45 45S74.853 95 50 95 5 74.853 5 50 25.147 5 50 5z' fill='none' stroke='%23A0522D' stroke-width='1.5'/%3E%3Cpath d='M50 20c16.569 0 30 13.431 30 30s-13.431 30-30 30-30-13.431-30-30 13.431-30 30-30z' fill='%23B8860B' fill-opacity='0.2'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8c17.673 0 32 14.327 32 32s-14.327 32-32 32S8 57.673 8 40 22.327 8 40 8z' fill='none' stroke='%23B8860B' stroke-width='1.5'/%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23B8860B' fill-opacity='0.15'/%3E%3C/svg%3E")`,
             }}
           />
           
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-            {/* Editorial Header with Luxury Typography */}
+            {/* Compact Editorial Header */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
               viewport={{ once: true }}
-              className="text-center max-w-6xl mx-auto mb-24"
+              className="text-center max-w-5xl mx-auto mb-16"
             >
-              <div className="flex items-center justify-center gap-8 mb-10">
+              <div className="flex items-center justify-center gap-6 mb-8">
                 <motion.div 
-                  className="w-28 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1.5, delay: 0.3 }}
+                  transition={{ duration: 1.2, delay: 0.2 }}
                   viewport={{ once: true }}
                 />
-                <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.35em] relative">
+                <span className="font-paragraph text-xs font-bold text-accent-color uppercase tracking-[0.3em] relative">
                   Our Promise
                   <motion.div
-                    className="absolute -bottom-2 left-0 right-0 h-px bg-accent-color/40"
+                    className="absolute -bottom-1 left-0 right-0 h-px bg-accent-color/30"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 1, delay: 0.8 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
                     viewport={{ once: true }}
                   />
                 </span>
                 <motion.div 
-                  className="w-28 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1.5, delay: 0.3 }}
+                  transition={{ duration: 1.2, delay: 0.2 }}
                   viewport={{ once: true }}
                 />
               </div>
               
               <motion.h2 
-                className="font-heading text-5xl md:text-6xl lg:text-7xl text-foreground mb-10 leading-[0.85] tracking-tight font-light"
-                initial={{ opacity: 0, y: 40 }}
+                className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-8 leading-[0.9] tracking-tight font-light"
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, delay: 0.4 }}
+                transition={{ duration: 1, delay: 0.3 }}
                 viewport={{ once: true }}
               >
                 The Kalamkari
-                <span className="block text-primary font-normal italic mt-2">Promise</span>
+                <span className="block text-primary font-normal italic mt-1">Promise</span>
               </motion.h2>
               
               <motion.p 
-                className="font-paragraph text-xl md:text-2xl text-foreground/80 leading-relaxed max-w-5xl mx-auto font-light"
-                initial={{ opacity: 0, y: 30 }}
+                className="font-paragraph text-lg md:text-xl text-foreground/75 leading-relaxed max-w-4xl mx-auto font-light"
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, delay: 0.6 }}
+                transition={{ duration: 1, delay: 0.5 }}
                 viewport={{ once: true }}
               >
-                We are committed to delivering not just a product, but an experience steeped in authenticity, quality, and respect for tradition. Every purchase supports artisan families and preserves cultural heritage.
+                We deliver authentic experiences steeped in tradition, quality, and respect for heritage. Every purchase supports artisan families and preserves cultural legacy.
               </motion.p>
             </motion.div>
 
-            {/* Luxury Tactile Promise Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16 mb-20">
+            {/* Compact Tactile Promise Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-16">
               {whyChooseUsItems.map((item, index) => (
                 <motion.article
                   key={index}
-                  initial={{ opacity: 0, y: 60, scale: 0.9 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 1, delay: index * 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ duration: 0.8, delay: index * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                   viewport={{ once: true }}
                   className="group relative"
                 >
-                  {/* Sophisticated Hover Glow */}
+                  {/* Premium Hover Glow */}
                   <motion.div 
-                    className="absolute -inset-6 bg-gradient-to-r from-accent-color/10 via-primary/10 to-accent-color/10 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-all duration-1000 blur-2xl"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.8 }}
+                    className="absolute -inset-4 bg-gradient-to-r from-accent-color/8 via-primary/8 to-accent-color/8 rounded-[1.8rem] opacity-0 group-hover:opacity-100 transition-all duration-800 blur-xl"
+                    whileHover={{ scale: 1.03 }}
+                    transition={{ duration: 0.6 }}
                   />
                   
-                  {/* Tactile Card Container */}
+                  {/* Compact Tactile Card Container */}
                   <motion.div
-                    whileHover={{ y: -16, scale: 1.03 }}
-                    transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    className="relative bg-white/96 backdrop-blur-xl rounded-[2rem] p-10 lg:p-12 shadow-2xl hover:shadow-3xl transition-all duration-700 border border-white/70 group-hover:border-accent-color/30 overflow-hidden"
+                    whileHover={{ 
+                      y: -12, 
+                      scale: 1.02,
+                      rotateY: 2,
+                      rotateX: 1
+                    }}
+                    transition={{ 
+                      duration: 0.5, 
+                      ease: [0.25, 0.46, 0.45, 0.94],
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 25
+                    }}
+                    className="relative bg-white/95 backdrop-blur-xl rounded-[1.5rem] p-8 lg:p-10 shadow-xl hover:shadow-2xl transition-all duration-600 border border-white/60 group-hover:border-accent-color/25 overflow-hidden"
+                    style={{
+                      transformStyle: "preserve-3d",
+                      perspective: "1000px"
+                    }}
                   >
-                    {/* Kalamkari Motif on Card */}
-                    <div className="absolute top-0 right-0 w-24 h-24 opacity-3 pointer-events-none"
+                    {/* Subtle Kalamkari Motif on Card */}
+                    <div className="absolute top-0 right-0 w-20 h-20 opacity-2 pointer-events-none"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='96' height='96' viewBox='0 0 96 96' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M48 24c13.255 0 24 10.745 24 24s-10.745 24-24 24-24-10.745-24-24 10.745-24 24-24z'/%3E%3Cpath d='M48 36c6.627 0 12 5.373 12 12s-5.373 12-12 12-12-5.373-12-12 5.373-12 12-12z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
                       }}
                     />
                     
-                    {/* Luxury Gold Icon Container */}
+                    {/* Compact Gold Icon Container */}
                     <motion.div 
-                      className="flex items-center justify-center w-28 h-28 mx-auto mb-10 relative"
-                      whileHover={{ scale: 1.15, rotate: 8 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="flex items-center justify-center w-20 h-20 mx-auto mb-8 relative"
+                      whileHover={{ 
+                        scale: 1.1, 
+                        rotate: 5,
+                        z: 20
+                      }}
+                      transition={{ 
+                        duration: 0.3, 
+                        ease: "easeOut",
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20
+                      }}
                     >
-                      {/* Multi-layered Gold Background */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/25 via-accent-color/35 to-accent-color/25 rounded-3xl shadow-xl group-hover:shadow-2xl transition-all duration-700"></div>
-                      <div className="absolute inset-2 bg-gradient-to-br from-accent-color/15 via-white/20 to-transparent rounded-2xl"></div>
-                      <div className="absolute inset-4 bg-gradient-to-br from-white/30 to-transparent rounded-xl"></div>
+                      {/* Layered Gold Background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/20 via-accent-color/30 to-accent-color/20 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-600"></div>
+                      <div className="absolute inset-1 bg-gradient-to-br from-accent-color/10 via-white/15 to-transparent rounded-xl"></div>
+                      <div className="absolute inset-3 bg-gradient-to-br from-white/25 to-transparent rounded-lg"></div>
                       
-                      {/* Icon with Enhanced Gold Styling */}
-                      <item.icon className="w-14 h-14 text-accent-color relative z-10 drop-shadow-lg" />
+                      {/* Icon with Gold Styling */}
+                      <item.icon className="w-10 h-10 text-accent-color relative z-10 drop-shadow-md" />
                       
-                      {/* Luxury Shimmer Effect */}
+                      {/* Shimmer Effect */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-3xl"
-                        animate={{ x: [-120, 120] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-2xl"
+                        animate={{ x: [-80, 80] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                       />
                     </motion.div>
                     
-                    {/* Editorial Content */}
+                    {/* Compact Content */}
                     <motion.h3 
-                      className="font-heading text-2xl lg:text-3xl text-foreground mb-8 text-center leading-tight group-hover:text-primary transition-colors duration-500 font-light tracking-tight"
-                      initial={{ opacity: 0, y: 20 }}
+                      className="font-heading text-xl lg:text-2xl text-foreground mb-6 text-center leading-tight group-hover:text-primary transition-colors duration-400 font-light tracking-tight"
+                      initial={{ opacity: 0, y: 15 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: index * 0.3 + 0.2 }}
+                      transition={{ duration: 0.6, delay: index * 0.2 + 0.1 }}
                       viewport={{ once: true }}
                     >
                       {item.title}
                     </motion.h3>
                     
                     <motion.p 
-                      className="font-paragraph text-lg text-foreground/75 leading-relaxed text-center mb-10 font-light"
-                      initial={{ opacity: 0, y: 20 }}
+                      className="font-paragraph text-base text-foreground/70 leading-relaxed text-center mb-8 font-light"
+                      initial={{ opacity: 0, y: 15 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: index * 0.3 + 0.4 }}
+                      transition={{ duration: 0.6, delay: index * 0.2 + 0.2 }}
                       viewport={{ once: true }}
                     >
                       {item.description}
                     </motion.p>
                     
-                    {/* Count-up Highlight Badge with Editorial Styling */}
+                    {/* Compact Highlight Badge */}
                     <div className="text-center">
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, delay: index * 0.3 + 0.6 }}
+                        transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-accent-color/12 via-accent-color/18 to-accent-color/12 text-primary rounded-2xl border border-accent-color/25 shadow-lg group-hover:shadow-xl transition-all duration-700 backdrop-blur-sm"
+                        whileHover={{ scale: 1.05 }}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-color/10 via-accent-color/15 to-accent-color/10 text-primary rounded-xl border border-accent-color/20 shadow-md group-hover:shadow-lg transition-all duration-600 backdrop-blur-sm"
                       >
-                        <Sparkles className="w-5 h-5 text-accent-color mr-3" />
-                        <span className="font-heading font-light text-base tracking-wide">
+                        <Sparkles className="w-4 h-4 text-accent-color mr-2" />
+                        <span className="font-heading font-light text-sm tracking-wide">
                           {index === 0 && (
                             <>
                               <CountUpNumber 
                                 end={500} 
-                                duration={2500}
-                                className="font-medium text-lg"
+                                duration={2000}
+                                className="font-medium text-base"
                                 suffix="+ "
                               />
                               Years Heritage
@@ -2700,22 +2709,22 @@ export default function HomePage() {
                             <>
                               <CountUpNumber 
                                 end={100} 
-                                duration={2500}
-                                className="font-medium text-lg"
+                                duration={2000}
+                                className="font-medium text-base"
                                 suffix="% "
                               />
-                              Natural & Sustainable
+                              Natural
                             </>
                           )}
                           {index === 2 && (
                             <>
                               <CountUpNumber 
                                 end={200} 
-                                duration={2500}
-                                className="font-medium text-lg"
+                                duration={2000}
+                                className="font-medium text-base"
                                 suffix="+ "
                               />
-                              Artisan Families
+                              Artisans
                             </>
                           )}
                         </span>
@@ -2802,95 +2811,265 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Visual Gallery - Premium Showcase */}
-        <section className="w-full py-20 md:py-28 bg-background relative">
-          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-16">
-            <AnimatedElement>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
+        {/* Woven in Elegance Gallery - Horizontal Scroll with Auto-scroll and Interactive Features */}
+        <section className="w-full py-20 md:py-24 bg-background relative overflow-hidden">
+          {/* Kalamkari Motif Background */}
+          <motion.div 
+            className="absolute inset-0 opacity-3"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.05'%3E%3Cpath d='M50 10c22.091 0 40 17.909 40 40s-17.909 40-40 40S10 72.091 10 50 27.909 10 50 10zm0 12c-15.464 0-28 12.536-28 28s12.536 28 28 28 28-12.536 28-28-12.536-28-28-28z'/%3E%3Cpath d='M50 30c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+          
+          {/* Gold Accent Elements */}
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.03, 1],
+              opacity: [0.4, 0.6, 0.4]
+            }}
+            transition={{ 
+              duration: 50, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+            className="absolute top-12 right-12 w-16 h-16 opacity-4"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 6c13.255 0 24 10.745 24 24s-10.745 24-24 24S6 43.255 6 30 16.745 6 30 6z' fill='none' stroke='%23B8860B' stroke-width='1'/%3E%3Cpath d='M30 18c6.627 0 12 5.373 12 12s-5.373 12-12 12-12-5.373-12-12 5.373-12 12-12z' fill='%23B8860B' fill-opacity='0.12'/%3E%3C/svg%3E")`,
+            }}
+          />
+          
+          <motion.div
+            animate={{ 
+              rotate: [360, 0],
+              y: [0, -12, 0],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ 
+              duration: 30, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="absolute bottom-16 left-12 w-20 h-20 opacity-3"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8c17.673 0 32 14.327 32 32s-14.327 32-32 32S8 57.673 8 40 22.327 8 40 8z' fill='none' stroke='%23A0522D' stroke-width='1.2'/%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23B8860B' fill-opacity='0.1'/%3E%3C/svg%3E")`,
+            }}
+          />
+
+          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
+            {/* Editorial Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="flex items-center justify-center gap-4 mb-8">
+                <motion.div 
+                  className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                  viewport={{ once: true }}
+                />
+                <span className="font-paragraph text-xs font-semibold text-accent-color uppercase tracking-[0.25em] relative">
+                  Visual Gallery
+                  <motion.div
+                    className="absolute -bottom-1 left-0 right-0 h-px bg-accent-color/30"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    viewport={{ once: true }}
+                  />
+                </span>
+                <motion.div 
+                  className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                  viewport={{ once: true }}
+                />
+              </div>
+              
+              <motion.h2 
+                className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-[0.9] tracking-tight font-light"
+                initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
                 viewport={{ once: true }}
-                className="text-center"
               >
-                <div className="flex items-center justify-center gap-4 mb-8">
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                  <span className="font-paragraph text-sm font-semibold text-accent-color uppercase tracking-[0.2em]">
-                    Visual Gallery
-                  </span>
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                </div>
-                
-                <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
-                  Woven in Elegance
-                </h2>
-                
-                <p className="font-paragraph text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
-                  Explore the vibrant world of Kalamkari through our visual journal of artistry, tradition, and contemporary elegance.
-                </p>
-              </motion.div>
-            </AnimatedElement>
+                Woven in
+                <span className="block text-primary font-normal italic mt-1">Elegance</span>
+              </motion.h2>
+              
+              <motion.p 
+                className="font-paragraph text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed font-light"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                viewport={{ once: true }}
+              >
+                Explore the vibrant world of Kalamkari through our visual journal of artistry, tradition, and contemporary elegance.
+              </motion.p>
+            </motion.div>
           </div>
           
-          {/* Enhanced Gallery Container */}
+          {/* Enhanced Auto-scrolling Gallery Container */}
           <div className="relative">
-            <div ref={galleryScrollRef} className="premium-scroll overflow-x-auto pb-8 px-6 md:px-8 lg:px-12">
-              <div className="flex gap-8 w-max">
+            {/* Gallery Scroll Container */}
+            <div 
+              ref={galleryScrollRef} 
+              className="premium-scroll overflow-x-auto pb-8 px-6 md:px-8 lg:px-12 scrollbar-hide"
+              style={{
+                scrollBehavior: 'smooth',
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none'
+              }}
+            >
+              <div className="flex gap-6 md:gap-8 w-max">
                 {galleryImages.map((image, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={{ once: true, margin: "0px 100px" }}
-                    whileHover={{ y: -12, scale: 1.02 }}
-                    className="gallery-item w-[35vh] md:w-[40vh] lg:w-[45vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 group relative"
+                    transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "0px 80px" }}
+                    whileHover={{ 
+                      y: -8, 
+                      scale: 1.02,
+                      rotateY: 3,
+                      rotateX: 1
+                    }}
+                    className="gallery-item w-[32vh] md:w-[36vh] lg:w-[40vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 group relative"
+                    style={{
+                      scrollSnapAlign: 'center',
+                      scrollSnapStop: 'always',
+                      transformStyle: 'preserve-3d'
+                    }}
                   >
-                    {/* Image */}
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      width={400}
-                      height={533}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    {/* Kalamkari Motif Overlay */}
+                    <div className="absolute inset-0 opacity-2 pointer-events-none z-10"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.08'%3E%3Cpath d='M30 15c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3Cpath d='M30 22c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z'/%3E%3C/g%3E%3C/svg%3E")`,
+                      }}
                     />
                     
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    {/* Main Image */}
+                    <motion.div
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                      className="w-full h-full relative"
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        width={360}
+                        height={480}
+                        className="w-full h-full object-cover"
+                        loading={index < 3 ? "eager" : "lazy"}
+                        sizes="(max-width: 768px) 32vh, (max-width: 1024px) 36vh, 40vh"
+                      />
+                    </motion.div>
                     
-                    {/* Category Label */}
+                    {/* Interactive Overlay */}
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
+                      initial={{ opacity: 0.3 }}
+                      whileHover={{ opacity: 0.8 }}
+                      transition={{ duration: 0.4 }}
+                    />
+                    
+                    {/* Gold Accent Border */}
+                    <motion.div
+                      className="absolute inset-0 border-2 border-transparent group-hover:border-accent-color/30 rounded-2xl transition-all duration-500"
+                      whileHover={{ borderColor: "rgba(184, 134, 11, 0.4)" }}
+                    />
+                    
+                    {/* Editorial Category Label */}
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileHover={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100"
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100"
                     >
-                      <span className="inline-block glass-morphism text-primary-foreground px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-md">
-                        {image.category}
-                      </span>
+                      <div className="bg-white/95 backdrop-blur-md text-primary px-4 py-2 rounded-xl text-sm font-semibold shadow-lg border border-accent-color/20">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-accent-color rounded-full"></div>
+                          <span className="font-heading tracking-wide">{image.category}</span>
+                        </div>
+                      </div>
                     </motion.div>
+                    
+                    {/* Interactive Shimmer Effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100"
+                      animate={{ x: [-100, 100] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
                   </motion.div>
                 ))}
               </div>
             </div>
             
-            {/* Enhanced Scroll Hint */}
+            {/* Enhanced Auto-scroll Indicator */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
               viewport={{ once: true }}
-              className="absolute bottom-0 right-8 md:right-16 flex items-center gap-3 text-foreground/50 text-sm font-paragraph uppercase tracking-[0.15em]"
+              className="absolute bottom-2 right-8 md:right-16 flex items-center gap-3 text-foreground/50 text-xs font-paragraph uppercase tracking-[0.2em]"
             >
-              <span>Auto-scrolling Gallery</span>
+              <div className="flex items-center gap-2">
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-2 h-2 bg-accent-color rounded-full"
+                />
+                <span className="font-medium">Auto-scrolling Gallery</span>
+              </div>
               <motion.div
-                animate={{ x: [0, 8, 0] }}
+                animate={{ x: [0, 6, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 className="flex items-center"
               >
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3 h-3" />
               </motion.div>
             </motion.div>
+            
+            {/* Accessibility Controls */}
+            <div className="absolute top-4 right-8 md:right-16 flex gap-2 opacity-70 hover:opacity-100 transition-opacity duration-300">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const container = galleryScrollRef.current;
+                  if (container) {
+                    container.scrollBy({ left: -300, behavior: 'smooth' });
+                  }
+                }}
+                className="w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 border border-white/60"
+                aria-label="Scroll gallery left"
+              >
+                <ArrowRight className="w-4 h-4 text-primary rotate-180" />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const container = galleryScrollRef.current;
+                  if (container) {
+                    container.scrollBy({ left: 300, behavior: 'smooth' });
+                  }
+                }}
+                className="w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 border border-white/60"
+                aria-label="Scroll gallery right"
+              >
+                <ArrowRight className="w-4 h-4 text-primary" />
+              </motion.button>
+            </div>
           </div>
         </section>
 
