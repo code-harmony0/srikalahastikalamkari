@@ -2811,116 +2811,242 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Woven in Elegance Gallery - Horizontal Scroll with Auto-scroll and Interactive Features */}
-        <section className="w-full py-20 md:py-24 bg-background relative overflow-hidden">
-          {/* Kalamkari Motif Background */}
+        {/* Woven in Elegance Gallery - Enhanced Interactive Horizontal Gallery with Parallax & Gold Glow */}
+        <section className="w-full py-20 md:py-24 bg-gradient-to-br from-background via-secondary/5 to-background relative overflow-hidden">
+          {/* Enhanced Kalamkari Motif Background with Parallax */}
           <motion.div 
-            className="absolute inset-0 opacity-3"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.05'%3E%3Cpath d='M50 10c22.091 0 40 17.909 40 40s-17.909 40-40 40S10 72.091 10 50 27.909 10 50 10zm0 12c-15.464 0-28 12.536-28 28s12.536 28 28 28 28-12.536 28-28-12.536-28-28-28z'/%3E%3Cpath d='M50 30c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-          
-          {/* Gold Accent Elements */}
-          <motion.div
+            className="absolute inset-0 opacity-4"
             animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.03, 1],
-              opacity: [0.4, 0.6, 0.4]
+              backgroundPosition: ["0% 0%", "100% 100%"],
+              scale: [1, 1.02, 1]
             }}
             transition={{ 
-              duration: 50, 
+              duration: 40, 
               repeat: Infinity, 
               ease: "linear" 
             }}
-            className="absolute top-12 right-12 w-16 h-16 opacity-4"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 6c13.255 0 24 10.745 24 24s-10.745 24-24 24S6 43.255 6 30 16.745 6 30 6z' fill='none' stroke='%23B8860B' stroke-width='1'/%3E%3Cpath d='M30 18c6.627 0 12 5.373 12 12s-5.373 12-12 12-12-5.373-12-12 5.373-12 12-12z' fill='%23B8860B' fill-opacity='0.12'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M60 15c24.853 0 45 20.147 45 45s-20.147 45-45 45S15 84.853 15 60 35.147 15 60 15zm0 15c-16.569 0-30 13.431-30 30s13.431 30 30 30 30-13.431 30-30-13.431-30-30-30z'/%3E%3Cpath d='M60 35c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23B8860B' fill-opacity='0.15'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "120px 120px"
+            }}
+          />
+          
+          {/* Enhanced Gold Glow Elements with Cinematic Motion */}
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.7, 0.3],
+              filter: ["brightness(1) saturate(1)", "brightness(1.3) saturate(1.5)", "brightness(1) saturate(1)"]
+            }}
+            transition={{ 
+              duration: 25, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="absolute top-16 right-16 w-24 h-24 opacity-5"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8c17.673 0 32 14.327 32 32s-14.327 32-32 32S8 57.673 8 40 22.327 8 40 8z' fill='none' stroke='%23B8860B' stroke-width='2'/%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23FFD700' fill-opacity='0.2'/%3E%3Ccircle cx='40' cy='40' r='6' fill='%23B8860B' fill-opacity='0.4'/%3E%3C/svg%3E")`,
+              filter: "drop-shadow(0 0 20px rgba(184, 134, 11, 0.4))"
             }}
           />
           
           <motion.div
             animate={{ 
               rotate: [360, 0],
-              y: [0, -12, 0],
-              opacity: [0.3, 0.5, 0.3]
+              y: [0, -20, 0],
+              x: [0, 10, 0],
+              opacity: [0.4, 0.8, 0.4],
+              filter: ["hue-rotate(0deg)", "hue-rotate(15deg)", "hue-rotate(0deg)"]
             }}
             transition={{ 
-              duration: 30, 
+              duration: 35, 
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            className="absolute bottom-16 left-12 w-20 h-20 opacity-3"
+            className="absolute bottom-20 left-16 w-28 h-28 opacity-4"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8c17.673 0 32 14.327 32 32s-14.327 32-32 32S8 57.673 8 40 22.327 8 40 8z' fill='none' stroke='%23A0522D' stroke-width='1.2'/%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23B8860B' fill-opacity='0.1'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10c22.091 0 40 17.909 40 40s-17.909 40-40 40S10 72.091 10 50 27.909 10 50 10z' fill='none' stroke='%23A0522D' stroke-width='1.5'/%3E%3Cpath d='M50 25c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z' fill='%23B8860B' fill-opacity='0.15'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%23FFD700' fill-opacity='0.3'/%3E%3C/svg%3E")`,
+              filter: "drop-shadow(0 0 15px rgba(160, 82, 45, 0.3))"
+            }}
+          />
+
+          {/* Additional Floating Gold Particles */}
+          <motion.div
+            animate={{ 
+              y: [0, -30, 0],
+              x: [0, 15, 0],
+              opacity: [0.2, 0.6, 0.2],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ 
+              duration: 20, 
+              repeat: Infinity, 
+              ease: "easeInOut",
+              delay: 5
+            }}
+            className="absolute top-1/3 left-1/4 w-6 h-6 bg-gradient-radial from-accent-color/40 to-transparent rounded-full"
+            style={{
+              filter: "blur(1px) drop-shadow(0 0 10px rgba(184, 134, 11, 0.5))"
+            }}
+          />
+          
+          <motion.div
+            animate={{ 
+              y: [0, 25, 0],
+              x: [0, -20, 0],
+              opacity: [0.3, 0.7, 0.3],
+              scale: [1, 1.3, 1]
+            }}
+            transition={{ 
+              duration: 18, 
+              repeat: Infinity, 
+              ease: "easeInOut",
+              delay: 10
+            }}
+            className="absolute top-2/3 right-1/3 w-8 h-8 bg-gradient-radial from-amber-400/30 to-transparent rounded-full"
+            style={{
+              filter: "blur(0.5px) drop-shadow(0 0 12px rgba(255, 215, 0, 0.4))"
             }}
           />
 
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
-            {/* Editorial Header */}
+            {/* Enhanced Editorial Header with Parallax Effects */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
               viewport={{ once: true }}
-              className="text-center"
+              className="text-center relative"
             >
-              <div className="flex items-center justify-center gap-4 mb-8">
+              {/* Floating Gold Accent Lines */}
+              <div className="flex items-center justify-center gap-6 mb-8 relative">
                 <motion.div 
-                  className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1, delay: 0.2 }}
+                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent relative"
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  whileInView={{ scaleX: 1, opacity: 1 }}
+                  transition={{ duration: 1.5, delay: 0.2 }}
                   viewport={{ once: true }}
-                />
-                <span className="font-paragraph text-xs font-semibold text-accent-color uppercase tracking-[0.25em] relative">
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400 to-transparent"
+                    animate={{ x: [-100, 100] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ filter: "blur(1px)" }}
+                  />
+                </motion.div>
+                
+                <motion.span 
+                  className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] relative px-4 py-2 bg-gradient-to-r from-accent-color/10 via-accent-color/20 to-accent-color/10 rounded-xl border border-accent-color/30 backdrop-blur-sm"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  viewport={{ once: true }}
+                >
                   Visual Gallery
                   <motion.div
-                    className="absolute -bottom-1 left-0 right-0 h-px bg-accent-color/30"
+                    className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-px bg-accent-color"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
                     viewport={{ once: true }}
                   />
-                </span>
+                  {/* Shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-xl"
+                    animate={{ x: [-100, 100] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </motion.span>
+                
                 <motion.div 
-                  className="w-16 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1, delay: 0.2 }}
+                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent relative"
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  whileInView={{ scaleX: 1, opacity: 1 }}
+                  transition={{ duration: 1.5, delay: 0.2 }}
                   viewport={{ once: true }}
-                />
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400 to-transparent"
+                    animate={{ x: [100, -100] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ filter: "blur(1px)" }}
+                  />
+                </motion.div>
               </div>
               
+              {/* Enhanced Title with Gold Glow */}
               <motion.h2 
-                className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 leading-[0.9] tracking-tight font-light"
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                className="font-heading text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[0.85] tracking-tight font-light relative"
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
                 viewport={{ once: true }}
+                style={{
+                  textShadow: "0 0 30px rgba(184, 134, 11, 0.3), 0 0 60px rgba(184, 134, 11, 0.1)"
+                }}
               >
-                Woven in
-                <span className="block text-primary font-normal italic mt-1">Elegance</span>
+                <motion.span
+                  className="block"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Woven in
+                </motion.span>
+                <motion.span 
+                  className="block text-primary font-normal italic mt-2 relative"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    background: "linear-gradient(135deg, #A0522D 0%, #B8860B 50%, #DAA520 100%)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    filter: "drop-shadow(0 0 20px rgba(184, 134, 11, 0.4))"
+                  }}
+                >
+                  Elegance
+                  {/* Gold glow effect */}
+                  <motion.div
+                    className="absolute inset-0 opacity-30"
+                    animate={{ 
+                      boxShadow: [
+                        "0 0 20px rgba(184, 134, 11, 0.3)",
+                        "0 0 40px rgba(184, 134, 11, 0.5)",
+                        "0 0 20px rgba(184, 134, 11, 0.3)"
+                      ]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </motion.span>
               </motion.h2>
               
+              {/* Enhanced Description with Parallax */}
               <motion.p 
-                className="font-paragraph text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed font-light"
+                className="font-paragraph text-xl md:text-2xl text-foreground/75 max-w-4xl mx-auto leading-relaxed font-light relative"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
+                transition={{ duration: 1, delay: 0.6 }}
                 viewport={{ once: true }}
               >
                 Explore the vibrant world of Kalamkari through our visual journal of artistry, tradition, and contemporary elegance.
+                <motion.span
+                  className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-accent-color/50 to-transparent"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  transition={{ duration: 1, delay: 1 }}
+                  viewport={{ once: true }}
+                />
               </motion.p>
             </motion.div>
           </div>
           
-          {/* Enhanced Auto-scrolling Gallery Container */}
+          {/* Enhanced Interactive Gallery Container with Parallax Scrolling */}
           <div className="relative">
-            {/* Gallery Scroll Container */}
+            {/* Gallery Scroll Container with Enhanced Parallax */}
             <div 
               ref={galleryScrollRef} 
-              className="premium-scroll overflow-x-auto pb-8 px-6 md:px-8 lg:px-12 scrollbar-hide"
+              className="premium-scroll overflow-x-auto pb-8 px-6 md:px-8 lg:px-12 scrollbar-hide relative"
               style={{
                 scrollBehavior: 'smooth',
                 scrollSnapType: 'x mandatory',
@@ -2929,215 +3055,648 @@ export default function HomePage() {
                 msOverflowStyle: 'none'
               }}
             >
-              <div className="flex gap-6 md:gap-8 w-max">
+              {/* Parallax Background Layer */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.05) 25%, rgba(255, 215, 0, 0.03) 50%, rgba(184, 134, 11, 0.05) 75%, transparent 100%)",
+                  backgroundSize: "200% 100%"
+                }}
+                animate={{ backgroundPosition: ["0% 0%", "100% 0%"] }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              />
+              
+              <div className="flex gap-8 md:gap-10 w-max relative">
                 {galleryImages.map((image, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                    initial={{ opacity: 0, scale: 0.9, y: 40 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: index * 0.08, ease: "easeOut" }}
-                    viewport={{ once: true, margin: "0px 80px" }}
-                    whileHover={{ 
-                      y: -8, 
-                      scale: 1.02,
-                      rotateY: 3,
-                      rotateX: 1
+                    transition={{ 
+                      duration: 0.8, 
+                      delay: index * 0.1, 
+                      ease: [0.25, 0.46, 0.45, 0.94] 
                     }}
-                    className="gallery-item w-[32vh] md:w-[36vh] lg:w-[40vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 group relative"
+                    viewport={{ once: true, margin: "0px 100px" }}
+                    whileHover={{ 
+                      y: -12, 
+                      scale: 1.03,
+                      rotateY: 4,
+                      rotateX: 2,
+                      z: 50
+                    }}
+                    className="gallery-item w-[34vh] md:w-[38vh] lg:w-[42vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-700 group relative"
                     style={{
                       scrollSnapAlign: 'center',
                       scrollSnapStop: 'always',
-                      transformStyle: 'preserve-3d'
+                      transformStyle: 'preserve-3d',
+                      perspective: '1000px'
                     }}
                   >
-                    {/* Kalamkari Motif Overlay */}
-                    <div className="absolute inset-0 opacity-2 pointer-events-none z-10"
+                    {/* Enhanced Gold Glow Border */}
+                    <motion.div
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.08'%3E%3Cpath d='M30 15c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3Cpath d='M30 22c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        background: "linear-gradient(45deg, rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.3), rgba(184, 134, 11, 0.4))",
+                        filter: "blur(8px)",
+                        transform: "scale(1.05)"
+                      }}
+                      animate={{
+                        background: [
+                          "linear-gradient(45deg, rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.3), rgba(184, 134, 11, 0.4))",
+                          "linear-gradient(45deg, rgba(255, 215, 0, 0.5), rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.5))",
+                          "linear-gradient(45deg, rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.3), rgba(184, 134, 11, 0.4))"
+                        ]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    
+                    {/* Enhanced Kalamkari Motif Overlay with Animation */}
+                    <motion.div 
+                      className="absolute inset-0 opacity-3 pointer-events-none z-10"
+                      animate={{ 
+                        backgroundPosition: ["0% 0%", "100% 100%"],
+                        opacity: [0.3, 0.5, 0.3]
+                      }}
+                      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.12'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%23FFD700' fill-opacity='0.3'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundSize: "80px 80px"
                       }}
                     />
                     
-                    {/* Main Image */}
+                    {/* Main Image with Enhanced Parallax */}
                     <motion.div
-                      whileHover={{ scale: 1.08 }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
-                      className="w-full h-full relative"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className="w-full h-full relative overflow-hidden rounded-3xl"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, transparent 50%, rgba(255, 215, 0, 0.1) 100%)"
+                      }}
                     >
                       <Image
                         src={image.src}
                         alt={image.alt}
-                        width={360}
-                        height={480}
-                        className="w-full h-full object-cover"
+                        width={420}
+                        height={560}
+                        className="w-full h-full object-cover transition-all duration-700 group-hover:brightness-110 group-hover:contrast-105"
                         loading={index < 3 ? "eager" : "lazy"}
-                        sizes="(max-width: 768px) 32vh, (max-width: 1024px) 36vh, 40vh"
+                        sizes="(max-width: 768px) 34vh, (max-width: 1024px) 38vh, 42vh"
+                        style={{
+                          filter: "saturate(1.1) contrast(1.02)"
+                        }}
+                      />
+                      
+                      {/* Enhanced Gold Shimmer Effect */}
+                      <motion.div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                        style={{
+                          background: "linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.3) 50%, transparent 70%)",
+                          backgroundSize: "200% 200%"
+                        }}
+                        animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />
                     </motion.div>
                     
-                    {/* Interactive Overlay */}
+                    {/* Enhanced Interactive Overlay with Cinematic Gradient */}
                     <motion.div 
-                      className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
+                      className="absolute inset-0 rounded-3xl"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 30%, rgba(184, 134, 11, 0.1) 70%, rgba(255, 215, 0, 0.2) 100%)"
+                      }}
                       initial={{ opacity: 0.3 }}
-                      whileHover={{ opacity: 0.8 }}
-                      transition={{ duration: 0.4 }}
+                      whileHover={{ opacity: 0.7 }}
+                      transition={{ duration: 0.5 }}
                     />
                     
-                    {/* Gold Accent Border */}
+                    {/* Enhanced Gold Border with Glow */}
                     <motion.div
-                      className="absolute inset-0 border-2 border-transparent group-hover:border-accent-color/30 rounded-2xl transition-all duration-500"
-                      whileHover={{ borderColor: "rgba(184, 134, 11, 0.4)" }}
+                      className="absolute inset-0 border-2 border-transparent group-hover:border-accent-color/60 rounded-3xl transition-all duration-500"
+                      whileHover={{ 
+                        borderColor: "rgba(184, 134, 11, 0.8)",
+                        boxShadow: "0 0 30px rgba(184, 134, 11, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.1)"
+                      }}
+                      style={{
+                        background: "linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent)",
+                        backgroundSize: "200% 200%"
+                      }}
+                      animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                     />
                     
-                    {/* Editorial Category Label */}
+                    {/* Enhanced Category Label with Gold Accent */}
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileHover={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                      className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100"
+                      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                      whileHover={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100"
                     >
-                      <div className="bg-white/95 backdrop-blur-md text-primary px-4 py-2 rounded-xl text-sm font-semibold shadow-lg border border-accent-color/20">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-accent-color rounded-full"></div>
-                          <span className="font-heading tracking-wide">{image.category}</span>
+                      <motion.div 
+                        className="bg-gradient-to-r from-white/95 via-white/98 to-white/95 backdrop-blur-xl text-primary px-6 py-3 rounded-2xl shadow-xl border border-accent-color/30 relative overflow-hidden"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        transition={{ duration: 0.3 }}
+                        style={{
+                          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), 0 0 20px rgba(184, 134, 11, 0.2)"
+                        }}
+                      >
+                        {/* Gold shimmer background */}
+                        <motion.div
+                          className="absolute inset-0 opacity-20"
+                          style={{
+                            background: "linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.3) 50%, transparent 100%)",
+                            backgroundSize: "200% 100%"
+                          }}
+                          animate={{ backgroundPosition: ["0% 0%", "100% 0%"] }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        />
+                        
+                        <div className="flex items-center gap-3 relative z-10">
+                          <motion.div 
+                            className="w-3 h-3 bg-gradient-to-r from-accent-color to-amber-400 rounded-full shadow-lg"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            style={{
+                              boxShadow: "0 0 10px rgba(184, 134, 11, 0.5)"
+                            }}
+                          />
+                          <span className="font-heading tracking-wide font-semibold text-base">
+                            {image.category}
+                          </span>
                         </div>
-                      </div>
+                      </motion.div>
                     </motion.div>
                     
-                    {/* Interactive Shimmer Effect */}
+                    {/* Enhanced Floating Gold Particles */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100"
-                      animate={{ x: [-100, 100] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute top-4 right-4 w-2 h-2 bg-gradient-radial from-accent-color to-transparent rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ 
+                        y: [0, -10, 0],
+                        opacity: [0.5, 1, 0.5],
+                        scale: [1, 1.3, 1]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                      style={{
+                        filter: "blur(0.5px) drop-shadow(0 0 8px rgba(184, 134, 11, 0.6))"
+                      }}
+                    />
+                    
+                    <motion.div
+                      className="absolute bottom-1/3 left-4 w-1.5 h-1.5 bg-gradient-radial from-amber-400 to-transparent rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ 
+                        x: [0, 8, 0],
+                        opacity: [0.4, 0.8, 0.4],
+                        scale: [1, 1.2, 1]
+                      }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                      style={{
+                        filter: "blur(0.3px) drop-shadow(0 0 6px rgba(255, 215, 0, 0.5))"
+                      }}
                     />
                   </motion.div>
                 ))}
               </div>
             </div>
             
-            {/* Enhanced Auto-scroll Indicator */}
+            {/* Enhanced Auto-scroll Indicator with Gold Glow */}
             <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
               viewport={{ once: true }}
-              className="absolute bottom-2 right-8 md:right-16 flex items-center gap-3 text-foreground/50 text-xs font-paragraph uppercase tracking-[0.2em]"
+              className="absolute bottom-4 right-8 md:right-16 flex items-center gap-4 text-foreground/60 text-sm font-paragraph uppercase tracking-[0.2em] bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl border border-accent-color/20 shadow-lg"
+              style={{
+                boxShadow: "0 4px 20px rgba(184, 134, 11, 0.1)"
+              }}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <motion.div
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-2 h-2 bg-accent-color rounded-full"
+                  animate={{ 
+                    scale: [1, 1.3, 1], 
+                    opacity: [0.5, 1, 0.5],
+                    boxShadow: [
+                      "0 0 5px rgba(184, 134, 11, 0.3)",
+                      "0 0 15px rgba(184, 134, 11, 0.6)",
+                      "0 0 5px rgba(184, 134, 11, 0.3)"
+                    ]
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-2.5 h-2.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full"
                 />
-                <span className="font-medium">Auto-scrolling Gallery</span>
+                <span className="font-medium text-primary">Auto-scrolling Gallery</span>
               </div>
               <motion.div
-                animate={{ x: [0, 6, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                animate={{ x: [0, 8, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 className="flex items-center"
               >
-                <ArrowRight className="w-3 h-3" />
+                <ArrowRight className="w-4 h-4 text-accent-color" />
               </motion.div>
             </motion.div>
             
-            {/* Accessibility Controls */}
-            <div className="absolute top-4 right-8 md:right-16 flex gap-2 opacity-70 hover:opacity-100 transition-opacity duration-300">
+            {/* Enhanced Accessibility Controls with Gold Styling */}
+            <div className="absolute top-6 right-8 md:right-16 flex gap-3 opacity-80 hover:opacity-100 transition-opacity duration-300">
               <motion.button
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.15, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   const container = galleryScrollRef.current;
                   if (container) {
-                    container.scrollBy({ left: -300, behavior: 'smooth' });
+                    container.scrollBy({ left: -400, behavior: 'smooth' });
                   }
                 }}
-                className="w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 border border-white/60"
+                className="w-10 h-10 bg-gradient-to-br from-white/95 via-white/98 to-white/95 backdrop-blur-xl rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 border border-accent-color/30 group"
                 aria-label="Scroll gallery left"
+                style={{
+                  boxShadow: "0 4px 20px rgba(184, 134, 11, 0.15)"
+                }}
               >
-                <ArrowRight className="w-4 h-4 text-primary rotate-180" />
+                <ArrowRight className="w-5 h-5 text-primary rotate-180 group-hover:text-accent-color transition-colors" />
+                <motion.div
+                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
+                  style={{
+                    background: "linear-gradient(45deg, rgba(184, 134, 11, 0.1), rgba(255, 215, 0, 0.1))"
+                  }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                />
               </motion.button>
+              
               <motion.button
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.15, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   const container = galleryScrollRef.current;
                   if (container) {
-                    container.scrollBy({ left: 300, behavior: 'smooth' });
+                    container.scrollBy({ left: 400, behavior: 'smooth' });
                   }
                 }}
-                className="w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 border border-white/60"
+                className="w-10 h-10 bg-gradient-to-br from-white/95 via-white/98 to-white/95 backdrop-blur-xl rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 border border-accent-color/30 group"
                 aria-label="Scroll gallery right"
+                style={{
+                  boxShadow: "0 4px 20px rgba(184, 134, 11, 0.15)"
+                }}
               >
-                <ArrowRight className="w-4 h-4 text-primary" />
+                <ArrowRight className="w-5 h-5 text-primary group-hover:text-accent-color transition-colors" />
+                <motion.div
+                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
+                  style={{
+                    background: "linear-gradient(45deg, rgba(184, 134, 11, 0.1), rgba(255, 215, 0, 0.1))"
+                  }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                />
               </motion.button>
             </div>
           </div>
         </section>
 
-        {/* Newsletter Section - Premium Subscription */}
-        <section className="w-full py-20 md:py-28 bg-gradient-to-br from-primary via-amber-800 to-primary text-primary-foreground relative overflow-hidden">
-          <div className="absolute inset-0 heritage-texture opacity-10"></div>
-          <DecorativePattern className="text-primary-foreground/8 premium-shimmer heritage-float" animated={true} />
+        {/* Enhanced Newsletter Section - Premium Subscription with Gradient & Woven Texture */}
+        <section className="w-full py-24 md:py-32 relative overflow-hidden">
+          {/* Enhanced Gradient Background with Woven Texture */}
+          <div className="absolute inset-0">
+            {/* Primary gradient layer */}
+            <div 
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(135deg, #A0522D 0%, #8B4513 25%, #B8860B 50%, #DAA520 75%, #A0522D 100%)",
+                backgroundSize: "400% 400%"
+              }}
+            />
+            
+            {/* Animated gradient overlay */}
+            <motion.div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(45deg, rgba(184, 134, 11, 0.3) 0%, rgba(255, 215, 0, 0.2) 25%, rgba(160, 82, 45, 0.3) 50%, rgba(218, 165, 32, 0.2) 75%, rgba(184, 134, 11, 0.3) 100%)",
+                backgroundSize: "300% 300%"
+              }}
+              animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            />
+            
+            {/* Woven texture pattern */}
+            <div 
+              className="absolute inset-0 opacity-15"
+              style={{
+                backgroundImage: `
+                  linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%),
+                  linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%),
+                  linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.1) 75%),
+                  linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.1) 75%)
+                `,
+                backgroundSize: "20px 20px",
+                backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px"
+              }}
+            />
+            
+            {/* Additional woven cross-hatch */}
+            <motion.div 
+              className="absolute inset-0 opacity-8"
+              animate={{ 
+                backgroundPosition: ["0px 0px", "40px 40px"],
+                opacity: [0.08, 0.12, 0.08]
+              }}
+              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                backgroundImage: `
+                  repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.05) 0px,
+                    transparent 1px,
+                    transparent 10px,
+                    rgba(255, 255, 255, 0.05) 11px
+                  ),
+                  repeating-linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.05) 0px,
+                    transparent 1px,
+                    transparent 10px,
+                    rgba(255, 255, 255, 0.05) 11px
+                  )
+                `
+              }}
+            />
+          </div>
           
-          <div className="max-w-4xl mx-auto text-center px-6 md:px-8 lg:px-12 relative z-10">
+          {/* Enhanced Heritage Texture Overlay */}
+          <div className="absolute inset-0 opacity-12">
+            <div 
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `
+                  radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+                  radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                  radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06) 1.5px, transparent 1.5px)
+                `,
+                backgroundSize: "30px 30px, 20px 20px, 25px 25px"
+              }}
+            />
+          </div>
+          
+          {/* Enhanced Decorative Pattern with Animation */}
+          <motion.div
+            className="absolute inset-0 opacity-8"
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          >
+            <div 
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.1'%3E%3Cpath d='M50 15c19.33 0 35 15.67 35 35s-15.67 35-35 35S15 69.33 15 50 30.67 15 50 15zm0 10c-13.807 0-25 11.193-25 25s11.193 25 25 25 25-11.193 25-25-11.193-25-25-25z'/%3E%3Cpath d='M50 30c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundSize: "100px 100px"
+              }}
+            />
+          </motion.div>
+          
+          {/* Floating Gold Elements */}
+          <motion.div
+            animate={{ 
+              y: [0, -20, 0],
+              x: [0, 10, 0],
+              opacity: [0.3, 0.6, 0.3],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-20 right-20 w-16 h-16 opacity-4"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 8c12.15 0 22 9.85 22 22s-9.85 22-22 22S8 42.15 8 30 17.85 8 30 8z' fill='none' stroke='%23FFFFFF' stroke-width='1.5' stroke-opacity='0.3'/%3E%3Cpath d='M30 18c6.627 0 12 5.373 12 12s-5.373 12-12 12-12-5.373-12-12 5.373-12 12-12z' fill='%23FFFFFF' fill-opacity='0.2'/%3E%3C/svg%3E")`,
+              filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))"
+            }}
+          />
+          
+          <motion.div
+            animate={{ 
+              y: [0, 15, 0],
+              x: [0, -8, 0],
+              opacity: [0.2, 0.5, 0.2],
+              rotate: [0, 180, 360]
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-24 left-16 w-12 h-12 opacity-3"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 5c11.046 0 20 8.954 20 20s-8.954 20-20 20S5 36.046 5 25 13.954 5 25 5z' fill='none' stroke='%23FFFFFF' stroke-width='1' stroke-opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='8' fill='%23FFFFFF' fill-opacity='0.15'/%3E%3C/svg%3E")`,
+              filter: "drop-shadow(0 0 8px rgba(255, 255, 255, 0.15))"
+            }}
+          />
+          
+          <div className="max-w-5xl mx-auto text-center px-6 md:px-8 lg:px-12 relative z-10">
             <AnimatedElement>
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
                 viewport={{ once: true }}
               >
-                <div className="flex items-center justify-center gap-4 mb-8">
-                  <Sparkles className="w-6 h-6 text-accent-color" />
-                  <span className="font-paragraph text-sm font-semibold text-accent-color uppercase tracking-[0.2em]">
-                    Stay Connected
-                  </span>
-                  <Sparkles className="w-6 h-6 text-accent-color" />
-                </div>
-                
-                <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-primary-foreground mb-6 leading-tight text-shadow-luxury">
-                  Join the Heritage Collective
-                </h2>
-                
-                <p className="font-paragraph text-lg md:text-xl text-primary-foreground/95 mb-12 leading-relaxed max-w-3xl mx-auto">
-                  Become a part of our story. Receive exclusive access to new collections, artisan stories, cultural insights, and special member-only offers.
-                </p>
-                
-                {/* Enhanced Newsletter Form */}
-                <form className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="flex-grow h-14 px-6 bg-white/95 backdrop-blur-sm border-2 border-white/50 rounded-2xl placeholder:text-foreground/50 font-paragraph focus:ring-4 focus:ring-primary-foreground/30 focus:outline-none focus:border-primary-foreground text-foreground text-base transition-all duration-300"
-                  />
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="h-14 px-8 rounded-2xl font-paragraph bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold text-base transition-all duration-300 hover:scale-105 shadow-xl"
+                {/* Enhanced Header with Animated Badges */}
+                <div className="flex items-center justify-center gap-6 mb-10">
+                  <motion.div
+                    animate={{ rotate: [0, 360] }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   >
-                    Subscribe Now
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </form>
-                
-                {/* Trust Indicators */}
-                <div className="flex flex-wrap justify-center items-center gap-6 text-primary-foreground/90 text-sm font-paragraph mb-6 font-medium">
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-4 h-4 fill-red-400 text-red-400" />
-                    <span className="font-semibold">5,000+ Subscribers</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-400 drop-shadow-sm" />
-                    <span className="font-semibold">Exclusive Content</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Award className="w-4 h-4 text-accent-color" />
-                    <span className="font-semibold">Member Benefits</span>
-                  </div>
+                    <Sparkles className="w-7 h-7 text-accent-color" style={{ filter: "drop-shadow(0 0 8px rgba(184, 134, 11, 0.5))" }} />
+                  </motion.div>
+                  
+                  <motion.span 
+                    className="font-paragraph text-base font-bold text-accent-color uppercase tracking-[0.3em] px-6 py-3 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg relative overflow-hidden"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    Stay Connected
+                    {/* Animated shimmer */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: [-100, 100] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  </motion.span>
+                  
+                  <motion.div
+                    animate={{ rotate: [360, 0] }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Sparkles className="w-7 h-7 text-accent-color" style={{ filter: "drop-shadow(0 0 8px rgba(184, 134, 11, 0.5))" }} />
+                  </motion.div>
                 </div>
                 
-                <p className="text-sm text-primary-foreground/70 font-paragraph">
+                {/* Enhanced Title with Gold Glow */}
+                <motion.h2 
+                  className="font-heading text-5xl md:text-6xl lg:text-7xl text-primary-foreground mb-8 leading-tight relative"
+                  style={{
+                    textShadow: "0 0 30px rgba(255, 255, 255, 0.3), 0 4px 20px rgba(0, 0, 0, 0.3)",
+                    filter: "drop-shadow(0 0 20px rgba(184, 134, 11, 0.2))"
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Join the Heritage Collective
+                  
+                  {/* Floating gold particles around title */}
+                  <motion.div
+                    className="absolute -top-4 -right-4 w-3 h-3 bg-gradient-radial from-accent-color to-transparent rounded-full"
+                    animate={{ 
+                      y: [0, -10, 0],
+                      opacity: [0.5, 1, 0.5],
+                      scale: [1, 1.3, 1]
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ filter: "blur(0.5px) drop-shadow(0 0 8px rgba(184, 134, 11, 0.6))" }}
+                  />
+                  
+                  <motion.div
+                    className="absolute -bottom-2 -left-6 w-2 h-2 bg-gradient-radial from-amber-400 to-transparent rounded-full"
+                    animate={{ 
+                      x: [0, 8, 0],
+                      opacity: [0.4, 0.8, 0.4],
+                      scale: [1, 1.2, 1]
+                    }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    style={{ filter: "blur(0.3px) drop-shadow(0 0 6px rgba(255, 215, 0, 0.5))" }}
+                  />
+                </motion.h2>
+                
+                {/* Enhanced Description */}
+                <motion.p 
+                  className="font-paragraph text-xl md:text-2xl text-primary-foreground/95 mb-14 leading-relaxed max-w-4xl mx-auto font-light"
+                  style={{
+                    textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)"
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  Become a part of our story. Receive exclusive access to new collections, artisan stories, cultural insights, and special member-only offers.
+                </motion.p>
+                
+                {/* Enhanced Newsletter Form with Improved Input & Button */}
+                <motion.form 
+                  className="flex flex-col sm:flex-row gap-5 max-w-3xl mx-auto mb-10"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.div 
+                    className="flex-grow relative"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      className="w-full h-16 px-8 bg-white/95 backdrop-blur-md border-2 border-white/60 hover:border-white/80 focus:border-accent-color rounded-2xl placeholder:text-foreground/60 font-paragraph focus:ring-4 focus:ring-accent-color/30 focus:outline-none text-foreground text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                      style={{
+                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)"
+                      }}
+                    />
+                    {/* Input glow effect */}
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                      style={{
+                        background: "linear-gradient(45deg, transparent, rgba(184, 134, 11, 0.1), transparent)",
+                        filter: "blur(1px)"
+                      }}
+                    />
+                  </motion.div>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Button 
+                      type="submit" 
+                      size="lg" 
+                      className="h-16 px-10 rounded-2xl font-paragraph bg-gradient-to-r from-primary-foreground via-white to-primary-foreground hover:from-white hover:via-primary-foreground hover:to-white text-primary font-bold text-lg transition-all duration-500 shadow-xl hover:shadow-2xl border-2 border-white/20 hover:border-accent-color/30 relative overflow-hidden group"
+                      style={{
+                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
+                      }}
+                    >
+                      {/* Button shimmer effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-color/20 to-transparent opacity-0 group-hover:opacity-100"
+                        animate={{ x: [-100, 100] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                      
+                      <span className="relative z-10 flex items-center gap-3">
+                        Subscribe Now
+                        <motion.div
+                          animate={{ x: [0, 4, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <ArrowRight className="w-6 h-6" />
+                        </motion.div>
+                      </span>
+                    </Button>
+                  </motion.div>
+                </motion.form>
+                
+                {/* Enhanced Trust Indicators with Animated Badges */}
+                <motion.div 
+                  className="flex flex-wrap justify-center items-center gap-8 text-primary-foreground/90 text-base font-paragraph mb-8 font-medium"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.7 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.div 
+                    className="flex items-center gap-3 px-4 py-2 bg-white/15 backdrop-blur-md rounded-xl border border-white/20 shadow-lg"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <Heart className="w-5 h-5 fill-red-400 text-red-400" style={{ filter: "drop-shadow(0 0 8px rgba(239, 68, 68, 0.5))" }} />
+                    </motion.div>
+                    <span className="font-semibold">5,000+ Subscribers</span>
+                  </motion.div>
+                  
+                  <motion.div 
+                    className="flex items-center gap-3 px-4 py-2 bg-white/15 backdrop-blur-md rounded-xl border border-white/20 shadow-lg"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.div
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Star className="w-5 h-5 fill-amber-400 text-amber-400" style={{ filter: "drop-shadow(0 0 8px rgba(251, 191, 36, 0.5))" }} />
+                    </motion.div>
+                    <span className="font-semibold">Exclusive Content</span>
+                  </motion.div>
+                  
+                  <motion.div 
+                    className="flex items-center gap-3 px-4 py-2 bg-white/15 backdrop-blur-md rounded-xl border border-white/20 shadow-lg"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.div
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <Award className="w-5 h-5 text-accent-color" style={{ filter: "drop-shadow(0 0 8px rgba(184, 134, 11, 0.5))" }} />
+                    </motion.div>
+                    <span className="font-semibold">Member Benefits</span>
+                  </motion.div>
+                </motion.div>
+                
+                {/* Enhanced Privacy Notice */}
+                <motion.p 
+                  className="text-base text-primary-foreground/80 font-paragraph leading-relaxed"
+                  style={{
+                    textShadow: "0 1px 4px rgba(0, 0, 0, 0.3)"
+                  }}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.9 }}
+                  viewport={{ once: true }}
+                >
                   We respect your privacy. Unsubscribe at any time. No spam, just beautiful heritage content.
-                </p>
+                </motion.p>
               </motion.div>
             </AnimatedElement>
           </div>
