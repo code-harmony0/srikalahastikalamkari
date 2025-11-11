@@ -2497,176 +2497,198 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* The Kalamkari Promise Section - Compact Tactile Cards with Premium Motion */}
-        <section className="w-full py-20 md:py-24 bg-gradient-to-br from-background via-secondary/8 to-background relative overflow-hidden">
-          {/* Subtle Kalamkari Background Motifs */}
-          <motion.div 
-            className="absolute inset-0 opacity-4"
+        {/* The Kalamkari Promise Section - Authentic Hand-drawn Motifs */}
+        <section className="w-full py-20 md:py-24 relative overflow-hidden">
+          {/* Ivory/Parchment Base Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#FDF6E3] via-[#FAF0E6] to-[#F5F5DC]"></div>
+          
+          {/* Authentic Kalamkari Floral Vines - Hand-drawn Style */}
+          <div 
+            className="absolute inset-0 opacity-12"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M60 12c26.51 0 48 21.49 48 48s-21.49 48-48 48S12 86.51 12 60 33.49 12 60 12zm0 16c-17.673 0-32 14.327-32 32s14.327 32 32 32 32-14.327 32-32-14.327-32-32-32z'/%3E%3Cpath d='M60 36c13.255 0 24 10.745 24 24s-10.745 24-24 24-24-10.745-24-24 10.745-24 24-24z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Flowing vine with organic curves --%3E%3Cpath d='M20 120c20-40 60-20 80-60s60 20 80-20 40 40 40 80-20 60-60 40-40-60-80-20-60-40-60-20z' fill='none' stroke-opacity='0.15'/%3E%3C!-- Delicate leaves along vine --%3E%3Cpath d='M45 95c8-4 12 2 8 8s-12 2-8-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M85 75c6-6 14 0 8 8s-14 2-8-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M125 85c8-2 10 6 4 8s-12-2-4-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M165 105c6-4 12 4 6 8s-12 0-6-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3C!-- Small decorative flowers --%3E%3Ccircle cx='60' cy='110' r='3' fill='%23B8860B' fill-opacity='0.12'/%3E%3Ccircle cx='140' cy='90' r='2.5' fill='%23B8860B' fill-opacity='0.12'/%3E%3Ccircle cx='180' cy='130' r='2' fill='%23B8860B' fill-opacity='0.12'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "240px 240px",
+              backgroundPosition: "0 0, 120px 120px"
             }}
           />
           
-          {/* Floating Gold Accents */}
-          <motion.div
-            animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.05, 1],
-              opacity: [0.3, 0.5, 0.3]
-            }}
-            transition={{ 
-              duration: 40, 
-              repeat: Infinity, 
-              ease: "linear" 
-            }}
-            className="absolute top-16 right-16 w-24 h-24 opacity-4"
+          {/* Traditional Paisley Motifs - Authentic Teardrop Shapes */}
+          <div 
+            className="absolute inset-0 opacity-10"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8c17.673 0 32 14.327 32 32s-14.327 32-32 32S8 57.673 8 40 22.327 8 40 8z' fill='none' stroke='%23B8860B' stroke-width='1.5'/%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23B8860B' fill-opacity='0.15'/%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='1' stroke-linecap='round'%3E%3C!-- Large paisley with internal details --%3E%3Cpath d='M50 40c20 0 35 15 35 35 0 25-20 45-35 45-20 0-35-20-35-45 0-20 15-35 35-35z' fill='%23B8860B' fill-opacity='0.06' stroke-opacity='0.12'/%3E%3C!-- Internal paisley decoration --%3E%3Cpath d='M45 55c8 0 15 7 15 15 0 12-10 20-15 20s-15-8-15-20c0-8 7-15 15-15z' fill='none' stroke-opacity='0.08'/%3E%3Cpath d='M48 65c3 0 6 3 6 6s-3 6-6 6-6-3-6-6 3-6 6-6z' fill='%23A0522D' fill-opacity='0.08'/%3E%3C!-- Smaller paisley --%3E%3Cpath d='M130 120c12 0 20 8 20 20 0 15-12 25-20 25s-20-10-20-25c0-12 8-20 20-20z' fill='%23B8860B' fill-opacity='0.05' stroke-opacity='0.10'/%3E%3Cpath d='M128 135c4 0 8 4 8 8s-4 8-8 8-8-4-8-8 4-8 8-8z' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "180px 180px",
+              backgroundPosition: "45px 45px"
+            }}
+          />
+          
+          {/* Lotus and Geometric Border Elements */}
+          <div 
+            className="absolute inset-0 opacity-8"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.8' stroke-linecap='round'%3E%3C!-- Lotus flower with petals --%3E%3Cg transform='translate(80,80)'%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10'/%3E%3Cpath d='M0-15c-3-3-8-2-8 2s5 5 8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(45)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(90)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(135)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(180)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(225)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(270)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(315)'/%3E%3Ccircle cx='0' cy='0' r='4' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C!-- Geometric border elements --%3E%3Crect x='20' y='20' width='8' height='8' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Crect x='132' y='132' width='8' height='8' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Cpath d='M30 140c4 0 8-4 8-8s-4-8-8-8-8 4-8 8 4 8 8 8z' fill='none' stroke-opacity='0.08'/%3E%3Cpath d='M130 30c4 0 8-4 8-8s-4-8-8-8-8 4-8 8 4 8 8 8z' fill='none' stroke-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "160px 160px",
+              backgroundPosition: "20px 20px"
+            }}
+          />
+          
+          {/* Subtle Parchment Texture */}
+          <div 
+            className="absolute inset-0 opacity-6"
+            style={{
+              backgroundImage: `
+                radial-gradient(circle at 25% 25%, rgba(160, 82, 45, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
+                linear-gradient(45deg, rgba(245, 245, 220, 0.04) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(245, 245, 220, 0.04) 25%, transparent 25%)
+              `,
+              backgroundSize: "20px 20px, 16px 16px, 8px 8px, 8px 8px",
+              backgroundPosition: "0 0, 10px 10px, 0 0, 4px 4px"
             }}
           />
           
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-            {/* Compact Editorial Header */}
+            {/* Refined Editorial Header with Smooth Fade Animation */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               viewport={{ once: true }}
               className="text-center max-w-5xl mx-auto mb-16"
             >
               <div className="flex items-center justify-center gap-6 mb-8">
                 <motion.div 
                   className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1.2, delay: 0.2 }}
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  whileInView={{ scaleX: 1, opacity: 1 }}
+                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
                   viewport={{ once: true }}
                 />
-                <span className="font-paragraph text-xs font-bold text-accent-color uppercase tracking-[0.3em] relative">
+                <motion.span 
+                  className="font-paragraph text-xs font-bold text-accent-color uppercase tracking-[0.3em] relative"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  viewport={{ once: true }}
+                >
                   Our Promise
                   <motion.div
                     className="absolute -bottom-1 left-0 right-0 h-px bg-accent-color/30"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
+                    transition={{ duration: 1, delay: 0.8 }}
                     viewport={{ once: true }}
                   />
-                </span>
+                </motion.span>
                 <motion.div 
                   className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1.2, delay: 0.2 }}
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  whileInView={{ scaleX: 1, opacity: 1 }}
+                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
                   viewport={{ once: true }}
                 />
               </div>
               
               <motion.h2 
                 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-8 leading-[0.9] tracking-tight font-light"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
+                transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
                 viewport={{ once: true }}
               >
                 The Kalamkari
-                <span className="block text-primary font-normal italic mt-1">Promise</span>
+                <motion.span 
+                  className="block text-primary font-normal italic mt-1"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+                  viewport={{ once: true }}
+                >
+                  Promise
+                </motion.span>
               </motion.h2>
               
               <motion.p 
                 className="font-paragraph text-lg md:text-xl text-foreground/75 leading-relaxed max-w-4xl mx-auto font-light"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
+                transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
                 viewport={{ once: true }}
               >
                 We deliver authentic experiences steeped in tradition, quality, and respect for heritage. Every purchase supports artisan families and preserves cultural legacy.
               </motion.p>
             </motion.div>
 
-            {/* Compact Tactile Promise Cards */}
+            {/* Refined Promise Cards with Gentle Hover Effects */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-16">
               {whyChooseUsItems.map((item, index) => (
                 <motion.article
                   key={index}
-                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 40, scale: 0.98 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.8, delay: index * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ 
+                    duration: 1, 
+                    delay: index * 0.15, 
+                    ease: [0.25, 0.46, 0.45, 0.94] 
+                  }}
                   viewport={{ once: true }}
                   className="group relative"
                 >
-                  {/* Premium Hover Glow */}
+                  {/* Gentle Hover Glow */}
                   <motion.div 
-                    className="absolute -inset-4 bg-gradient-to-r from-accent-color/8 via-primary/8 to-accent-color/8 rounded-[1.8rem] opacity-0 group-hover:opacity-100 transition-all duration-800 blur-xl"
-                    whileHover={{ scale: 1.03 }}
-                    transition={{ duration: 0.6 }}
+                    className="absolute -inset-3 bg-gradient-to-r from-accent-color/5 via-primary/5 to-accent-color/5 rounded-[1.5rem] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-lg"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.4 }}
                   />
                   
-                  {/* Compact Tactile Card Container */}
+                  {/* Handcrafted Card Container */}
                   <motion.div
                     whileHover={{ 
-                      y: -12, 
-                      scale: 1.02,
-                      rotateY: 2,
-                      rotateX: 1
+                      y: -6, 
+                      scale: 1.01
                     }}
                     transition={{ 
-                      duration: 0.5, 
-                      ease: [0.25, 0.46, 0.45, 0.94],
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 25
+                      duration: 0.4, 
+                      ease: "easeOut"
                     }}
-                    className="relative bg-white/95 backdrop-blur-xl rounded-[1.5rem] p-8 lg:p-10 shadow-xl hover:shadow-2xl transition-all duration-600 border border-white/60 group-hover:border-accent-color/25 overflow-hidden"
-                    style={{
-                      transformStyle: "preserve-3d",
-                      perspective: "1000px"
-                    }}
+                    className="relative bg-white/95 backdrop-blur-sm rounded-[1.5rem] p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/60 group-hover:border-accent-color/20 overflow-hidden"
                   >
-                    {/* Subtle Kalamkari Motif on Card */}
-                    <div className="absolute top-0 right-0 w-20 h-20 opacity-2 pointer-events-none"
+                    {/* Subtle Handcrafted Texture on Card */}
+                    <div 
+                      className="absolute top-0 right-0 w-20 h-20 opacity-2 pointer-events-none"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.04'%3E%3Cpath d='M20 10c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3Cpath d='M20 15c2.761 0 5 2.239 5 5s-2.239 5-5 5-5-2.239-5-5 2.239-5 5-5z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundSize: "40px 40px"
                       }}
                     />
                     
-                    {/* Compact Gold Icon Container */}
+                    {/* Refined Icon Container */}
                     <motion.div 
                       className="flex items-center justify-center w-20 h-20 mx-auto mb-8 relative"
                       whileHover={{ 
-                        scale: 1.1, 
-                        rotate: 5,
-                        z: 20
+                        scale: 1.05,
+                        rotate: 2
                       }}
                       transition={{ 
                         duration: 0.3, 
-                        ease: "easeOut",
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 20
+                        ease: "easeOut"
                       }}
                     >
-                      {/* Layered Gold Background */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/20 via-accent-color/30 to-accent-color/20 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-600"></div>
-                      <div className="absolute inset-1 bg-gradient-to-br from-accent-color/10 via-white/15 to-transparent rounded-xl"></div>
-                      <div className="absolute inset-3 bg-gradient-to-br from-white/25 to-transparent rounded-lg"></div>
+                      {/* Layered Background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/15 via-accent-color/25 to-accent-color/15 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-500"></div>
+                      <div className="absolute inset-1 bg-gradient-to-br from-accent-color/8 via-white/10 to-transparent rounded-xl"></div>
+                      <div className="absolute inset-3 bg-gradient-to-br from-white/20 to-transparent rounded-lg"></div>
                       
-                      {/* Icon with Gold Styling */}
-                      <item.icon className="w-10 h-10 text-accent-color relative z-10 drop-shadow-md" />
-                      
-                      {/* Shimmer Effect */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-2xl"
-                        animate={{ x: [-80, 80] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                      />
+                      {/* Icon */}
+                      <item.icon className="w-10 h-10 text-accent-color relative z-10" />
                     </motion.div>
                     
-                    {/* Compact Content */}
+                    {/* Content with Smooth Animations */}
                     <motion.h3 
                       className="font-heading text-xl lg:text-2xl text-foreground mb-6 text-center leading-tight group-hover:text-primary transition-colors duration-400 font-light tracking-tight"
-                      initial={{ opacity: 0, y: 15 }}
+                      initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.2 + 0.1 }}
+                      transition={{ duration: 0.6, delay: index * 0.15 + 0.2 }}
                       viewport={{ once: true }}
                     >
                       {item.title}
@@ -2674,23 +2696,23 @@ export default function HomePage() {
                     
                     <motion.p 
                       className="font-paragraph text-base text-foreground/70 leading-relaxed text-center mb-8 font-light"
-                      initial={{ opacity: 0, y: 15 }}
+                      initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.2 + 0.2 }}
+                      transition={{ duration: 0.6, delay: index * 0.15 + 0.3 }}
                       viewport={{ once: true }}
                     >
                       {item.description}
                     </motion.p>
                     
-                    {/* Compact Highlight Badge */}
+                    {/* Refined Highlight Badge */}
                     <div className="text-center">
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
+                        transition={{ duration: 0.6, delay: index * 0.15 + 0.4 }}
                         viewport={{ once: true }}
-                        whileHover={{ scale: 1.05 }}
-                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-color/10 via-accent-color/15 to-accent-color/10 text-primary rounded-xl border border-accent-color/20 shadow-md group-hover:shadow-lg transition-all duration-600 backdrop-blur-sm"
+                        whileHover={{ scale: 1.02 }}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-color/8 via-accent-color/12 to-accent-color/8 text-primary rounded-xl border border-accent-color/15 shadow-sm group-hover:shadow-md transition-all duration-500 backdrop-blur-sm"
                       >
                         <Sparkles className="w-4 h-4 text-accent-color mr-2" />
                         <span className="font-heading font-light text-sm tracking-wide">
@@ -2735,22 +2757,25 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Enhanced Stats Row with Count-up and Editorial Feel */}
+            {/* Refined Stats Row with Smooth Slide Animations */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.8 }}
+              transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
               viewport={{ once: true }}
               className="text-center"
             >
               <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-20">
                 <motion.div 
                   className="flex items-center gap-6 group"
-                  whileHover={{ scale: 1.08, y: -4 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-400/20 via-amber-400/30 to-amber-400/20 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500">
-                    <Star className="w-8 h-8 fill-amber-400 text-amber-400 drop-shadow-md" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-amber-400/15 via-amber-400/25 to-amber-400/15 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-400">
+                    <Star className="w-8 h-8 fill-amber-400 text-amber-400" />
                   </div>
                   <div className="text-left">
                     <div className="font-heading font-light text-3xl text-primary tracking-tight">
@@ -2767,10 +2792,13 @@ export default function HomePage() {
                 
                 <motion.div 
                   className="flex items-center gap-6 group"
-                  whileHover={{ scale: 1.08, y: -4 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary/20 via-primary/30 to-primary/20 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary/15 via-primary/25 to-primary/15 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-400">
                     <Scissors className="w-8 h-8 text-primary" />
                   </div>
                   <div className="text-left">
@@ -2788,10 +2816,13 @@ export default function HomePage() {
                 
                 <motion.div 
                   className="flex items-center gap-6 group"
-                  whileHover={{ scale: 1.08, y: -4 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 1.2 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-accent-color/20 via-accent-color/30 to-accent-color/20 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500">
+                  <div className="w-16 h-16 bg-gradient-to-br from-accent-color/15 via-accent-color/25 to-accent-color/15 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-400">
                     <Users className="w-8 h-8 text-accent-color" />
                   </div>
                   <div className="text-left">
@@ -2811,136 +2842,80 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Woven in Elegance Gallery - Enhanced Interactive Horizontal Gallery with Parallax & Gold Glow */}
-        <section className="w-full py-20 md:py-24 bg-gradient-to-br from-background via-secondary/5 to-background relative overflow-hidden">
-          {/* Enhanced Kalamkari Motif Background with Parallax */}
-          <motion.div 
-            className="absolute inset-0 opacity-4"
-            animate={{ 
-              backgroundPosition: ["0% 0%", "100% 100%"],
-              scale: [1, 1.02, 1]
-            }}
-            transition={{ 
-              duration: 40, 
-              repeat: Infinity, 
-              ease: "linear" 
-            }}
+        {/* Woven in Elegance Gallery - Authentic Hand-drawn Motifs */}
+        <section className="w-full py-20 md:py-24 relative overflow-hidden">
+          {/* Ivory/Parchment Base Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#FDF6E3] via-[#FAF0E6] to-[#F8F8FF]"></div>
+          
+          {/* Authentic Kalamkari Paisley Garden - Hand-drawn Style */}
+          <div 
+            className="absolute inset-0 opacity-14"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M60 15c24.853 0 45 20.147 45 45s-20.147 45-45 45S15 84.853 15 60 35.147 15 60 15zm0 15c-16.569 0-30 13.431-30 30s13.431 30 30 30 30-13.431 30-30-13.431-30-30-30z'/%3E%3Cpath d='M60 35c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23B8860B' fill-opacity='0.15'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "120px 120px"
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='280' height='280' viewBox='0 0 280 280' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Large ornate paisley with flowing curves --%3E%3Cpath d='M70 60c25 0 45 20 45 45 0 35-25 65-45 65-30 0-50-30-50-65 0-25 20-45 50-45z' fill='%23A0522D' fill-opacity='0.06' stroke-opacity='0.12'/%3E%3C!-- Internal paisley decorations --%3E%3Cpath d='M65 85c12 0 22 10 22 22 0 18-15 30-22 30s-22-12-22-30c0-12 10-22 22-22z' fill='none' stroke-opacity='0.08'/%3E%3Cpath d='M68 100c6 0 10 4 10 10s-4 10-10 10-10-4-10-10 4-10 10-10z' fill='%23B8860B' fill-opacity='0.08'/%3E%3C!-- Decorative dots and small motifs --%3E%3Ccircle cx='55' cy='75' r='2' fill='%23B8860B' fill-opacity='0.10'/%3E%3Ccircle cx='80' cy='95' r='1.5' fill='%23B8860B' fill-opacity='0.10'/%3E%3Ccircle cx='75' cy='130' r='2.5' fill='%23A0522D' fill-opacity='0.08'/%3E%3C!-- Medium paisley --%3E%3Cpath d='M180 140c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23B8860B' fill-opacity='0.05' stroke-opacity='0.10'/%3E%3Cpath d='M178 160c8 0 14 6 14 14s-6 14-14 14-14-6-14-14 6-14 14-14z' fill='%23A0522D' fill-opacity='0.06'/%3E%3C!-- Small paisley --%3E%3Cpath d='M220 80c12 0 20 8 20 20 0 15-12 25-20 25s-20-10-20-25c0-12 8-20 20-20z' fill='%23B8860B' fill-opacity='0.04' stroke-opacity='0.08'/%3E%3Ccircle cx='218' cy='95' r='4' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "280px 280px",
+              backgroundPosition: "0 0, 140px 140px"
             }}
           />
           
-          {/* Enhanced Gold Glow Elements with Cinematic Motion */}
-          <motion.div
-            animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.7, 0.3],
-              filter: ["brightness(1) saturate(1)", "brightness(1.3) saturate(1.5)", "brightness(1) saturate(1)"]
-            }}
-            transition={{ 
-              duration: 25, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            }}
-            className="absolute top-16 right-16 w-24 h-24 opacity-5"
+          {/* Traditional Floral Vines with Leaves */}
+          <div 
+            className="absolute inset-0 opacity-10"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8c17.673 0 32 14.327 32 32s-14.327 32-32 32S8 57.673 8 40 22.327 8 40 8z' fill='none' stroke='%23B8860B' stroke-width='2'/%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z' fill='%23FFD700' fill-opacity='0.2'/%3E%3Ccircle cx='40' cy='40' r='6' fill='%23B8860B' fill-opacity='0.4'/%3E%3C/svg%3E")`,
-              filter: "drop-shadow(0 0 20px rgba(184, 134, 11, 0.4))"
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.8' stroke-linecap='round'%3E%3C!-- Flowing vine with natural curves --%3E%3Cpath d='M30 100c15-25 35-10 50-35s35 15 50-10 25 25 25 50-15 35-35 25-25-35-50-15-35-25-40-15z' fill='none' stroke-opacity='0.12'/%3E%3C!-- Organic leaves --%3E%3Cpath d='M55 80c6-3 9 2 6 6s-9 1-6-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M85 65c5-4 10 1 6 6s-10 1-6-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M115 75c6-2 8 4 3 6s-9-1-3-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M145 95c5-3 9 3 5 6s-9 0-5-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3C!-- Small flowers --%3E%3Cg transform='translate(75,105)'%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M0-4c-1-1-3-1-3 1s2 2 3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(72)'/%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(144)'/%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(216)'/%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(288)'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%23B8860B' fill-opacity='0.10'/%3E%3C/g%3E%3Cg transform='translate(125,55)'%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M0-3c-1-1-2-1-2 1s1 1 2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(60)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(120)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(180)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(240)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(300)'/%3E%3Ccircle cx='0' cy='0' r='1' fill='%23B8860B' fill-opacity='0.10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "200px 200px",
+              backgroundPosition: "50px 50px"
             }}
           />
           
-          <motion.div
-            animate={{ 
-              rotate: [360, 0],
-              y: [0, -20, 0],
-              x: [0, 10, 0],
-              opacity: [0.4, 0.8, 0.4],
-              filter: ["hue-rotate(0deg)", "hue-rotate(15deg)", "hue-rotate(0deg)"]
-            }}
-            transition={{ 
-              duration: 35, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            }}
-            className="absolute bottom-20 left-16 w-28 h-28 opacity-4"
+          {/* Geometric Border Elements and Lotus Motifs */}
+          <div 
+            className="absolute inset-0 opacity-8"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10c22.091 0 40 17.909 40 40s-17.909 40-40 40S10 72.091 10 50 27.909 10 50 10z' fill='none' stroke='%23A0522D' stroke-width='1.5'/%3E%3Cpath d='M50 25c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z' fill='%23B8860B' fill-opacity='0.15'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%23FFD700' fill-opacity='0.3'/%3E%3C/svg%3E")`,
-              filter: "drop-shadow(0 0 15px rgba(160, 82, 45, 0.3))"
-            }}
-          />
-
-          {/* Additional Floating Gold Particles */}
-          <motion.div
-            animate={{ 
-              y: [0, -30, 0],
-              x: [0, 15, 0],
-              opacity: [0.2, 0.6, 0.2],
-              scale: [1, 1.2, 1]
-            }}
-            transition={{ 
-              duration: 20, 
-              repeat: Infinity, 
-              ease: "easeInOut",
-              delay: 5
-            }}
-            className="absolute top-1/3 left-1/4 w-6 h-6 bg-gradient-radial from-accent-color/40 to-transparent rounded-full"
-            style={{
-              filter: "blur(1px) drop-shadow(0 0 10px rgba(184, 134, 11, 0.5))"
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.6' stroke-linecap='round'%3E%3C!-- Stylized lotus --%3E%3Cg transform='translate(70,70)'%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08'/%3E%3Cpath d='M0-12c-2-2-6-1-6 1s4 4 6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(30)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(60)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(90)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(120)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(150)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(180)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(210)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(240)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(270)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(300)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(330)'/%3E%3Ccircle cx='0' cy='0' r='3' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C!-- Traditional border elements --%3E%3Crect x='25' y='25' width='6' height='6' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Crect x='109' y='109' width='6' height='6' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Cpath d='M35 115c3 0 6-3 6-6s-3-6-6-6-6 3-6 6 3 6 6 6z' fill='none' stroke-opacity='0.06'/%3E%3Cpath d='M105 35c3 0 6-3 6-6s-3-6-6-6-6 3-6 6 3 6 6 6z' fill='none' stroke-opacity='0.06'/%3E%3C!-- Small decorative dots --%3E%3Ccircle cx='50' cy='20' r='1.5' fill='%23B8860B' fill-opacity='0.08'/%3E%3Ccircle cx='90' cy='120' r='1.5' fill='%23B8860B' fill-opacity='0.08'/%3E%3Ccircle cx='20' cy='90' r='1' fill='%23A0522D' fill-opacity='0.08'/%3E%3Ccircle cx='120' cy='50' r='1' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "140px 140px",
+              backgroundPosition: "35px 35px"
             }}
           />
           
-          <motion.div
-            animate={{ 
-              y: [0, 25, 0],
-              x: [0, -20, 0],
-              opacity: [0.3, 0.7, 0.3],
-              scale: [1, 1.3, 1]
-            }}
-            transition={{ 
-              duration: 18, 
-              repeat: Infinity, 
-              ease: "easeInOut",
-              delay: 10
-            }}
-            className="absolute top-2/3 right-1/3 w-8 h-8 bg-gradient-radial from-amber-400/30 to-transparent rounded-full"
+          {/* Subtle Parchment Texture with Organic Feel */}
+          <div 
+            className="absolute inset-0 opacity-6"
             style={{
-              filter: "blur(0.5px) drop-shadow(0 0 12px rgba(255, 215, 0, 0.4))"
+              backgroundImage: `
+                radial-gradient(circle at 30% 30%, rgba(160, 82, 45, 0.025) 1px, transparent 1px),
+                radial-gradient(circle at 70% 70%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
+                radial-gradient(circle at 50% 20%, rgba(245, 245, 220, 0.03) 0.5px, transparent 0.5px),
+                radial-gradient(circle at 20% 80%, rgba(245, 245, 220, 0.025) 0.5px, transparent 0.5px)
+              `,
+              backgroundSize: "24px 24px, 18px 18px, 12px 12px, 16px 16px",
+              backgroundPosition: "0 0, 12px 12px, 6px 6px, 8px 8px"
             }}
           />
 
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
-            {/* Enhanced Editorial Header with Parallax Effects */}
+            {/* Refined Editorial Header with Smooth Fade Animation */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               viewport={{ once: true }}
               className="text-center relative"
             >
-              {/* Floating Gold Accent Lines */}
+              {/* Refined Header Elements */}
               <div className="flex items-center justify-center gap-6 mb-8 relative">
                 <motion.div 
                   className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent relative"
                   initial={{ scaleX: 0, opacity: 0 }}
                   whileInView={{ scaleX: 1, opacity: 1 }}
-                  transition={{ duration: 1.5, delay: 0.2 }}
+                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
                   viewport={{ once: true }}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400 to-transparent"
-                    animate={{ x: [-100, 100] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    style={{ filter: "blur(1px)" }}
-                  />
-                </motion.div>
+                />
                 
                 <motion.span 
-                  className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] relative px-4 py-2 bg-gradient-to-r from-accent-color/10 via-accent-color/20 to-accent-color/10 rounded-xl border border-accent-color/30 backdrop-blur-sm"
-                  initial={{ scale: 0.8, opacity: 0 }}
+                  className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] relative px-4 py-2 bg-gradient-to-r from-accent-color/8 via-accent-color/15 to-accent-color/8 rounded-xl border border-accent-color/20 backdrop-blur-sm"
+                  initial={{ scale: 0.9, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
                   viewport={{ once: true }}
                 >
                   Visual Gallery
@@ -2951,82 +2926,51 @@ export default function HomePage() {
                     transition={{ duration: 0.6, delay: 0.8 }}
                     viewport={{ once: true }}
                   />
-                  {/* Shimmer effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-xl"
-                    animate={{ x: [-100, 100] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  />
                 </motion.span>
                 
                 <motion.div 
                   className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent relative"
                   initial={{ scaleX: 0, opacity: 0 }}
                   whileInView={{ scaleX: 1, opacity: 1 }}
-                  transition={{ duration: 1.5, delay: 0.2 }}
+                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
                   viewport={{ once: true }}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400 to-transparent"
-                    animate={{ x: [100, -100] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    style={{ filter: "blur(1px)" }}
-                  />
-                </motion.div>
+                />
               </div>
               
-              {/* Enhanced Title with Gold Glow */}
+              {/* Refined Title */}
               <motion.h2 
                 className="font-heading text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[0.85] tracking-tight font-light relative"
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
                 viewport={{ once: true }}
-                style={{
-                  textShadow: "0 0 30px rgba(184, 134, 11, 0.3), 0 0 60px rgba(184, 134, 11, 0.1)"
-                }}
               >
                 <motion.span
                   className="block"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  viewport={{ once: true }}
                 >
                   Woven in
                 </motion.span>
                 <motion.span 
                   className="block text-primary font-normal italic mt-2 relative"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                  style={{
-                    background: "linear-gradient(135deg, #A0522D 0%, #B8860B 50%, #DAA520 100%)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    filter: "drop-shadow(0 0 20px rgba(184, 134, 11, 0.4))"
-                  }}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  viewport={{ once: true }}
                 >
                   Elegance
-                  {/* Gold glow effect */}
-                  <motion.div
-                    className="absolute inset-0 opacity-30"
-                    animate={{ 
-                      boxShadow: [
-                        "0 0 20px rgba(184, 134, 11, 0.3)",
-                        "0 0 40px rgba(184, 134, 11, 0.5)",
-                        "0 0 20px rgba(184, 134, 11, 0.3)"
-                      ]
-                    }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  />
                 </motion.span>
               </motion.h2>
               
-              {/* Enhanced Description with Parallax */}
+              {/* Refined Description */}
               <motion.p 
                 className="font-paragraph text-xl md:text-2xl text-foreground/75 max-w-4xl mx-auto leading-relaxed font-light relative"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.6 }}
+                transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
                 viewport={{ once: true }}
               >
                 Explore the vibrant world of Kalamkari through our visual journal of artistry, tradition, and contemporary elegance.
@@ -3034,16 +2978,16 @@ export default function HomePage() {
                   className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-accent-color/50 to-transparent"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1, delay: 1 }}
+                  transition={{ duration: 1, delay: 1.2 }}
                   viewport={{ once: true }}
                 />
               </motion.p>
             </motion.div>
           </div>
           
-          {/* Enhanced Interactive Gallery Container with Parallax Scrolling */}
+          {/* Refined Gallery Container with Smooth Animations */}
           <div className="relative">
-            {/* Gallery Scroll Container with Enhanced Parallax */}
+            {/* Gallery Scroll Container */}
             <div 
               ref={galleryScrollRef} 
               className="premium-scroll overflow-x-auto pb-8 px-6 md:px-8 lg:px-12 scrollbar-hide relative"
@@ -3055,22 +2999,11 @@ export default function HomePage() {
                 msOverflowStyle: 'none'
               }}
             >
-              {/* Parallax Background Layer */}
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.05) 25%, rgba(255, 215, 0, 0.03) 50%, rgba(184, 134, 11, 0.05) 75%, transparent 100%)",
-                  backgroundSize: "200% 100%"
-                }}
-                animate={{ backgroundPosition: ["0% 0%", "100% 0%"] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              />
-              
               <div className="flex gap-8 md:gap-10 w-max relative">
                 {galleryImages.map((image, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ 
                       duration: 0.8, 
@@ -3079,146 +3012,78 @@ export default function HomePage() {
                     }}
                     viewport={{ once: true, margin: "0px 100px" }}
                     whileHover={{ 
-                      y: -12, 
-                      scale: 1.03,
-                      rotateY: 4,
-                      rotateX: 2,
-                      z: 50
+                      y: -8, 
+                      scale: 1.02
                     }}
-                    className="gallery-item w-[34vh] md:w-[38vh] lg:w-[42vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-700 group relative"
+                    className="gallery-item w-[34vh] md:w-[38vh] lg:w-[42vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 group relative"
                     style={{
                       scrollSnapAlign: 'center',
-                      scrollSnapStop: 'always',
-                      transformStyle: 'preserve-3d',
-                      perspective: '1000px'
+                      scrollSnapStop: 'always'
                     }}
                   >
-                    {/* Enhanced Gold Glow Border */}
-                    <motion.div
-                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500"
+                    {/* Subtle Handcrafted Motif Overlay */}
+                    <div 
+                      className="absolute inset-0 opacity-2 pointer-events-none z-10"
                       style={{
-                        background: "linear-gradient(45deg, rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.3), rgba(184, 134, 11, 0.4))",
-                        filter: "blur(8px)",
-                        transform: "scale(1.05)"
-                      }}
-                      animate={{
-                        background: [
-                          "linear-gradient(45deg, rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.3), rgba(184, 134, 11, 0.4))",
-                          "linear-gradient(45deg, rgba(255, 215, 0, 0.5), rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.5))",
-                          "linear-gradient(45deg, rgba(184, 134, 11, 0.4), rgba(255, 215, 0, 0.3), rgba(184, 134, 11, 0.4))"
-                        ]
-                      }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    
-                    {/* Enhanced Kalamkari Motif Overlay with Animation */}
-                    <motion.div 
-                      className="absolute inset-0 opacity-3 pointer-events-none z-10"
-                      animate={{ 
-                        backgroundPosition: ["0% 0%", "100% 100%"],
-                        opacity: [0.3, 0.5, 0.3]
-                      }}
-                      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.12'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%23FFD700' fill-opacity='0.3'/%3E%3C/g%3E%3C/svg%3E")`,
-                        backgroundSize: "80px 80px"
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.08'%3E%3Cpath d='M30 15c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3Cpath d='M30 22c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundSize: "60px 60px"
                       }}
                     />
                     
-                    {/* Main Image with Enhanced Parallax */}
+                    {/* Main Image with Gentle Hover Effect */}
                     <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
                       className="w-full h-full relative overflow-hidden rounded-3xl"
-                      style={{
-                        background: "linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, transparent 50%, rgba(255, 215, 0, 0.1) 100%)"
-                      }}
                     >
                       <Image
                         src={image.src}
                         alt={image.alt}
                         width={420}
                         height={560}
-                        className="w-full h-full object-cover transition-all duration-700 group-hover:brightness-110 group-hover:contrast-105"
+                        className="w-full h-full object-cover transition-all duration-500 group-hover:brightness-105"
                         loading={index < 3 ? "eager" : "lazy"}
                         sizes="(max-width: 768px) 34vh, (max-width: 1024px) 38vh, 42vh"
-                        style={{
-                          filter: "saturate(1.1) contrast(1.02)"
-                        }}
-                      />
-                      
-                      {/* Enhanced Gold Shimmer Effect */}
-                      <motion.div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100"
-                        style={{
-                          background: "linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.3) 50%, transparent 70%)",
-                          backgroundSize: "200% 200%"
-                        }}
-                        animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />
                     </motion.div>
                     
-                    {/* Enhanced Interactive Overlay with Cinematic Gradient */}
+                    {/* Gentle Interactive Overlay */}
                     <motion.div 
                       className="absolute inset-0 rounded-3xl"
                       style={{
-                        background: "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 30%, rgba(184, 134, 11, 0.1) 70%, rgba(255, 215, 0, 0.2) 100%)"
+                        background: "linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 30%, rgba(184, 134, 11, 0.05) 70%, rgba(255, 215, 0, 0.1) 100%)"
                       }}
-                      initial={{ opacity: 0.3 }}
-                      whileHover={{ opacity: 0.7 }}
-                      transition={{ duration: 0.5 }}
+                      initial={{ opacity: 0.2 }}
+                      whileHover={{ opacity: 0.5 }}
+                      transition={{ duration: 0.4 }}
                     />
                     
-                    {/* Enhanced Gold Border with Glow */}
+                    {/* Refined Border with Gentle Glow */}
                     <motion.div
-                      className="absolute inset-0 border-2 border-transparent group-hover:border-accent-color/60 rounded-3xl transition-all duration-500"
+                      className="absolute inset-0 border-2 border-transparent group-hover:border-accent-color/40 rounded-3xl transition-all duration-400"
                       whileHover={{ 
-                        borderColor: "rgba(184, 134, 11, 0.8)",
-                        boxShadow: "0 0 30px rgba(184, 134, 11, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.1)"
+                        borderColor: "rgba(184, 134, 11, 0.6)",
+                        boxShadow: "0 0 20px rgba(184, 134, 11, 0.2)"
                       }}
-                      style={{
-                        background: "linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent)",
-                        backgroundSize: "200% 200%"
-                      }}
-                      animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                     />
                     
-                    {/* Enhanced Category Label with Gold Accent */}
+                    {/* Refined Category Label */}
                     <motion.div
-                      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
                       whileHover={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
                       className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100"
                     >
                       <motion.div 
-                        className="bg-gradient-to-r from-white/95 via-white/98 to-white/95 backdrop-blur-xl text-primary px-6 py-3 rounded-2xl shadow-xl border border-accent-color/30 relative overflow-hidden"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        transition={{ duration: 0.3 }}
-                        style={{
-                          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), 0 0 20px rgba(184, 134, 11, 0.2)"
-                        }}
+                        className="bg-gradient-to-r from-white/95 via-white/98 to-white/95 backdrop-blur-md text-primary px-6 py-3 rounded-2xl shadow-lg border border-accent-color/20 relative overflow-hidden"
+                        whileHover={{ scale: 1.02, y: -1 }}
+                        transition={{ duration: 0.2 }}
                       >
-                        {/* Gold shimmer background */}
-                        <motion.div
-                          className="absolute inset-0 opacity-20"
-                          style={{
-                            background: "linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.3) 50%, transparent 100%)",
-                            backgroundSize: "200% 100%"
-                          }}
-                          animate={{ backgroundPosition: ["0% 0%", "100% 0%"] }}
-                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                        />
-                        
                         <div className="flex items-center gap-3 relative z-10">
                           <motion.div 
-                            className="w-3 h-3 bg-gradient-to-r from-accent-color to-amber-400 rounded-full shadow-lg"
-                            animate={{ scale: [1, 1.2, 1] }}
+                            className="w-3 h-3 bg-gradient-to-r from-accent-color to-amber-400 rounded-full shadow-sm"
+                            animate={{ scale: [1, 1.1, 1] }}
                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                            style={{
-                              boxShadow: "0 0 10px rgba(184, 134, 11, 0.5)"
-                            }}
                           />
                           <span className="font-heading tracking-wide font-semibold text-base">
                             {image.category}
@@ -3226,33 +3091,6 @@ export default function HomePage() {
                         </div>
                       </motion.div>
                     </motion.div>
-                    
-                    {/* Enhanced Floating Gold Particles */}
-                    <motion.div
-                      className="absolute top-4 right-4 w-2 h-2 bg-gradient-radial from-accent-color to-transparent rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ 
-                        y: [0, -10, 0],
-                        opacity: [0.5, 1, 0.5],
-                        scale: [1, 1.3, 1]
-                      }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                      style={{
-                        filter: "blur(0.5px) drop-shadow(0 0 8px rgba(184, 134, 11, 0.6))"
-                      }}
-                    />
-                    
-                    <motion.div
-                      className="absolute bottom-1/3 left-4 w-1.5 h-1.5 bg-gradient-radial from-amber-400 to-transparent rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ 
-                        x: [0, 8, 0],
-                        opacity: [0.4, 0.8, 0.4],
-                        scale: [1, 1.2, 1]
-                      }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                      style={{
-                        filter: "blur(0.3px) drop-shadow(0 0 6px rgba(255, 215, 0, 0.5))"
-                      }}
-                    />
                   </motion.div>
                 ))}
               </div>
