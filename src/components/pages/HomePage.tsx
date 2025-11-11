@@ -2497,53 +2497,68 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* The Kalamkari Promise Section - Authentic Hand-drawn Motifs */}
+        {/* Our Promise Section - Luxury Heritage Design */}
         <section className="w-full py-20 md:py-24 relative overflow-hidden">
-          {/* Ivory/Parchment Base Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#FDF6E3] via-[#FAF0E6] to-[#F5F5DC]"></div>
+          {/* Warm Ivory Base Background */}
+          <div className="absolute inset-0 bg-[#FDF8F2]"></div>
           
-          {/* Authentic Kalamkari Floral Vines - Hand-drawn Style */}
-          <div 
-            className="absolute inset-0 opacity-12"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Flowing vine with organic curves --%3E%3Cpath d='M20 120c20-40 60-20 80-60s60 20 80-20 40 40 40 80-20 60-60 40-40-60-80-20-60-40-60-20z' fill='none' stroke-opacity='0.15'/%3E%3C!-- Delicate leaves along vine --%3E%3Cpath d='M45 95c8-4 12 2 8 8s-12 2-8-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M85 75c6-6 14 0 8 8s-14 2-8-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M125 85c8-2 10 6 4 8s-12-2-4-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M165 105c6-4 12 4 6 8s-12 0-6-8z' fill='%23A0522D' fill-opacity='0.08'/%3E%3C!-- Small decorative flowers --%3E%3Ccircle cx='60' cy='110' r='3' fill='%23B8860B' fill-opacity='0.12'/%3E%3Ccircle cx='140' cy='90' r='2.5' fill='%23B8860B' fill-opacity='0.12'/%3E%3Ccircle cx='180' cy='130' r='2' fill='%23B8860B' fill-opacity='0.12'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "240px 240px",
-              backgroundPosition: "0 0, 120px 120px"
-            }}
-          />
+          {/* Subtle Gradient Overlay for Depth */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#FDF8F2] via-[#FDF8F2]/95 to-[#FAF5EF]/90"></div>
           
-          {/* Traditional Paisley Motifs - Authentic Teardrop Shapes */}
-          <div 
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='1' stroke-linecap='round'%3E%3C!-- Large paisley with internal details --%3E%3Cpath d='M50 40c20 0 35 15 35 35 0 25-20 45-35 45-20 0-35-20-35-45 0-20 15-35 35-35z' fill='%23B8860B' fill-opacity='0.06' stroke-opacity='0.12'/%3E%3C!-- Internal paisley decoration --%3E%3Cpath d='M45 55c8 0 15 7 15 15 0 12-10 20-15 20s-15-8-15-20c0-8 7-15 15-15z' fill='none' stroke-opacity='0.08'/%3E%3Cpath d='M48 65c3 0 6 3 6 6s-3 6-6 6-6-3-6-6 3-6 6-6z' fill='%23A0522D' fill-opacity='0.08'/%3E%3C!-- Smaller paisley --%3E%3Cpath d='M130 120c12 0 20 8 20 20 0 15-12 25-20 25s-20-10-20-25c0-12 8-20 20-20z' fill='%23B8860B' fill-opacity='0.05' stroke-opacity='0.10'/%3E%3Cpath d='M128 135c4 0 8 4 8 8s-4 8-8 8-8-4-8-8 4-8 8-8z' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "180px 180px",
-              backgroundPosition: "45px 45px"
-            }}
-          />
-          
-          {/* Lotus and Geometric Border Elements */}
+          {/* Delicate Kalamkari Floral Vines - Fine Line Art */}
           <div 
             className="absolute inset-0 opacity-8"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.8' stroke-linecap='round'%3E%3C!-- Lotus flower with petals --%3E%3Cg transform='translate(80,80)'%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10'/%3E%3Cpath d='M0-15c-3-3-8-2-8 2s5 5 8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(45)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(90)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(135)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(180)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(225)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(270)'/%3E%3Cpath d='M0-15c3-3 8-2 8 2s-5 5-8 2z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.10' transform='rotate(315)'/%3E%3Ccircle cx='0' cy='0' r='4' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C!-- Geometric border elements --%3E%3Crect x='20' y='20' width='8' height='8' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Crect x='132' y='132' width='8' height='8' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Cpath d='M30 140c4 0 8-4 8-8s-4-8-8-8-8 4-8 8 4 8 8 8z' fill='none' stroke-opacity='0.08'/%3E%3Cpath d='M130 30c4 0 8-4 8-8s-4-8-8-8-8 4-8 8 4 8 8 8z' fill='none' stroke-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "160px 160px",
-              backgroundPosition: "20px 20px"
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='320' height='320' viewBox='0 0 320 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Graceful flowing vine --%3E%3Cpath d='M40 160c30-50 80-30 120-80s80 30 120-40' fill='none' stroke-opacity='0.08'/%3E%3C!-- Delicate leaves --%3E%3Cpath d='M70 130c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M130 100c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M190 130c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M250 100c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3C!-- Tiny blossoms --%3E%3Ccircle cx='100' cy='140' r='1.5' fill='%23A0522D' fill-opacity='0.08'/%3E%3Ccircle cx='220' cy='110' r='1' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "320px 320px",
+              backgroundPosition: "0 0, 160px 160px"
             }}
           />
           
-          {/* Subtle Parchment Texture */}
+          {/* Elegant Paisley Motifs - Minimal & Refined */}
           <div 
             className="absolute inset-0 opacity-6"
             style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='280' height='280' viewBox='0 0 280 280' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.5' stroke-linecap='round'%3E%3C!-- Refined paisley outline --%3E%3Cpath d='M80 70c15 0 25 10 25 25 0 20-15 35-25 35s-25-15-25-35c0-15 10-25 25-25z' fill='none' stroke-opacity='0.08'/%3E%3C!-- Inner detail --%3E%3Cpath d='M78 85c6 0 10 4 10 10s-4 10-10 10-10-4-10-10 4-10 10-10z' fill='%23B8860B' fill-opacity='0.06'/%3E%3C!-- Smaller paisley --%3E%3Cpath d='M200 180c10 0 18 8 18 18 0 15-10 25-18 25s-18-10-18-25c0-10 8-18 18-18z' fill='none' stroke-opacity='0.06'/%3E%3Ccircle cx='198' cy='195' r='3' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "280px 280px",
+              backgroundPosition: "70px 70px"
+            }}
+          />
+          
+          {/* Sacred Lotus Elements - Minimal & Spiritual */}
+          <div 
+            className="absolute inset-0 opacity-7"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.4' stroke-linecap='round'%3E%3C!-- Lotus petals --%3E%3Cg transform='translate(120,120)'%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(60)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(120)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(180)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(240)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(300)'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "240px 240px",
+              backgroundPosition: "60px 60px"
+            }}
+          />
+          
+          {/* Silk Paper Texture - Luxury Feel */}
+          <div 
+            className="absolute inset-0 opacity-4"
+            style={{
               backgroundImage: `
-                radial-gradient(circle at 25% 25%, rgba(160, 82, 45, 0.03) 1px, transparent 1px),
-                radial-gradient(circle at 75% 75%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
-                linear-gradient(45deg, rgba(245, 245, 220, 0.04) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(245, 245, 220, 0.04) 25%, transparent 25%)
+                radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.015) 1px, transparent 1px),
+                radial-gradient(circle at 60% 20%, rgba(253, 248, 242, 0.8) 0.5px, transparent 0.5px),
+                radial-gradient(circle at 30% 80%, rgba(253, 248, 242, 0.6) 0.3px, transparent 0.3px)
               `,
-              backgroundSize: "20px 20px, 16px 16px, 8px 8px, 8px 8px",
-              backgroundPosition: "0 0, 10px 10px, 0 0, 4px 4px"
+              backgroundSize: "40px 40px, 35px 35px, 25px 25px, 30px 30px",
+              backgroundPosition: "0 0, 20px 20px, 10px 10px, 15px 15px"
+            }}
+          />
+          
+          {/* Smooth Blending Overlay */}
+          <div 
+            className="absolute inset-0 opacity-3"
+            style={{
+              background: `
+                radial-gradient(ellipse at 30% 20%, rgba(253, 248, 242, 0.8) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(250, 245, 239, 0.6) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(253, 248, 242, 0.4) 0%, transparent 40%, rgba(250, 245, 239, 0.3) 100%)
+              `
             }}
           />
           
