@@ -308,11 +308,31 @@ export default function HomePage() {
   return (
     <>
       <style>{`
+        /* Single Static Kalamkari Motif Background - Premium & Unified */
+        .kalamkari-static-background {
+          background-color: #FDF8F2; /* Ivory base */
+          background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round' opacity='0.06'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23A0522D' fill-opacity='0.04'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%23B8860B' fill-opacity='0.03'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23A0522D' fill-opacity='0.03'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%23B8860B' fill-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E");
+          background-size: 200px 200px;
+          background-position: 0 0;
+          background-repeat: repeat;
+          background-attachment: fixed;
+        }
+        
+        /* Silk Fabric Texture Overlay */
+        .silk-fabric-texture {
+          background-image: 
+            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.015) 1px, transparent 1px),
+            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.01) 1px, transparent 1px),
+            radial-gradient(circle at 60% 20%, rgba(253, 248, 242, 0.02) 0.5px, transparent 0.5px);
+          background-size: 30px 30px, 25px 25px, 20px 20px;
+          background-position: 0 0, 15px 15px, 10px 10px;
+        }
+
         /* Enhanced GSAP-style Animation System with Improved Accessibility */
         .animate-reveal {
           opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          transform: translateY(15px);
+          transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .animate-reveal.is-visible {
           opacity: 1;
@@ -332,40 +352,6 @@ export default function HomePage() {
           }
         }
 
-        /* Enhanced Semi-transparent Gradient Overlay with Better Contrast */
-        .luxury-fabric-overlay {
-          background: 
-            /* Main gradient for text readability */
-            linear-gradient(
-              135deg,
-              rgba(0, 0, 0, 0.45) 0%,
-              rgba(0, 0, 0, 0.25) 25%,
-              rgba(0, 0, 0, 0.35) 50%,
-              rgba(0, 0, 0, 0.15) 75%,
-              rgba(0, 0, 0, 0.4) 100%
-            ),
-            /* Vignette effect for depth */
-            radial-gradient(
-              ellipse at center,
-              transparent 0%,
-              rgba(0, 0, 0, 0.15) 50%,
-              rgba(0, 0, 0, 0.4) 100%
-            );
-          backdrop-filter: blur(1px) saturate(1.1);
-          animation: luxuryFabricFlow 20s ease-in-out infinite;
-        }
-
-        @keyframes luxuryFabricFlow {
-          0%, 100% { 
-            opacity: 0.95; 
-            filter: brightness(1) contrast(1.05) saturate(1.1); 
-          }
-          50% { 
-            opacity: 1; 
-            filter: brightness(1.05) contrast(1.08) saturate(1.15); 
-          }
-        }
-
         /* Premium Typography with Enhanced Contrast and Accessibility */
         .luxury-headline {
           font-family: 'Cormorant Garamond', serif;
@@ -377,19 +363,19 @@ export default function HomePage() {
             0 8px 24px rgba(0, 0, 0, 0.6);
           letter-spacing: -0.02em;
           line-height: 0.85;
-          animation: gsapHeadlineEntrance 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          animation: gsapHeadlineEntrance 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         @keyframes gsapHeadlineEntrance {
           0% {
             opacity: 0;
-            transform: translateY(60px) scale(0.95);
-            filter: blur(2px);
+            transform: translateY(40px) scale(0.98);
+            filter: blur(1px);
           }
           60% {
             opacity: 0.9;
-            transform: translateY(15px) scale(0.99);
-            filter: blur(0.5px);
+            transform: translateY(10px) scale(0.99);
+            filter: blur(0.3px);
           }
           100% {
             opacity: 1;
@@ -472,288 +458,21 @@ export default function HomePage() {
           outline-offset: 2px;
         }
 
-        /* Enhanced Floating Particles with Performance Optimization */
-        .floating-particles {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          pointer-events: none;
-          z-index: 5;
-          will-change: transform;
-        }
-
-        .particle {
-          position: absolute;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(184, 134, 11, 0.4) 0%, rgba(255, 215, 0, 0.2) 50%, transparent 100%);
-          animation: floatParticle 15s ease-in-out infinite;
-          filter: blur(0.5px);
-          will-change: transform;
-        }
-
-        .particle:nth-child(1) {
-          width: 4px;
-          height: 4px;
-          top: 20%;
-          left: 15%;
-          animation-delay: 0s;
-          animation-duration: 16s;
-        }
-
-        .particle:nth-child(2) {
-          width: 6px;
-          height: 6px;
-          top: 65%;
-          left: 80%;
-          animation-delay: 2s;
-          animation-duration: 18s;
-        }
-
-        .particle:nth-child(3) {
-          width: 3px;
-          height: 3px;
-          top: 35%;
-          left: 70%;
-          animation-delay: 4s;
-          animation-duration: 14s;
-        }
-
-        .particle:nth-child(4) {
-          width: 5px;
-          height: 5px;
-          top: 80%;
-          left: 25%;
-          animation-delay: 6s;
-          animation-duration: 17s;
-        }
-
-        .particle:nth-child(5) {
-          width: 7px;
-          height: 7px;
-          top: 50%;
-          left: 55%;
-          animation-delay: 8s;
-          animation-duration: 19s;
-        }
-
-        .particle:nth-child(6) {
-          width: 4px;
-          height: 4px;
-          top: 15%;
-          left: 45%;
-          animation-delay: 10s;
-          animation-duration: 15s;
-        }
-
-        @keyframes floatParticle {
-          0%, 100% {
-            transform: translateY(0px) translateX(0px) scale(1);
-            opacity: 0.3;
-          }
-          25% {
-            transform: translateY(-25px) translateX(20px) scale(1.2);
-            opacity: 0.6;
-          }
-          50% {
-            transform: translateY(-15px) translateX(-15px) scale(0.9);
-            opacity: 0.4;
-          }
-          75% {
-            transform: translateY(-35px) translateX(25px) scale(1.1);
-            opacity: 0.7;
-          }
-        }
-
-        /* Enhanced Background Image Transitions with Performance */
-        .hero-background-image {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: opacity 3s ease-in-out;
-          transform: scale(1.05);
-          will-change: opacity, transform;
-        }
-
-        .hero-background-image.active {
-          opacity: 1;
-          transform: scale(1.05);
-        }
-
-        .hero-background-image.inactive {
-          opacity: 0;
-          transform: scale(1.08);
-        }
-
-        /* Enhanced Parallax Effects with Performance */
-        .parallax-enhanced {
-          transform-style: preserve-3d;
-          will-change: transform;
-          backface-visibility: hidden;
-        }
-
-        /* Refined Cinematic Divider */
-        .cinematic-divider {
-          position: relative;
-          width: 100px;
-          height: 2px;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(184, 134, 11, 0.4) 20%,
-            rgba(255, 215, 0, 0.8) 50%,
-            rgba(184, 134, 11, 0.4) 80%,
-            transparent 100%
-          );
-          overflow: hidden;
-          animation: dividerPulse 6s ease-in-out infinite;
-        }
-
-        .cinematic-divider::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 215, 0, 0.8) 30%,
-            rgba(255, 255, 255, 0.6) 50%,
-            rgba(255, 215, 0, 0.8) 70%,
-            transparent 100%
-          );
-          animation: dividerShine 4s ease-in-out infinite;
-        }
-
-        @keyframes dividerPulse {
-          0%, 100% { 
-            opacity: 0.7; 
-            transform: scaleX(1); 
-          }
-          50% { 
-            opacity: 1; 
-            transform: scaleX(1.1); 
-          }
-        }
-
-        @keyframes dividerShine {
-          0% { left: -100%; }
-          50% { left: 100%; }
-          100% { left: -100%; }
-        }
-
-        /* SEO-optimized animations with better performance */
-        .seo-fade-in {
-          animation: seoFadeIn 2s ease-out;
-        }
-
-        @keyframes seoFadeIn {
-          0% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Modern glass morphism with enhanced accessibility */
-        .modern-glass-morphism {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Responsive text scaling with improved readability */
-        @media (max-width: 640px) {
-          .luxury-headline {
-            text-shadow: 
-              0 1px 4px rgba(0, 0, 0, 0.9),
-              0 2px 8px rgba(0, 0, 0, 0.7);
-          }
-          
-          .luxury-tagline {
-            text-shadow: 
-              0 1px 3px rgba(0, 0, 0, 0.9),
-              0 2px 6px rgba(0, 0, 0, 0.7);
-          }
-        }
-
-        @keyframes luxuryGoldFlow {
-          0%, 100% { 
-            background-position: 0% 50%; 
-            filter: brightness(1) saturate(1.2);
-          }
-          50% { 
-            background-position: 100% 50%; 
-            filter: brightness(1.3) saturate(1.5);
-          }
-        }
-
-        /* Enhanced Button Styles with Luxury Feel */
-        .luxury-primary-button {
-          background: linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #654321 100%);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          backdrop-filter: blur(20px);
-          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .luxury-primary-button::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.3) 50%,
-            transparent 100%
-          );
-          transition: left 0.8s ease;
-        }
-
-        .luxury-primary-button:hover::before {
-          left: 100%;
-        }
-
-        .luxury-primary-button:hover {
-          background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
-          transform: translateY(-3px) scale(1.02);
-        }
-
-        .luxury-secondary-button {
-          background: rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(30px);
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .luxury-secondary-button:hover {
-          background: rgba(255, 255, 255, 0.25);
-          border-color: rgba(51, 51, 51, 0.4);
-          transform: translateY(-3px) scale(1.02);
-        }
-
-        /* Enhanced Smooth Fade-in Animations with Performance */
+        /* Smooth Fade/Slide Animations */
         .fade-in-up {
-          animation: fadeInUp 1.5s ease-out;
+          animation: fadeInUp 0.8s ease-out;
         }
 
         @keyframes fadeInUp {
           0% {
             opacity: 0;
-            transform: translateY(40px) scale(0.98);
-            filter: blur(2px);
+            transform: translateY(20px) scale(0.98);
+            filter: blur(0.5px);
           }
           60% {
             opacity: 0.8;
-            transform: translateY(10px) scale(0.99);
-            filter: blur(0.5px);
+            transform: translateY(5px) scale(0.99);
+            filter: blur(0.2px);
           }
           100% {
             opacity: 1;
@@ -763,13 +482,13 @@ export default function HomePage() {
         }
 
         .fade-in-delayed {
-          animation: fadeInDelayed 2s ease-out 0.3s both;
+          animation: fadeInDelayed 1s ease-out 0.2s both;
         }
 
         @keyframes fadeInDelayed {
           0% {
             opacity: 0;
-            transform: translateY(30px) scale(0.98);
+            transform: translateY(15px) scale(0.98);
           }
           100% {
             opacity: 1;
@@ -777,14 +496,7 @@ export default function HomePage() {
           }
         }
 
-        /* Parallax Layer with Performance Optimization */
-        .parallax-layer {
-          transform-style: preserve-3d;
-          will-change: transform;
-          backface-visibility: hidden;
-        }
-
-        /* Background Image Transitions with Better Performance */
+        /* Enhanced Background Image Transitions */
         .hero-background-image {
           position: absolute;
           top: 0;
@@ -792,768 +504,22 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: opacity 2.5s ease-in-out;
-          transform: scale(1.05);
+          transition: opacity 2s ease-in-out;
+          transform: scale(1.02);
           will-change: opacity;
         }
 
         .hero-background-image.active {
           opacity: 1;
-          transform: scale(1.05);
+          transform: scale(1.02);
         }
 
         .hero-background-image.inactive {
           opacity: 0;
-          transform: scale(1.08);
-        }
-
-        /* Enhanced Text Legibility with Better Contrast */
-        .text-shadow-luxury {
-          text-shadow: 
-            0 2px 4px rgba(0, 0, 0, 0.9),
-            0 4px 8px rgba(0, 0, 0, 0.7),
-            0 6px 12px rgba(0, 0, 0, 0.5);
-        }
-
-        .text-shadow-soft {
-          text-shadow: 
-            0 1px 3px rgba(0, 0, 0, 0.7),
-            0 2px 6px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Modern Gradient Overlay with Enhanced Accessibility */
-        .modern-gradient-overlay {
-          background: 
-            /* Vignette effect */
-            radial-gradient(
-              ellipse at center,
-              transparent 0%,
-              rgba(0, 0, 0, 0.1) 40%,
-              rgba(0, 0, 0, 0.25) 70%,
-              rgba(0, 0, 0, 0.5) 100%
-            ),
-            /* Main gradient */
-            linear-gradient(
-              180deg,
-              rgba(0, 0, 0, 0.6) 0%,
-              rgba(0, 0, 0, 0.4) 20%,
-              rgba(0, 0, 0, 0.25) 40%,
-              rgba(0, 0, 0, 0.1) 60%,
-              rgba(0, 0, 0, 0.05) 80%,
-              transparent 100%
-            );
-          animation: gradientBreathing 20s ease-in-out infinite;
-        }
-
-        @keyframes gradientBreathing {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.9; }
-        }
-
-        /* Moving Bokeh Shimmer Effects with Performance */
-        .bokeh-shimmer {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          pointer-events: none;
-          z-index: 4;
-          will-change: transform;
-        }
-
-        .bokeh-particle {
-          position: absolute;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(184, 134, 11, 0.3) 0%, rgba(255, 215, 0, 0.15) 50%, transparent 100%);
-          animation: bokehFloat 12s ease-in-out infinite;
-          filter: blur(0.5px);
-          will-change: transform;
-        }
-
-        .bokeh-particle:nth-child(1) {
-          width: 6px;
-          height: 6px;
-          top: 25%;
-          left: 15%;
-          animation-delay: 0s;
-          animation-duration: 14s;
-        }
-
-        .bokeh-particle:nth-child(2) {
-          width: 8px;
-          height: 8px;
-          top: 55%;
-          left: 75%;
-          animation-delay: 2s;
-          animation-duration: 16s;
-        }
-
-        .bokeh-particle:nth-child(3) {
-          width: 4px;
-          height: 4px;
-          top: 45%;
-          left: 35%;
-          animation-delay: 4s;
-          animation-duration: 13s;
-        }
-
-        .bokeh-particle:nth-child(4) {
-          width: 7px;
-          height: 7px;
-          top: 75%;
-          left: 55%;
-          animation-delay: 6s;
-          animation-duration: 15s;
-        }
-
-        .bokeh-particle:nth-child(5) {
-          width: 9px;
-          height: 9px;
-          top: 20%;
-          left: 65%;
-          animation-delay: 8s;
-          animation-duration: 17s;
-        }
-
-        @keyframes bokehFloat {
-          0%, 100% {
-            transform: translateY(0px) translateX(0px) scale(1);
-            opacity: 0.2;
-          }
-          25% {
-            transform: translateY(-20px) translateX(15px) scale(1.1);
-            opacity: 0.4;
-          }
-          50% {
-            transform: translateY(-10px) translateX(-10px) scale(0.9);
-            opacity: 0.3;
-          }
-          75% {
-            transform: translateY(-25px) translateX(20px) scale(1.05);
-            opacity: 0.5;
-          }
-        }
-
-        /* Optimized Gradient Light Movement */
-        .gradient-light-movement {
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(184, 134, 11, 0.1) 20%,
-            rgba(255, 215, 0, 0.06) 40%,
-            rgba(184, 134, 11, 0.08) 60%,
-            transparent 100%
-          );
-          background-size: 200% 100%;
-          animation: gradientLightMove 15s ease-in-out infinite;
-        }
-
-        @keyframes gradientLightMove {
-          0% { background-position: -200% 0; }
-          50% { background-position: 100% 0; }
-          100% { background-position: -200% 0; }
-        }
-
-        /* Refined Soft Gradient with Better Performance */
-        .refined-soft-gradient {
-          background: radial-gradient(
-            ellipse at center,
-            rgba(245, 245, 220, 0.08) 0%,
-            rgba(222, 184, 135, 0.12) 30%,
-            rgba(160, 82, 45, 0.15) 70%,
-            rgba(101, 67, 33, 0.18) 100%
-          );
-          animation: refinedSoftPulse 10s ease-in-out infinite;
-        }
-
-        @keyframes refinedSoftPulse {
-          0%, 100% { opacity: 0.8; transform: scale(1); }
-          50% { opacity: 0.9; transform: scale(1.01); }
-        }
-
-        /* Cinematic Lighting with Optimized Performance */
-        .cinematic-lighting-2025 {
-          background: 
-            radial-gradient(circle at 30% 20%, rgba(184, 134, 11, 0.12) 0%, transparent 50%),
-            radial-gradient(circle at 70% 80%, rgba(160, 82, 45, 0.08) 0%, transparent 50%),
-            linear-gradient(45deg, transparent 40%, rgba(245, 245, 220, 0.06) 50%, transparent 60%);
-          animation: cinematicLighting 12s ease-in-out infinite;
-        }
-
-        @keyframes cinematicLighting {
-          0%, 100% { opacity: 0.6; }
-          25% { opacity: 0.7; }
-          50% { opacity: 0.65; }
-          75% { opacity: 0.8; }
-        }
-
-        /* Elegant Serif Headlines with Improved Performance */
-        .elegant-serif-headline {
-          font-family: 'Cormorant Garamond', serif;
-          font-weight: 400;
-          text-shadow: 
-            0 3px 8px rgba(0, 0, 0, 0.7),
-            0 6px 16px rgba(0, 0, 0, 0.5),
-            0 2px 4px rgba(255, 255, 255, 0.1);
-          animation: cinematicEntrance 2.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        @keyframes cinematicEntrance {
-          0% {
-            opacity: 0;
-            transform: translateY(40px) scale(0.95);
-            letter-spacing: 0.1em;
-            filter: blur(1px);
-          }
-          60% {
-            opacity: 0.8;
-            transform: translateY(8px) scale(0.99);
-            letter-spacing: 0.03em;
-            filter: blur(0.3px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            letter-spacing: 0.02em;
-            filter: blur(0);
-          }
-        }
-
-        /* Gold Italic Tagline with Better Performance */
-        .gold-italic-tagline {
-          font-family: 'Cormorant Garamond', serif;
-          font-style: italic;
-          font-weight: 300;
-          background: linear-gradient(
-            135deg,
-            #B8860B 0%,
-            #DAA520 25%,
-            #FFD700 50%,
-            #F4A460 75%,
-            #B8860B 100%
-          );
-          background-size: 200% 200%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: goldTaglineFlow 6s ease-in-out infinite;
-          text-shadow: 0 2px 6px rgba(184, 134, 11, 0.25);
-        }
-
-        @keyframes goldTaglineFlow {
-          0%, 100% { 
-            background-position: 0% 50%; 
-            filter: brightness(1) saturate(1.1);
-          }
-          50% { 
-            background-position: 100% 50%; 
-            filter: brightness(1.15) saturate(1.25);
-          }
-        }
-
-        /* Animated Divider with Optimized Performance */
-        .cinematic-divider {
-          position: relative;
-          width: 100px;
-          height: 2px;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(184, 134, 11, 0.3) 20%,
-            rgba(255, 215, 0, 0.7) 50%,
-            rgba(184, 134, 11, 0.3) 80%,
-            transparent 100%
-          );
-          overflow: hidden;
-          animation: dividerPulse 5s ease-in-out infinite;
-        }
-
-        .cinematic-divider::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 215, 0, 0.8) 30%,
-            rgba(255, 255, 255, 0.5) 50%,
-            rgba(255, 215, 0, 0.8) 70%,
-            transparent 100%
-          );
-          animation: dividerShine 3s ease-in-out infinite;
-        }
-
-        @keyframes dividerPulse {
-          0%, 100% { 
-            opacity: 0.7; 
-            transform: scaleX(1); 
-          }
-          50% { 
-            opacity: 1; 
-            transform: scaleX(1.05); 
-          }
-        }
-
-        @keyframes dividerShine {
-          0% { left: -100%; }
-          50% { left: 100%; }
-          100% { left: -100%; }
-        }
-
-        /* Cinematic Entrance Animations with Better Performance */
-        .cinematic-entrance {
-          animation: cinematicSlideIn 2s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        @keyframes cinematicSlideIn {
-          0% {
-            opacity: 0;
-            transform: translateY(50px) scale(0.98);
-            filter: blur(1.5px);
-          }
-          40% {
-            opacity: 0.6;
-            transform: translateY(15px) scale(0.99);
-            filter: blur(0.5px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
-          }
-        }
-
-        /* Refined Animations with Better Performance */
-        .refined-fade-in {
-          animation: refinedFadeIn 2s ease-out;
-        }
-
-        @keyframes refinedFadeIn {
-          0% { opacity: 0; transform: translateY(25px) scale(0.99); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .refined-slide-up {
-          animation: refinedSlideUp 2.3s ease-out 0.2s both;
-        }
-
-        @keyframes refinedSlideUp {
-          0% { opacity: 0; transform: translateY(30px) scale(0.98); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Refined Gold Gradient with Better Performance */
-        .refined-gold-gradient {
-          background: linear-gradient(
-            135deg,
-            #B8860B 0%,
-            #DAA520 25%,
-            #FFD700 50%,
-            #DAA520 75%,
-            #B8860B 100%
-          );
-          background-size: 200% 200%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: refinedGoldFlow 6s ease-in-out infinite;
-        }
-
-        @keyframes refinedGoldFlow {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-
-        /* Refined Shimmer Text with Better Performance */
-        .refined-shimmer-text {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .refined-shimmer-text::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.25) 50%,
-            transparent 100%
-          );
-          animation: refinedShimmer 5s ease-in-out infinite;
-        }
-
-        @keyframes refinedShimmer {
-          0% { left: -100%; }
-          50%, 100% { left: 100%; }
-        }
-
-        .refined-body-text {
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-          animation: refinedBodyFloat 8s ease-in-out infinite;
-        }
-
-        @keyframes refinedBodyFloat {
-          0%, 100% { transform: translateY(0px); opacity: 0.85; }
-          50% { transform: translateY(-1px); opacity: 1; }
-        }
-
-        /* Premium Button Interactions with Better Performance */
-        .luxury-button {
-          position: relative;
-          overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(184, 134, 11, 0.3);
-        }
-
-        .luxury-button::before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          background: radial-gradient(
-            circle,
-            rgba(255, 215, 0, 0.3) 0%,
-            rgba(184, 134, 11, 0.15) 50%,
-            transparent 100%
-          );
-          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-          transform: translate(-50%, -50%);
-          border-radius: 50%;
-        }
-
-        .luxury-button:hover::before {
-          width: 300px;
-          height: 300px;
-        }
-
-        .luxury-button:hover {
-          transform: translateY(-3px) scale(1.02);
-          box-shadow: 
-            0 12px 40px rgba(184, 134, 11, 0.3),
-            0 6px 20px rgba(0, 0, 0, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-          border-color: rgba(184, 134, 11, 0.5);
-        }
-
-        .luxury-button:active {
-          transform: translateY(-1px) scale(1.01);
-          transition: all 0.15s ease;
-        }
-
-        .luxury-button:focus {
-          outline: 2px solid rgba(184, 134, 11, 0.6);
-          outline-offset: 2px;
-        }
-
-        /* Parallax Enhancement with Better Performance */
-        .parallax-enhanced {
-          transform-style: preserve-3d;
-          will-change: transform;
-          backface-visibility: hidden;
-        }
-
-        /* Refined UI Components with Better Accessibility */
-        .refined-glass-badge {
-          background: rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(30px);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        /* Handcrafted Luxury Lighting Effects with Better Performance */
-        .luxury-lighting {
-          background: 
-            radial-gradient(circle at 30% 20%, rgba(184, 134, 11, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 70% 80%, rgba(160, 82, 45, 0.06) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 60%),
-            linear-gradient(45deg, transparent 40%, rgba(245, 245, 220, 0.05) 50%, transparent 60%);
-          animation: luxuryLightingFlow 20s ease-in-out infinite;
-        }
-
-        @keyframes luxuryLightingFlow {
-          0%, 100% { opacity: 0.8; filter: brightness(1) contrast(1.05); }
-          25% { opacity: 0.85; filter: brightness(1.05) contrast(1.08); }
-          50% { opacity: 0.82; filter: brightness(1.03) contrast(1.06); }
-          75% { opacity: 0.88; filter: brightness(1.08) contrast(1.1); }
-        }
-
-        /* Background Image Carousel Styles with Better Performance */
-        .hero-carousel-container {
-          position: relative;
-          overflow: hidden;
-          width: 100%;
-          height: 100%;
-        }
-
-        .hero-carousel-image {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: opacity 2s ease-in-out;
-          transform: scale(1.05);
-          z-index: 1;
-          will-change: opacity;
-        }
-
-        .hero-carousel-image.active {
-          opacity: 1;
-        }
-
-        .hero-carousel-image.inactive {
-          opacity: 0;
-        }
-        /* Kalamkari Background with Better Performance */
-        .kalamkari-pen-background {
-          background: 
-            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.06) 0%, transparent 40%),
-            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.04) 0%, transparent 40%),
-            linear-gradient(135deg, rgba(245, 245, 220, 0.95) 0%, rgba(222, 184, 135, 0.98) 100%);
-          animation: kalamkariFlow 15s ease-in-out infinite;
-        }
-
-        @keyframes kalamkariFlow {
-          0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
-          50% { opacity: 0.96; filter: hue-rotate(1deg); }
-        }
-
-        /* Smooth Pen Stroke Animation with Better Performance */
-        .pen-stroke-animation {
-          background: linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.25) 50%, transparent 100%);
-          background-size: 200% 100%;
-          animation: penStroke 6s ease-in-out infinite;
-        }
-
-        @keyframes penStroke {
-          0%, 100% { background-position: -200% 0; }
-          50% { background-position: 200% 0; }
-        }
-
-        /* Minimal Button Styles with Better Accessibility */
-        .minimal-primary-cta {
-          background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
-          box-shadow: 
-            0 4px 20px rgba(160, 82, 45, 0.25),
-            0 2px 8px rgba(0, 0, 0, 0.1);
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .minimal-primary-cta::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.2) 50%,
-            transparent 100%
-          );
-          transition: left 0.5s ease;
-        }
-
-        .minimal-primary-cta:hover::before {
-          left: 100%;
-        }
-
-        .minimal-primary-cta:hover {
-          background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
-          box-shadow: 
-            0 6px 30px rgba(160, 82, 45, 0.35),
-            0 3px 12px rgba(0, 0, 0, 0.15);
-          transform: translateY(-2px);
-        }
-
-        .minimal-primary-cta:focus {
-          outline: 2px solid #A0522D;
-          outline-offset: 2px;
-        }
-
-        .minimal-secondary-cta {
-          background: rgba(255, 255, 255, 0.8);
-          backdrop-filter: blur(20px);
-          border: 2px solid rgba(51, 51, 51, 0.2);
-          box-shadow: 
-            0 4px 20px rgba(0, 0, 0, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .minimal-secondary-cta:hover {
-          background: rgba(255, 255, 255, 0.95);
-          border-color: rgba(51, 51, 51, 0.4);
-          box-shadow: 
-            0 6px 30px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.4);
-          transform: translateY(-2px);
-        }
-
-        .minimal-secondary-cta:focus {
-          outline: 2px solid rgba(51, 51, 51, 0.6);
-          outline-offset: 2px;
-        }
-
-        /* Refined Trust and Scroll Animations with Better Performance */
-        .luxury-cta-text {
-          font-weight: 600;
-          letter-spacing: 0.02em;
-          position: relative;
-          z-index: 1;
-        }
-
-        .refined-trust-item {
-          animation: refinedTrustFloat 6s ease-in-out infinite;
-        }
-
-        .refined-trust-item:nth-child(1) { animation-delay: 0s; }
-        .refined-trust-item:nth-child(2) { animation-delay: 1s; }
-        .refined-trust-item:nth-child(3) { animation-delay: 2s; }
-
-        @keyframes refinedTrustFloat {
-          0%, 100% { transform: translateY(0px); opacity: 0.8; }
-          50% { transform: translateY(-3px); opacity: 1; }
-        }
-
-        .refined-scroll-indicator {
-          animation: refinedScrollPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes refinedScrollPulse {
-          0%, 100% { opacity: 0.6; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        .refined-scroll-mouse {
-          transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .refined-scroll-mouse:hover {
-          border-color: rgba(51, 51, 51, 0.8);
-          transform: scale(1.1);
-        }
-
-        /* Responsive Refinements */
-        @media (max-width: 640px) {
-          .refined-headline-shadow {
-            text-shadow: 
-              0 1px 4px rgba(0, 0, 0, 0.15),
-              0 2px 8px rgba(0, 0, 0, 0.1);
-          }
-          
-          .refined-gold-gradient {
-            background: #B8860B;
-            -webkit-background-clip: unset;
-            -webkit-text-fill-color: unset;
-            background-clip: unset;
-          }
-        }
-
-        /* Legacy Styles for Compatibility */
-        .heritage-texture::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: 
-            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.1) 2px, transparent 2px),
-            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.1) 1px, transparent 1px);
-          background-size: 24px 24px, 16px 16px;
-          z-index: -1;
-        }
-
-        .premium-scroll {
-          scroll-behavior: smooth;
-          scroll-snap-type: x mandatory;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-
-        .premium-scroll::-webkit-scrollbar {
-          display: none;
-        }
-
-        .gallery-item {
-          scroll-snap-align: center;
-          scroll-snap-stop: always;
-        }
-
-        .luxury-glow {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .luxury-glow::before {
-          content: '';
-          position: absolute;
-          top: -50%;
-          right: -50%;
-          width: 200%;
-          height: 200%;
-          background: radial-gradient(circle, rgba(184, 134, 11, 0.2) 0%, transparent 70%);
-          animation: luxuryGlow 10s ease-in-out infinite;
-        }
-
-        @keyframes luxuryGlow {
-          0%, 100% { transform: translate(-20px, -20px) scale(1); opacity: 0.3; }
-          50% { transform: translate(20px, 20px) scale(1.1); opacity: 0.6; }
-        }
-
-        .heritage-float {
-          animation: heritageFloat 15s ease-in-out infinite;
-        }
-
-        @keyframes heritageFloat {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          25% { transform: translateY(-15px) rotate(1deg); }
-          50% { transform: translateY(-8px) rotate(-0.5deg); }
-          75% { transform: translateY(-12px) rotate(0.8deg); }
-        }
-
-        .premium-shimmer {
-          background: linear-gradient(
-            45deg, 
-            transparent 30%, 
-            rgba(255, 255, 255, 0.15) 50%, 
-            transparent 70%
-          );
-          background-size: 300% 300%;
-          animation: premiumShimmer 4s ease-in-out infinite;
-        }
-
-        @keyframes premiumShimmer {
-          0% { background-position: -300% -300%; }
-          50% { background-position: 300% 300%; }
-          100% { background-position: -300% -300%; }
-        }
-
-        .glass-morphism {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          transform: scale(1.04);
         }
       `}</style>
-      <main className="w-full bg-background text-foreground overflow-hidden">
+      <main className="w-full kalamkari-static-background silk-fabric-texture text-foreground overflow-hidden">
         {/* Modern Luxury Hero Section - Kalamkari Heritage Reimagined */}
         <section 
           ref={heroRef}
@@ -1750,10 +716,7 @@ export default function HomePage() {
         </section>
 
         {/* Featured Products Section - Premium Showcase */}
-        <section className="w-full py-16 md:py-20 bg-background relative overflow-hidden">
-          <div className="absolute inset-0 heritage-texture opacity-30"></div>
-          <DecorativePattern className="text-primary/3 premium-shimmer heritage-float" animated={true} />
-          
+        <section className="w-full py-16 md:py-20 relative overflow-hidden">
           <div className="max-w-[120rem] mx-auto px-4 md:px-6 lg:px-8 relative z-10">
             <AnimatedElement>
               <div className="text-center mb-12">
@@ -1960,47 +923,7 @@ export default function HomePage() {
         </section>
 
         {/* The Soul of the Artisan Section - Refined Split Layout */}
-        <section className="w-full py-20 md:py-28 bg-gradient-to-br from-background via-secondary/3 to-background relative overflow-hidden">
-          {/* Subtle Kalamkari Background Motif */}
-          <motion.div 
-            className="absolute inset-0 opacity-2"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.04'%3E%3Cpath d='M40 40c11.046 0 20-8.954 20-20S51.046 0 40 0 20 8.954 20 20s8.954 20 20 20zm0-3c9.389 0 17-7.611 17-17S49.389 3 40 3 23 10.611 23 20s7.611 17 17 17z'/%3E%3Cpath d='M40 30c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zm0-1c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9z'/%3E%3Ccircle cx='40' cy='20' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-          
-          {/* Floating Decorative Elements */}
-          <motion.div
-            animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.05, 1]
-            }}
-            transition={{ 
-              duration: 25, 
-              repeat: Infinity, 
-              ease: "linear" 
-            }}
-            className="absolute top-16 right-16 w-20 h-20 opacity-3"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5c13.807 0 25 11.193 25 25S43.807 55 30 55 5 43.807 5 30 16.193 5 30 5zm0 5c-11.046 0-20 8.954-20 20s8.954 20 20 20 20-8.954 20-20S41.046 10 30 10z' fill='%23A0522D'/%3E%3Cpath d='M30 18c6.627 0 12 5.373 12 12s-5.373 12-12 12-12-5.373-12-12 5.373-12 12-12z' fill='%23B8860B' fill-opacity='0.2'/%3E%3C/svg%3E")`,
-            }}
-          />
-          
-          <motion.div
-            animate={{ 
-              rotate: [360, 0],
-              y: [0, -15, 0]
-            }}
-            transition={{ 
-              duration: 18, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            }}
-            className="absolute bottom-20 left-12 w-16 h-16 opacity-3"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 3c12.15 0 22 9.85 22 22S37.15 47 25 47 3 37.15 3 25 12.85 3 25 3z' fill='none' stroke='%23A0522D' stroke-width='1.5'/%3E%3Cpath d='M25 12c7.18 0 13 5.82 13 13s-5.82 13-13 13-13-5.82-13-13 5.82-13 13-13z' fill='%23B8860B' fill-opacity='0.15'/%3E%3C/svg%3E")`,
-            }}
-          />
+        <section className="w-full py-20 md:py-28 relative overflow-hidden">
 
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12">
             <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -2218,31 +1141,7 @@ export default function HomePage() {
 
         {/* Seasonal Offerings Section - Modern Tactile Cards with Editorial Feel */}
         {promotions.length > 0 && (
-          <section className="w-full py-24 md:py-32 bg-gradient-to-br from-background via-secondary/8 to-background relative overflow-hidden">
-            {/* Kalamkari Motif Background */}
-            <motion.div 
-              className="absolute inset-0 opacity-4"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.08'%3E%3Cpath d='M60 10c27.614 0 50 22.386 50 50s-22.386 50-50 50S10 87.614 10 60 32.386 10 60 10zm0 15c-19.33 0-35 15.67-35 35s15.67 35 35 35 35-15.67 35-35-15.67-35-35-35z'/%3E%3Cpath d='M60 35c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25zm0 8c-9.389 0-17 7.611-17 17s7.611 17 17 17 17-7.611 17-17-7.611-17-17-17z'/%3E%3Ccircle cx='60' cy='60' r='4' fill='%23B8860B' fill-opacity='0.3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}
-            />
-            
-            {/* Floating Kalamkari Elements */}
-            <motion.div
-              animate={{ 
-                rotate: [0, 360],
-                scale: [1, 1.05, 1]
-              }}
-              transition={{ 
-                duration: 40, 
-                repeat: Infinity, 
-                ease: "linear" 
-              }}
-              className="absolute top-16 right-16 w-32 h-32 opacity-6"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 5c24.853 0 45 20.147 45 45S74.853 95 50 95 5 74.853 5 50 25.147 5 50 5z' fill='none' stroke='%23B8860B' stroke-width='1.5'/%3E%3Cpath d='M50 20c16.569 0 30 13.431 30 30s-13.431 30-30 30-30-13.431-30-30 13.431-30 30-30z' fill='%23A0522D' fill-opacity='0.1'/%3E%3Cpath d='M50 35c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23B8860B' fill-opacity='0.2'/%3E%3C/svg%3E")`,
-              }}
-            />
+          <section className="w-full py-24 md:py-32 relative overflow-hidden">
             
             <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
               {/* Editorial Header with Luxury Typography */}
@@ -2319,9 +1218,9 @@ export default function HomePage() {
                       className="relative overflow-hidden rounded-[2rem] shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/95 backdrop-blur-md border border-white/60"
                     >
                       {/* Kalamkari Motif Overlay on Card */}
-                      <div className="absolute inset-0 opacity-3 pointer-events-none"
+                      <div className="absolute inset-0 opacity-2 pointer-events-none"
                         style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.06'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.04'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
                         }}
                       />
                       
@@ -2413,9 +1312,9 @@ export default function HomePage() {
                       className="relative overflow-hidden rounded-[2rem] shadow-2xl hover:shadow-3xl transition-all duration-700 bg-white/95 backdrop-blur-md border border-white/60"
                     >
                       {/* Kalamkari Motif Overlay on Card */}
-                      <div className="absolute inset-0 opacity-3 pointer-events-none"
+                      <div className="absolute inset-0 opacity-2 pointer-events-none"
                         style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.06'%3E%3Cpath d='M40 15c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z'/%3E%3Cpath d='M40 25c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3C/g%3E%3C/svg%3E")`,
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.04'%3E%3Cpath d='M40 15c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z'/%3E%3Cpath d='M40 25c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3C/g%3E%3C/svg%3E")`,
                         }}
                       />
                       
@@ -2499,68 +1398,6 @@ export default function HomePage() {
 
         {/* Our Promise Section - Luxury Heritage Design */}
         <section className="w-full py-20 md:py-24 relative overflow-hidden">
-          {/* Warm Ivory Base Background */}
-          <div className="absolute inset-0 bg-[#FDF8F2]"></div>
-          
-          {/* Subtle Gradient Overlay for Depth */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#FDF8F2] via-[#FDF8F2]/95 to-[#FAF5EF]/90"></div>
-          
-          {/* Delicate Kalamkari Floral Vines - Fine Line Art */}
-          <div 
-            className="absolute inset-0 opacity-8"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='320' height='320' viewBox='0 0 320 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Graceful flowing vine --%3E%3Cpath d='M40 160c30-50 80-30 120-80s80 30 120-40' fill='none' stroke-opacity='0.08'/%3E%3C!-- Delicate leaves --%3E%3Cpath d='M70 130c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M130 100c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M190 130c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M250 100c4-2 6 1 4 4s-6 1-4-4z' fill='%23B8860B' fill-opacity='0.06'/%3E%3C!-- Tiny blossoms --%3E%3Ccircle cx='100' cy='140' r='1.5' fill='%23A0522D' fill-opacity='0.08'/%3E%3Ccircle cx='220' cy='110' r='1' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "320px 320px",
-              backgroundPosition: "0 0, 160px 160px"
-            }}
-          />
-          
-          {/* Elegant Paisley Motifs - Minimal & Refined */}
-          <div 
-            className="absolute inset-0 opacity-6"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='280' height='280' viewBox='0 0 280 280' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.5' stroke-linecap='round'%3E%3C!-- Refined paisley outline --%3E%3Cpath d='M80 70c15 0 25 10 25 25 0 20-15 35-25 35s-25-15-25-35c0-15 10-25 25-25z' fill='none' stroke-opacity='0.08'/%3E%3C!-- Inner detail --%3E%3Cpath d='M78 85c6 0 10 4 10 10s-4 10-10 10-10-4-10-10 4-10 10-10z' fill='%23B8860B' fill-opacity='0.06'/%3E%3C!-- Smaller paisley --%3E%3Cpath d='M200 180c10 0 18 8 18 18 0 15-10 25-18 25s-18-10-18-25c0-10 8-18 18-18z' fill='none' stroke-opacity='0.06'/%3E%3Ccircle cx='198' cy='195' r='3' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "280px 280px",
-              backgroundPosition: "70px 70px"
-            }}
-          />
-          
-          {/* Sacred Lotus Elements - Minimal & Spiritual */}
-          <div 
-            className="absolute inset-0 opacity-7"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.4' stroke-linecap='round'%3E%3C!-- Lotus petals --%3E%3Cg transform='translate(120,120)'%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(60)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(120)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(180)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(240)'/%3E%3Cpath d='M0-8c1-1 3-1 3 1s-2 2-3 1z' fill='%23B8860B' fill-opacity='0.06' transform='rotate(300)'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "240px 240px",
-              backgroundPosition: "60px 60px"
-            }}
-          />
-          
-          {/* Silk Paper Texture - Luxury Feel */}
-          <div 
-            className="absolute inset-0 opacity-4"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
-                radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.015) 1px, transparent 1px),
-                radial-gradient(circle at 60% 20%, rgba(253, 248, 242, 0.8) 0.5px, transparent 0.5px),
-                radial-gradient(circle at 30% 80%, rgba(253, 248, 242, 0.6) 0.3px, transparent 0.3px)
-              `,
-              backgroundSize: "40px 40px, 35px 35px, 25px 25px, 30px 30px",
-              backgroundPosition: "0 0, 20px 20px, 10px 10px, 15px 15px"
-            }}
-          />
-          
-          {/* Smooth Blending Overlay */}
-          <div 
-            className="absolute inset-0 opacity-3"
-            style={{
-              background: `
-                radial-gradient(ellipse at 30% 20%, rgba(253, 248, 242, 0.8) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 80%, rgba(250, 245, 239, 0.6) 0%, transparent 50%),
-                linear-gradient(135deg, rgba(253, 248, 242, 0.4) 0%, transparent 40%, rgba(250, 245, 239, 0.3) 100%)
-              `
-            }}
-          />
           
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
             {/* Refined Editorial Header with Smooth Fade Animation */}
@@ -2670,9 +1507,9 @@ export default function HomePage() {
                   >
                     {/* Subtle Handcrafted Texture on Card */}
                     <div 
-                      className="absolute top-0 right-0 w-20 h-20 opacity-2 pointer-events-none"
+                      className="absolute top-0 right-0 w-20 h-20 opacity-1 pointer-events-none"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.04'%3E%3Cpath d='M20 10c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3Cpath d='M20 15c2.761 0 5 2.239 5 5s-2.239 5-5 5-5-2.239-5-5 2.239-5 5-5z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.02'%3E%3Cpath d='M20 10c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3Cpath d='M20 15c2.761 0 5 2.239 5 5s-2.239 5-5 5-5-2.239-5-5 2.239-5 5-5z'/%3E%3C/g%3E%3C/svg%3E")`,
                         backgroundSize: "40px 40px"
                       }}
                     />
@@ -2859,53 +1696,6 @@ export default function HomePage() {
 
         {/* Woven in Elegance Gallery - Authentic Hand-drawn Motifs */}
         <section className="w-full py-20 md:py-24 relative overflow-hidden">
-          {/* Ivory/Parchment Base Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#FDF6E3] via-[#FAF0E6] to-[#F8F8FF]"></div>
-          
-          {/* Authentic Kalamkari Paisley Garden - Hand-drawn Style */}
-          <div 
-            className="absolute inset-0 opacity-14"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='280' height='280' viewBox='0 0 280 280' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Large ornate paisley with flowing curves --%3E%3Cpath d='M70 60c25 0 45 20 45 45 0 35-25 65-45 65-30 0-50-30-50-65 0-25 20-45 50-45z' fill='%23A0522D' fill-opacity='0.06' stroke-opacity='0.12'/%3E%3C!-- Internal paisley decorations --%3E%3Cpath d='M65 85c12 0 22 10 22 22 0 18-15 30-22 30s-22-12-22-30c0-12 10-22 22-22z' fill='none' stroke-opacity='0.08'/%3E%3Cpath d='M68 100c6 0 10 4 10 10s-4 10-10 10-10-4-10-10 4-10 10-10z' fill='%23B8860B' fill-opacity='0.08'/%3E%3C!-- Decorative dots and small motifs --%3E%3Ccircle cx='55' cy='75' r='2' fill='%23B8860B' fill-opacity='0.10'/%3E%3Ccircle cx='80' cy='95' r='1.5' fill='%23B8860B' fill-opacity='0.10'/%3E%3Ccircle cx='75' cy='130' r='2.5' fill='%23A0522D' fill-opacity='0.08'/%3E%3C!-- Medium paisley --%3E%3Cpath d='M180 140c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23B8860B' fill-opacity='0.05' stroke-opacity='0.10'/%3E%3Cpath d='M178 160c8 0 14 6 14 14s-6 14-14 14-14-6-14-14 6-14 14-14z' fill='%23A0522D' fill-opacity='0.06'/%3E%3C!-- Small paisley --%3E%3Cpath d='M220 80c12 0 20 8 20 20 0 15-12 25-20 25s-20-10-20-25c0-12 8-20 20-20z' fill='%23B8860B' fill-opacity='0.04' stroke-opacity='0.08'/%3E%3Ccircle cx='218' cy='95' r='4' fill='%23A0522D' fill-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "280px 280px",
-              backgroundPosition: "0 0, 140px 140px"
-            }}
-          />
-          
-          {/* Traditional Floral Vines with Leaves */}
-          <div 
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.8' stroke-linecap='round'%3E%3C!-- Flowing vine with natural curves --%3E%3Cpath d='M30 100c15-25 35-10 50-35s35 15 50-10 25 25 25 50-15 35-35 25-25-35-50-15-35-25-40-15z' fill='none' stroke-opacity='0.12'/%3E%3C!-- Organic leaves --%3E%3Cpath d='M55 80c6-3 9 2 6 6s-9 1-6-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M85 65c5-4 10 1 6 6s-10 1-6-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M115 75c6-2 8 4 3 6s-9-1-3-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M145 95c5-3 9 3 5 6s-9 0-5-6z' fill='%23B8860B' fill-opacity='0.08'/%3E%3C!-- Small flowers --%3E%3Cg transform='translate(75,105)'%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M0-4c-1-1-3-1-3 1s2 2 3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(72)'/%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(144)'/%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(216)'/%3E%3Cpath d='M0-4c1-1 3-1 3 1s-2 2-3 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(288)'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%23B8860B' fill-opacity='0.10'/%3E%3C/g%3E%3Cg transform='translate(125,55)'%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08'/%3E%3Cpath d='M0-3c-1-1-2-1-2 1s1 1 2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(60)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(120)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(180)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(240)'/%3E%3Cpath d='M0-3c1-1 2-1 2 1s-1 1-2 1z' fill='%23A0522D' fill-opacity='0.08' transform='rotate(300)'/%3E%3Ccircle cx='0' cy='0' r='1' fill='%23B8860B' fill-opacity='0.10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "200px 200px",
-              backgroundPosition: "50px 50px"
-            }}
-          />
-          
-          {/* Geometric Border Elements and Lotus Motifs */}
-          <div 
-            className="absolute inset-0 opacity-8"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.6' stroke-linecap='round'%3E%3C!-- Stylized lotus --%3E%3Cg transform='translate(70,70)'%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08'/%3E%3Cpath d='M0-12c-2-2-6-1-6 1s4 4 6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(30)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(60)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(90)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(120)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(150)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(180)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(210)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(240)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(270)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(300)'/%3E%3Cpath d='M0-12c2-2 6-1 6 1s-4 4-6 1z' fill='%23B8860B' fill-opacity='0.08' stroke-opacity='0.08' transform='rotate(330)'/%3E%3Ccircle cx='0' cy='0' r='3' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C!-- Traditional border elements --%3E%3Crect x='25' y='25' width='6' height='6' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Crect x='109' y='109' width='6' height='6' rx='1' fill='%23A0522D' fill-opacity='0.06' stroke='none'/%3E%3Cpath d='M35 115c3 0 6-3 6-6s-3-6-6-6-6 3-6 6 3 6 6 6z' fill='none' stroke-opacity='0.06'/%3E%3Cpath d='M105 35c3 0 6-3 6-6s-3-6-6-6-6 3-6 6 3 6 6 6z' fill='none' stroke-opacity='0.06'/%3E%3C!-- Small decorative dots --%3E%3Ccircle cx='50' cy='20' r='1.5' fill='%23B8860B' fill-opacity='0.08'/%3E%3Ccircle cx='90' cy='120' r='1.5' fill='%23B8860B' fill-opacity='0.08'/%3E%3Ccircle cx='20' cy='90' r='1' fill='%23A0522D' fill-opacity='0.08'/%3E%3Ccircle cx='120' cy='50' r='1' fill='%23A0522D' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "140px 140px",
-              backgroundPosition: "35px 35px"
-            }}
-          />
-          
-          {/* Subtle Parchment Texture with Organic Feel */}
-          <div 
-            className="absolute inset-0 opacity-6"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 30% 30%, rgba(160, 82, 45, 0.025) 1px, transparent 1px),
-                radial-gradient(circle at 70% 70%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
-                radial-gradient(circle at 50% 20%, rgba(245, 245, 220, 0.03) 0.5px, transparent 0.5px),
-                radial-gradient(circle at 20% 80%, rgba(245, 245, 220, 0.025) 0.5px, transparent 0.5px)
-              `,
-              backgroundSize: "24px 24px, 18px 18px, 12px 12px, 16px 16px",
-              backgroundPosition: "0 0, 12px 12px, 6px 6px, 8px 8px"
-            }}
-          />
 
           <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
             {/* Refined Editorial Header with Smooth Fade Animation */}
@@ -3038,9 +1828,9 @@ export default function HomePage() {
                   >
                     {/* Subtle Handcrafted Motif Overlay */}
                     <div 
-                      className="absolute inset-0 opacity-2 pointer-events-none z-10"
+                      className="absolute inset-0 opacity-1 pointer-events-none z-10"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.08'%3E%3Cpath d='M30 15c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3Cpath d='M30 22c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.04'%3E%3Cpath d='M30 15c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3Cpath d='M30 22c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z'/%3E%3C/g%3E%3C/svg%3E")`,
                         backgroundSize: "60px 60px"
                       }}
                     />
