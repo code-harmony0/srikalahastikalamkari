@@ -118,32 +118,27 @@ export default function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Soft, minimal, elegant Kalamkari artwork images for premium slideshow
+  // High-quality authentic Kalamkari saree fabric designs for premium slideshow
   const heroBackgroundImages = [
     {
-      src: 'https://static.wixstatic.com/media/07221c_7702a92a945e4e3d9d264d850387a669~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Soft minimal elegant Kalamkari artwork featuring delicate floral vines with flowing organic curves and subtle paisley motifs in warm earthy tones',
-      brightness: 'light'
+      src: 'https://static.wixstatic.com/media/07221c_c45dd096bca345ed934ef2aa3d04f9d1~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality authentic Kalamkari saree fabric design featuring intricate floral vines with delicate leaves and traditional botanical patterns in rich earthy colors',
+      brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_5d275bbafe2a4fff847ae6bc68ed1f21~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Soft minimal elegant Kalamkari artwork featuring graceful peacock silhouettes with refined feather patterns in warm earthy tones',
-      brightness: 'light'
+      src: 'https://static.wixstatic.com/media/07221c_620a807ffb0e4ee2bf9a95df58a97892~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality authentic Kalamkari saree fabric design featuring majestic peacocks with elaborate feather details and traditional motifs in rich earthy colors',
+      brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_437aeb33abcc47dfbc3ed102b82f76ed~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Soft minimal elegant Kalamkari artwork featuring delicate lotus flowers in bloom with gentle botanical elements in warm earthy tones',
-      brightness: 'light'
+      src: 'https://static.wixstatic.com/media/07221c_8634eeb12ed14eb08c3cf416b2e2e535~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality authentic Kalamkari saree fabric design featuring intricate paisley patterns in various sizes with traditional Indian motifs in rich earthy colors',
+      brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_8fe998cd0b8341208e5cc800081d1c7f~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Soft minimal elegant Kalamkari artwork featuring refined paisley patterns with flowing brush lines in warm earthy tones',
-      brightness: 'light'
-    },
-    {
-      src: 'https://static.wixstatic.com/media/07221c_52b5e4a84d774ee0b7bc0568dfea2474~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Soft minimal elegant Kalamkari artwork featuring gentle brush lines and flowing strokes with subtle botanical elements in warm earthy tones',
-      brightness: 'light'
+      src: 'https://static.wixstatic.com/media/07221c_6e6171a600d14428b75c75e237912a87~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality authentic Kalamkari saree fabric design featuring lotus flowers and traditional botanical elements with flowing patterns in rich earthy colors',
+      brightness: 'medium'
     }
   ];
 
