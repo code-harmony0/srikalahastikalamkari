@@ -118,26 +118,31 @@ export default function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // High-quality authentic Kalamkari saree fabric designs for premium slideshow
+  // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns
   const heroBackgroundImages = [
     {
-      src: 'https://static.wixstatic.com/media/07221c_c45dd096bca345ed934ef2aa3d04f9d1~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality authentic Kalamkari saree fabric design featuring intricate floral vines with delicate leaves and traditional botanical patterns in rich earthy colors',
+      src: 'https://static.wixstatic.com/media/07221c_057b348c686a4a28af296cd5c08c04e0~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted floral vine patterns with delicate leaves, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_620a807ffb0e4ee2bf9a95df58a97892~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality authentic Kalamkari saree fabric design featuring majestic peacocks with elaborate feather details and traditional motifs in rich earthy colors',
+      src: 'https://static.wixstatic.com/media/07221c_a10c03740aaa48faa294a8e88471f228~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted peacock patterns with elaborate feather details, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_8634eeb12ed14eb08c3cf416b2e2e535~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality authentic Kalamkari saree fabric design featuring intricate paisley patterns in various sizes with traditional Indian motifs in rich earthy colors',
+      src: 'https://static.wixstatic.com/media/07221c_f4eeef23656c44868a3bde7bb1b18f70~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted intricate paisley patterns, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_6e6171a600d14428b75c75e237912a87~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality authentic Kalamkari saree fabric design featuring lotus flowers and traditional botanical elements with flowing patterns in rich earthy colors',
+      src: 'https://static.wixstatic.com/media/07221c_8d2fc60a480e4a90bb4090e06329c34c~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted lotus flower patterns with botanical elements, natural dyes in warm earthy tones, soft cloth folds visible',
+      brightness: 'medium'
+    },
+    {
+      src: 'https://static.wixstatic.com/media/07221c_6aad4d237fbd4800ab6b65b8fcc59f64~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted mixed traditional patterns with floral vines and paisleys, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     }
   ];
@@ -171,7 +176,7 @@ export default function HomePage() {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % heroBackgroundImages.length
       );
-    }, 5000); // 5 seconds for optimal viewing time
+    }, 4500); // 4.5 seconds - within 4-6s range for optimal viewing
 
     return () => clearInterval(interval);
   }, [heroBackgroundImages.length]);
@@ -506,7 +511,7 @@ export default function HomePage() {
           opacity: 0;
         }
 
-        /* Soft warm gradient overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-12%) */
+        /* Soft warm gradient overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-10%) */
         .cinematic-overlay {
           position: absolute;
           top: 0;
@@ -515,11 +520,11 @@ export default function HomePage() {
           height: 100%;
           background: linear-gradient(
             180deg,
-            rgba(101, 67, 33, 0.35) 0%,
-            rgba(101, 67, 33, 0.25) 25%,
-            rgba(160, 82, 45, 0.20) 50%,
-            rgba(184, 134, 11, 0.15) 75%,
-            rgba(245, 245, 220, 0.10) 100%
+            rgba(101, 67, 33, 0.30) 0%,
+            rgba(101, 67, 33, 0.25) 30%,
+            rgba(160, 82, 45, 0.18) 60%,
+            rgba(184, 134, 11, 0.15) 80%,
+            rgba(245, 245, 220, 0.08) 100%
           );
           z-index: 1;
         }
