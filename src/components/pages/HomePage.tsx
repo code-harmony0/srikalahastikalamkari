@@ -489,7 +489,7 @@ export default function HomePage() {
           }
         }
 
-        /* Cinematic Background Image Transitions - Soft Fade Only */
+        /* Cinematic Background Image Transitions - Smooth 2.5s Fade Only */
         .hero-background-image {
           position: absolute;
           top: 0;
@@ -509,15 +509,48 @@ export default function HomePage() {
           opacity: 0;
         }
 
-        /* Gentle darkening overlay (10-15%) */
+        /* Soft warm Kalamkari-inspired gradient overlay (cream→gold→deep brown) */
         .cinematic-overlay {
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          background: rgba(0, 0, 0, 0.12);
+          background: linear-gradient(
+            135deg,
+            rgba(245, 245, 220, 0.15) 0%,
+            rgba(184, 134, 11, 0.20) 35%,
+            rgba(160, 82, 45, 0.25) 70%,
+            rgba(101, 67, 33, 0.30) 100%
+          );
           z-index: 1;
+        }
+
+        /* Faint Kalamkari border motifs on left/right edges (6-8% opacity) */
+        .kalamkari-border-left {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 120px;
+          height: 100%;
+          background-image: url("data:image/svg+xml,%3Csvg width='120' height='100' viewBox='0 0 120 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23F5F5DC' stroke-width='0.8' opacity='0.07'%3E%3Cpath d='M20 10c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23F5F5DC' fill-opacity='0.06'/%3E%3Cpath d='M25 60c6 0 11 5 11 11 0 9-6 16-11 16s-11-7-11-16c0-6 5-11 11-11z' fill='%23B8860B' fill-opacity='0.05'/%3E%3Cpath d='M15 85c4 0 8 4 8 8 0 6-4 11-8 11s-8-5-8-11c0-4 4-8 8-8z' fill='%23A0522D' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E");
+          background-repeat: repeat-y;
+          background-position: left center;
+          z-index: 2;
+          pointer-events: none;
+        }
+
+        .kalamkari-border-right {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 120px;
+          height: 100%;
+          background-image: url("data:image/svg+xml,%3Csvg width='120' height='100' viewBox='0 0 120 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23F5F5DC' stroke-width='0.8' opacity='0.07' transform='scale(-1,1) translate(-120,0)'%3E%3Cpath d='M20 10c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23F5F5DC' fill-opacity='0.06'/%3E%3Cpath d='M25 60c6 0 11 5 11 11 0 9-6 16-11 16s-11-7-11-16c0-6 5-11 11-11z' fill='%23B8860B' fill-opacity='0.05'/%3E%3Cpath d='M15 85c4 0 8 4 8 8 0 6-4 11-8 11s-8-5-8-11c0-4 4-8 8-8z' fill='%23A0522D' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E");
+          background-repeat: repeat-y;
+          background-position: right center;
+          z-index: 2;
+          pointer-events: none;
         }
 
         /* Premium centered serif title styling */
@@ -599,8 +632,12 @@ export default function HomePage() {
               ))}
             </div>
             
-            {/* Gentle Darkening Overlay (10-15%) */}
+            {/* Soft Warm Kalamkari-Inspired Gradient Overlay */}
             <div className="cinematic-overlay" />
+            
+            {/* Faint Kalamkari Border Motifs for Textile Frame Effect */}
+            <div className="kalamkari-border-left" />
+            <div className="kalamkari-border-right" />
           </div>
           
           {/* Hero Content - Premium Centered Design */}
