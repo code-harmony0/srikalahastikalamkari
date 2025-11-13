@@ -118,31 +118,31 @@ export default function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns
+  // High-quality REAL Kalamkari saree fabric photographs with modern luxury pastel color grading
   const heroBackgroundImages = [
     {
-      src: 'https://static.wixstatic.com/media/07221c_057b348c686a4a28af296cd5c08c04e0~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted floral vine patterns with delicate leaves, natural dyes in warm earthy tones, soft cloth folds visible',
+      src: 'https://static.wixstatic.com/media/07221c_d1922b6a74c947fc91ce234af55292aa~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted floral vine patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_a10c03740aaa48faa294a8e88471f228~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted peacock patterns with elaborate feather details, natural dyes in warm earthy tones, soft cloth folds visible',
+      src: 'https://static.wixstatic.com/media/07221c_7e895cfca52c46f3a9203dce6ff9d439~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted peacock patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_f4eeef23656c44868a3bde7bb1b18f70~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted intricate paisley patterns, natural dyes in warm earthy tones, soft cloth folds visible',
+      src: 'https://static.wixstatic.com/media/07221c_ab6cb7ef4587456ca430053eaa4a1f30~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted paisley patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_8d2fc60a480e4a90bb4090e06329c34c~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted lotus flower patterns with botanical elements, natural dyes in warm earthy tones, soft cloth folds visible',
+      src: 'https://static.wixstatic.com/media/07221c_c2b70960df8c4780afab5fee0f6bc7b0~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted lotus flower patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_6aad4d237fbd4800ab6b65b8fcc59f64~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted mixed traditional patterns with floral vines and paisleys, natural dyes in warm earthy tones, soft cloth folds visible',
+      src: 'https://static.wixstatic.com/media/07221c_869c103229bb4b778eb6089ca5e67b80~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted mixed traditional patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
       brightness: 'medium'
     }
   ];
@@ -301,22 +301,22 @@ export default function HomePage() {
   return (
     <>
       <style>{`
-        /* Single Static Kalamkari Motif Background - Premium & Unified */
+        /* Modern Luxury Pastel Kalamkari Background - Premium & Unified */
         .kalamkari-static-background {
-          background-color: #FDF8F2; /* Ivory base */
-          background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round' opacity='0.06'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23A0522D' fill-opacity='0.04'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%23B8860B' fill-opacity='0.03'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23A0522D' fill-opacity='0.03'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%23B8860B' fill-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E");
+          background-color: #F8F6F3; /* Clay beige base */
+          background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23E6D7FF' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round' opacity='0.08'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23E6D7FF' fill-opacity='0.05'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%23B8E6E1' fill-opacity='0.04'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23B8D4F0' fill-opacity='0.04'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%23F4E4BC' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E");
           background-size: 200px 200px;
           background-position: 0 0;
           background-repeat: repeat;
           background-attachment: fixed;
         }
         
-        /* Silk Fabric Texture Overlay */
+        /* Soft Pastel Fabric Texture Overlay */
         .silk-fabric-texture {
           background-image: 
-            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.015) 1px, transparent 1px),
-            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.01) 1px, transparent 1px),
-            radial-gradient(circle at 60% 20%, rgba(253, 248, 242, 0.02) 0.5px, transparent 0.5px);
+            radial-gradient(circle at 20% 30%, rgba(230, 215, 255, 0.02) 1px, transparent 1px),
+            radial-gradient(circle at 80% 70%, rgba(184, 230, 225, 0.015) 1px, transparent 1px),
+            radial-gradient(circle at 60% 20%, rgba(248, 246, 243, 0.025) 0.5px, transparent 0.5px);
           background-size: 30px 30px, 25px 25px, 20px 20px;
           background-position: 0 0, 15px 15px, 10px 10px;
         }
@@ -511,7 +511,7 @@ export default function HomePage() {
           opacity: 0;
         }
 
-        /* Soft warm gradient overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-10%) */
+        /* Soft pastel gradient overlay (lavender top 25-30%, teal mid 15-18%, powder blue bottom 8%) */
         .cinematic-overlay {
           position: absolute;
           top: 0;
@@ -520,16 +520,16 @@ export default function HomePage() {
           height: 100%;
           background: linear-gradient(
             180deg,
-            rgba(101, 67, 33, 0.30) 0%,
-            rgba(101, 67, 33, 0.25) 30%,
-            rgba(160, 82, 45, 0.18) 60%,
-            rgba(184, 134, 11, 0.15) 80%,
-            rgba(245, 245, 220, 0.08) 100%
+            rgba(230, 215, 255, 0.28) 0%,
+            rgba(230, 215, 255, 0.22) 30%,
+            rgba(184, 230, 225, 0.16) 60%,
+            rgba(184, 212, 240, 0.12) 80%,
+            rgba(248, 246, 243, 0.08) 100%
           );
           z-index: 1;
         }
 
-        /* Premium textile texture overlay for authentic saree feel */
+        /* Premium pastel textile texture overlay for authentic saree feel */
         .textile-texture {
           position: absolute;
           top: 0;
@@ -537,9 +537,9 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           background-image: 
-            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
-            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.015) 1px, transparent 1px),
-            radial-gradient(circle at 50% 50%, rgba(218, 165, 32, 0.01) 0.5px, transparent 0.5px);
+            radial-gradient(circle at 25% 25%, rgba(230, 215, 255, 0.025) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(184, 230, 225, 0.02) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(244, 228, 188, 0.015) 0.5px, transparent 0.5px);
           background-size: 40px 40px, 35px 35px, 25px 25px;
           background-position: 0 0, 20px 20px, 10px 10px;
           z-index: 2;
@@ -571,35 +571,37 @@ export default function HomePage() {
           text-align: center;
         }
 
-        /* Gold-brown button styling */
+        /* Modern Luxury Pastel Button Styles */
         .cinematic-button-primary {
-          background: linear-gradient(135deg, #B8860B 0%, #A0522D 50%, #8B4513 100%);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          color: #ffffff;
+          background: linear-gradient(135deg, #E6D7FF 0%, #B8E6E1 50%, #B8D4F0 100%);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          color: #6B7280;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 4px 20px rgba(230, 215, 255, 0.25);
         }
 
         .cinematic-button-primary:hover {
-          background: linear-gradient(135deg, #DAA520 0%, #B8860B 50%, #A0522D 100%);
+          background: linear-gradient(135deg, #D4C5FF 0%, #A8DDD6 50%, #A8C8E8 100%);
           transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+          box-shadow: 0 8px 30px rgba(230, 215, 255, 0.35);
+          color: #6B7280;
         }
 
         .cinematic-button-secondary {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(255, 255, 255, 0.20);
           backdrop-filter: blur(20px);
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          border: 2px solid rgba(230, 215, 255, 0.4);
           color: #ffffff;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 20px rgba(230, 215, 255, 0.2);
         }
 
         .cinematic-button-secondary:hover {
-          background: rgba(255, 255, 255, 0.25);
-          border-color: rgba(255, 255, 255, 0.5);
+          background: rgba(230, 215, 255, 0.25);
+          border-color: rgba(230, 215, 255, 0.6);
           transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 8px 30px rgba(230, 215, 255, 0.3);
+          color: #ffffff;
         }
       `}</style>
       <main className="w-full kalamkari-static-background silk-fabric-texture text-foreground overflow-hidden">

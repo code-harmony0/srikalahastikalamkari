@@ -23,24 +23,30 @@ export default {
                 paragraph: ["open sans"]
             },
             colors: {
-                "accent-color": "#B8860B",
-                "light-brown": "#F5F5DC",
-                destructive: "#DC143C",
+                // Modern Luxury Pastel Theme
+                "accent-color": "#E6D7FF", // Soft lavender
+                "light-brown": "#F8F6F3", // Clay beige light
+                destructive: "#FF6B9D", // Soft pink destructive
                 "destructive-foreground": "#FFFFFF",
-                background: "#F5F5DC",
-                secondary: "#D2B48C",
-                foreground: "#333333",
-                "secondary-foreground": "#333333",
+                background: "#F8F6F3", // Clay beige background
+                secondary: "#B8E6E1", // Pastel teal
+                foreground: "#6B7280", // Warm grey text
+                "secondary-foreground": "#6B7280",
                 "primary-foreground": "#FFFFFF",
-                primary: "#A0522D",
-                softgraytext: "#B8860B",
-                creamhighlight: "#F5F5DC",
-                pastelblue: "#F5F5DC",
-                foregroungd: "#333333",
-                footerbackground: "#333333",
-                linkcolor: "#A0522D",
-                buttonborder: "#A0522D",
-                "light-brown-unused": "#DEB887"
+                primary: "#E6D7FF", // Soft lavender primary
+                softgraytext: "#9CA3AF", // Soft grey text
+                creamhighlight: "#F8F6F3", // Clay beige highlight
+                pastelblue: "#B8D4F0", // Powder blue
+                foregroungd: "#6B7280",
+                footerbackground: "#6B7280", // Warm grey footer
+                linkcolor: "#E6D7FF", // Soft lavender links
+                buttonborder: "#E6D7FF", // Soft lavender borders
+                "soft-lavender": "#E6D7FF",
+                "pastel-teal": "#B8E6E1", 
+                "powder-blue": "#B8D4F0",
+                "clay-beige": "#F8F6F3",
+                "warm-grey": "#6B7280",
+                "soft-gold": "#F4E4BC"
             },
         },
     },
