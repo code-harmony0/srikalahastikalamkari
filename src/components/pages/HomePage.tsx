@@ -1994,354 +1994,157 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Enhanced Newsletter Section - Premium Subscription with Gradient & Woven Texture */}
+        {/* Refined Newsletter Section - Static Brown Gradient with Subtle Gold Kalamkari */}
         <section className="w-full py-24 md:py-32 relative overflow-hidden">
-          {/* Enhanced Gradient Background with Woven Texture */}
+          {/* Static Brown Gradient Background */}
           <div className="absolute inset-0">
-            {/* Primary gradient layer */}
             <div 
               className="absolute inset-0"
               style={{
-                background: "linear-gradient(135deg, #A0522D 0%, #8B4513 25%, #B8860B 50%, #DAA520 75%, #A0522D 100%)",
-                backgroundSize: "400% 400%"
-              }}
-            />
-            
-            {/* Animated gradient overlay */}
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(45deg, rgba(184, 134, 11, 0.3) 0%, rgba(255, 215, 0, 0.2) 25%, rgba(160, 82, 45, 0.3) 50%, rgba(218, 165, 32, 0.2) 75%, rgba(184, 134, 11, 0.3) 100%)",
-                backgroundSize: "300% 300%"
-              }}
-              animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            />
-            
-            {/* Woven texture pattern */}
-            <div 
-              className="absolute inset-0 opacity-15"
-              style={{
-                backgroundImage: `
-                  linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%),
-                  linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%),
-                  linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.1) 75%),
-                  linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.1) 75%)
-                `,
-                backgroundSize: "20px 20px",
-                backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px"
-              }}
-            />
-            
-            {/* Additional woven cross-hatch */}
-            <motion.div 
-              className="absolute inset-0 opacity-8"
-              animate={{ 
-                backgroundPosition: ["0px 0px", "40px 40px"],
-                opacity: [0.08, 0.12, 0.08]
-              }}
-              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-              style={{
-                backgroundImage: `
-                  repeating-linear-gradient(
-                    0deg,
-                    rgba(255, 255, 255, 0.05) 0px,
-                    transparent 1px,
-                    transparent 10px,
-                    rgba(255, 255, 255, 0.05) 11px
-                  ),
-                  repeating-linear-gradient(
-                    90deg,
-                    rgba(255, 255, 255, 0.05) 0px,
-                    transparent 1px,
-                    transparent 10px,
-                    rgba(255, 255, 255, 0.05) 11px
-                  )
-                `
+                background: "linear-gradient(135deg, #2D1810 0%, #3D2317 25%, #4A2C1A 50%, #3D2317 75%, #2D1810 100%)"
               }}
             />
           </div>
           
-          {/* Enhanced Heritage Texture Overlay */}
-          <div className="absolute inset-0 opacity-12">
-            <div 
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `
-                  radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
-                  radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-                  radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06) 1.5px, transparent 1.5px)
-                `,
-                backgroundSize: "30px 30px, 20px 20px, 25px 25px"
-              }}
-            />
-          </div>
-          
-          {/* Enhanced Decorative Pattern with Animation */}
-          <motion.div
-            className="absolute inset-0 opacity-8"
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          >
-            <div 
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.1'%3E%3Cpath d='M50 15c19.33 0 35 15.67 35 35s-15.67 35-35 35S15 69.33 15 50 30.67 15 50 15zm0 10c-13.807 0-25 11.193-25 25s11.193 25 25 25 25-11.193 25-25-11.193-25-25-25z'/%3E%3Cpath d='M50 30c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                backgroundSize: "100px 100px"
-              }}
-            />
-          </motion.div>
-          
-          {/* Floating Gold Elements */}
-          <motion.div
-            animate={{ 
-              y: [0, -20, 0],
-              x: [0, 10, 0],
-              opacity: [0.3, 0.6, 0.3],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-20 right-20 w-16 h-16 opacity-4"
+          {/* Subtle Gold Kalamkari Motif - Static */}
+          <div 
+            className="absolute inset-0 opacity-6"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 8c12.15 0 22 9.85 22 22s-9.85 22-22 22S8 42.15 8 30 17.85 8 30 8z' fill='none' stroke='%23FFFFFF' stroke-width='1.5' stroke-opacity='0.3'/%3E%3Cpath d='M30 18c6.627 0 12 5.373 12 12s-5.373 12-12 12-12-5.373-12-12 5.373-12 12-12z' fill='%23FFFFFF' fill-opacity='0.2'/%3E%3C/svg%3E")`,
-              filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))"
-            }}
-          />
-          
-          <motion.div
-            animate={{ 
-              y: [0, 15, 0],
-              x: [0, -8, 0],
-              opacity: [0.2, 0.5, 0.2],
-              rotate: [0, 180, 360]
-            }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-24 left-16 w-12 h-12 opacity-3"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 5c11.046 0 20 8.954 20 20s-8.954 20-20 20S5 36.046 5 25 13.954 5 25 5z' fill='none' stroke='%23FFFFFF' stroke-width='1' stroke-opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='8' fill='%23FFFFFF' fill-opacity='0.15'/%3E%3C/svg%3E")`,
-              filter: "drop-shadow(0 0 8px rgba(255, 255, 255, 0.15))"
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.4'%3E%3Cpath d='M40 30c15 0 27 12 27 27 0 20-15 35-27 35s-27-15-27-35c0-15 12-27 27-27z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M120 100c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M80 40c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23B8860B' fill-opacity='0.05'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "160px 160px",
+              backgroundPosition: "0 0",
+              backgroundRepeat: "repeat"
             }}
           />
           
           <div className="max-w-5xl mx-auto text-center px-6 md:px-8 lg:px-12 relative z-10">
-            <AnimatedElement>
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            {/* Premium Typography Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="mb-10"
+            >
+              {/* Gold Divider */}
+              <motion.div 
+                className="w-24 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent mx-auto mb-8"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ duration: 1.2, delay: 0.2 }}
+                viewport={{ once: true }}
+              />
+              
+              <motion.span 
+                className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] block mb-6"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
               >
-                {/* Enhanced Header with Animated Badges */}
-                <div className="flex items-center justify-center gap-6 mb-10">
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Sparkles className="w-7 h-7 text-accent-color" style={{ filter: "drop-shadow(0 0 8px rgba(184, 134, 11, 0.5))" }} />
-                  </motion.div>
-                  
-                  <motion.span 
-                    className="font-paragraph text-base font-bold text-accent-color uppercase tracking-[0.3em] px-6 py-3 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg relative overflow-hidden"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    Stay Connected
-                    {/* Animated shimmer */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                      animate={{ x: [-100, 100] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                  </motion.span>
-                  
-                  <motion.div
-                    animate={{ rotate: [360, 0] }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Sparkles className="w-7 h-7 text-accent-color" style={{ filter: "drop-shadow(0 0 8px rgba(184, 134, 11, 0.5))" }} />
-                  </motion.div>
-                </div>
-                
-                {/* Enhanced Title with Gold Glow */}
-                <motion.h2 
-                  className="font-heading text-5xl md:text-6xl lg:text-7xl text-primary-foreground mb-8 leading-tight relative"
+                Stay Connected
+              </motion.span>
+            </motion.div>
+            
+            {/* Premium Title */}
+            <motion.h2 
+              className="font-heading text-5xl md:text-6xl lg:text-7xl text-primary-foreground mb-8 leading-tight font-light"
+              style={{
+                textShadow: "0 2px 12px rgba(0, 0, 0, 0.4)"
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              Join the Heritage Collective
+            </motion.h2>
+            
+            {/* Refined Description */}
+            <motion.p 
+              className="font-paragraph text-xl md:text-2xl text-primary-foreground/90 mb-14 leading-relaxed max-w-4xl mx-auto font-light"
+              style={{
+                textShadow: "0 1px 6px rgba(0, 0, 0, 0.3)"
+              }}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
+              Become a part of our story. Receive exclusive access to new collections, artisan stories, cultural insights, and special member-only offers.
+            </motion.p>
+            
+            {/* Tactile Newsletter Form */}
+            <motion.form 
+              className="flex flex-col sm:flex-row gap-5 max-w-3xl mx-auto mb-12"
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex-grow relative">
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  className="w-full h-16 px-8 bg-white/95 backdrop-blur-sm border-2 border-white/40 hover:border-accent-color/60 focus:border-accent-color rounded-2xl placeholder:text-foreground/60 font-paragraph focus:ring-4 focus:ring-accent-color/20 focus:outline-none text-foreground text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
                   style={{
-                    textShadow: "0 0 30px rgba(255, 255, 255, 0.3), 0 4px 20px rgba(0, 0, 0, 0.3)",
-                    filter: "drop-shadow(0 0 20px rgba(184, 134, 11, 0.2))"
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.1)"
                   }}
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Join the Heritage Collective
-                  
-                  {/* Floating gold particles around title */}
-                  <motion.div
-                    className="absolute -top-4 -right-4 w-3 h-3 bg-gradient-radial from-accent-color to-transparent rounded-full"
-                    animate={{ 
-                      y: [0, -10, 0],
-                      opacity: [0.5, 1, 0.5],
-                      scale: [1, 1.3, 1]
-                    }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    style={{ filter: "blur(0.5px) drop-shadow(0 0 8px rgba(184, 134, 11, 0.6))" }}
-                  />
-                  
-                  <motion.div
-                    className="absolute -bottom-2 -left-6 w-2 h-2 bg-gradient-radial from-amber-400 to-transparent rounded-full"
-                    animate={{ 
-                      x: [0, 8, 0],
-                      opacity: [0.4, 0.8, 0.4],
-                      scale: [1, 1.2, 1]
-                    }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    style={{ filter: "blur(0.3px) drop-shadow(0 0 6px rgba(255, 215, 0, 0.5))" }}
-                  />
-                </motion.h2>
-                
-                {/* Enhanced Description */}
-                <motion.p 
-                  className="font-paragraph text-xl md:text-2xl text-primary-foreground/95 mb-14 leading-relaxed max-w-4xl mx-auto font-light"
-                  style={{
-                    textShadow: "0 2px 8px rgba(0, 0, 0, 0.3)"
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  viewport={{ once: true }}
-                >
-                  Become a part of our story. Receive exclusive access to new collections, artisan stories, cultural insights, and special member-only offers.
-                </motion.p>
-                
-                {/* Enhanced Newsletter Form with Improved Input & Button */}
-                <motion.form 
-                  className="flex flex-col sm:flex-row gap-5 max-w-3xl mx-auto mb-10"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  viewport={{ once: true }}
-                >
-                  <motion.div 
-                    className="flex-grow relative"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <input
-                      type="email"
-                      placeholder="Enter your email address"
-                      className="w-full h-16 px-8 bg-white/95 backdrop-blur-md border-2 border-white/60 hover:border-white/80 focus:border-accent-color rounded-2xl placeholder:text-foreground/60 font-paragraph focus:ring-4 focus:ring-accent-color/30 focus:outline-none text-foreground text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                      style={{
-                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)"
-                      }}
-                    />
-                    {/* Input glow effect */}
-                    <motion.div
-                      className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                      style={{
-                        background: "linear-gradient(45deg, transparent, rgba(184, 134, 11, 0.1), transparent)",
-                        filter: "blur(1px)"
-                      }}
-                    />
-                  </motion.div>
-                  
-                  <motion.div
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      className="h-16 px-10 rounded-2xl font-paragraph bg-gradient-to-r from-primary-foreground via-white to-primary-foreground hover:from-white hover:via-primary-foreground hover:to-white text-primary font-bold text-lg transition-all duration-500 shadow-xl hover:shadow-2xl border-2 border-white/20 hover:border-accent-color/30 relative overflow-hidden group"
-                      style={{
-                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
-                      }}
-                    >
-                      {/* Button shimmer effect */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-color/20 to-transparent opacity-0 group-hover:opacity-100"
-                        animate={{ x: [-100, 100] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      />
-                      
-                      <span className="relative z-10 flex items-center gap-3">
-                        Subscribe Now
-                        <motion.div
-                          animate={{ x: [0, 4, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          <ArrowRight className="w-6 h-6" />
-                        </motion.div>
-                      </span>
-                    </Button>
-                  </motion.div>
-                </motion.form>
-                
-                {/* Enhanced Trust Indicators with Animated Badges */}
-                <motion.div 
-                  className="flex flex-wrap justify-center items-center gap-8 text-primary-foreground/90 text-base font-paragraph mb-8 font-medium"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.7 }}
-                  viewport={{ once: true }}
-                >
-                  <motion.div 
-                    className="flex items-center gap-3 px-4 py-2 bg-white/15 backdrop-blur-md rounded-xl border border-white/20 shadow-lg"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <Heart className="w-5 h-5 fill-red-400 text-red-400" style={{ filter: "drop-shadow(0 0 8px rgba(239, 68, 68, 0.5))" }} />
-                    </motion.div>
-                    <span className="font-semibold">5,000+ Subscribers</span>
-                  </motion.div>
-                  
-                  <motion.div 
-                    className="flex items-center gap-3 px-4 py-2 bg-white/15 backdrop-blur-md rounded-xl border border-white/20 shadow-lg"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.div
-                      animate={{ rotate: [0, 360] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Star className="w-5 h-5 fill-amber-400 text-amber-400" style={{ filter: "drop-shadow(0 0 8px rgba(251, 191, 36, 0.5))" }} />
-                    </motion.div>
-                    <span className="font-semibold">Exclusive Content</span>
-                  </motion.div>
-                  
-                  <motion.div 
-                    className="flex items-center gap-3 px-4 py-2 bg-white/15 backdrop-blur-md rounded-xl border border-white/20 shadow-lg"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.div
-                      animate={{ y: [0, -3, 0] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <Award className="w-5 h-5 text-accent-color" style={{ filter: "drop-shadow(0 0 8px rgba(184, 134, 11, 0.5))" }} />
-                    </motion.div>
-                    <span className="font-semibold">Member Benefits</span>
-                  </motion.div>
-                </motion.div>
-                
-                {/* Enhanced Privacy Notice */}
-                <motion.p 
-                  className="text-base text-primary-foreground/80 font-paragraph leading-relaxed"
-                  style={{
-                    textShadow: "0 1px 4px rgba(0, 0, 0, 0.3)"
-                  }}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.9 }}
-                  viewport={{ once: true }}
-                >
-                  We respect your privacy. Unsubscribe at any time. No spam, just beautiful heritage content.
-                </motion.p>
-              </motion.div>
-            </AnimatedElement>
+                />
+              </div>
+              
+              <Button 
+                type="submit" 
+                size="lg" 
+                className="h-16 px-10 rounded-2xl font-paragraph bg-gradient-to-r from-accent-color to-amber-600 hover:from-amber-600 hover:to-accent-color text-primary font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl border-0"
+                style={{
+                  boxShadow: "0 8px 32px rgba(184, 134, 11, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2)"
+                }}
+              >
+                <span className="flex items-center gap-3">
+                  Subscribe Now
+                  <ArrowRight className="w-6 h-6" />
+                </span>
+              </Button>
+            </motion.form>
+            
+            {/* Trust Indicators - Calm & Static */}
+            <motion.div 
+              className="flex flex-wrap justify-center items-center gap-8 text-primary-foreground/85 text-base font-paragraph mb-8 font-medium"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.9 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <Heart className="w-5 h-5 text-red-400" />
+                <span className="font-semibold">5,000+ Subscribers</span>
+              </div>
+              
+              <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <Star className="w-5 h-5 text-amber-400" />
+                <span className="font-semibold">Exclusive Content</span>
+              </div>
+              
+              <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <Award className="w-5 h-5 text-accent-color" />
+                <span className="font-semibold">Member Benefits</span>
+              </div>
+            </motion.div>
+            
+            {/* Privacy Notice */}
+            <motion.p 
+              className="text-base text-primary-foreground/75 font-paragraph leading-relaxed"
+              style={{
+                textShadow: "0 1px 3px rgba(0, 0, 0, 0.3)"
+              }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
+              viewport={{ once: true }}
+            >
+              We respect your privacy. Unsubscribe at any time. No spam, just beautiful heritage content.
+            </motion.p>
           </div>
         </section>
 
