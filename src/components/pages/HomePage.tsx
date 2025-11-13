@@ -118,31 +118,32 @@ export default function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Enhanced handcrafted fabric background images with better variety
+  // Multiple Kalamkari fabric photos for cinematic background slideshow
   const heroBackgroundImages = [
     {
-      src: 'https://static.wixstatic.com/media/07221c_0b754ad420fd4c2caea1a72b3ad2e7ff~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Handcrafted Kalamkari silk saree with intricate tree of life motifs',
-      brightness: 'dark', // For white text
-      seoKeywords: 'handcrafted kalamkari silk saree tree of life'
+      src: 'https://static.wixstatic.com/media/07221c_407384aee6b446069b0a6cd6eb1bd05e~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'Exquisite Kalamkari fabric with intricate tree of life motifs in rich earth tones',
+      brightness: 'dark'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_9ea5a7cb1e4d40fb832cc400e2d6b2fd~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Premium cotton Kalamkari saree with traditional peacock patterns',
-      brightness: 'light', // For dark text
-      seoKeywords: 'premium cotton kalamkari saree peacock patterns'
+      src: 'https://static.wixstatic.com/media/07221c_02d103483e1447bd9013ec017c23f41c~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'Traditional Kalamkari textile featuring hand-painted peacock and floral patterns',
+      brightness: 'dark'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_3d2089764404458fa47df692b1921434~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Heritage Kalamkari fabric with hand-painted floral designs',
-      brightness: 'dark', // For white text
-      seoKeywords: 'heritage kalamkari fabric hand painted floral'
+      src: 'https://static.wixstatic.com/media/07221c_d2d7a0f5dfab4e7b965345018017d46a~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'Heritage Kalamkari saree with detailed paisley motifs and natural dyes',
+      brightness: 'dark'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_95267136773741e194ea4bf762fc8465~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Luxury Kalamkari textile with gold thread work and natural dyes',
-      brightness: 'medium', // For adaptive text
-      seoKeywords: 'luxury kalamkari textile gold thread natural dyes'
+      src: 'https://static.wixstatic.com/media/07221c_0a8895d1223d461da59c361d01a75be7~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'Luxury Kalamkari fabric showcasing traditional temple and mythological scenes',
+      brightness: 'dark'
+    },
+    {
+      src: 'https://static.wixstatic.com/media/07221c_32614c1c96a64864b3941c0ee25e1ca9~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'Artisan-crafted Kalamkari textile with gold accents and botanical designs',
+      brightness: 'dark'
     }
   ];
 
@@ -169,13 +170,13 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  // Enhanced background image carousel with smoother transitions
+  // Soft fade transition for cinematic background slideshow (4-6s per image)
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % heroBackgroundImages.length
       );
-    }, 8000); // Slower transition for luxury feel
+    }, 5000); // 5 seconds per image for calm, cinematic feel
 
     return () => clearInterval(interval);
   }, [heroBackgroundImages.length]);
@@ -194,16 +195,8 @@ export default function HomePage() {
     });
   }, [heroControls]);
 
-  // Background image carousel effect - Slower transition for luxury feel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        (prevIndex + 1) % heroBackgroundImages.length
-      );
-    }, 6000); // Change image every 6 seconds for more elegant pacing
-
-    return () => clearInterval(interval);
-  }, [heroBackgroundImages.length]);
+  // Remove duplicate background image carousel effect
+  // (keeping only the one above for 5-second intervals)
 
   // Auto-scroll gallery
   useEffect(() => {
@@ -496,7 +489,7 @@ export default function HomePage() {
           }
         }
 
-        /* Enhanced Background Image Transitions */
+        /* Cinematic Background Image Transitions - Soft Fade Only */
         .hero-background-image {
           position: absolute;
           top: 0;
@@ -504,35 +497,93 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: opacity 2s ease-in-out;
-          transform: scale(1.02);
+          transition: opacity 2.5s ease-in-out;
           will-change: opacity;
         }
 
         .hero-background-image.active {
           opacity: 1;
-          transform: scale(1.02);
         }
 
         .hero-background-image.inactive {
           opacity: 0;
-          transform: scale(1.04);
+        }
+
+        /* Gentle darkening overlay (10-15%) */
+        .cinematic-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.12);
+          z-index: 1;
+        }
+
+        /* Premium centered serif title styling */
+        .cinematic-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          color: #ffffff;
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+          letter-spacing: -0.02em;
+          line-height: 0.9;
+          text-align: center;
+        }
+
+        /* Elegant italic tagline */
+        .cinematic-tagline {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          color: #ffffff;
+          text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+          letter-spacing: 0.01em;
+          text-align: center;
+        }
+
+        /* Gold-brown button styling */
+        .cinematic-button-primary {
+          background: linear-gradient(135deg, #B8860B 0%, #A0522D 50%, #8B4513 100%);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #ffffff;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .cinematic-button-primary:hover {
+          background: linear-gradient(135deg, #DAA520 0%, #B8860B 50%, #A0522D 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .cinematic-button-secondary {
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(20px);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          color: #ffffff;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .cinematic-button-secondary:hover {
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.5);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
       `}</style>
       <main className="w-full kalamkari-static-background silk-fabric-texture text-foreground overflow-hidden">
-        {/* Modern Luxury Hero Section - Kalamkari Heritage Reimagined */}
+        {/* Cinematic Hero Section - Calm, High-End Look */}
         <section 
           ref={heroRef}
           className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
           role="banner"
-          aria-label="Kalamkari Heritage - Modern Luxury Collection"
+          aria-label="Kalamkari Heritage - Cinematic Collection"
         >
-          {/* Premium Fabric Background Layers with Parallax */}
-          <motion.div 
-            style={{ y: heroY }}
-            className="absolute inset-0 z-0 parallax-layer"
-          >
-            {/* Background Image Carousel - Enhanced Handcrafted Fabric Textures */}
+          {/* Multiple Kalamkari Fabric Background Images */}
+          <div className="absolute inset-0 z-0">
+            {/* Background Image Slideshow - Soft Fade Only */}
             <div className="absolute inset-0">
               {heroBackgroundImages.map((image, index) => (
                 <Image
@@ -548,171 +599,68 @@ export default function HomePage() {
               ))}
             </div>
             
-            {/* Enhanced Semi-transparent Gradient Overlay */}
-            <div className="absolute inset-0 luxury-fabric-overlay"></div>
-            
-            {/* Floating Particles for Premium Feel */}
-            <div className="absolute inset-0 floating-particles">
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-            </div>
-          </motion.div>
+            {/* Gentle Darkening Overlay (10-15%) */}
+            <div className="cinematic-overlay" />
+          </div>
           
-          {/* Enhanced Hero Content with Adaptive Text and GSAP Animations */}
-          <motion.div
-            style={{ 
-              opacity: heroOpacity,
-              scale: heroScale
-            }}
-            animate={heroControls}
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
-            className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-6xl mx-auto w-full"
-          >
-            {/* SEO-optimized structured data for e-commerce */}
-            <script type="application/ld+json">
-              {JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "Store",
-                "name": "Shri Kalamkari",
-                "description": "Premium handcrafted Kalamkari sarees with traditional artistry and modern luxury",
-                "url": window.location.origin,
-                "image": heroBackgroundImages[currentImageIndex]?.src,
-                "priceRange": "₹₹₹",
-                "paymentAccepted": ["Cash", "Credit Card", "UPI"],
-                "currenciesAccepted": "INR",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressCountry": "IN"
-                }
-              })}
-            </script>
-
-            {/* Elegant Divider with Enhanced Animation */}
-            <motion.div
-              initial={{ opacity: 0, scaleX: 0 }}
-              animate={{ opacity: 1, scaleX: 1 }}
-              transition={{ 
-                duration: 2, 
-                delay: 0.8, 
-                ease: [0.25, 0.46, 0.45, 0.94]
-              }}
-              className="mb-16 md:mb-20 flex items-center justify-center"
-            >
-              <div className="cinematic-divider"></div>
-            </motion.div>
-
-            {/* Enhanced Headlines with Fixed White Text Color */}
+          {/* Hero Content - Premium Centered Design */}
+          <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-6xl mx-auto w-full">
+            {/* Premium Centered Serif Title */}
             <motion.h1
-              className={`luxury-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[0.85] tracking-tight mb-10 md:mb-12`}
+              className="cinematic-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-8"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
             >
-              <motion.span 
-                initial={{ opacity: 0, y: 120 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 2.2, 
-                  delay: 1.2,
-                  ease: [0.25, 0.46, 0.45, 0.94]
-                }}
-                className="block text-white"
-              >
-                Kalamkari
-              </motion.span>
-              <motion.span 
-                initial={{ opacity: 0, y: 120 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 2.2, 
-                  delay: 1.6,
-                  ease: [0.25, 0.46, 0.45, 0.94]
-                }}
-                className="block text-white font-light"
-              >
-                Heritage
-              </motion.span>
+              <span className="block">Kalamkari</span>
+              <span className="block font-light">Heritage</span>
             </motion.h1>
 
-            {/* Enhanced Tagline with Fixed White Text */}
-            <motion.div
-              initial={{ opacity: 0, y: 80 }}
+            {/* Elegant Italic Tagline */}
+            <motion.p
+              className="cinematic-tagline text-xl md:text-2xl lg:text-3xl mb-12 max-w-4xl leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 2.2, 
-                delay: 2.0, 
-                ease: [0.25, 0.46, 0.45, 0.94]
-              }}
-              className="mb-16 md:mb-18"
+              transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
             >
-              <p className="luxury-tagline text-white text-xl md:text-2xl lg:text-3xl leading-relaxed max-w-4xl mx-auto text-center">
-                "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
-              </p>
-            </motion.div>
+              "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
+            </motion.p>
 
-            {/* Enhanced CTA Buttons with Modern Design */}
+            {/* Gold-Brown Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 100 }}
+              className="flex flex-col sm:flex-row gap-6 max-w-2xl mx-auto w-full"
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 2.2, 
-                delay: 2.5, 
-                ease: [0.25, 0.46, 0.45, 0.94]
-              }}
-              className="flex flex-col sm:flex-row gap-5 md:gap-6 max-w-2xl mx-auto w-full"
+              transition={{ duration: 1.2, delay: 1.1, ease: "easeOut" }}
             >
-              <Link to="/shop" className="group flex-1">
-                <motion.div
-                  whileHover={{ scale: 1.03, y: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              <Link to="/shop" className="flex-1">
+                <Button 
+                  size="lg" 
+                  className="cinematic-button-primary px-10 py-6 text-lg font-medium rounded-2xl w-full h-16"
+                  aria-label="Explore our handcrafted Kalamkari collection"
                 >
-                  <Button 
-                    size="lg" 
-                    className="luxury-primary-button text-white px-10 py-5 text-lg font-medium rounded-2xl w-full h-16"
-                    aria-label="Explore our handcrafted Kalamkari saree collection"
-                  >
-                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
-                      Explore Collection
-                      <motion.span
-                        className="inline-block text-xl"
-                        animate={{ x: [0, 8, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        →
-                      </motion.span>
-                    </span>
-                  </Button>
-                </motion.div>
+                  <span className="flex items-center justify-center gap-3 font-serif">
+                    Explore Collection
+                    <ArrowRight className="w-6 h-6" />
+                  </span>
+                </Button>
               </Link>
-              <Link to="/about" className="group flex-1">
-                <motion.div
-                  whileHover={{ scale: 1.03, y: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              
+              <Link to="/about" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="cinematic-button-secondary px-10 py-6 text-lg font-medium rounded-2xl w-full h-16"
+                  aria-label="Learn about our heritage and artisan story"
                 >
-                  <Button 
-                    variant="outline" 
-                    size="lg" 
-                    className="luxury-secondary-button text-white px-10 py-5 text-lg font-medium rounded-2xl w-full h-16"
-                    aria-label="Learn about our heritage and artisan story"
-                  >
-                    <span className="relative z-10 flex items-center justify-center gap-3 font-serif">
-                      Our Heritage
-                      <motion.span
-                        className="inline-block text-lg"
-                        animate={{ rotate: [0, 15, -15, 0] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        ✨
-                      </motion.span>
-                    </span>
-                  </Button>
-                </motion.div>
+                  <span className="flex items-center justify-center gap-3 font-serif">
+                    Our Heritage
+                    <Sparkles className="w-6 h-6" />
+                  </span>
+                </Button>
               </Link>
             </motion.div>
-          </motion.div>
+          </div>
         </section>
 
         {/* Featured Products Section - Premium Showcase */}
