@@ -170,13 +170,13 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  // Slow fade between images every 6-8 seconds for premium calm experience
+  // Slow fade between images every 4-6 seconds as requested
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % heroBackgroundImages.length
       );
-    }, 7000); // 7 seconds for slow, premium transitions
+    }, 5000); // 5 seconds for optimal viewing time
 
     return () => clearInterval(interval);
   }, [heroBackgroundImages.length]);
@@ -489,7 +489,7 @@ export default function HomePage() {
           }
         }
 
-        /* Slow fade transitions only - calm and premium */
+        /* Pure fade transitions only - no zoom/slide/motion as requested */
         .hero-background-image {
           position: absolute;
           top: 0;
@@ -497,10 +497,10 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: opacity 2.5s ease-in-out;
+          transition: opacity 1.5s ease-in-out;
           will-change: opacity;
           transform: none;
-          filter: contrast(0.92) saturate(0.95) brightness(1.05);
+          filter: contrast(0.95) saturate(1.05) brightness(1.02);
         }
 
         .hero-background-image.active {
@@ -511,7 +511,7 @@ export default function HomePage() {
           opacity: 0;
         }
 
-        /* Premium soft gradient overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 10%) */
+        /* Soft warm gradient overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-12%) */
         .cinematic-overlay {
           position: absolute;
           top: 0;
@@ -520,16 +520,16 @@ export default function HomePage() {
           height: 100%;
           background: linear-gradient(
             180deg,
-            rgba(101, 67, 33, 0.30) 0%,
+            rgba(101, 67, 33, 0.35) 0%,
             rgba(101, 67, 33, 0.25) 25%,
-            rgba(160, 82, 45, 0.18) 50%,
+            rgba(160, 82, 45, 0.20) 50%,
             rgba(184, 134, 11, 0.15) 75%,
             rgba(245, 245, 220, 0.10) 100%
           );
           z-index: 1;
         }
 
-        /* Silk-paper texture overlay for premium feel */
+        /* Premium textile texture overlay for authentic saree feel */
         .textile-texture {
           position: absolute;
           top: 0;
@@ -537,14 +537,14 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           background-image: 
-            radial-gradient(circle at 20% 30%, rgba(245, 245, 220, 0.015) 1px, transparent 1px),
-            radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.01) 0.5px, transparent 0.5px),
-            radial-gradient(circle at 60% 40%, rgba(160, 82, 45, 0.008) 0.8px, transparent 0.8px);
-          background-size: 60px 60px, 45px 45px, 35px 35px;
-          background-position: 0 0, 30px 30px, 15px 15px;
+            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.015) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(218, 165, 32, 0.01) 0.5px, transparent 0.5px);
+          background-size: 40px 40px, 35px 35px, 25px 25px;
+          background-position: 0 0, 20px 20px, 10px 10px;
           z-index: 2;
           pointer-events: none;
-          opacity: 0.6;
+          opacity: 0.7;
         }
 
 
@@ -628,10 +628,10 @@ export default function HomePage() {
               ))}
             </div>
             
-            {/* Premium Soft Gradient Overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 10%) */}
+            {/* Soft Warm Gradient Overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-12%) */}
             <div className="cinematic-overlay" />
             
-            {/* Silk-Paper Texture for Premium Feel */}
+            {/* Premium Textile Texture for Authentic Saree Feel */}
             <div className="textile-texture" />
             
 
