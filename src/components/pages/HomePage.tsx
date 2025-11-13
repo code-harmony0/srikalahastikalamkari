@@ -118,31 +118,11 @@ export default function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Multiple Kalamkari fabric photos for cinematic background slideshow
+  // High-quality Kalamkari artwork for cinematic background slideshow
   const heroBackgroundImages = [
     {
-      src: 'https://static.wixstatic.com/media/07221c_407384aee6b446069b0a6cd6eb1bd05e~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Exquisite Kalamkari fabric with intricate tree of life motifs in rich earth tones',
-      brightness: 'dark'
-    },
-    {
-      src: 'https://static.wixstatic.com/media/07221c_02d103483e1447bd9013ec017c23f41c~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Traditional Kalamkari textile featuring hand-painted peacock and floral patterns',
-      brightness: 'dark'
-    },
-    {
-      src: 'https://static.wixstatic.com/media/07221c_d2d7a0f5dfab4e7b965345018017d46a~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Heritage Kalamkari saree with detailed paisley motifs and natural dyes',
-      brightness: 'dark'
-    },
-    {
-      src: 'https://static.wixstatic.com/media/07221c_0a8895d1223d461da59c361d01a75be7~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Luxury Kalamkari fabric showcasing traditional temple and mythological scenes',
-      brightness: 'dark'
-    },
-    {
-      src: 'https://static.wixstatic.com/media/07221c_32614c1c96a64864b3941c0ee25e1ca9~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'Artisan-crafted Kalamkari textile with gold accents and botanical designs',
+      src: 'https://static.wixstatic.com/media/07221c_508401cbf2754c49bbc7bf2264b68be8~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality traditional Kalamkari artwork featuring intricate peacock, paisley, lotus, and floral motifs in rich ochre, brown, maroon, and gold colors',
       brightness: 'dark'
     }
   ];
@@ -170,16 +150,11 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  // Soft fade transition for cinematic background slideshow (4-6s per image)
+  // Single static Kalamkari artwork - no slideshow needed
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        (prevIndex + 1) % heroBackgroundImages.length
-      );
-    }, 5000); // 5 seconds per image for calm, cinematic feel
-
-    return () => clearInterval(interval);
-  }, [heroBackgroundImages.length]);
+    // Set to first (and only) image
+    setCurrentImageIndex(0);
+  }, []);
 
   // GSAP-style hero entrance animation
   useEffect(() => {
@@ -489,7 +464,7 @@ export default function HomePage() {
           }
         }
 
-        /* Cinematic Background Image Transitions - Smooth 2.5s Fade Only */
+        /* Matte texture background with slow fade transitions */
         .hero-background-image {
           position: absolute;
           top: 0;
@@ -497,8 +472,9 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: opacity 2.5s ease-in-out;
+          transition: opacity 3s ease-in-out;
           will-change: opacity;
+          filter: contrast(0.95) saturate(1.1);
         }
 
         .hero-background-image.active {
@@ -509,7 +485,7 @@ export default function HomePage() {
           opacity: 0;
         }
 
-        /* Soft warm Kalamkari-inspired gradient overlay (cream→gold→deep brown) */
+        /* Soft warm gradient overlay (cream→brown→gold) with reduced intensity 45-60% */
         .cinematic-overlay {
           position: absolute;
           top: 0;
@@ -518,40 +494,15 @@ export default function HomePage() {
           height: 100%;
           background: linear-gradient(
             135deg,
-            rgba(245, 245, 220, 0.15) 0%,
-            rgba(184, 134, 11, 0.20) 35%,
-            rgba(160, 82, 45, 0.25) 70%,
-            rgba(101, 67, 33, 0.30) 100%
+            rgba(245, 245, 220, 0.45) 0%,
+            rgba(160, 82, 45, 0.50) 35%,
+            rgba(184, 134, 11, 0.55) 70%,
+            rgba(218, 165, 32, 0.60) 100%
           );
           z-index: 1;
         }
 
-        /* Faint Kalamkari border motifs on left/right edges (6-8% opacity) */
-        .kalamkari-border-left {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 120px;
-          height: 100%;
-          background-image: url("data:image/svg+xml,%3Csvg width='120' height='100' viewBox='0 0 120 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23F5F5DC' stroke-width='0.8' opacity='0.07'%3E%3Cpath d='M20 10c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23F5F5DC' fill-opacity='0.06'/%3E%3Cpath d='M25 60c6 0 11 5 11 11 0 9-6 16-11 16s-11-7-11-16c0-6 5-11 11-11z' fill='%23B8860B' fill-opacity='0.05'/%3E%3Cpath d='M15 85c4 0 8 4 8 8 0 6-4 11-8 11s-8-5-8-11c0-4 4-8 8-8z' fill='%23A0522D' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E");
-          background-repeat: repeat-y;
-          background-position: left center;
-          z-index: 2;
-          pointer-events: none;
-        }
 
-        .kalamkari-border-right {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 120px;
-          height: 100%;
-          background-image: url("data:image/svg+xml,%3Csvg width='120' height='100' viewBox='0 0 120 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23F5F5DC' stroke-width='0.8' opacity='0.07' transform='scale(-1,1) translate(-120,0)'%3E%3Cpath d='M20 10c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23F5F5DC' fill-opacity='0.06'/%3E%3Cpath d='M25 60c6 0 11 5 11 11 0 9-6 16-11 16s-11-7-11-16c0-6 5-11 11-11z' fill='%23B8860B' fill-opacity='0.05'/%3E%3Cpath d='M15 85c4 0 8 4 8 8 0 6-4 11-8 11s-8-5-8-11c0-4 4-8 8-8z' fill='%23A0522D' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E");
-          background-repeat: repeat-y;
-          background-position: right center;
-          z-index: 2;
-          pointer-events: none;
-        }
 
         /* Premium centered serif title styling */
         .cinematic-title {
@@ -635,9 +586,7 @@ export default function HomePage() {
             {/* Soft Warm Kalamkari-Inspired Gradient Overlay */}
             <div className="cinematic-overlay" />
             
-            {/* Faint Kalamkari Border Motifs for Textile Frame Effect */}
-            <div className="kalamkari-border-left" />
-            <div className="kalamkari-border-right" />
+
           </div>
           
           {/* Hero Content - Premium Centered Design */}
