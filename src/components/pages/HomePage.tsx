@@ -118,11 +118,26 @@ export default function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // High-quality Kalamkari artwork for cinematic background slideshow
+  // Multiple high-quality Kalamkari artwork images for slideshow
   const heroBackgroundImages = [
     {
-      src: 'https://static.wixstatic.com/media/07221c_508401cbf2754c49bbc7bf2264b68be8~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality traditional Kalamkari artwork featuring intricate peacock, paisley, lotus, and floral motifs in rich ochre, brown, maroon, and gold colors',
+      src: 'https://static.wixstatic.com/media/07221c_e56372fdb6ea4673bdc3083d9d526a75~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality traditional Kalamkari artwork featuring majestic peacocks with detailed feather patterns and flowing floral vines in warm brown, gold, and maroon tones',
+      brightness: 'dark'
+    },
+    {
+      src: 'https://static.wixstatic.com/media/07221c_b75378227020459a9eb596be5c2483bf~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality traditional Kalamkari artwork featuring large lotus flowers in full bloom with intricate botanical patterns in warm brown, gold, and maroon palette',
+      brightness: 'dark'
+    },
+    {
+      src: 'https://static.wixstatic.com/media/07221c_d67c7039dca24026b8d09235ba050805~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality traditional Kalamkari artwork featuring flowing floral vines with delicate leaves and traditional paisley motifs in warm brown, gold, and maroon tones',
+      brightness: 'dark'
+    },
+    {
+      src: 'https://static.wixstatic.com/media/07221c_afa40bc0b8d84e2e8702c8dc7cc0b0a2~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality traditional Kalamkari artwork featuring intricate paisley patterns in various sizes with traditional Indian motifs in warm brown, gold, and maroon color scheme',
       brightness: 'dark'
     }
   ];
@@ -150,11 +165,16 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  // Single static Kalamkari artwork - no slideshow needed
+  // Fade between images every 4-6 seconds
   useEffect(() => {
-    // Set to first (and only) image
-    setCurrentImageIndex(0);
-  }, []);
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % heroBackgroundImages.length
+      );
+    }, 5000); // 5 seconds for smooth transitions
+
+    return () => clearInterval(interval);
+  }, [heroBackgroundImages.length]);
 
   // GSAP-style hero entrance animation
   useEffect(() => {
@@ -464,7 +484,7 @@ export default function HomePage() {
           }
         }
 
-        /* Matte texture background with slow fade transitions */
+        /* Pure fade transitions only - no zoom/slide/movement */
         .hero-background-image {
           position: absolute;
           top: 0;
@@ -472,9 +492,10 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: opacity 3s ease-in-out;
+          transition: opacity 1.5s ease-in-out;
           will-change: opacity;
-          filter: contrast(0.95) saturate(1.1);
+          transform: none;
+          filter: contrast(0.95) saturate(1.05);
         }
 
         .hero-background-image.active {
@@ -485,7 +506,7 @@ export default function HomePage() {
           opacity: 0;
         }
 
-        /* Soft warm gradient overlay (cream→brown→gold) with reduced intensity 45-60% */
+        /* Soft warm gradient overlay (10-15% dark top → warm bottom) */
         .cinematic-overlay {
           position: absolute;
           top: 0;
@@ -493,13 +514,30 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           background: linear-gradient(
-            135deg,
-            rgba(245, 245, 220, 0.45) 0%,
-            rgba(160, 82, 45, 0.50) 35%,
-            rgba(184, 134, 11, 0.55) 70%,
-            rgba(218, 165, 32, 0.60) 100%
+            180deg,
+            rgba(0, 0, 0, 0.10) 0%,
+            rgba(0, 0, 0, 0.05) 30%,
+            rgba(160, 82, 45, 0.08) 70%,
+            rgba(184, 134, 11, 0.15) 100%
           );
           z-index: 1;
+        }
+
+        /* Subtle textile texture overlay */
+        .textile-texture {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: 
+            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.015) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(218, 165, 32, 0.01) 0.5px, transparent 0.5px);
+          background-size: 40px 40px, 35px 35px, 25px 25px;
+          background-position: 0 0, 20px 20px, 10px 10px;
+          z-index: 2;
+          pointer-events: none;
         }
 
 
@@ -583,8 +621,11 @@ export default function HomePage() {
               ))}
             </div>
             
-            {/* Soft Warm Kalamkari-Inspired Gradient Overlay */}
+            {/* Soft Warm Gradient Overlay (10-15% dark top → warm bottom) */}
             <div className="cinematic-overlay" />
+            
+            {/* Subtle Textile Texture */}
+            <div className="textile-texture" />
             
 
           </div>
