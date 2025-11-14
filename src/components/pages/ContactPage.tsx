@@ -38,18 +38,18 @@ export default function ContactPage() {
     <div className="w-full min-h-screen bg-background relative">
       <ChikankariPattern className="text-primary/5" opacity="opacity-3" />
       {/* Hero Section */}
-      <section className="relative w-full py-24 md:py-32 overflow-hidden">
+      <section className="relative w-full py-32 md:py-40 lg:py-48 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image src="https://static.wixstatic.com/media/07221c_d429380cd73a433caa954c962ce5d49e~mv2.png" alt="Kalamkari fabric texture background" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/40"></div>
           <DecorativePattern className="text-accent-color" />
         </div>
-        <div className="relative z-10 max-w-[100rem] mx-auto px-4 md:px-8 text-center">
+        <div className="relative z-10 max-w-[100rem] mx-auto px-6 md:px-12 lg:px-16 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-5xl md:text-6xl font-heading font-bold text-primary-foreground mb-4"
+            className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-primary-foreground mb-6 md:mb-8"
           >
             We'd Love to Hear From You
           </motion.h1>
@@ -57,7 +57,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl text-primary-foreground/90 max-w-2xl mx-auto"
+            className="text-lg md:text-xl lg:text-2xl text-primary-foreground/90 max-w-3xl mx-auto leading-relaxed"
           >
             Have questions about our sarees or need assistance? Reach out to us and we'll respond within 24 hours.
           </motion.p>
@@ -65,9 +65,9 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Content */}
-      <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-16 md:py-24 relative z-10">
+      <div className="max-w-[100rem] mx-auto px-6 md:px-12 lg:px-16 py-20 md:py-28 lg:py-32 relative z-10">
         <DecorativePattern className="text-primary/5" opacity="opacity-5" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 lg:gap-20">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -76,109 +76,116 @@ export default function ContactPage() {
             viewport={{ once: true }}
             className="lg:col-span-2"
           >
-            <h2 className="text-3xl font-heading font-bold text-foreground mb-8">Send Us a Message</h2>
-            
-            {submitted ? (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-8 text-center">
-                <p className="text-lg font-paragraph text-green-800">
-                  Thank you for your message! We'll get back to you soon.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="fullName" className="text-sm font-semibold text-foreground mb-2 block">
-                      Full Name
-                    </Label>
-                    <Input
-                      id="fullName"
-                      name="fullName"
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      required
-                      className="w-full"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email" className="text-sm font-semibold text-foreground mb-2 block">
-                      Email Address
-                    </Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="Enter your email address"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full"
-                    />
-                  </div>
+            <div className="max-w-4xl">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">Send Us a Message</h2>
+              <p className="text-lg text-foreground/70 font-paragraph mb-10 leading-relaxed">
+                We're here to help with any questions about our handcrafted sarees, custom orders, or anything else you'd like to know.
+              </p>
+              
+              {submitted ? (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-10 text-center">
+                  <p className="text-lg font-paragraph text-green-800">
+                    Thank you for your message! We'll get back to you soon.
+                  </p>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="phone" className="text-sm font-semibold text-foreground mb-2 block">
-                      Phone Number
-                    </Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      placeholder="Enter your phone number"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full"
-                    />
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <Label htmlFor="fullName" className="text-sm font-semibold text-foreground mb-3 block">
+                        Full Name
+                      </Label>
+                      <Input
+                        id="fullName"
+                        name="fullName"
+                        type="text"
+                        placeholder="Enter your full name"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        required
+                        className="w-full h-12"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email" className="text-sm font-semibold text-foreground mb-3 block">
+                        Email Address
+                      </Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email address"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="w-full h-12"
+                      />
+                    </div>
                   </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <Label htmlFor="phone" className="text-sm font-semibold text-foreground mb-3 block">
+                        Phone Number
+                      </Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        placeholder="Enter your phone number"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full h-12"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="subject" className="text-sm font-semibold text-foreground mb-3 block">
+                        Subject
+                      </Label>
+                      <select
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        required
+                        className="w-full h-12 px-4 py-3 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                      >
+                        <option value="">Select a subject</option>
+                        <option value="product-inquiry">Product Inquiry</option>
+                        <option value="order-status">Order Status</option>
+                        <option value="returns">Returns & Exchanges</option>
+                        <option value="custom-order">Custom Order</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div>
-                    <Label htmlFor="subject" className="text-sm font-semibold text-foreground mb-2 block">
-                      Subject
+                    <Label htmlFor="message" className="text-sm font-semibold text-foreground mb-3 block">
+                      Your Message
                     </Label>
-                    <select
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
+                    <Textarea
+                      id="message"
+                      name="message"
+                      placeholder="Write your message here..."
+                      value={formData.message}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                      className="w-full min-h-48 p-4"
+                    />
+                  </div>
+
+                  <div className="pt-4">
+                    <Button
+                      type="submit"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-4 h-auto rounded-sm font-paragraph text-base"
                     >
-                      <option value="">Select a subject</option>
-                      <option value="product-inquiry">Product Inquiry</option>
-                      <option value="order-status">Order Status</option>
-                      <option value="returns">Returns & Exchanges</option>
-                      <option value="custom-order">Custom Order</option>
-                      <option value="other">Other</option>
-                    </select>
+                      Send Message
+                    </Button>
                   </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="message" className="text-sm font-semibold text-foreground mb-2 block">
-                    Your Message
-                  </Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    placeholder="Write your message here..."
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    className="w-full min-h-40"
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-sm font-paragraph"
-                >
-                  Send Message
-                </Button>
-              </form>
-            )}
+                </form>
+              )}
+            </div>
           </motion.div>
 
           {/* Contact Details */}
@@ -187,19 +194,19 @@ export default function ContactPage() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-6"
           >
             {/* Email */}
-            <div className="bg-white rounded-lg p-6 shadow-sm relative">
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100 relative">
               <DecorativeBorder position="top" className="opacity-40" />
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-6 h-6 text-primary" />
+              <div className="flex items-start gap-5">
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-7 h-7 text-primary" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-2">Email</h3>
+                <div className="flex-1">
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-3">Email</h3>
                   <p className="text-foreground/70 font-paragraph">
-                    <a href="mailto:support@kalamkari.com" className="text-primary hover:underline">
+                    <a href="mailto:support@kalamkari.com" className="text-primary hover:underline transition-colors">
                       support@kalamkari.com
                     </a>
                   </p>
@@ -208,15 +215,15 @@ export default function ContactPage() {
             </div>
 
             {/* Phone */}
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-primary" />
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
+              <div className="flex items-start gap-5">
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Phone className="w-7 h-7 text-primary" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-2">Phone</h3>
+                <div className="flex-1">
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-3">Phone</h3>
                   <p className="text-foreground/70 font-paragraph">
-                    <a href="tel:+919876543210" className="text-primary hover:underline">
+                    <a href="tel:+919876543210" className="text-primary hover:underline transition-colors">
                       +91 98765 43210
                     </a>
                   </p>
@@ -225,35 +232,35 @@ export default function ContactPage() {
             </div>
 
             {/* Business Hours */}
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-6 h-6 text-primary" />
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
+              <div className="flex items-start gap-5">
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-7 h-7 text-primary" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-2">Business Hours</h3>
-                  <p className="text-foreground/70 font-paragraph text-sm">
-                    Mon - Fri: 10:00 AM - 6:00 PM<br />
-                    Sat: 11:00 AM - 5:00 PM<br />
-                    Sun: Closed
-                  </p>
+                <div className="flex-1">
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-3">Business Hours</h3>
+                  <div className="text-foreground/70 font-paragraph space-y-1">
+                    <p>Mon - Fri: 10:00 AM - 6:00 PM</p>
+                    <p>Sat: 11:00 AM - 5:00 PM</p>
+                    <p>Sun: Closed</p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Address */}
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-primary" />
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
+              <div className="flex items-start gap-5">
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-7 h-7 text-primary" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-2">Address</h3>
-                  <p className="text-foreground/70 font-paragraph text-sm">
-                    123 Artisan Way<br />
-                    Craft Village, India<br />
-                    PIN: 500001
-                  </p>
+                <div className="flex-1">
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-3">Address</h3>
+                  <div className="text-foreground/70 font-paragraph space-y-1">
+                    <p>123 Artisan Way</p>
+                    <p>Craft Village, India</p>
+                    <p>PIN: 500001</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -262,18 +269,30 @@ export default function ContactPage() {
       </div>
 
       {/* Map Section */}
-      <section className="w-full bg-gray-100 py-12">
-        <div className="max-w-[100rem] mx-auto px-4 md:px-8">
+      <section className="w-full bg-secondary/20 py-20 md:py-24 border-t border-gray-200">
+        <div className="max-w-[100rem] mx-auto px-6 md:px-12 lg:px-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">Visit Our Studio</h2>
+            <p className="text-lg text-foreground/70 font-paragraph max-w-2xl mx-auto">
+              Experience our handcrafted sarees in person at our artisan studio in the heart of Craft Village.
+            </p>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="bg-gray-300 rounded-lg h-96 flex items-center justify-center"
+            className="bg-white rounded-lg shadow-sm border border-gray-200 h-96 md:h-[500px] flex items-center justify-center overflow-hidden"
           >
-            <p className="text-foreground/70 font-paragraph">
-              Map integration would go here
-            </p>
+            <div className="text-center">
+              <MapPin className="w-16 h-16 text-primary/40 mx-auto mb-4" />
+              <p className="text-foreground/70 font-paragraph text-lg">
+                Interactive map integration would be displayed here
+              </p>
+              <p className="text-foreground/50 font-paragraph text-sm mt-2">
+                Showing our location at 123 Artisan Way, Craft Village
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
