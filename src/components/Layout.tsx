@@ -1,24 +1,57 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Menu, X, Search, Heart, ShoppingCart, User, Sparkles, Instagram, Facebook, Twitter, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Menu, X, Search, Heart, ShoppingCart, User, Sparkles, Instagram, Facebook, Twitter, Mail, Phone, MapPin, ArrowRight, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useMember } from '@/integrations';
 
 export default function Layout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { member, isAuthenticated, isLoading } = useMember();
   
-  // Header scroll effect
+  // Header scroll effect with shrink and blur
   const { scrollY } = useScroll();
+  const headerHeight = useTransform(scrollY, [0, 100], [72, 56]);
   const headerOpacity = useTransform(scrollY, [0, 100], [1, 0.95]);
-  const headerBlur = useTransform(scrollY, [0, 100], [0, 10]);
+  const headerBlur = useTransform(scrollY, [0, 100], [0, 8]);
+  const logoScale = useTransform(scrollY, [0, 100], [1, 0.85]);
 
   const navLinks = [
-    { label: 'Home', href: '/' },
-    { label: 'Shop', href: '/shop' },
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' },
+    { 
+      label: 'Home', 
+      href: '/',
+      hasDropdown: false
+    },
+    { 
+      label: 'Shop', 
+      href: '/shop',
+      hasDropdown: true,
+      megaMenu: {
+        categories: [
+          { name: 'Silk Sarees', href: '/shop/silk', description: 'Premium silk collection' },
+          { name: 'Cotton Sarees', href: '/shop/cotton', description: 'Comfortable daily wear' },
+          { name: 'Kalamkari Prints', href: '/shop/kalamkari', description: 'Traditional hand-painted' },
+          { name: 'Bridal Collection', href: '/shop/bridal', description: 'Special occasion wear' }
+        ],
+        featured: [
+          { name: 'New Arrivals', href: '/shop/new', description: 'Latest designs' },
+          { name: 'Best Sellers', href: '/shop/bestsellers', description: 'Customer favorites' },
+          { name: 'Sale Items', href: '/shop/sale', description: 'Limited time offers' },
+          { name: 'Gift Cards', href: '/shop/gifts', description: 'Perfect for loved ones' }
+        ]
+      }
+    },
+    { 
+      label: 'About', 
+      href: '/about',
+      hasDropdown: false
+    },
+    { 
+      label: 'Contact', 
+      href: '/contact',
+      hasDropdown: false
+    },
   ];
 
   const containerVariants = {
@@ -41,145 +74,205 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Enhanced Premium Header */}
+      {/* Refined Premium Header */}
       <motion.header 
         style={{ 
+          height: headerHeight,
           opacity: headerOpacity,
           backdropFilter: `blur(${headerBlur}px)`
         }}
-        className="bg-gradient-to-r from-primary via-amber-800 to-primary shadow-2xl sticky top-0 z-50 border-b-2 border-accent-color/50"
+        className="bg-gradient-to-r from-primary via-amber-800 to-primary shadow-lg sticky top-0 z-50 border-b border-accent-color/30 transition-all duration-300"
       >
-        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12">
-          <div className="flex items-center justify-between h-20 lg:h-24">
-            {/* Enhanced Logo Section */}
+        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 h-full">
+          <div className="flex items-center justify-between h-full">
+            {/* Refined Logo Section */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              style={{ scale: logoScale }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="flex items-center gap-3"
             >
-              <Link to="/" className="flex items-center gap-4 group">
+              <Link to="/" className="flex items-center gap-3 group" aria-label="Kalamkari Heritage Home">
                 <div className="relative">
-                  <div className="w-14 h-14 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-2xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-3">
-                    <span className="text-primary-foreground font-heading font-bold text-2xl">K</span>
+                  <div className="w-12 h-12 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-105">
+                    <span className="text-primary-foreground font-heading font-bold text-xl">K</span>
                   </div>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-                    className="absolute inset-0 rounded-2xl border-2 border-transparent border-t-accent-color/60 opacity-40"
-                  />
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-color rounded-full animate-pulse"></div>
+                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-accent-color rounded-full opacity-80"></div>
                 </div>
                 <div className="hidden sm:flex flex-col">
-                  <span className="text-2xl font-heading font-bold text-primary-foreground leading-tight tracking-tight">
+                  <span className="text-[22px] font-heading font-bold text-primary-foreground leading-tight tracking-tight">
                     Kalamkari
                   </span>
-                  <span className="text-xs font-paragraph text-accent-color tracking-[0.3em] font-semibold">
-                    HERITAGE
+                  <span className="text-[10px] font-paragraph text-accent-color tracking-[0.2em] font-semibold uppercase">
+                    Heritage
                   </span>
                 </div>
               </Link>
             </motion.div>
 
-            {/* Enhanced Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-10">
+            {/* Refined Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-8" role="navigation" aria-label="Main navigation">
               {navLinks.map((link, i) => (
-                <motion.div
+                <div
                   key={link.href}
-                  custom={i}
-                  variants={navItemVariants}
-                  initial="hidden"
-                  animate="visible"
+                  className="relative"
+                  onMouseEnter={() => link.hasDropdown && setOpenDropdown(link.label)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <Link
                     to={link.href}
-                    className="relative text-primary-foreground font-paragraph text-base font-semibold group overflow-hidden py-2 px-1"
+                    className="relative text-primary-foreground font-paragraph text-base font-semibold group flex items-center gap-1 py-3 px-2 rounded-lg hover:bg-primary-foreground/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                    aria-expanded={link.hasDropdown ? openDropdown === link.label : undefined}
+                    aria-haspopup={link.hasDropdown ? "true" : undefined}
                   >
                     <span className="relative z-10 transition-colors duration-300 group-hover:text-accent-color">
                       {link.label}
                     </span>
+                    {link.hasDropdown && (
+                      <ChevronDown 
+                        className={`w-4 h-4 transition-all duration-300 ${
+                          openDropdown === link.label ? 'rotate-180 text-accent-color' : 'text-primary-foreground group-hover:text-accent-color'
+                        }`}
+                      />
+                    )}
                     <motion.div
                       className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent-color to-amber-400 origin-left"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
-                    />
-                    <motion.div
-                      className="absolute inset-0 bg-primary-foreground/10 rounded-lg opacity-0"
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
                     />
                   </Link>
-                </motion.div>
+
+                  {/* 2-Column Mega Menu */}
+                  {link.hasDropdown && link.megaMenu && openDropdown === link.label && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[480px] bg-primary-foreground rounded-2xl shadow-2xl border border-accent-color/20 overflow-hidden z-50"
+                    >
+                      <div className="grid grid-cols-2 gap-0">
+                        {/* Categories Column */}
+                        <div className="p-6 border-r border-accent-color/10">
+                          <h3 className="text-sm font-heading font-bold text-primary uppercase tracking-wide mb-4">Categories</h3>
+                          <div className="space-y-2">
+                            {link.megaMenu.categories.map((item) => (
+                              <Link
+                                key={item.href}
+                                to={item.href}
+                                className="block p-3 rounded-lg hover:bg-accent-color/10 transition-colors duration-200 group"
+                                onClick={() => setOpenDropdown(null)}
+                              >
+                                <div className="text-sm font-semibold text-primary group-hover:text-accent-color transition-colors">
+                                  {item.name}
+                                </div>
+                                <div className="text-xs text-primary/70 mt-1">
+                                  {item.description}
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Featured Column */}
+                        <div className="p-6">
+                          <h3 className="text-sm font-heading font-bold text-primary uppercase tracking-wide mb-4">Featured</h3>
+                          <div className="space-y-2">
+                            {link.megaMenu.featured.map((item) => (
+                              <Link
+                                key={item.href}
+                                to={item.href}
+                                className="block p-3 rounded-lg hover:bg-accent-color/10 transition-colors duration-200 group"
+                                onClick={() => setOpenDropdown(null)}
+                              >
+                                <div className="text-sm font-semibold text-primary group-hover:text-accent-color transition-colors">
+                                  {item.name}
+                                </div>
+                                <div className="text-xs text-primary/70 mt-1">
+                                  {item.description}
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               ))}
             </nav>
 
-            {/* Enhanced Right Icons */}
-            <div className="flex items-center gap-3 lg:gap-4">
+            {/* Refined Utility Icons */}
+            <div className="flex items-center gap-2">
               <motion.button
-                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group"
+                className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                aria-label="Search"
               >
                 <Search className="w-5 h-5 group-hover:text-accent-color transition-colors" />
               </motion.button>
               
               <motion.button
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group relative"
+                className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group relative focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                aria-label="Wishlist (3 items)"
               >
                 <Heart className="w-5 h-5 group-hover:text-red-400 transition-colors" />
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
-                >
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
                   3
-                </motion.span>
+                </span>
               </motion.button>
               
               <motion.div
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link to="/cart" className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 relative flex text-primary-foreground group">
+                <Link 
+                  to="/cart" 
+                  className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 relative flex text-primary-foreground group focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                  aria-label="Shopping cart (2 items)"
+                >
                   <ShoppingCart className="w-5 h-5 group-hover:text-accent-color transition-colors" />
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    whileHover={{ scale: 1.1 }}
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-accent-color text-primary font-bold text-xs rounded-full flex items-center justify-center shadow-lg"
-                  >
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent-color text-primary font-bold text-xs rounded-full flex items-center justify-center">
                     2
-                  </motion.span>
+                  </span>
                 </Link>
               </motion.div>
               
               {isAuthenticated ? (
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Link to="/profile" className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group">
+                  <Link 
+                    to="/profile" 
+                    className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                    aria-label="User profile"
+                  >
                     <User className="w-5 h-5 group-hover:text-accent-color transition-colors" />
                   </Link>
                 </motion.div>
               ) : (
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group"
+                <Button 
+                  className="hidden sm:flex bg-accent-color hover:bg-accent-color/90 text-primary font-semibold px-6 py-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent-color/50 focus:ring-offset-2 focus:ring-offset-primary"
+                  aria-label="Sign in to your account"
                 >
-                  <User className="w-5 h-5 group-hover:text-accent-color transition-colors" />
-                </motion.button>
+                  Sign In
+                </Button>
               )}
 
-              {/* Enhanced Mobile Menu Button */}
+              {/* Mobile Menu Button */}
               <motion.button
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 text-primary-foreground"
+                className="lg:hidden p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 text-primary-foreground focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMenuOpen}
               >
                 <motion.div
                   animate={{ rotate: isMenuOpen ? 180 : 0 }}
@@ -195,7 +288,7 @@ export default function Layout() {
             </div>
           </div>
 
-          {/* Enhanced Mobile Navigation */}
+          {/* Mobile Slide Menu */}
           <motion.nav
             initial={{ opacity: 0, height: 0 }}
             animate={{ 
@@ -204,8 +297,10 @@ export default function Layout() {
             }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="lg:hidden overflow-hidden border-t border-primary-foreground/20"
+            role="navigation"
+            aria-label="Mobile navigation"
           >
-            <div className="py-6 space-y-4">
+            <div className="py-6 space-y-2">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.href}
@@ -219,24 +314,42 @@ export default function Layout() {
                   <Link
                     to={link.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="block text-primary-foreground hover:text-accent-color transition-colors font-paragraph text-lg font-semibold py-3 px-4 rounded-lg hover:bg-primary-foreground/10"
+                    className="block text-primary-foreground hover:text-accent-color transition-colors font-paragraph text-lg font-semibold py-3 px-4 rounded-lg hover:bg-primary-foreground/10 focus:outline-none focus:ring-2 focus:ring-accent-color/50"
                   >
                     {link.label}
                   </Link>
                 </motion.div>
               ))}
               
-              {/* Mobile Icons */}
+              {/* Mobile Utility Icons */}
               <div className="flex items-center justify-center gap-6 pt-4 border-t border-primary-foreground/20">
-                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
+                <button 
+                  className="p-3 text-primary-foreground hover:text-accent-color transition-colors focus:outline-none focus:ring-2 focus:ring-accent-color/50 rounded-lg"
+                  aria-label="Search"
+                >
                   <Search className="w-6 h-6" />
                 </button>
-                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
+                <button 
+                  className="p-3 text-primary-foreground hover:text-accent-color transition-colors focus:outline-none focus:ring-2 focus:ring-accent-color/50 rounded-lg"
+                  aria-label="Wishlist"
+                >
                   <Heart className="w-6 h-6" />
                 </button>
-                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
-                  <User className="w-6 h-6" />
-                </button>
+                {isAuthenticated ? (
+                  <Link 
+                    to="/profile"
+                    className="p-3 text-primary-foreground hover:text-accent-color transition-colors focus:outline-none focus:ring-2 focus:ring-accent-color/50 rounded-lg"
+                    aria-label="User profile"
+                  >
+                    <User className="w-6 h-6" />
+                  </Link>
+                ) : (
+                  <Button 
+                    className="bg-accent-color hover:bg-accent-color/90 text-primary font-semibold px-6 py-2 rounded-full transition-all duration-300"
+                  >
+                    Sign In
+                  </Button>
+                )}
               </div>
             </div>
           </motion.nav>
