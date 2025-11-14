@@ -111,8 +111,8 @@ export default function AboutPage() {
     <div className="w-full min-h-screen bg-background relative">
       <ChanderiPattern className="text-primary/5" opacity="opacity-3" />
       
-      {/* Hero Section - Enhanced with better overlay and spacing */}
-      <section className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden">
+      {/* Hero Section - Optimized spacing */}
+      <section className="relative w-full min-h-[75vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src="https://static.wixstatic.com/media/07221c_071767876ac742d2aadac0238ead57d0~mv2.png?originWidth=1920&originHeight=1024"
@@ -128,26 +128,25 @@ export default function AboutPage() {
               https://static.wixstatic.com/media/07221c_071767876ac742d2aadac0238ead57d0~mv2.png?originWidth=1920&originHeight=1024 1920w
             "
           />
-          {/* Enhanced gradient overlay with better visual hierarchy */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/45 to-black/60"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20"></div>
         </div>
         
-        <div className="relative z-10 max-w-[100rem] mx-auto px-6 md:px-12 text-center">
+        <div className="relative z-10 max-w-[100rem] mx-auto px-4 md:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-6"
+            className="space-y-4"
           >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold text-primary-foreground leading-tight tracking-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-primary-foreground leading-tight tracking-tight">
               Our Story
             </h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-xl md:text-2xl text-primary-foreground/95 max-w-4xl mx-auto leading-relaxed font-paragraph"
+              className="text-lg md:text-xl text-primary-foreground/95 max-w-3xl mx-auto leading-relaxed font-paragraph"
             >
               Celebrating the timeless art of Kalamkari and the master artisans who keep this ancient heritage alive through every brushstroke.
             </motion.p>
@@ -157,7 +156,7 @@ export default function AboutPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1 }}
-              className="pt-12"
+              className="pt-8"
             >
               <motion.div
                 animate={{ y: [0, 8, 0] }}
@@ -175,10 +174,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Our Mission - Enhanced spacing and micro-interactions */}
-      <section className="w-full py-32 md:py-40">
-        <div className="max-w-[100rem] mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+      {/* Our Mission - Optimized spacing and balanced columns */}
+      <section className="w-full py-20 md:py-24">
+        <div className="max-w-[100rem] mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -190,7 +189,7 @@ export default function AboutPage() {
                 <Image
                   src="https://static.wixstatic.com/media/07221c_2d9705923c15466887b842567c2d0261~mv2.png?originWidth=768&originHeight=768"
                   alt="Skilled Kalamkari artisan delicately hand-painting traditional motifs with natural dyes on premium cotton fabric"
-                  className="w-full h-auto rounded-2xl shadow-xl transition-all duration-500 group-hover:shadow-2xl"
+                  className="w-full h-auto rounded-xl shadow-lg transition-all duration-500 group-hover:shadow-xl"
                   width={600}
                   height={600}
                   loading="lazy"
@@ -201,8 +200,7 @@ export default function AboutPage() {
                     https://static.wixstatic.com/media/07221c_2d9705923c15466887b842567c2d0261~mv2.png?originWidth=768&originHeight=768 768w
                   "
                 />
-                {/* Subtle decorative frame */}
-                <div className="absolute -inset-4 bg-gradient-to-br from-primary/5 to-accent-color/5 rounded-3xl -z-10 transition-all duration-500 group-hover:from-primary/10 group-hover:to-accent-color/10"></div>
+                <div className="absolute -inset-3 bg-gradient-to-br from-primary/5 to-accent-color/5 rounded-2xl -z-10 transition-all duration-500 group-hover:from-primary/8 group-hover:to-accent-color/8"></div>
               </div>
             </motion.div>
 
@@ -211,15 +209,15 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true, margin: "-100px" }}
-              className="order-1 lg:order-2 space-y-8"
+              className="order-1 lg:order-2 space-y-6"
             >
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <motion.span 
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
-                  className="inline-block font-heading text-primary text-xl font-semibold tracking-wide uppercase"
+                  className="inline-block font-heading text-primary text-lg font-semibold tracking-wide uppercase"
                 >
                   Our Mission
                 </motion.span>
@@ -228,7 +226,7 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                   viewport={{ once: true }}
-                  className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-tight"
+                  className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight"
                 >
                   Preserving Tradition,{' '}
                   <span className="text-primary">Creating Beauty</span>
@@ -240,7 +238,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
-                className="font-paragraph text-lg md:text-xl text-foreground/80 space-y-6 leading-relaxed"
+                className="font-paragraph text-base md:text-lg text-foreground/80 space-y-4 leading-relaxed"
               >
                 <p>
                   Kalamkari is more than just a textile art form—it is a living narrative of centuries-old craftsmanship. At Kalamkari Heritage, we are dedicated to preserving this ancient tradition while making it accessible to the modern world.
@@ -259,7 +257,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
                 viewport={{ once: true }}
-                className="grid grid-cols-3 gap-6 pt-8 border-t border-primary/20"
+                className="grid grid-cols-3 gap-4 pt-6 border-t border-primary/20"
               >
                 {[
                   { number: "50+", label: "Master Artisans" },
@@ -267,8 +265,8 @@ export default function AboutPage() {
                   { number: "4", label: "Years of Heritage" }
                 ].map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-2xl md:text-3xl font-heading font-bold text-primary">{stat.number}</div>
-                    <div className="text-sm text-foreground/70 font-paragraph">{stat.label}</div>
+                    <div className="text-xl md:text-2xl font-heading font-bold text-primary">{stat.number}</div>
+                    <div className="text-xs md:text-sm text-foreground/70 font-paragraph">{stat.label}</div>
                   </div>
                 ))}
               </motion.div>
@@ -277,25 +275,25 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Our Values - Enhanced cards with icons and better visual hierarchy */}
-      <section className="w-full py-32 md:py-40 bg-gradient-to-br from-secondary/20 via-background to-secondary/10">
-        <div className="max-w-[100rem] mx-auto px-6 md:px-12">
+      {/* Our Values - Modernized card grid with reduced padding */}
+      <section className="w-full py-20 md:py-24 bg-gradient-to-br from-secondary/15 via-background to-secondary/8">
+        <div className="max-w-[100rem] mx-auto px-4 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-center max-w-4xl mx-auto mb-20"
+            className="text-center max-w-3xl mx-auto mb-16"
           >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-6 leading-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4 leading-tight">
               Our Core <span className="text-primary">Values</span>
             </h2>
-            <p className="font-paragraph text-xl text-foreground/80 leading-relaxed">
+            <p className="font-paragraph text-lg text-foreground/80 leading-relaxed">
               These principles guide everything we do, from sourcing materials to serving our customers with excellence.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {values.map((value, index) => {
               const IconComponent = value.icon;
               return (
@@ -303,31 +301,31 @@ export default function AboutPage() {
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
                   viewport={{ once: true, margin: "-50px" }}
-                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                  whileHover={{ y: -4, transition: { duration: 0.3 } }}
                   className="group"
                 >
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 lg:p-10 shadow-lg border border-gray-100/50 relative overflow-hidden h-full transition-all duration-500 hover:shadow-2xl hover:border-primary/20">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 lg:p-8 shadow-md border border-gray-100/60 relative overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:border-primary/15">
                     {/* Background gradient */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
                     
                     {/* Decorative border */}
-                    <DecorativeBorder position="left" className="opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+                    <DecorativeBorder position="left" className="opacity-15 group-hover:opacity-30 transition-opacity duration-300" />
                     
                     <div className="relative z-10">
                       {/* Icon */}
-                      <div className="mb-6">
-                        <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-accent-color/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                          <IconComponent className={`w-8 h-8 ${value.iconColor} group-hover:scale-110 transition-transform duration-300`} />
+                      <div className="mb-5">
+                        <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-accent-color/10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                          <IconComponent className={`w-6 h-6 ${value.iconColor} group-hover:scale-105 transition-transform duration-300`} />
                         </div>
                       </div>
                       
                       {/* Content */}
-                      <h3 className="text-2xl lg:text-3xl font-heading font-bold text-foreground mb-4 group-hover:text-primary transition-colors duration-300">
+                      <h3 className="text-xl lg:text-2xl font-heading font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
                         {value.title}
                       </h3>
-                      <p className="font-paragraph text-foreground/70 leading-relaxed text-lg group-hover:text-foreground/80 transition-colors duration-300">
+                      <p className="font-paragraph text-foreground/70 leading-relaxed text-base group-hover:text-foreground/80 transition-colors duration-300">
                         {value.description}
                       </p>
                     </div>
@@ -339,42 +337,42 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Our Team - Enhanced with better image treatment and spacing */}
-      <section className="w-full py-32 md:py-40">
-        <div className="max-w-[100rem] mx-auto px-6 md:px-12">
+      {/* Our Team - Aligned and refined spacing */}
+      <section className="w-full py-20 md:py-24">
+        <div className="max-w-[100rem] mx-auto px-4 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-center max-w-4xl mx-auto mb-20"
+            className="text-center max-w-3xl mx-auto mb-16"
           >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-6 leading-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4 leading-tight">
               Meet Our <span className="text-primary">Team</span>
             </h2>
-            <p className="font-paragraph text-xl text-foreground/80 leading-relaxed">
+            <p className="font-paragraph text-lg text-foreground/80 leading-relaxed">
               Passionate individuals dedicated to bringing the beauty of Kalamkari to the world through authentic craftsmanship.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
             {teamMembers.map((member, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2, ease: "easeOut" }}
+                transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
                 viewport={{ once: true, margin: "-50px" }}
-                whileHover={{ y: -12, transition: { duration: 0.4 } }}
+                whileHover={{ y: -6, transition: { duration: 0.3 } }}
                 className="group text-center"
               >
                 {/* Enhanced image container */}
-                <div className="relative mb-8 overflow-hidden rounded-2xl">
+                <div className="relative mb-6 overflow-hidden rounded-xl">
                   <div className="aspect-[3/4] overflow-hidden">
                     <Image
                       src={member.image}
                       alt={`${member.name}, ${member.role} at Kalamkari Heritage, dedicated to preserving traditional textile arts`}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                       width={400}
                       height={500}
                       loading="lazy"
@@ -388,23 +386,23 @@ export default function AboutPage() {
                   </div>
                   
                   {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   
                   {/* Decorative frame */}
-                  <div className="absolute -inset-2 bg-gradient-to-br from-primary/10 to-accent-color/10 rounded-3xl -z-10 transition-all duration-500 group-hover:from-primary/20 group-hover:to-accent-color/20"></div>
+                  <div className="absolute -inset-2 bg-gradient-to-br from-primary/8 to-accent-color/8 rounded-2xl -z-10 transition-all duration-300 group-hover:from-primary/15 group-hover:to-accent-color/15"></div>
                 </div>
                 
                 {/* Enhanced text content */}
-                <div className="space-y-3">
-                  <h3 className="text-2xl lg:text-3xl font-heading font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                <div className="space-y-2">
+                  <h3 className="text-xl lg:text-2xl font-heading font-bold text-foreground group-hover:text-primary transition-colors duration-300">
                     {member.name}
                   </h3>
-                  <p className="font-paragraph text-lg text-primary/80 font-medium">
+                  <p className="font-paragraph text-base text-primary/80 font-medium">
                     {member.role}
                   </p>
                   
                   {/* Decorative line */}
-                  <div className="w-16 h-0.5 bg-gradient-to-r from-primary to-accent-color mx-auto opacity-60 group-hover:opacity-100 group-hover:w-24 transition-all duration-300"></div>
+                  <div className="w-12 h-0.5 bg-gradient-to-r from-primary to-accent-color mx-auto opacity-60 group-hover:opacity-100 group-hover:w-16 transition-all duration-300"></div>
                 </div>
               </motion.div>
             ))}
@@ -412,25 +410,25 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Why Choose Us - Enhanced with better visual rhythm */}
-      <section className="w-full py-32 md:py-40 bg-gradient-to-br from-secondary/15 via-background to-secondary/5">
-        <div className="max-w-[100rem] mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+      {/* Why Choose Us - Balanced layout with consistent spacing */}
+      <section className="w-full py-20 md:py-24 bg-gradient-to-br from-secondary/12 via-background to-secondary/5">
+        <div className="max-w-[100rem] mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true, margin: "-100px" }}
-              className="space-y-8"
+              className="space-y-6"
             >
-              <div className="space-y-6">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-tight">
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight">
                   Why Choose{' '}
                   <span className="text-primary">Kalamkari Heritage?</span>
                 </h2>
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {[
                   'Authentic hand-painted sarees crafted by master artisans',
                   'Premium natural fabrics and traditional dyes',
@@ -443,16 +441,16 @@ export default function AboutPage() {
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: 0.5, delay: index * 0.08 }}
                     viewport={{ once: true }}
-                    className="flex gap-4 items-start group"
+                    className="flex gap-3 items-start group"
                   >
-                    <div className="w-7 h-7 bg-gradient-to-br from-primary to-accent-color rounded-full flex items-center justify-center flex-shrink-0 mt-1 group-hover:scale-110 transition-transform duration-300">
-                      <svg className="w-4 h-4 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-6 h-6 bg-gradient-to-br from-primary to-accent-color rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-300">
+                      <svg className="w-3.5 h-3.5 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <p className="font-paragraph text-lg md:text-xl text-foreground/80 leading-relaxed group-hover:text-foreground transition-colors duration-300">
+                    <p className="font-paragraph text-base md:text-lg text-foreground/80 leading-relaxed group-hover:text-foreground transition-colors duration-300">
                       {reason}
                     </p>
                   </motion.div>
@@ -470,7 +468,7 @@ export default function AboutPage() {
               <Image
                 src="https://static.wixstatic.com/media/07221c_34372093ed9d4c35aa96a263080fe962~mv2.png?originWidth=448&originHeight=640"
                 alt="Beautiful collection of vibrant handcrafted Kalamkari sarees showcasing traditional patterns and premium natural fabrics"
-                className="w-full h-auto rounded-2xl shadow-xl transition-all duration-500 group-hover:shadow-2xl"
+                className="w-full h-auto rounded-xl shadow-lg transition-all duration-500 group-hover:shadow-xl"
                 width={500}
                 height={700}
                 loading="lazy"
@@ -481,29 +479,28 @@ export default function AboutPage() {
                   https://static.wixstatic.com/media/07221c_34372093ed9d4c35aa96a263080fe962~mv2.png?originWidth=448&originHeight=640 448w
                 "
               />
-              {/* Decorative frame */}
-              <div className="absolute -inset-4 bg-gradient-to-br from-primary/5 to-accent-color/5 rounded-3xl -z-10 transition-all duration-500 group-hover:from-primary/10 group-hover:to-accent-color/10"></div>
+              <div className="absolute -inset-3 bg-gradient-to-br from-primary/5 to-accent-color/5 rounded-2xl -z-10 transition-all duration-500 group-hover:from-primary/8 group-hover:to-accent-color/8"></div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section - Enhanced with better visual hierarchy and spacing */}
-      <section className="w-full py-32 md:py-40">
-        <div className="max-w-[100rem] mx-auto px-6 md:px-12 text-center">
+      {/* CTA Section - Polished with consistent spacing */}
+      <section className="w-full py-20 md:py-24">
+        <div className="max-w-[100rem] mx-auto px-4 md:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, margin: "-100px" }}
-            className="space-y-8"
+            className="space-y-6"
           >
-            <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-tight">
+            <div className="space-y-4">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight">
                 Experience the{' '}
                 <span className="text-primary">Kalamkari Difference</span>
               </h2>
-              <p className="font-paragraph text-xl md:text-2xl text-foreground/80 max-w-4xl mx-auto leading-relaxed">
+              <p className="font-paragraph text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">
                 Explore our collection and discover the beauty of handcrafted Kalamkari sarees that tell stories of tradition, artistry, and timeless elegance.
               </p>
             </div>
@@ -513,15 +510,15 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
-              className="pt-4"
+              className="pt-2"
             >
               <Link to="/shop">
                 <Button 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-4 text-lg md:text-xl rounded-xl font-paragraph group transition-all duration-300 hover:shadow-xl hover:scale-105"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-lg font-paragraph group transition-all duration-300 hover:shadow-lg hover:scale-102"
                   aria-label="Shop our collection of authentic Kalamkari sarees"
                 >
                   Shop Our Collection
-                  <ArrowRight className="w-5 h-5 ml-3 transition-transform group-hover:translate-x-2" />
+                  <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </motion.div>
