@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Image } from '@/components/ui/image';
-import { ChevronLeft, Lock, Shield, Truck, Clock, CreditCard, Smartphone, Building2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronLeft, Lock, Shield, Truck, Clock, CreditCard, Smartphone, Building2, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 import { IkatPattern } from '@/components/ui/decorative-pattern';
 
 interface CheckoutFormData {
@@ -119,9 +119,42 @@ export default function CheckoutPage() {
             <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">
               Checkout
             </h1>
-            <p className="text-sm text-foreground/70 font-paragraph">
-              Complete your purchase securely
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-foreground/70 font-paragraph">
+                Complete your purchase securely
+              </p>
+              
+              {/* Add to Wishlist Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-2.5 rounded-xl transition-all duration-300 flex group relative focus:outline-none focus:ring-2 focus:ring-primary/50 bg-primary/10 hover:bg-primary/20"
+                style={{ 
+                  color: '#A0522D'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.backgroundColor = '#A0522D';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#A0522D';
+                  e.currentTarget.style.backgroundColor = 'rgba(160, 82, 45, 0.1)';
+                }}
+                aria-label="Add items to wishlist"
+              >
+                <Heart className="w-5 h-5 transition-colors" />
+                <span 
+                  className="absolute -top-1 -right-1 w-4 h-4 text-xs font-bold flex items-center justify-center"
+                  style={{ 
+                    backgroundColor: '#B8860B', 
+                    color: '#FFFFFF',
+                    borderRadius: '14px'
+                  }}
+                >
+                  2
+                </span>
+              </motion.button>
+            </div>
           </motion.div>
         </div>
       </section>
