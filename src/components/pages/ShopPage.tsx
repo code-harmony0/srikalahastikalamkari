@@ -280,7 +280,7 @@ export default function ShopPage() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto"
             >
               {/* Unique Designs Card */}
               <motion.div 
@@ -289,7 +289,7 @@ export default function ShopPage() {
                 transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
                 className="group relative"
               >
-                <div className="relative bg-white/60 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
+                <div className="relative bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   <div className="relative z-10 text-center">
@@ -297,11 +297,11 @@ export default function ShopPage() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.6, delay: 1, type: "spring", stiffness: 200 }}
-                      className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2 group-hover:scale-110 transition-transform duration-300"
+                      className="text-2xl md:text-3xl font-heading font-bold text-primary mb-1 group-hover:scale-110 transition-transform duration-300"
                     >
                       {products.length}
                     </motion.div>
-                    <div className="text-sm font-paragraph text-foreground/80 font-medium">
+                    <div className="text-xs font-paragraph text-foreground/80 font-bold">
                       Unique Designs
                     </div>
                   </div>
@@ -315,7 +315,7 @@ export default function ShopPage() {
                 transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
                 className="group relative"
               >
-                <div className="relative bg-white/60 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
+                <div className="relative bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-accent-color/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   <div className="relative z-10 text-center">
@@ -323,11 +323,11 @@ export default function ShopPage() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.6, delay: 1.1, type: "spring", stiffness: 200 }}
-                      className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2 group-hover:scale-110 transition-transform duration-300"
+                      className="text-2xl md:text-3xl font-heading font-bold text-primary mb-1 group-hover:scale-110 transition-transform duration-300"
                     >
                       {products.filter(p => p.isFeatured).length}
                     </motion.div>
-                    <div className="text-sm font-paragraph text-foreground/80 font-medium">
+                    <div className="text-xs font-paragraph text-foreground/80 font-bold">
                       Featured Pieces
                     </div>
                   </div>
@@ -341,7 +341,7 @@ export default function ShopPage() {
                 transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
                 className="group relative"
               >
-                <div className="relative bg-white/60 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
+                <div className="relative bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/40 hover:border-primary/20 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   <div className="relative z-10 text-center">
@@ -349,11 +349,11 @@ export default function ShopPage() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.6, delay: 1.2, type: "spring", stiffness: 200 }}
-                      className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2 group-hover:scale-110 transition-transform duration-300"
+                      className="text-2xl md:text-3xl font-heading font-bold text-primary mb-1 group-hover:scale-110 transition-transform duration-300"
                     >
                       {categories.length}
                     </motion.div>
-                    <div className="text-sm font-paragraph text-foreground/80 font-medium">
+                    <div className="text-xs font-paragraph text-foreground/80 font-bold">
                       Categories
                     </div>
                   </div>
@@ -390,8 +390,8 @@ export default function ShopPage() {
           <KanjeevaramPattern className="text-primary" opacity="opacity-100" />
         </div>
         
-        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-8 md:py-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-6 md:py-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
           {/* Sidebar Filters */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -399,52 +399,55 @@ export default function ShopPage() {
             transition={{ duration: 0.6 }}
             className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/60 sticky top-24 relative overflow-hidden">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/60 sticky top-24 relative overflow-hidden">
               {/* Subtle decorative elements */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/20 via-accent-color/20 to-primary/20"></div>
+              <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/20 via-accent-color/20 to-primary/20"></div>
               
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-heading font-bold text-foreground">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-heading font-bold text-foreground">
                   Filters
                 </h2>
                 {getActiveFiltersCount() > 0 && (
-                  <Badge variant="secondary" className="bg-primary/15 text-primary border-primary/20 px-2 py-1 text-xs">
+                  <Badge variant="secondary" className="bg-primary/15 text-primary border-primary/20 px-2 py-0.5 text-xs">
                     {getActiveFiltersCount()}
                   </Badge>
                 )}
               </div>
 
               {/* Search */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-3 block">
+              <div className="mb-4">
+                <Label className="text-xs font-semibold text-foreground mb-2 block">
                   Search Products
                 </Label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3.5 h-3.5 text-foreground/40" />
                   <Input
                     type="text"
                     placeholder="Search by name, description..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-full border-gray-200 focus:border-primary focus:ring-primary/20 h-10"
+                    className="pl-9 w-full border-gray-200 focus:border-primary focus:ring-primary/20 h-8 text-sm"
                   />
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm('')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-foreground/40 hover:text-foreground"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-foreground/40 hover:text-foreground"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
               </div>
 
+              {/* Light Divider */}
+              <div className="w-full h-px bg-gray-200/60 mb-4"></div>
+
               {/* Price Range */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-4 block">
+              <div className="mb-4">
+                <Label className="text-xs font-semibold text-foreground mb-3 block">
                   Price Range
                 </Label>
-                <div className="px-2">
+                <div className="px-1">
                   <Slider
                     value={priceRange}
                     onValueChange={setPriceRange}
@@ -453,25 +456,28 @@ export default function ShopPage() {
                     step={100}
                     className="w-full"
                   />
-                  <div className="flex justify-between mt-3 text-sm text-foreground/70 font-medium">
+                  <div className="flex justify-between mt-2 text-xs text-foreground/70 font-medium">
                     <span>₹{priceRange[0].toLocaleString()}</span>
                     <span>₹{priceRange[1].toLocaleString()}</span>
                   </div>
                 </div>
               </div>
 
+              {/* Light Divider */}
+              <div className="w-full h-px bg-gray-200/60 mb-4"></div>
+
               {/* Sizes */}
               {allSizes.length > 0 && (
-                <div className="mb-6">
-                  <Label className="text-sm font-semibold text-foreground mb-4 block">
+                <div className="mb-4">
+                  <Label className="text-xs font-semibold text-foreground mb-3 block">
                     Available Sizes
                   </Label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {allSizes.map(size => (
                       <button
                         key={size}
                         onClick={() => handleSizeToggle(size)}
-                        className={`px-3 py-1.5 text-sm rounded-lg border-2 transition-all duration-200 font-medium ${
+                        className={`px-2.5 py-1 text-xs rounded-md border-2 transition-all duration-200 font-medium ${
                           selectedSizes.includes(size)
                             ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                             : 'bg-white text-foreground/70 border-gray-200 hover:border-primary/50 hover:text-primary'
@@ -484,17 +490,20 @@ export default function ShopPage() {
                 </div>
               )}
 
+              {/* Light Divider */}
+              <div className="w-full h-px bg-gray-200/60 mb-4"></div>
+
               {/* Colors */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-4 block">
+              <div className="mb-4">
+                <Label className="text-xs font-semibold text-foreground mb-3 block">
                   Colors
                 </Label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-1.5">
                   {availableColors.map(color => (
                     <button
                       key={color}
                       onClick={() => handleColorToggle(color)}
-                      className={`px-2 py-1.5 text-sm rounded-lg border-2 transition-all duration-200 font-medium ${
+                      className={`px-2 py-1 text-xs rounded-md border-2 transition-all duration-200 font-medium ${
                         selectedColors.includes(color)
                           ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                           : 'bg-white text-foreground/70 border-gray-200 hover:border-primary/50 hover:text-primary'
@@ -506,22 +515,25 @@ export default function ShopPage() {
                 </div>
               </div>
 
+              {/* Light Divider */}
+              <div className="w-full h-px bg-gray-200/60 mb-4"></div>
+
               {/* Quick Filters */}
-              <div className="mb-6">
-                <Label className="text-sm font-semibold text-foreground mb-4 block">
+              <div className="mb-4">
+                <Label className="text-xs font-semibold text-foreground mb-3 block">
                   Quick Filters
                 </Label>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div className="flex items-center">
                     <Checkbox
                       id="featured-only"
                       checked={featuredOnly}
                       onCheckedChange={(checked) => setFeaturedOnly(checked === true)}
-                      className="border-2 border-gray-200 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      className="border-2 border-gray-200 data-[state=checked]:bg-primary data-[state=checked]:border-primary w-4 h-4"
                     />
                     <Label
                       htmlFor="featured-only"
-                      className="ml-3 text-sm text-foreground/80 cursor-pointer font-medium"
+                      className="ml-2 text-xs text-foreground/80 cursor-pointer font-medium"
                     >
                       Featured Only
                     </Label>
@@ -531,11 +543,11 @@ export default function ShopPage() {
                       id="in-stock"
                       checked={inStock}
                       onCheckedChange={(checked) => setInStock(checked === true)}
-                      className="border-2 border-gray-200 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      className="border-2 border-gray-200 data-[state=checked]:bg-primary data-[state=checked]:border-primary w-4 h-4"
                     />
                     <Label
                       htmlFor="in-stock"
-                      className="ml-3 text-sm text-foreground/80 cursor-pointer font-medium"
+                      className="ml-2 text-xs text-foreground/80 cursor-pointer font-medium"
                     >
                       In Stock Only
                     </Label>
@@ -547,10 +559,10 @@ export default function ShopPage() {
               {getActiveFiltersCount() > 0 && (
                 <Button
                   variant="outline"
-                  className="w-full border-2 border-gray-200 hover:border-primary hover:text-primary transition-all duration-200 h-9"
+                  className="w-full border-2 border-gray-200 hover:border-primary hover:text-primary transition-all duration-200 h-8 text-xs"
                   onClick={clearAllFilters}
                 >
-                  <X className="w-4 h-4 mr-2" />
+                  <X className="w-3.5 h-3.5 mr-1.5" />
                   Clear All Filters
                 </Button>
               )}
@@ -565,28 +577,28 @@ export default function ShopPage() {
               className="lg:col-span-3"
             >
               {/* Toolbar */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/60">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4 bg-white/80 backdrop-blur-sm rounded-2xl p-3 shadow-lg border border-white/60">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="lg:hidden flex items-center gap-2 text-primary font-medium hover:text-primary/80 transition-colors px-3 py-2 rounded-xl border border-primary/20 hover:border-primary/40 bg-white/60 text-sm"
+                    className="lg:hidden flex items-center gap-2 text-primary font-medium hover:text-primary/80 transition-colors px-2.5 py-1.5 rounded-xl border border-primary/20 hover:border-primary/40 bg-white/60 text-xs"
                   >
-                    <SlidersHorizontal className="w-4 h-4" />
+                    <SlidersHorizontal className="w-3.5 h-3.5" />
                     Filters
                     {getActiveFiltersCount() > 0 && (
-                      <Badge variant="secondary" className="bg-primary/15 text-primary text-xs border-primary/20 rounded-full px-2 py-0.5">
+                      <Badge variant="secondary" className="bg-primary/15 text-primary text-xs border-primary/20 rounded-full px-1.5 py-0">
                         {getActiveFiltersCount()}
                       </Badge>
                     )}
                   </button>
                   <div className="flex items-center gap-2">
-                    <span className="text-foreground/70 font-paragraph text-sm font-medium">
+                    <span className="text-foreground/70 font-paragraph text-xs font-medium">
                       Showing {currentProducts.length} of {filteredProducts.length} products
                     </span>
                     {getActiveFiltersCount() > 0 && (
                       <button
                         onClick={clearAllFilters}
-                        className="text-primary text-sm hover:text-primary/80 transition-colors font-medium underline underline-offset-2"
+                        className="text-primary text-xs hover:text-primary/80 transition-colors font-medium underline underline-offset-2"
                       >
                         Clear filters
                       </button>
@@ -594,38 +606,38 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   {/* View Mode Toggle */}
-                  <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden bg-white/60">
+                  <div className="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden bg-white/60">
                     <button
                       onClick={() => setViewMode('grid')}
-                      className={`p-2.5 transition-all duration-200 ${
+                      className={`p-2 transition-all duration-200 ${
                         viewMode === 'grid' 
                           ? 'bg-primary text-primary-foreground shadow-sm' 
                           : 'bg-transparent text-foreground/70 hover:bg-gray-50 hover:text-primary'
                       }`}
                     >
-                      <Grid3X3 className="w-4 h-4" />
+                      <Grid3X3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`p-2.5 transition-all duration-200 ${
+                      className={`p-2 transition-all duration-200 ${
                         viewMode === 'list' 
                           ? 'bg-primary text-primary-foreground shadow-sm' 
                           : 'bg-transparent text-foreground/70 hover:bg-gray-50 hover:text-primary'
                       }`}
                     >
-                      <List className="w-4 h-4" />
+                      <List className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   {/* Sort Dropdown */}
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm text-foreground/70 whitespace-nowrap font-medium">Sort by:</Label>
+                  <div className="flex items-center gap-1.5">
+                    <Label className="text-xs text-foreground/70 whitespace-nowrap font-medium">Sort by:</Label>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="px-3 py-2 border-2 border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white/80 font-medium transition-all duration-200"
+                      className="px-2.5 py-1.5 border-2 border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white/80 font-medium transition-all duration-200"
                     >
                       <option value="popular">Most Popular</option>
                       <option value="newest">Newest</option>
@@ -644,47 +656,47 @@ export default function ShopPage() {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mb-4"
+                  className="mb-3"
                 >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm text-foreground/70 font-medium">Active filters:</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-foreground/70 font-medium">Active filters:</span>
                     {searchTerm && (
-                      <Badge variant="outline" className="flex items-center gap-1 rounded-full text-xs">
+                      <Badge variant="outline" className="flex items-center gap-1 rounded-full text-xs py-0 px-2">
                         Search: "{searchTerm}"
                         <button onClick={() => setSearchTerm('')}>
-                          <X className="w-3 h-3" />
+                          <X className="w-2.5 h-2.5" />
                         </button>
                       </Badge>
                     )}
                     {selectedSizes.map(size => (
-                      <Badge key={size} variant="outline" className="flex items-center gap-1 rounded-full text-xs">
+                      <Badge key={size} variant="outline" className="flex items-center gap-1 rounded-full text-xs py-0 px-2">
                         Size: {size}
                         <button onClick={() => handleSizeToggle(size)}>
-                          <X className="w-3 h-3" />
+                          <X className="w-2.5 h-2.5" />
                         </button>
                       </Badge>
                     ))}
                     {selectedColors.map(color => (
-                      <Badge key={color} variant="outline" className="flex items-center gap-1 rounded-full text-xs">
+                      <Badge key={color} variant="outline" className="flex items-center gap-1 rounded-full text-xs py-0 px-2">
                         Color: {color}
                         <button onClick={() => handleColorToggle(color)}>
-                          <X className="w-3 h-3" />
+                          <X className="w-2.5 h-2.5" />
                         </button>
                       </Badge>
                     ))}
                     {featuredOnly && (
-                      <Badge variant="outline" className="flex items-center gap-1 rounded-full text-xs">
+                      <Badge variant="outline" className="flex items-center gap-1 rounded-full text-xs py-0 px-2">
                         Featured Only
                         <button onClick={() => setFeaturedOnly(false)}>
-                          <X className="w-3 h-3" />
+                          <X className="w-2.5 h-2.5" />
                         </button>
                       </Badge>
                     )}
                     {(priceRange[0] > 0 || priceRange[1] < 10000) && (
-                      <Badge variant="outline" className="flex items-center gap-1 rounded-full text-xs">
+                      <Badge variant="outline" className="flex items-center gap-1 rounded-full text-xs py-0 px-2">
                         ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}
                         <button onClick={() => setPriceRange([0, 10000])}>
-                          <X className="w-3 h-3" />
+                          <X className="w-2.5 h-2.5" />
                         </button>
                       </Badge>
                     )}
@@ -694,14 +706,14 @@ export default function ShopPage() {
 
               {/* Products Grid/List */}
               {loading ? (
-                <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-6`}>
+                <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-4`}>
                   {[...Array(6)].map((_, i) => (
                     <div key={i} className="bg-white/80 rounded-2xl overflow-hidden animate-pulse shadow-lg">
-                      <div className={`w-full ${viewMode === 'grid' ? 'h-64' : 'h-32'} bg-gray-200`} />
-                      <div className="p-4 space-y-3">
-                        <div className="h-4 bg-gray-200 rounded w-3/4" />
-                        <div className="h-4 bg-gray-200 rounded w-1/2" />
-                        <div className="h-4 bg-gray-200 rounded w-1/4" />
+                      <div className={`w-full ${viewMode === 'grid' ? 'h-56' : 'h-28'} bg-gray-200`} />
+                      <div className="p-3 space-y-2">
+                        <div className="h-3 bg-gray-200 rounded w-3/4" />
+                        <div className="h-3 bg-gray-200 rounded w-1/2" />
+                        <div className="h-3 bg-gray-200 rounded w-1/4" />
                       </div>
                     </div>
                   ))}
@@ -712,7 +724,7 @@ export default function ShopPage() {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-6`}
+                    className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-4`}
                   >
                     <AnimatePresence mode="popLayout">
                       {currentProducts.map((product, index) => (
@@ -728,17 +740,17 @@ export default function ShopPage() {
                           onMouseLeave={() => setHoveredProduct(null)}
                         >
                           <Link to={`/product/${product._id}`}>
-                            <div className={`${viewMode === 'list' ? 'flex gap-4' : 'block'} bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-white/60 hover:border-primary/20`}>
-                              <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-32 flex-shrink-0' : 'w-full'}`}>
+                            <div className={`${viewMode === 'list' ? 'flex gap-3' : 'block'} bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-white/60 hover:border-primary/20`}>
+                              <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-28 flex-shrink-0' : 'w-full'}`}>
                                 {product.mainImage && (
                                   <Image
                                     src={product.mainImage}
                                     alt={product.title || 'Product'}
-                                    className={`w-full ${viewMode === 'grid' ? 'h-64' : 'h-32'} object-cover transition-all duration-500 ease-out ${
+                                    className={`w-full ${viewMode === 'grid' ? 'h-56' : 'h-28'} object-cover transition-all duration-500 ease-out ${
                                       hoveredProduct === product._id ? 'scale-105' : 'scale-100'
                                     }`}
-                                    width={300}
-                                    height={viewMode === 'grid' ? 320 : 128}
+                                    width={280}
+                                    height={viewMode === 'grid' ? 280 : 112}
                                   />
                                 )}
                                 
@@ -749,7 +761,7 @@ export default function ShopPage() {
                                     opacity: hoveredProduct === product._id ? 1 : 0 
                                   }}
                                   transition={{ duration: 0.3 }}
-                                  className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent"
+                                  className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent"
                                 />
 
                                 {/* Wishlist Button */}
@@ -758,10 +770,10 @@ export default function ShopPage() {
                                     e.preventDefault();
                                     toggleWishlist(product._id);
                                   }}
-                                  className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all duration-300"
+                                  className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all duration-300"
                                 >
                                   <Heart 
-                                    className={`w-4 h-4 transition-colors duration-300 ${
+                                    className={`w-3.5 h-3.5 transition-colors duration-300 ${
                                       wishlist.includes(product._id) 
                                         ? 'fill-red-500 text-red-500' 
                                         : 'text-foreground/60 hover:text-red-500'
@@ -770,14 +782,14 @@ export default function ShopPage() {
                                 </button>
 
                                 {/* Badges */}
-                                <div className="absolute top-3 left-3 flex flex-col gap-1">
+                                <div className="absolute top-2 left-2 flex flex-col gap-1">
                                   {product.isFeatured && (
-                                    <Badge className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full shadow-md">
+                                    <Badge className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full shadow-md">
                                       Featured
                                     </Badge>
                                   )}
                                   {product.stockQuantity && product.stockQuantity < 5 && (
-                                    <Badge variant="destructive" className="text-xs px-2 py-1 rounded-full shadow-md">
+                                    <Badge variant="destructive" className="text-xs px-1.5 py-0.5 rounded-full shadow-md">
                                       Low Stock
                                     </Badge>
                                   )}
@@ -791,28 +803,28 @@ export default function ShopPage() {
                                     y: hoveredProduct === product._id ? 0 : 20
                                   }}
                                   transition={{ duration: 0.3 }}
-                                  className="absolute bottom-3 left-3 right-3 flex justify-center"
+                                  className="absolute bottom-2 left-2 right-2 flex justify-center"
                                 >
                                   <Button 
                                     size="sm" 
-                                    className="h-9 px-4 text-sm bg-white/95 hover:bg-white text-foreground shadow-lg rounded-full font-medium transition-all duration-300"
+                                    className="h-7 px-3 text-xs bg-white/95 hover:bg-white text-foreground shadow-lg rounded-full font-medium transition-all duration-300"
                                     onClick={(e) => {
                                       e.preventDefault();
                                       // Add to cart logic here
                                     }}
                                   >
-                                    <ShoppingBag className="w-4 h-4 mr-2" />
+                                    <ShoppingBag className="w-3 h-3 mr-1.5" />
                                     Add to Cart
                                   </Button>
                                 </motion.div>
                               </div>
 
-                              <div className={`p-4 ${viewMode === 'list' ? 'flex-1' : ''}`}>
+                              <div className={`p-3 ${viewMode === 'list' ? 'flex-1' : ''}`}>
                                 <motion.h3
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ delay: 0.1 }}
-                                  className="text-lg font-heading font-medium text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight"
+                                  className="text-base font-heading font-medium text-foreground mb-1.5 group-hover:text-primary transition-colors line-clamp-2 leading-tight"
                                 >
                                   {product.title}
                                 </motion.h3>
@@ -821,27 +833,27 @@ export default function ShopPage() {
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ delay: 0.15 }}
-                                  className="text-foreground/70 text-sm font-paragraph mb-3 line-clamp-2 leading-relaxed"
+                                  className="text-foreground/70 text-xs font-paragraph mb-2 line-clamp-2 leading-relaxed"
                                 >
                                   {product.description}
                                 </motion.p>
 
-                                <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center justify-between mb-2">
                                   <motion.p
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.2 }}
-                                    className="text-primary font-bold text-lg"
+                                    className="text-primary font-bold text-base"
                                   >
                                     ₹{product.price?.toLocaleString('en-IN')}
                                   </motion.p>
 
                                   {/* Rating */}
-                                  <div className="flex items-center gap-1">
+                                  <div className="flex items-center gap-0.5">
                                     {[...Array(5)].map((_, i) => (
                                       <Star 
                                         key={i} 
-                                        className="w-3 h-3 fill-yellow-400 text-yellow-400" 
+                                        className="w-2.5 h-2.5 fill-yellow-400 text-yellow-400" 
                                       />
                                     ))}
                                     <span className="text-xs text-foreground/60 ml-1">(4.5)</span>
@@ -854,13 +866,13 @@ export default function ShopPage() {
                                     {product.availableSizes.split(',').slice(0, 3).map((size, i) => (
                                       <span 
                                         key={i}
-                                        className="text-xs px-2 py-1 bg-gray-100/80 text-foreground/70 rounded-full font-medium"
+                                        className="text-xs px-1.5 py-0.5 bg-gray-100/80 text-foreground/70 rounded-full font-medium"
                                       >
                                         {size.trim()}
                                       </span>
                                     ))}
                                     {product.availableSizes.split(',').length > 3 && (
-                                      <span className="text-xs px-2 py-1 bg-gray-100/80 text-foreground/70 rounded-full font-medium">
+                                      <span className="text-xs px-1.5 py-0.5 bg-gray-100/80 text-foreground/70 rounded-full font-medium">
                                         +{product.availableSizes.split(',').length - 3}
                                       </span>
                                     )}
@@ -880,14 +892,14 @@ export default function ShopPage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.3 }}
-                      className="flex justify-center items-center gap-2 mt-12"
+                      className="flex justify-center items-center gap-1.5 mt-8"
                     >
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="h-10 px-4 rounded-full border-2 border-gray-200 hover:border-primary hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 font-medium"
+                        className="h-8 px-3 rounded-full border-2 border-gray-200 hover:border-primary hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 font-medium text-xs"
                       >
                         Previous
                       </Button>
@@ -899,7 +911,7 @@ export default function ShopPage() {
                             variant={currentPage === page ? "default" : "outline"}
                             size="sm"
                             onClick={() => handlePageChange(page)}
-                            className={`h-10 w-10 rounded-full font-medium transition-all duration-300 ${
+                            className={`h-8 w-8 rounded-full font-medium transition-all duration-300 text-xs ${
                               currentPage === page
                                 ? 'bg-primary text-primary-foreground shadow-md'
                                 : 'border-2 border-gray-200 hover:border-primary hover:text-primary bg-white/80'
@@ -915,7 +927,7 @@ export default function ShopPage() {
                         size="sm"
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="h-10 px-4 rounded-full border-2 border-gray-200 hover:border-primary hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 font-medium"
+                        className="h-8 px-3 rounded-full border-2 border-gray-200 hover:border-primary hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed bg-white/80 font-medium text-xs"
                       >
                         Next
                       </Button>
@@ -926,23 +938,23 @@ export default function ShopPage() {
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-16 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg"
+                  className="text-center py-12 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg"
                 >
                   <div className="max-w-md mx-auto">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Search className="w-8 h-8 text-gray-400" />
+                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Search className="w-6 h-6 text-gray-400" />
                     </div>
-                    <h3 className="text-xl font-heading font-medium text-foreground mb-3">
+                    <h3 className="text-lg font-heading font-medium text-foreground mb-2">
                       No products found
                     </h3>
-                    <p className="text-foreground/70 font-paragraph mb-6 leading-relaxed">
+                    <p className="text-foreground/70 font-paragraph mb-4 leading-relaxed text-sm">
                       We couldn't find any products matching your current filters. Try adjusting your search criteria.
                     </p>
                     <Button
                       onClick={clearAllFilters}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 px-6 rounded-full font-medium"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground h-8 px-4 rounded-full font-medium text-xs"
                     >
-                      <X className="w-4 h-4 mr-2" />
+                      <X className="w-3.5 h-3.5 mr-1.5" />
                       Clear All Filters
                     </Button>
                   </div>
