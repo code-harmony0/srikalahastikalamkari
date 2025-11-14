@@ -271,35 +271,39 @@ export default function Layout() {
                 <Search className="w-5 h-5 transition-colors" />
               </motion.button>
               
-              <motion.button
+              <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-2.5 rounded-xl transition-all duration-300 hidden sm:flex group relative focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
-                style={{ 
-                  color: '#F7ECE4'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FFFFFF';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#F7ECE4';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                aria-label="Wishlist (3 items)"
               >
-                <Heart className="w-5 h-5 transition-colors" />
-                <span 
-                  className="absolute -top-1 -right-1 w-4 h-4 text-xs font-bold flex items-center justify-center"
+                <Link 
+                  to="/wishlist" 
+                  className="p-2.5 rounded-xl transition-all duration-300 hidden sm:flex group relative focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
                   style={{ 
-                    backgroundColor: '#DFA059', 
-                    color: '#3A1E0E',
-                    borderRadius: '14px'
+                    color: '#F7ECE4'
                   }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#FFFFFF';
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#F7ECE4';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                  aria-label="Wishlist (3 items)"
                 >
-                  3
-                </span>
-              </motion.button>
+                  <Heart className="w-5 h-5 transition-colors" />
+                  <span 
+                    className="absolute -top-1 -right-1 w-4 h-4 text-xs font-bold flex items-center justify-center"
+                    style={{ 
+                      backgroundColor: '#DFA059', 
+                      color: '#3A1E0E',
+                      borderRadius: '14px'
+                    }}
+                  >
+                    3
+                  </span>
+                </Link>
+              </motion.div>
               
               <motion.div
                 whileHover={{ scale: 1.05 }}

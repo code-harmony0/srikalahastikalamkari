@@ -11,6 +11,7 @@ import CheckoutPage from '@/components/pages/CheckoutPage';
 import ContactPage from '@/components/pages/ContactPage';
 import AboutPage from '@/components/pages/AboutPage';
 import ProfilePage from '@/components/pages/ProfilePage';
+import WishlistPage from '@/components/pages/WishlistPage';
 import { MemberProtectedRoute } from '@/components/ui/member-protected-route';
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <CartPage />,
+      },
+      {
+        path: "wishlist",
+        element: <WishlistPage />,
       },
       {
         path: "checkout",
