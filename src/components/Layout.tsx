@@ -280,9 +280,9 @@ export default function Layout() {
           viewport={{ once: true }}
         />
         
-        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-24 relative z-10">
+        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-12 relative z-10">
           {/* 4-Column Footer Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Brand Section */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -291,7 +291,7 @@ export default function Layout() {
               viewport={{ once: true }}
               className="lg:col-span-1"
             >
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-3xl flex items-center justify-center shadow-xl">
                   <span className="text-primary-foreground font-heading font-bold text-2xl">K</span>
                 </div>
@@ -305,19 +305,19 @@ export default function Layout() {
                 </div>
               </div>
               
-              <p className="text-primary-foreground/85 font-paragraph text-lg leading-relaxed mb-8">
+              <p className="text-primary-foreground/85 font-paragraph text-base leading-relaxed mb-6">
                 Handcrafted Kalamkari sarees celebrating the rich heritage of Indian textile traditions. Each piece tells a story of artistry, culture, and timeless elegance.
               </p>
               
               {/* Social Media */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 {[Instagram, Facebook, Twitter].map((Icon, index) => (
                   <a
                     key={index}
                     href="#"
-                    className="w-12 h-12 bg-primary-foreground/15 hover:bg-accent-color/30 rounded-2xl flex items-center justify-center transition-all duration-300 border border-primary-foreground/20 hover:border-accent-color/40"
+                    className="w-9 h-9 bg-primary-foreground/15 hover:bg-accent-color/30 rounded-xl flex items-center justify-center transition-all duration-300 border border-primary-foreground/20 hover:border-accent-color/40"
                   >
-                    <Icon className="w-6 h-6 text-primary-foreground hover:text-accent-color transition-colors" />
+                    <Icon className="w-4 h-4 text-primary-foreground hover:text-accent-color transition-colors" />
                   </a>
                 ))}
               </div>
@@ -330,18 +330,18 @@ export default function Layout() {
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-heading font-bold text-primary-foreground mb-8 relative">
+              <h3 className="text-xl font-heading font-extrabold text-primary-foreground mb-5 relative">
                 Quick Links
-                <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
+                <div className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
               </h3>
-              <ul className="space-y-5">
+              <ul className="space-y-2">
                 {navLinks.map((link, index) => (
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-lg flex items-center py-2 px-3 rounded-xl hover:bg-primary-foreground/10"
+                      className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center py-1.5 px-2 rounded-lg hover:bg-primary-foreground/10"
                     >
-                      <span className="w-2 h-2 bg-accent-color/60 rounded-full mr-4" />
+                      <span className="w-1.5 h-1.5 bg-accent-color/60 rounded-full mr-3" />
                       {link.label}
                     </Link>
                   </li>
@@ -356,11 +356,11 @@ export default function Layout() {
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-heading font-bold text-primary-foreground mb-8 relative">
+              <h3 className="text-xl font-heading font-extrabold text-primary-foreground mb-5 relative">
                 Customer Care
-                <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
+                <div className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
               </h3>
-              <ul className="space-y-5">
+              <ul className="space-y-2">
                 {[
                   'Contact Us',
                   'Shipping & Returns', 
@@ -370,9 +370,9 @@ export default function Layout() {
                   <li key={item}>
                     <a
                       href="#"
-                      className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-lg flex items-center py-2 px-3 rounded-xl hover:bg-primary-foreground/10"
+                      className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center py-1.5 px-2 rounded-lg hover:bg-primary-foreground/10"
                     >
-                      <span className="w-2 h-2 bg-accent-color/60 rounded-full mr-4" />
+                      <span className="w-1.5 h-1.5 bg-accent-color/60 rounded-full mr-3" />
                       {item}
                     </a>
                   </li>
@@ -387,20 +387,20 @@ export default function Layout() {
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-heading font-bold text-primary-foreground mb-8 relative">
+              <h3 className="text-xl font-heading font-extrabold text-primary-foreground mb-5 relative">
                 Get in Touch
-                <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
+                <div className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
               </h3>
               
-              <div className="space-y-6 mb-8">
+              <div className="space-y-4 mb-6">
                 {[
                   { icon: Mail, text: 'hello@kalamkari.com' },
                   { icon: Phone, text: '+91 98765 43210' },
                   { icon: MapPin, text: 'Heritage Craft Center\nSrikalahasti, Andhra Pradesh\nIndia - 517644' }
                 ].map(({ icon: Icon, text }, index) => (
-                  <div key={index} className="flex items-start gap-4 text-primary-foreground/80">
-                    <Icon className="w-6 h-6 text-accent-color flex-shrink-0 mt-1" />
-                    <span className="font-paragraph text-lg leading-relaxed whitespace-pre-line">
+                  <div key={index} className="flex items-start gap-3 text-primary-foreground/80">
+                    <Icon className="w-5 h-5 text-accent-color flex-shrink-0 mt-0.5" />
+                    <span className="font-paragraph text-base leading-snug whitespace-pre-line">
                       {text}
                     </span>
                   </div>
@@ -408,20 +408,20 @@ export default function Layout() {
               </div>
 
               {/* Newsletter Signup */}
-              <div className="bg-primary-foreground/15 backdrop-blur-sm rounded-3xl p-8 border border-accent-color/30">
-                <h4 className="text-xl font-heading font-semibold text-primary-foreground mb-4">
+              <div className="bg-primary-foreground/15 backdrop-blur-sm rounded-2xl p-5 border border-accent-color/30">
+                <h4 className="text-lg font-heading font-semibold text-primary-foreground mb-3">
                   Stay Updated
                 </h4>
-                <p className="text-primary-foreground/80 font-paragraph text-base mb-6">
+                <p className="text-primary-foreground/80 font-paragraph text-sm mb-4">
                   Subscribe for exclusive offers and heritage stories.
                 </p>
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <input
                     type="email"
                     placeholder="Your email"
-                    className="flex-1 px-5 py-4 border border-accent-color/40 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-accent-color/60 bg-primary-foreground/25 text-primary-foreground placeholder:text-primary-foreground/60 backdrop-blur-sm transition-all duration-300"
+                    className="flex-1 px-3 py-2.5 border border-accent-color/40 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent-color/60 bg-primary-foreground/25 text-primary-foreground placeholder:text-primary-foreground/60 backdrop-blur-sm transition-all duration-300"
                   />
-                  <Button className="bg-gradient-to-r from-accent-color to-amber-500 hover:from-amber-500 hover:to-accent-color text-primary px-8 py-4 rounded-2xl font-semibold transition-all duration-300 border-0">
+                  <Button className="bg-gradient-to-r from-accent-color to-amber-500 hover:from-amber-500 hover:to-accent-color text-primary px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 border-0 text-sm">
                     Join
                   </Button>
                 </div>
@@ -438,20 +438,20 @@ export default function Layout() {
             className="relative"
           >
             {/* Gold divider above bottom bar */}
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-accent-color to-transparent mb-8" />
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-accent-color to-transparent mb-5" />
             
-            <div className="flex flex-col lg:flex-row justify-between items-center gap-8">
-              <div className="flex flex-col sm:flex-row items-center gap-8">
-                <p className="text-primary-foreground/80 font-paragraph text-lg">
+            <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <p className="text-primary-foreground/80 font-paragraph text-sm">
                   © 2024 Kalamkari Heritage. All rights reserved.
                 </p>
-                <div className="flex items-center gap-3 text-primary-foreground/70 text-base">
-                  <Sparkles className="w-5 h-5 text-accent-color" />
+                <div className="flex items-center gap-2 text-primary-foreground/70 text-sm">
+                  <Sparkles className="w-4 h-4 text-accent-color" />
                   <span>Handcrafted with love in India</span>
                 </div>
               </div>
               
-              <div className="flex flex-wrap justify-center gap-8">
+              <div className="flex flex-wrap justify-center gap-4">
                 {[
                   'Privacy Policy',
                   'Terms of Service', 
@@ -460,7 +460,7 @@ export default function Layout() {
                   <a
                     key={item}
                     href="#"
-                    className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base"
+                    className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-sm"
                   >
                     {item}
                   </a>
