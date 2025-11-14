@@ -79,9 +79,12 @@ export default function Layout() {
         style={{ 
           height: headerHeight,
           opacity: headerOpacity,
-          backdropFilter: `blur(${headerBlur}px)`
+          backdropFilter: `blur(${headerBlur}px)`,
+          background: 'linear-gradient(135deg, #9A4A2B 0%, #7B3A22 100%)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
         }}
-        className="bg-gradient-to-r from-primary via-amber-800 to-primary shadow-lg sticky top-0 z-50 border-b border-accent-color/30 transition-all duration-300"
+        className="sticky top-0 z-50 transition-all duration-300"
       >
         <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 h-full">
           <div className="flex items-center justify-between h-full">
@@ -95,16 +98,20 @@ export default function Layout() {
             >
               <Link to="/" className="flex items-center gap-3 group" aria-label="Kalamkari Heritage Home">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-105">
-                    <span className="text-primary-foreground font-heading font-bold text-xl">K</span>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-105"
+                       style={{
+                         background: 'linear-gradient(135deg, #C06A3E 0%, #8C4627 100%)',
+                         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+                       }}>
+                    <span className="font-heading font-bold text-xl" style={{ color: '#FFF8F2' }}>K</span>
                   </div>
-                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-accent-color rounded-full opacity-80"></div>
+                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full opacity-80" style={{ backgroundColor: '#DFA059' }}></div>
                 </div>
                 <div className="hidden sm:flex flex-col">
-                  <span className="text-[22px] font-heading font-bold text-primary-foreground leading-tight tracking-tight">
+                  <span className="text-[22px] font-heading font-bold leading-tight tracking-tight" style={{ color: '#FDF7F0' }}>
                     Kalamkari
                   </span>
-                  <span className="text-[10px] font-paragraph text-accent-color tracking-[0.2em] font-semibold uppercase">
+                  <span className="text-[10px] font-paragraph tracking-[0.2em] font-semibold uppercase" style={{ color: '#F2D4A3' }}>
                     Heritage
                   </span>
                 </div>
@@ -122,22 +129,38 @@ export default function Layout() {
                 >
                   <Link
                     to={link.href}
-                    className="relative text-primary-foreground font-paragraph text-base font-semibold group flex items-center gap-1 py-3 px-2 rounded-lg hover:bg-primary-foreground/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                    className="relative font-paragraph text-base font-semibold group flex items-center gap-1 py-3 px-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
+                    style={{ 
+                      color: '#FDF7F0'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#FFFFFF';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = openDropdown === link.label ? '#D9A46C' : '#FDF7F0';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                     aria-expanded={link.hasDropdown ? openDropdown === link.label : undefined}
                     aria-haspopup={link.hasDropdown ? "true" : undefined}
                   >
-                    <span className="relative z-10 transition-colors duration-300 group-hover:text-accent-color">
+                    <span className="relative z-10 transition-colors duration-300" style={{ 
+                      color: openDropdown === link.label ? '#D9A46C' : 'inherit' 
+                    }}>
                       {link.label}
                     </span>
                     {link.hasDropdown && (
                       <ChevronDown 
-                        className={`w-4 h-4 transition-all duration-300 ${
-                          openDropdown === link.label ? 'rotate-180 text-accent-color' : 'text-primary-foreground group-hover:text-accent-color'
-                        }`}
+                        className="w-4 h-4 transition-all duration-300"
+                        style={{ 
+                          color: openDropdown === link.label ? '#D9A46C' : 'inherit',
+                          transform: openDropdown === link.label ? 'rotate(180deg)' : 'rotate(0deg)'
+                        }}
                       />
                     )}
                     <motion.div
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent-color to-amber-400 origin-left"
+                      className="absolute bottom-0 left-0 w-full h-0.5 origin-left"
+                      style={{ background: 'linear-gradient(90deg, #F2D4A3 0%, #DFA059 100%)' }}
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -151,24 +174,37 @@ export default function Layout() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[480px] bg-primary-foreground rounded-2xl shadow-2xl border border-accent-color/20 overflow-hidden z-50"
+                      className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[480px] rounded-2xl shadow-2xl overflow-hidden z-50"
+                      style={{ 
+                        backgroundColor: '#FDF7F0',
+                        border: '1px solid rgba(242, 212, 163, 0.3)'
+                      }}
                     >
                       <div className="grid grid-cols-2 gap-0">
                         {/* Categories Column */}
-                        <div className="p-6 border-r border-accent-color/10">
-                          <h3 className="text-sm font-heading font-bold text-primary uppercase tracking-wide mb-4">Categories</h3>
+                        <div className="p-6" style={{ borderRight: '1px solid rgba(242, 212, 163, 0.2)' }}>
+                          <h3 className="text-sm font-heading font-bold uppercase tracking-wide mb-4" style={{ color: '#7B3A22' }}>Categories</h3>
                           <div className="space-y-2">
                             {link.megaMenu.categories.map((item) => (
                               <Link
                                 key={item.href}
                                 to={item.href}
-                                className="block p-3 rounded-lg hover:bg-accent-color/10 transition-colors duration-200 group"
+                                className="block p-3 rounded-lg transition-colors duration-200 group"
+                                style={{ 
+                                  color: '#7B3A22'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.backgroundColor = 'rgba(223, 160, 89, 0.1)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                }}
                                 onClick={() => setOpenDropdown(null)}
                               >
-                                <div className="text-sm font-semibold text-primary group-hover:text-accent-color transition-colors">
+                                <div className="text-sm font-semibold transition-colors group-hover:text-[#C06A3E]">
                                   {item.name}
                                 </div>
-                                <div className="text-xs text-primary/70 mt-1">
+                                <div className="text-xs mt-1" style={{ color: 'rgba(123, 58, 34, 0.7)' }}>
                                   {item.description}
                                 </div>
                               </Link>
@@ -178,19 +214,28 @@ export default function Layout() {
 
                         {/* Featured Column */}
                         <div className="p-6">
-                          <h3 className="text-sm font-heading font-bold text-primary uppercase tracking-wide mb-4">Featured</h3>
+                          <h3 className="text-sm font-heading font-bold uppercase tracking-wide mb-4" style={{ color: '#7B3A22' }}>Featured</h3>
                           <div className="space-y-2">
                             {link.megaMenu.featured.map((item) => (
                               <Link
                                 key={item.href}
                                 to={item.href}
-                                className="block p-3 rounded-lg hover:bg-accent-color/10 transition-colors duration-200 group"
+                                className="block p-3 rounded-lg transition-colors duration-200 group"
+                                style={{ 
+                                  color: '#7B3A22'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.backgroundColor = 'rgba(223, 160, 89, 0.1)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                }}
                                 onClick={() => setOpenDropdown(null)}
                               >
-                                <div className="text-sm font-semibold text-primary group-hover:text-accent-color transition-colors">
+                                <div className="text-sm font-semibold transition-colors group-hover:text-[#C06A3E]">
                                   {item.name}
                                 </div>
-                                <div className="text-xs text-primary/70 mt-1">
+                                <div className="text-xs mt-1" style={{ color: 'rgba(123, 58, 34, 0.7)' }}>
                                   {item.description}
                                 </div>
                               </Link>
@@ -209,20 +254,49 @@ export default function Layout() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                className="p-2.5 rounded-xl transition-all duration-300 hidden sm:flex group focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
+                style={{ 
+                  color: '#F7ECE4'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#F7ECE4';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
                 aria-label="Search"
               >
-                <Search className="w-5 h-5 group-hover:text-accent-color transition-colors" />
+                <Search className="w-5 h-5 transition-colors" />
               </motion.button>
               
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group relative focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                className="p-2.5 rounded-xl transition-all duration-300 hidden sm:flex group relative focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
+                style={{ 
+                  color: '#F7ECE4'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#F7ECE4';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
                 aria-label="Wishlist (3 items)"
               >
-                <Heart className="w-5 h-5 group-hover:text-red-400 transition-colors" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+                <Heart className="w-5 h-5 transition-colors" />
+                <span 
+                  className="absolute -top-1 -right-1 w-4 h-4 text-xs font-bold flex items-center justify-center"
+                  style={{ 
+                    backgroundColor: '#DFA059', 
+                    color: '#3A1E0E',
+                    borderRadius: '14px'
+                  }}
+                >
                   3
                 </span>
               </motion.button>
@@ -233,11 +307,29 @@ export default function Layout() {
               >
                 <Link 
                   to="/cart" 
-                  className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 relative flex text-primary-foreground group focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                  className="p-2.5 rounded-xl transition-all duration-300 relative flex group focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
+                  style={{ 
+                    color: '#F7ECE4'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#FFFFFF';
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#F7ECE4';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
                   aria-label="Shopping cart (2 items)"
                 >
-                  <ShoppingCart className="w-5 h-5 group-hover:text-accent-color transition-colors" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent-color text-primary font-bold text-xs rounded-full flex items-center justify-center">
+                  <ShoppingCart className="w-5 h-5 transition-colors" />
+                  <span 
+                    className="absolute -top-1 -right-1 w-4 h-4 font-bold text-xs flex items-center justify-center"
+                    style={{ 
+                      backgroundColor: '#DFA059', 
+                      color: '#3A1E0E',
+                      borderRadius: '14px'
+                    }}
+                  >
                     2
                   </span>
                 </Link>
@@ -250,19 +342,47 @@ export default function Layout() {
                 >
                   <Link 
                     to="/profile" 
-                    className="p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                    className="p-2.5 rounded-xl transition-all duration-300 hidden sm:flex group focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
+                    style={{ 
+                      color: '#F7ECE4'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#FFFFFF';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#F7ECE4';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                     aria-label="User profile"
                   >
-                    <User className="w-5 h-5 group-hover:text-accent-color transition-colors" />
+                    <User className="w-5 h-5 transition-colors" />
                   </Link>
                 </motion.div>
               ) : (
-                <Button 
-                  className="hidden sm:flex bg-accent-color hover:bg-accent-color/90 text-primary font-semibold px-6 py-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent-color/50 focus:ring-offset-2 focus:ring-offset-primary"
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="hidden sm:flex font-semibold px-6 py-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgba(242,212,163,0.5)] focus:ring-offset-[#9A4A2B]"
+                  style={{
+                    background: 'linear-gradient(135deg, #C06A3E 0%, #8C4627 100%)',
+                    color: '#FFF8F2',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #CC7845 0%, #98502E 100%)';
+                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #C06A3E 0%, #8C4627 100%)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                  }}
                   aria-label="Sign in to your account"
                 >
                   Sign In
-                </Button>
+                </motion.button>
               )}
 
               {/* Mobile Menu Button */}
@@ -270,7 +390,18 @@ export default function Layout() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2.5 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 text-primary-foreground focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                className="lg:hidden p-2.5 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
+                style={{ 
+                  color: '#F7ECE4'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#F7ECE4';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isMenuOpen}
               >
@@ -296,7 +427,8 @@ export default function Layout() {
               height: isMenuOpen ? 'auto' : 0 
             }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="lg:hidden overflow-hidden border-t border-primary-foreground/20"
+            className="lg:hidden overflow-hidden"
+            style={{ borderTop: '1px solid rgba(253, 247, 240, 0.15)' }}
             role="navigation"
             aria-label="Mobile navigation"
           >
@@ -314,7 +446,18 @@ export default function Layout() {
                   <Link
                     to={link.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="block text-primary-foreground hover:text-accent-color transition-colors font-paragraph text-lg font-semibold py-3 px-4 rounded-lg hover:bg-primary-foreground/10 focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                    className="block transition-colors font-paragraph text-lg font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)]"
+                    style={{ 
+                      color: '#FDF7F0'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#FFFFFF';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#FDF7F0';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                   >
                     {link.label}
                   </Link>
@@ -322,15 +465,37 @@ export default function Layout() {
               ))}
               
               {/* Mobile Utility Icons */}
-              <div className="flex items-center justify-center gap-6 pt-4 border-t border-primary-foreground/20">
+              <div className="flex items-center justify-center gap-6 pt-4" style={{ borderTop: '1px solid rgba(253, 247, 240, 0.15)' }}>
                 <button 
-                  className="p-3 text-primary-foreground hover:text-accent-color transition-colors focus:outline-none focus:ring-2 focus:ring-accent-color/50 rounded-lg"
+                  className="p-3 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)] rounded-lg"
+                  style={{ 
+                    color: '#F7ECE4'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#FFFFFF';
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#F7ECE4';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
                   aria-label="Search"
                 >
                   <Search className="w-6 h-6" />
                 </button>
                 <button 
-                  className="p-3 text-primary-foreground hover:text-accent-color transition-colors focus:outline-none focus:ring-2 focus:ring-accent-color/50 rounded-lg"
+                  className="p-3 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)] rounded-lg"
+                  style={{ 
+                    color: '#F7ECE4'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#FFFFFF';
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#F7ECE4';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
                   aria-label="Wishlist"
                 >
                   <Heart className="w-6 h-6" />
@@ -338,17 +503,43 @@ export default function Layout() {
                 {isAuthenticated ? (
                   <Link 
                     to="/profile"
-                    className="p-3 text-primary-foreground hover:text-accent-color transition-colors focus:outline-none focus:ring-2 focus:ring-accent-color/50 rounded-lg"
+                    className="p-3 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)] rounded-lg"
+                    style={{ 
+                      color: '#F7ECE4'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#FFFFFF';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#F7ECE4';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                     aria-label="User profile"
                   >
                     <User className="w-6 h-6" />
                   </Link>
                 ) : (
-                  <Button 
-                    className="bg-accent-color hover:bg-accent-color/90 text-primary font-semibold px-6 py-2 rounded-full transition-all duration-300"
+                  <button 
+                    className="font-semibold px-6 py-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[rgba(242,212,163,0.5)] focus:ring-offset-[#9A4A2B]"
+                    style={{
+                      background: 'linear-gradient(135deg, #C06A3E 0%, #8C4627 100%)',
+                      color: '#FFF8F2',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #CC7845 0%, #98502E 100%)';
+                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #C06A3E 0%, #8C4627 100%)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                    }}
                   >
                     Sign In
-                  </Button>
+                  </button>
                 )}
               </div>
             </div>
