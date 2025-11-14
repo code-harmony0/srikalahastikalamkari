@@ -47,7 +47,7 @@ export default function Layout() {
           opacity: headerOpacity,
           backdropFilter: `blur(${headerBlur}px)`
         }}
-        className="bg-gradient-to-r from-soft-lavender via-pastel-teal to-powder-blue shadow-2xl sticky top-0 z-50 border-b-2 border-soft-lavender/50"
+        className="bg-gradient-to-r from-primary via-amber-800 to-primary shadow-2xl sticky top-0 z-50 border-b-2 border-accent-color/50"
       >
         <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12">
           <div className="flex items-center justify-between h-20 lg:h-24">
@@ -59,21 +59,21 @@ export default function Layout() {
             >
               <Link to="/" className="flex items-center gap-4 group">
                 <div className="relative">
-                  <div className="w-14 h-14 bg-gradient-to-br from-soft-lavender via-pastel-teal to-powder-blue rounded-2xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-3">
-                    <span className="text-warm-grey font-heading font-bold text-2xl">K</span>
+                  <div className="w-14 h-14 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-2xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-3">
+                    <span className="text-primary-foreground font-heading font-bold text-2xl">K</span>
                   </div>
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-                    className="absolute inset-0 rounded-2xl border-2 border-transparent border-t-soft-lavender/60 opacity-40"
+                    className="absolute inset-0 rounded-2xl border-2 border-transparent border-t-accent-color/60 opacity-40"
                   />
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-soft-lavender rounded-full animate-pulse"></div>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent-color rounded-full animate-pulse"></div>
                 </div>
                 <div className="hidden sm:flex flex-col">
                   <span className="text-2xl font-heading font-bold text-primary-foreground leading-tight tracking-tight">
                     Kalamkari
                   </span>
-                  <span className="text-xs font-paragraph text-soft-lavender tracking-[0.3em] font-semibold">
+                  <span className="text-xs font-paragraph text-accent-color tracking-[0.3em] font-semibold">
                     HERITAGE
                   </span>
                 </div>
@@ -94,11 +94,11 @@ export default function Layout() {
                     to={link.href}
                     className="relative text-primary-foreground font-paragraph text-base font-semibold group overflow-hidden py-2 px-1"
                   >
-                    <span className="relative z-10 transition-colors duration-300 group-hover:text-soft-lavender">
+                    <span className="relative z-10 transition-colors duration-300 group-hover:text-accent-color">
                       {link.label}
                     </span>
                     <motion.div
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-soft-lavender to-pastel-teal origin-left"
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent-color to-amber-400 origin-left"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                       transition={{ duration: 0.4, ease: "easeOut" }}
@@ -120,7 +120,7 @@ export default function Layout() {
                 whileTap={{ scale: 0.95 }}
                 className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group"
               >
-                <Search className="w-5 h-5 group-hover:text-soft-lavender transition-colors" />
+                <Search className="w-5 h-5 group-hover:text-accent-color transition-colors" />
               </motion.button>
               
               <motion.button
@@ -143,12 +143,12 @@ export default function Layout() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link to="/cart" className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 relative flex text-primary-foreground group">
-                  <ShoppingCart className="w-5 h-5 group-hover:text-soft-lavender transition-colors" />
+                  <ShoppingCart className="w-5 h-5 group-hover:text-accent-color transition-colors" />
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     whileHover={{ scale: 1.1 }}
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-soft-lavender text-warm-grey font-bold text-xs rounded-full flex items-center justify-center shadow-lg"
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-accent-color text-primary font-bold text-xs rounded-full flex items-center justify-center shadow-lg"
                   >
                     2
                   </motion.span>
@@ -161,7 +161,7 @@ export default function Layout() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link to="/profile" className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group">
-                    <User className="w-5 h-5 group-hover:text-soft-lavender transition-colors" />
+                    <User className="w-5 h-5 group-hover:text-accent-color transition-colors" />
                   </Link>
                 </motion.div>
               ) : (
@@ -170,7 +170,7 @@ export default function Layout() {
                   whileTap={{ scale: 0.95 }}
                   className="p-3 hover:bg-primary-foreground/15 rounded-xl transition-all duration-300 hidden sm:flex text-primary-foreground group"
                 >
-                  <User className="w-5 h-5 group-hover:text-soft-lavender transition-colors" />
+                  <User className="w-5 h-5 group-hover:text-accent-color transition-colors" />
                 </motion.button>
               )}
 
@@ -219,7 +219,7 @@ export default function Layout() {
                   <Link
                     to={link.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="block text-primary-foreground hover:text-soft-lavender transition-colors font-paragraph text-lg font-semibold py-3 px-4 rounded-lg hover:bg-primary-foreground/10"
+                    className="block text-primary-foreground hover:text-accent-color transition-colors font-paragraph text-lg font-semibold py-3 px-4 rounded-lg hover:bg-primary-foreground/10"
                   >
                     {link.label}
                   </Link>
@@ -228,13 +228,13 @@ export default function Layout() {
               
               {/* Mobile Icons */}
               <div className="flex items-center justify-center gap-6 pt-4 border-t border-primary-foreground/20">
-                <button className="p-3 text-primary-foreground hover:text-soft-lavender transition-colors">
+                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
                   <Search className="w-6 h-6" />
                 </button>
-                <button className="p-3 text-primary-foreground hover:text-soft-lavender transition-colors">
+                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
                   <Heart className="w-6 h-6" />
                 </button>
-                <button className="p-3 text-primary-foreground hover:text-soft-lavender transition-colors">
+                <button className="p-3 text-primary-foreground hover:text-accent-color transition-colors">
                   <User className="w-6 h-6" />
                 </button>
               </div>
@@ -248,32 +248,32 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      {/* Refined Premium Footer - Modern Luxury Pastel Theme */}
+      {/* Refined Premium Footer - Static Brown Gradient with Subtle Gold Kalamkari */}
       <footer className="relative overflow-hidden mt-24">
-        {/* Soft Pastel Gradient Background */}
+        {/* Static Brown Gradient Background */}
         <div className="absolute inset-0">
           <div 
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(135deg, #E6D7FF 0%, #B8E6E1 25%, #B8D4F0 50%, #F8F6F3 75%, #E6D7FF 100%)"
+              background: "linear-gradient(135deg, #2D1810 0%, #3D2317 25%, #4A2C1A 50%, #3D2317 75%, #2D1810 100%)"
             }}
           />
         </div>
         
-        {/* Subtle Pastel Kalamkari Motif - Static */}
+        {/* Subtle Gold Kalamkari Motif - Static */}
         <div 
-          className="absolute inset-0 opacity-8"
+          className="absolute inset-0 opacity-6"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23E6D7FF' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.3'%3E%3Cpath d='M35 25c12 0 22 10 22 22 0 16-12 28-22 28s-22-12-22-28c0-12 10-22 22-22z' fill='%23E6D7FF' fill-opacity='0.06'/%3E%3Cpath d='M105 85c10 0 18 8 18 18 0 14-10 24-18 24s-18-10-18-24c0-10 8-18 18-18z' fill='%23B8E6E1' fill-opacity='0.05'/%3E%3Cpath d='M70 35c8 0 14 6 14 14 0 10-8 18-14 18s-14-8-14-18c0-8 6-14 14-14z' fill='%23B8D4F0' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.3'%3E%3Cpath d='M35 25c12 0 22 10 22 22 0 16-12 28-22 28s-22-12-22-28c0-12 10-22 22-22z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M105 85c10 0 18 8 18 18 0 14-10 24-18 24s-18-10-18-24c0-10 8-18 18-18z' fill='%23B8860B' fill-opacity='0.05'/%3E%3Cpath d='M70 35c8 0 14 6 14 14 0 10-8 18-14 18s-14-8-14-18c0-8 6-14 14-14z' fill='%23B8860B' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E")`,
             backgroundSize: "140px 140px",
             backgroundPosition: "0 0",
             backgroundRepeat: "repeat"
           }}
         />
         
-        {/* Soft Lavender Divider at Top */}
+        {/* Gold Divider at Top */}
         <motion.div 
-          className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-soft-lavender to-transparent"
+          className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-color to-transparent"
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
@@ -292,20 +292,20 @@ export default function Layout() {
               className="lg:col-span-1"
             >
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-soft-lavender via-pastel-teal to-powder-blue rounded-3xl flex items-center justify-center shadow-xl">
-                  <span className="text-warm-grey font-heading font-bold text-2xl">K</span>
+                <div className="w-16 h-16 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-3xl flex items-center justify-center shadow-xl">
+                  <span className="text-primary-foreground font-heading font-bold text-2xl">K</span>
                 </div>
                 <div>
-                  <span className="text-3xl font-heading font-bold text-warm-grey block leading-tight tracking-tight">
+                  <span className="text-3xl font-heading font-bold text-primary-foreground block leading-tight tracking-tight">
                     Kalamkari
                   </span>
-                  <span className="text-sm font-paragraph text-soft-lavender tracking-[0.2em] font-semibold">
+                  <span className="text-sm font-paragraph text-accent-color tracking-[0.2em] font-semibold">
                     HERITAGE
                   </span>
                 </div>
               </div>
               
-              <p className="text-warm-grey/85 font-paragraph text-lg leading-relaxed mb-8">
+              <p className="text-primary-foreground/85 font-paragraph text-lg leading-relaxed mb-8">
                 Handcrafted Kalamkari sarees celebrating the rich heritage of Indian textile traditions. Each piece tells a story of artistry, culture, and timeless elegance.
               </p>
               
@@ -315,9 +315,9 @@ export default function Layout() {
                   <a
                     key={index}
                     href="#"
-                    className="w-12 h-12 bg-warm-grey/15 hover:bg-soft-lavender/30 rounded-2xl flex items-center justify-center transition-all duration-300 border border-warm-grey/20 hover:border-soft-lavender/40"
+                    className="w-12 h-12 bg-primary-foreground/15 hover:bg-accent-color/30 rounded-2xl flex items-center justify-center transition-all duration-300 border border-primary-foreground/20 hover:border-accent-color/40"
                   >
-                    <Icon className="w-6 h-6 text-warm-grey hover:text-soft-lavender transition-colors" />
+                    <Icon className="w-6 h-6 text-primary-foreground hover:text-accent-color transition-colors" />
                   </a>
                 ))}
               </div>
@@ -330,18 +330,18 @@ export default function Layout() {
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-heading font-bold text-warm-grey mb-8 relative">
+              <h3 className="text-2xl font-heading font-bold text-primary-foreground mb-8 relative">
                 Quick Links
-                <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-soft-lavender to-pastel-teal rounded-full" />
+                <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
               </h3>
               <ul className="space-y-5">
                 {navLinks.map((link, index) => (
                   <li key={link.href}>
                     <Link
                       to={link.href}
-                      className="text-warm-grey/80 hover:text-soft-lavender transition-all duration-300 font-paragraph text-lg flex items-center py-2 px-3 rounded-xl hover:bg-warm-grey/10"
+                      className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-lg flex items-center py-2 px-3 rounded-xl hover:bg-primary-foreground/10"
                     >
-                      <span className="w-2 h-2 bg-soft-lavender/60 rounded-full mr-4" />
+                      <span className="w-2 h-2 bg-accent-color/60 rounded-full mr-4" />
                       {link.label}
                     </Link>
                   </li>
@@ -356,9 +356,9 @@ export default function Layout() {
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-heading font-bold text-warm-grey mb-8 relative">
+              <h3 className="text-2xl font-heading font-bold text-primary-foreground mb-8 relative">
                 Customer Care
-                <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-soft-lavender to-pastel-teal rounded-full" />
+                <div className="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
               </h3>
               <ul className="space-y-5">
                 {[
@@ -370,9 +370,9 @@ export default function Layout() {
                   <li key={item}>
                     <a
                       href="#"
-                      className="text-warm-grey/80 hover:text-soft-lavender transition-all duration-300 font-paragraph text-lg flex items-center py-2 px-3 rounded-xl hover:bg-warm-grey/10"
+                      className="text-primary-foreground/80 hover:text-accent-color transition-all duration-300 font-paragraph text-lg flex items-center py-2 px-3 rounded-xl hover:bg-primary-foreground/10"
                     >
-                      <span className="w-2 h-2 bg-soft-lavender/60 rounded-full mr-4" />
+                      <span className="w-2 h-2 bg-accent-color/60 rounded-full mr-4" />
                       {item}
                     </a>
                   </li>

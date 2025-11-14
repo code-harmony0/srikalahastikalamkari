@@ -118,31 +118,31 @@ export default function HomePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // High-quality REAL Kalamkari saree fabric photographs with modern luxury pastel color grading
+  // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns
   const heroBackgroundImages = [
     {
-      src: 'https://static.wixstatic.com/media/07221c_d1922b6a74c947fc91ce234af55292aa~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted floral vine patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
+      src: 'https://static.wixstatic.com/media/07221c_057b348c686a4a28af296cd5c08c04e0~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted floral vine patterns with delicate leaves, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_7e895cfca52c46f3a9203dce6ff9d439~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted peacock patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
+      src: 'https://static.wixstatic.com/media/07221c_a10c03740aaa48faa294a8e88471f228~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted peacock patterns with elaborate feather details, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_ab6cb7ef4587456ca430053eaa4a1f30~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted paisley patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
+      src: 'https://static.wixstatic.com/media/07221c_f4eeef23656c44868a3bde7bb1b18f70~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted intricate paisley patterns, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_c2b70960df8c4780afab5fee0f6bc7b0~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted lotus flower patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
+      src: 'https://static.wixstatic.com/media/07221c_8d2fc60a480e4a90bb4090e06329c34c~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted lotus flower patterns with botanical elements, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     },
     {
-      src: 'https://static.wixstatic.com/media/07221c_869c103229bb4b778eb6089ca5e67b80~mv2.png?originWidth=1920&originHeight=1024',
-      alt: 'High-quality photograph of authentic Kalamkari saree fabric with handcrafted mixed traditional patterns, color-graded to soft pastel tones: lavender, teal, powder blue, clay beige',
+      src: 'https://static.wixstatic.com/media/07221c_6aad4d237fbd4800ab6b65b8fcc59f64~mv2.png?originWidth=1920&originHeight=1024',
+      alt: 'High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted mixed traditional patterns with floral vines and paisleys, natural dyes in warm earthy tones, soft cloth folds visible',
       brightness: 'medium'
     }
   ];
@@ -301,192 +301,24 @@ export default function HomePage() {
   return (
     <>
       <style>{`
-        /* Premium Modern Kalamkari Background - Deep Teal & Ivory Base */
+        /* Single Static Kalamkari Motif Background - Premium & Unified */
         .kalamkari-static-background {
-          background-color: #F7F5F3; /* Ivory base */
-          background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23134E4A' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.06'%3E%3Cpath d='M60 40c20 0 36 16 36 36 0 28-20 50-36 50s-36-22-36-50c0-20 16-36 36-36z' fill='%23134E4A' fill-opacity='0.03'/%3E%3Cpath d='M180 140c18 0 32 14 32 32 0 24-18 44-32 44s-32-20-32-44c0-18 14-32 32-32z' fill='%23A78BFA' fill-opacity='0.04'/%3E%3Cpath d='M140 60c14 0 26 12 26 26 0 18-14 34-26 34s-26-16-26-34c0-14 12-26 26-26z' fill='%23D4A574' fill-opacity='0.05'/%3E%3Cpath d='M80 160c12 0 22 10 22 22 0 16-12 28-22 28s-22-12-22-28c0-12 10-22 22-22z' fill='%23B8860B' fill-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E");
-          background-size: 240px 240px;
+          background-color: #FDF8F2; /* Ivory base */
+          background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round' opacity='0.06'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23A0522D' fill-opacity='0.04'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%23B8860B' fill-opacity='0.03'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23A0522D' fill-opacity='0.03'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%23B8860B' fill-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E");
+          background-size: 200px 200px;
           background-position: 0 0;
           background-repeat: repeat;
           background-attachment: fixed;
         }
         
-        /* Premium Textile Texture Overlay - Deep Teal & Muted Lavender */
+        /* Silk Fabric Texture Overlay */
         .silk-fabric-texture {
           background-image: 
-            radial-gradient(circle at 25% 35%, rgba(19, 78, 74, 0.03) 1px, transparent 1px),
-            radial-gradient(circle at 75% 65%, rgba(167, 139, 250, 0.025) 1px, transparent 1px),
-            radial-gradient(circle at 50% 20%, rgba(247, 245, 243, 0.04) 0.5px, transparent 0.5px);
-          background-size: 35px 35px, 28px 28px, 22px 22px;
-          background-position: 0 0, 18px 18px, 12px 12px;
-        }
-
-        /* Premium Cinematic Hero Section */
-        .cinematic-hero {
-          background: linear-gradient(135deg, #134E4A 0%, #0F3E3A 25%, #1A5A55 50%, #0F3E3A 75%, #134E4A 100%);
-          position: relative;
-          overflow: hidden;
-        }
-
-        /* Soft Textile Motifs - 5-8% Opacity, No Movement */
-        .textile-motifs {
-          background-image: 
-            url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23F7F5F3' stroke-width='0.8' opacity='0.06'%3E%3Cpath d='M45 30c15 0 27 12 27 27 0 20-15 35-27 35s-27-15-27-35c0-15 12-27 27-27z' fill='%23F7F5F3' fill-opacity='0.05'/%3E%3Cpath d='M135 120c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23A78BFA' fill-opacity='0.06'/%3E%3Cpath d='M90 60c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%23D4A574' fill-opacity='0.07'/%3E%3C/g%3E%3C/svg%3E"),
-            url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.6' opacity='0.08'%3E%3Cpath d='M30 20c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23B8860B' fill-opacity='0.05'/%3E%3Cpath d='M90 80c6 0 11 5 11 11 0 9-6 16-11 16s-11-7-11-16c0-6 5-11 11-11z' fill='%23F7F5F3' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E");
-          background-size: 180px 180px, 120px 120px;
-          background-position: 0 0, 90px 60px;
-          background-repeat: repeat;
-          opacity: 0.7;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          pointer-events: none;
-        }
-
-        /* Soft Ivory-to-Transparent Gradient Behind Headline */
-        .headline-gradient {
-          background: linear-gradient(
-            135deg,
-            rgba(247, 245, 243, 0.15) 0%,
-            rgba(247, 245, 243, 0.08) 30%,
-            rgba(247, 245, 243, 0.04) 60%,
-            transparent 100%
-          );
-          backdrop-filter: blur(20px);
-          border-radius: 2rem;
-          padding: 3rem 2rem;
-          border: 1px solid rgba(247, 245, 243, 0.1);
-        }
-
-        /* Editorial Layout Typography */
-        .editorial-headline {
-          font-family: 'Cormorant Garamond', serif;
-          font-weight: 300;
-          color: #F7F5F3;
-          text-shadow: 
-            0 4px 20px rgba(19, 78, 74, 0.8),
-            0 8px 40px rgba(19, 78, 74, 0.6);
-          letter-spacing: -0.03em;
-          line-height: 0.85;
-        }
-
-        /* Ultra-Soft Fade Animation */
-        .ultra-soft-fade {
-          animation: ultraSoftFade 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        @keyframes ultraSoftFade {
-          0% {
-            opacity: 0;
-            transform: translateY(30px) scale(0.98);
-            filter: blur(2px);
-          }
-          40% {
-            opacity: 0.6;
-            transform: translateY(15px) scale(0.99);
-            filter: blur(1px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
-          }
-        }
-
-        /* Pill-Shaped Buttons - Teal & Gold */
-        .pill-button-teal {
-          background: linear-gradient(135deg, #134E4A 0%, #0F3E3A 50%, #1A5A55 100%);
-          border: 1px solid rgba(247, 245, 243, 0.2);
-          border-radius: 50px;
-          color: #F7F5F3;
-          backdrop-filter: blur(20px);
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-          box-shadow: 
-            0 8px 32px rgba(19, 78, 74, 0.3),
-            inset 0 1px 0 rgba(247, 245, 243, 0.1);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .pill-button-teal::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(247, 245, 243, 0.2) 50%,
-            transparent 100%
-          );
-          transition: left 0.6s ease;
-        }
-
-        .pill-button-teal:hover::before {
-          left: 100%;
-        }
-
-        .pill-button-teal:hover {
-          background: linear-gradient(135deg, #0F3E3A 0%, #134E4A 50%, #1A5A55 100%);
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 
-            0 12px 48px rgba(19, 78, 74, 0.4),
-            inset 0 1px 0 rgba(247, 245, 243, 0.15);
-        }
-
-        .pill-button-gold {
-          background: linear-gradient(135deg, #B8860B 0%, #D4A574 50%, #B8860B 100%);
-          border: 1px solid rgba(247, 245, 243, 0.3);
-          border-radius: 50px;
-          color: #2D1810;
-          backdrop-filter: blur(20px);
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-          box-shadow: 
-            0 8px 32px rgba(184, 134, 11, 0.3),
-            inset 0 1px 0 rgba(247, 245, 243, 0.2);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .pill-button-gold::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(247, 245, 243, 0.3) 50%,
-            transparent 100%
-          );
-          transition: left 0.6s ease;
-        }
-
-        .pill-button-gold:hover::before {
-          left: 100%;
-        }
-
-        .pill-button-gold:hover {
-          background: linear-gradient(135deg, #D4A574 0%, #B8860B 50%, #D4A574 100%);
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 
-            0 12px 48px rgba(184, 134, 11, 0.4),
-            inset 0 1px 0 rgba(247, 245, 243, 0.25);
-        }
-
-        /* High-End Cinematic Feel */
-        .cinematic-container {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
+            radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.015) 1px, transparent 1px),
+            radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.01) 1px, transparent 1px),
+            radial-gradient(circle at 60% 20%, rgba(253, 248, 242, 0.02) 0.5px, transparent 0.5px);
+          background-size: 30px 30px, 25px 25px, 20px 20px;
+          background-position: 0 0, 15px 15px, 10px 10px;
         }
 
         /* Enhanced GSAP-style Animation System with Improved Accessibility */
@@ -506,12 +338,6 @@ export default function HomePage() {
             transition: opacity 0.3s ease;
             transform: none;
           }
-          .ultra-soft-fade {
-            animation: none;
-            opacity: 1;
-            transform: none;
-            filter: none;
-          }
           * {
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
@@ -519,15 +345,15 @@ export default function HomePage() {
           }
         }
 
-        /* Premium Typography with Enhanced Contrast - Deep Teal & Charcoal */
+        /* Premium Typography with Enhanced Contrast and Accessibility */
         .luxury-headline {
           font-family: 'Cormorant Garamond', serif;
           font-weight: 300;
           color: #ffffff !important;
           text-shadow: 
-            0 3px 12px rgba(19, 78, 74, 0.9),
-            0 6px 20px rgba(19, 78, 74, 0.8),
-            0 10px 30px rgba(19, 78, 74, 0.6);
+            0 2px 8px rgba(0, 0, 0, 0.9),
+            0 4px 16px rgba(0, 0, 0, 0.8),
+            0 8px 24px rgba(0, 0, 0, 0.6);
           letter-spacing: -0.02em;
           line-height: 0.85;
           animation: gsapHeadlineEntrance 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -558,21 +384,20 @@ export default function HomePage() {
           color: #ffffff !important;
           letter-spacing: 0.01em;
           text-shadow: 
-            0 3px 10px rgba(19, 78, 74, 0.9),
-            0 6px 18px rgba(19, 78, 74, 0.7),
-            0 8px 24px rgba(19, 78, 74, 0.5);
+            0 2px 6px rgba(0, 0, 0, 0.9),
+            0 4px 12px rgba(0, 0, 0, 0.7),
+            0 6px 18px rgba(0, 0, 0, 0.5);
         }
 
-        /* Premium Pill-Shaped Button Styles - Deep Teal & Antique Gold */
+        /* Enhanced Button Styles with Better Accessibility */
         .luxury-primary-button {
-          background: linear-gradient(135deg, #134E4A 0%, #0F3E3A 50%, #0A2E2A 100%);
+          background: linear-gradient(135deg, #A0522D 0%, #8B4513 50%, #654321 100%);
           border: 1px solid rgba(255, 255, 255, 0.2);
           backdrop-filter: blur(20px);
           transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
           position: relative;
           overflow: hidden;
-          box-shadow: 0 4px 20px rgba(19, 78, 74, 0.3);
-          border-radius: 50px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .luxury-primary-button::before {
@@ -596,9 +421,9 @@ export default function HomePage() {
         }
 
         .luxury-primary-button:hover {
-          background: linear-gradient(135deg, #0F3E3A 0%, #134E4A 50%, #1A5A55 100%);
+          background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
           transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 8px 30px rgba(19, 78, 74, 0.4);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
 
         .luxury-primary-button:focus {
@@ -611,15 +436,14 @@ export default function HomePage() {
           backdrop-filter: blur(30px);
           border: 2px solid rgba(255, 255, 255, 0.3);
           transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-          box-shadow: 0 4px 20px rgba(19, 78, 74, 0.2);
-          border-radius: 50px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .luxury-secondary-button:hover {
           background: rgba(255, 255, 255, 0.25);
           border-color: rgba(255, 255, 255, 0.5);
           transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 8px 30px rgba(19, 78, 74, 0.3);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
 
         .luxury-secondary-button:focus {
@@ -687,7 +511,7 @@ export default function HomePage() {
           opacity: 0;
         }
 
-        /* Deep Teal & Muted Lavender gradient overlay */
+        /* Soft warm gradient overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-10%) */
         .cinematic-overlay {
           position: absolute;
           top: 0;
@@ -696,16 +520,16 @@ export default function HomePage() {
           height: 100%;
           background: linear-gradient(
             180deg,
-            rgba(19, 78, 74, 0.35) 0%,
-            rgba(19, 78, 74, 0.28) 30%,
-            rgba(167, 139, 250, 0.18) 60%,
-            rgba(212, 165, 116, 0.14) 80%,
-            rgba(247, 245, 243, 0.10) 100%
+            rgba(101, 67, 33, 0.30) 0%,
+            rgba(101, 67, 33, 0.25) 30%,
+            rgba(160, 82, 45, 0.18) 60%,
+            rgba(184, 134, 11, 0.15) 80%,
+            rgba(245, 245, 220, 0.08) 100%
           );
           z-index: 1;
         }
 
-        /* Premium textile texture overlay - Deep Teal & Antique Gold accents */
+        /* Premium textile texture overlay for authentic saree feel */
         .textile-texture {
           position: absolute;
           top: 0;
@@ -713,14 +537,14 @@ export default function HomePage() {
           width: 100%;
           height: 100%;
           background-image: 
-            radial-gradient(circle at 30% 30%, rgba(19, 78, 74, 0.035) 1px, transparent 1px),
-            radial-gradient(circle at 70% 70%, rgba(167, 139, 250, 0.025) 1px, transparent 1px),
-            radial-gradient(circle at 50% 50%, rgba(184, 134, 11, 0.02) 0.5px, transparent 0.5px);
-          background-size: 45px 45px, 38px 38px, 28px 28px;
-          background-position: 0 0, 22px 22px, 12px 12px;
+            radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.02) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.015) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(218, 165, 32, 0.01) 0.5px, transparent 0.5px);
+          background-size: 40px 40px, 35px 35px, 25px 25px;
+          background-position: 0 0, 20px 20px, 10px 10px;
           z-index: 2;
           pointer-events: none;
-          opacity: 0.8;
+          opacity: 0.7;
         }
 
 
@@ -747,114 +571,129 @@ export default function HomePage() {
           text-align: center;
         }
 
-        /* Modern Premium Pill-Shaped Button Styles - Deep Teal & Antique Gold */
+        /* Gold-brown button styling */
         .cinematic-button-primary {
-          background: linear-gradient(135deg, #134E4A 0%, #0F3E3A 50%, #0A2E2A 100%);
-          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: linear-gradient(135deg, #B8860B 0%, #A0522D 50%, #8B4513 100%);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           color: #ffffff;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 20px rgba(19, 78, 74, 0.25);
-          border-radius: 50px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
 
         .cinematic-button-primary:hover {
-          background: linear-gradient(135deg, #0F3E3A 0%, #134E4A 50%, #1A5A55 100%);
+          background: linear-gradient(135deg, #DAA520 0%, #B8860B 50%, #A0522D 100%);
           transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(19, 78, 74, 0.35);
-          color: #ffffff;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
         }
 
         .cinematic-button-secondary {
-          background: rgba(184, 134, 11, 0.20);
+          background: rgba(255, 255, 255, 0.15);
           backdrop-filter: blur(20px);
-          border: 2px solid rgba(184, 134, 11, 0.4);
+          border: 2px solid rgba(255, 255, 255, 0.3);
           color: #ffffff;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 20px rgba(184, 134, 11, 0.2);
-          border-radius: 50px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .cinematic-button-secondary:hover {
-          background: rgba(184, 134, 11, 0.35);
-          border-color: rgba(184, 134, 11, 0.6);
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.5);
           transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(184, 134, 11, 0.3);
-          color: #ffffff;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
       `}</style>
       <main className="w-full kalamkari-static-background silk-fabric-texture text-foreground overflow-hidden">
-        {/* Premium Cinematic Hero Section - Deep Teal, Muted Lavender, Ivory, Sandstone, Charcoal, Antique Gold */}
+        {/* Cinematic Hero Section - Calm, High-End Look */}
         <section 
           ref={heroRef}
-          className="cinematic-hero cinematic-container"
+          className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
           role="banner"
-          aria-label="Kalamkari Heritage - Premium Modern Collection"
+          aria-label="Kalamkari Heritage - Cinematic Collection"
         >
-          {/* Soft Textile Motifs Background - 5-8% Opacity, Static */}
-          <div className="textile-motifs" />
-          
-          {/* Hero Content - Editorial Layout with Soft Gradient */}
-          <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-7xl mx-auto w-full">
-            <div className="headline-gradient">
-              {/* Editorial Serif Headline */}
-              <motion.h1
-                className="editorial-headline text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] mb-8 ultra-soft-fade"
-                initial={{ opacity: 0, y: 60, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 2.5, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                <span className="block">Kalamkari</span>
-                <span className="block font-light italic text-[#A78BFA]">Heritage</span>
-              </motion.h1>
-
-              {/* Elegant Subtitle */}
-              <motion.p
-                className="text-2xl md:text-3xl lg:text-4xl text-[#F7F5F3]/90 mb-12 max-w-5xl leading-relaxed font-light italic"
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  textShadow: '0 2px 16px rgba(19, 78, 74, 0.6)'
-                }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 2, delay: 1.5, ease: "easeOut" }}
-              >
-                Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance
-              </motion.p>
-
-              {/* Pill-Shaped Buttons - Teal & Gold */}
-              <motion.div
-                className="flex flex-col sm:flex-row gap-6 max-w-2xl mx-auto w-full"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 2, delay: 2.2, ease: "easeOut" }}
-              >
-                <Link to="/shop" className="flex-1">
-                  <Button 
-                    size="lg" 
-                    className="pill-button-teal px-12 py-8 text-xl font-medium w-full h-20"
-                    aria-label="Explore our handcrafted Kalamkari collection"
-                  >
-                    <span className="flex items-center justify-center gap-4 font-serif">
-                      Explore Collection
-                      <ArrowRight className="w-6 h-6" />
-                    </span>
-                  </Button>
-                </Link>
-                
-                <Link to="/about" className="flex-1">
-                  <Button 
-                    size="lg" 
-                    className="pill-button-gold px-12 py-8 text-xl font-medium w-full h-20"
-                    aria-label="Learn about our heritage and artisan story"
-                  >
-                    <span className="flex items-center justify-center gap-4 font-serif">
-                      Our Heritage
-                      <Sparkles className="w-6 h-6" />
-                    </span>
-                  </Button>
-                </Link>
-              </motion.div>
+          {/* Multiple Kalamkari Fabric Background Images */}
+          <div className="absolute inset-0 z-0">
+            {/* Background Image Slideshow - Soft Fade Only */}
+            <div className="absolute inset-0">
+              {heroBackgroundImages.map((image, index) => (
+                <Image
+                  key={index}
+                  src={image.src}
+                  alt={image.alt}
+                  width={1920}
+                  height={1080}
+                  className={`hero-background-image ${
+                    index === currentImageIndex ? 'active' : 'inactive'
+                  }`}
+                />
+              ))}
             </div>
+            
+            {/* Soft Warm Gradient Overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-12%) */}
+            <div className="cinematic-overlay" />
+            
+            {/* Premium Textile Texture for Authentic Saree Feel */}
+            <div className="textile-texture" />
+            
+
+          </div>
+          
+          {/* Hero Content - Premium Centered Design */}
+          <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-6xl mx-auto w-full">
+            {/* Premium Centered Serif Title */}
+            <motion.h1
+              className="cinematic-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-8"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
+            >
+              <span className="block">Kalamkari</span>
+              <span className="block font-light">Heritage</span>
+            </motion.h1>
+
+            {/* Elegant Italic Tagline */}
+            <motion.p
+              className="cinematic-tagline text-xl md:text-2xl lg:text-3xl mb-12 max-w-4xl leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
+            >
+              "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
+            </motion.p>
+
+            {/* Gold-Brown Buttons */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-6 max-w-2xl mx-auto w-full"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 1.1, ease: "easeOut" }}
+            >
+              <Link to="/shop" className="flex-1">
+                <Button 
+                  size="lg" 
+                  className="cinematic-button-primary px-10 py-6 text-lg font-medium rounded-2xl w-full h-16"
+                  aria-label="Explore our handcrafted Kalamkari collection"
+                >
+                  <span className="flex items-center justify-center gap-3 font-serif">
+                    Explore Collection
+                    <ArrowRight className="w-6 h-6" />
+                  </span>
+                </Button>
+              </Link>
+              
+              <Link to="/about" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="cinematic-button-secondary px-10 py-6 text-lg font-medium rounded-2xl w-full h-16"
+                  aria-label="Learn about our heritage and artisan story"
+                >
+                  <span className="flex items-center justify-center gap-3 font-serif">
+                    Our Heritage
+                    <Sparkles className="w-6 h-6" />
+                  </span>
+                </Button>
+              </Link>
+            </motion.div>
           </div>
         </section>
 
