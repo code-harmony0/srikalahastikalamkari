@@ -432,7 +432,11 @@ export default function Layout() {
             }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="lg:hidden overflow-hidden"
-            style={{ borderTop: '1px solid rgba(253, 247, 240, 0.15)' }}
+            style={{ 
+              borderTop: '1px solid rgba(253, 247, 240, 0.15)',
+              background: 'linear-gradient(135deg, #8B3E1F 0%, #6B2E15 100%)',
+              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.08)'
+            }}
             role="navigation"
             aria-label="Mobile navigation"
           >
