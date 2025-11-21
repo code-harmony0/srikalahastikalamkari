@@ -84,9 +84,9 @@ export default function Layout() {
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
         }}
-        className="sticky top-0 z-50 transition-all duration-300 flex flex-col"
+        className="sticky top-0 z-50 transition-all duration-300"
       >
-        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 h-full w-full flex flex-col">
+        <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 h-full">
           <div className="flex items-center justify-between h-full">
             {/* Refined Logo Section */}
             <motion.div
@@ -431,7 +431,7 @@ export default function Layout() {
               height: isMenuOpen ? 'auto' : 0 
             }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="lg:hidden overflow-hidden w-screen -mx-6 md:-mx-8 lg:-mx-12"
+            className="lg:hidden overflow-hidden fixed left-0 right-0 top-[72px] w-full z-40\"
             style={{ 
               borderTop: '1px solid rgba(253, 247, 240, 0.15)',
               background: 'linear-gradient(135deg, #8B3E1F 0%, #6B2E15 100%)',
@@ -440,7 +440,7 @@ export default function Layout() {
             role="navigation"
             aria-label="Mobile navigation"
           >
-            <div className="px-6 md:px-8 lg:px-12 py-6 space-y-2">
+            <div className="px-6 md:px-8 py-6 space-y-2">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.href}
@@ -473,7 +473,7 @@ export default function Layout() {
               ))}
               
               {/* Mobile Utility Icons */}
-              <div className="flex items-center justify-center gap-6 pt-4 px-6 md:px-8 lg:px-12 -mx-6 md:-mx-8 lg:-mx-12" style={{ borderTop: '1px solid rgba(253, 247, 240, 0.15)' }}>
+              <div className="flex items-center justify-center gap-6 pt-4\" style={{ borderTop: '1px solid rgba(253, 247, 240, 0.15)' }}>
                 <button 
                   className="p-3 transition-colors focus:outline-none focus:ring-2 focus:ring-[rgba(242,212,163,0.5)] rounded-lg"
                   style={{ 
