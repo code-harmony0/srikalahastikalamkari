@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
-import { Products } from '@/entities';
+import { Products, ProductReviews } from '@/entities';
 import { Image } from '@/components/ui/image';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -11,16 +11,19 @@ import { Separator } from '@/components/ui/separator';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Heart, Share2, ChevronLeft, ShoppingBag, Star, Shield, Truck, Users, Clock, Check } from 'lucide-react';
 import { PatolaPattern } from '@/components/ui/decorative-pattern';
+import { motion } from 'framer-motion';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Products | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Products[]>([]);
+  const [reviews, setReviews] = useState<ProductReviews[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +38,11 @@ export default function ProductDetailPage() {
           .filter(p => p._id !== id && p.isFeatured)
           .slice(0, 4);
         setRelatedProducts(related);
+
+        // Fetch reviews for this product
+        const { items: allReviews } = await BaseCrudService.getAll<ProductReviews>('productreviews');
+        const productReviews = allReviews.filter(r => r.productName === product.title);
+        setReviews(productReviews);
 
         // Set default size
         if (product.availableSizes) {
@@ -93,6 +101,13 @@ export default function ProductDetailPage() {
   const reviewCount = 127;
   const stockCount = 8;
   const viewersCount = 12;
+
+  // Calculate average rating from reviews
+  const avgRating = reviews.length > 0
+    ? (reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
+    : rating;
+
+  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 3);
 
   return (
     <div className="w-full min-h-screen bg-background relative">
@@ -174,6 +189,24 @@ export default function ProductDetailPage() {
                   width={600}
                   height={600}
                 />
+                {/* Thumbnail Previews */}
+                <div className="flex gap-3 mt-4">
+                  {[...Array(3)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      whileHover={{ scale: 1.05 }}
+                      className="cursor-pointer border-2 border-gray-300 hover:border-primary rounded-lg overflow-hidden transition-colors"
+                    >
+                      <Image
+                        src={product.mainImage}
+                        alt={`Thumbnail ${i + 1}`}
+                        className="w-20 h-20 object-cover"
+                        width={80}
+                        height={80}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -189,18 +222,23 @@ export default function ProductDetailPage() {
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star
+                    <motion.div
                       key={i}
-                      className={`w-4 h-4 ${
-                        i < Math.floor(rating)
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
-                      }`}
-                    />
+                      whileHover={{ scale: 1.2 }}
+                      className="cursor-pointer"
+                    >
+                      <Star
+                        className={`w-4 h-4 ${
+                          i < Math.floor(parseFloat(avgRating as string))
+                            ? 'text-yellow-400 fill-current'
+                            : 'text-gray-300'
+                        }`}
+                      />
+                    </motion.div>
                   ))}
-                  <span className="text-sm font-semibold text-foreground ml-1">{rating}</span>
+                  <span className="text-sm font-semibold text-foreground ml-1">{avgRating}</span>
                 </div>
-                <span className="text-sm text-foreground/60">({reviewCount} reviews)</span>
+                <span className="text-sm text-foreground/60">({reviews.length || reviewCount} reviews)</span>
               </div>
 
               {/* Price and Badges */}
@@ -213,6 +251,9 @@ export default function ProductDetailPage() {
                     Featured
                   </Badge>
                 )}
+                <Badge className="bg-green-50 text-green-700 border border-green-200">
+                  Free Shipping
+                </Badge>
               </div>
 
               {/* Stock and Activity */}
@@ -231,7 +272,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              {/* Free Shipping */}
+              {/* Free Shipping Info */}
               <div className="flex items-center gap-2 mb-6 p-3 bg-green-50 border border-green-200 rounded-lg">
                 <Truck className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-green-700 font-medium">
@@ -307,12 +348,20 @@ export default function ProductDetailPage() {
             {/* Action Buttons */}
             <div className="space-y-4">
               <div className="flex gap-3">
-                <Button className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-base rounded-sm font-paragraph">
-                  <ShoppingBag className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </Button>
-                <button
+                <motion.div
+                  className="flex-1"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-base rounded-sm font-paragraph">
+                    <ShoppingBag className="w-5 h-5 mr-2" />
+                    Add to Cart
+                  </Button>
+                </motion.div>
+                <motion.button
                   onClick={() => setIsWishlisted(!isWishlisted)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className={`w-12 h-12 border rounded-sm flex items-center justify-center transition-colors ${
                     isWishlisted
                       ? 'bg-primary/10 border-primary text-primary'
@@ -320,10 +369,14 @@ export default function ProductDetailPage() {
                   }`}
                 >
                   <Heart className="w-5 h-5" fill={isWishlisted ? 'currentColor' : 'none'} />
-                </button>
-                <button className="w-12 h-12 border border-gray-300 rounded-sm flex items-center justify-center text-foreground/70 hover:border-primary transition-colors">
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-12 h-12 border border-gray-300 rounded-sm flex items-center justify-center text-foreground/70 hover:border-primary transition-colors"
+                >
                   <Share2 className="w-5 h-5" />
-                </button>
+                </motion.button>
               </div>
 
               {/* Delivery & Security Info */}
@@ -411,6 +464,150 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
+        {/* Customer Reviews Section */}
+        <section className="mt-16 pt-8 border-t border-gray-200">
+          <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-6">
+            Customer Reviews
+          </h2>
+
+          {/* Average Rating Display */}
+          {reviews.length > 0 && (
+            <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200">
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-primary mb-2">{avgRating}</div>
+                  <div className="flex items-center gap-1 justify-center mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < Math.floor(parseFloat(avgRating as string))
+                            ? 'text-yellow-400 fill-current'
+                            : 'text-gray-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm text-foreground/60">Based on {reviews.length} reviews</p>
+                </div>
+                <Separator orientation="vertical" className="h-20" />
+                <div className="flex-1 space-y-2">
+                  {[5, 4, 3, 2, 1].map((stars) => {
+                    const count = reviews.filter(r => r.rating === stars).length;
+                    const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+                    return (
+                      <div key={stars} className="flex items-center gap-2">
+                        <span className="text-sm text-foreground/60 w-8">{stars}★</span>
+                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${percentage}%` }}
+                            transition={{ duration: 0.5 }}
+                            className="h-full bg-yellow-400"
+                          />
+                        </div>
+                        <span className="text-sm text-foreground/60 w-8 text-right">{count}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Reviews List */}
+          {reviews.length > 0 ? (
+            <div className="space-y-4 mb-6">
+              {displayedReviews.map((review, index) => (
+                <motion.div
+                  key={review._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-heading font-semibold text-foreground">
+                        {review.customerName}
+                      </h3>
+                      <p className="text-sm text-foreground/60">
+                        {review.reviewDate
+                          ? new Date(review.reviewDate).toLocaleDateString('en-IN', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })
+                          : 'Recently'}
+                      </p>
+                    </div>
+                    {review.isVerifiedPurchase && (
+                      <Badge className="bg-green-50 text-green-700 border border-green-200 text-xs">
+                        Verified Purchase
+                      </Badge>
+                    )}
+                  </div>
+
+                  {/* Rating Stars */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < (review.rating || 0)
+                              ? 'text-yellow-400 fill-current'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm font-semibold text-foreground">{review.rating}/5</span>
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-foreground/70 font-paragraph leading-relaxed">
+                    {review.reviewText}
+                  </p>
+
+                  {index < displayedReviews.length - 1 && (
+                    <Separator className="mt-4" />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-6 bg-white rounded-lg border border-gray-200 text-center mb-6">
+              <p className="text-foreground/60 font-paragraph">
+                No reviews yet. Be the first to review this product!
+              </p>
+            </div>
+          )}
+
+          {/* Show More / Write Review Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            {reviews.length > 3 && (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowAllReviews(!showAllReviews)}
+                className="flex-1 px-6 py-3 border border-primary text-primary rounded-sm font-paragraph font-medium hover:bg-primary/5 transition-colors"
+              >
+                {showAllReviews ? 'Show Less Reviews' : 'Show More Reviews'}
+              </motion.button>
+            )}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={reviews.length > 3 ? 'flex-1' : 'w-full'}
+            >
+              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-sm font-paragraph">
+                Write a Review
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <section className="mt-16 pt-8 border-t border-gray-200">
@@ -418,9 +615,13 @@ export default function ProductDetailPage() {
               You Might Also Like
             </h2>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
               {relatedProducts.map((relProduct) => (
-                <div key={relProduct._id} className="group">
+                <motion.div
+                  key={relProduct._id}
+                  whileHover={{ y: -4 }}
+                  className="group"
+                >
                   <Link to={`/product/${relProduct._id}`}>
                     <div className="relative overflow-hidden rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow mb-3">
                       {relProduct.mainImage && (
@@ -445,7 +646,7 @@ export default function ProductDetailPage() {
                       ₹{relProduct.price?.toLocaleString('en-IN')}
                     </p>
                   </Link>
-                </div>
+                </motion.div>
               ))}
             </div>
           </section>
