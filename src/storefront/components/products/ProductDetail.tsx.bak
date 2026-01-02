@@ -1,0 +1,949 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { useProductBySlug, useProducts } from "@/shared/hooks/use-products";
+import { useCartStore } from "@/shared/cart-store";
+import { useWishlistStore } from "@/shared/wishlist-store";
+import { Button } from "@/shared/ui/button";
+import { Badge } from "@/shared/ui/badge";
+import { Separator } from "@/shared/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
+import { Label } from "@/shared/ui/label";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/shared/ui/accordion";
+import {
+  Heart,
+  Share2,
+  ChevronLeft,
+  ShoppingBag,
+  Star,
+  Shield,
+  Truck,
+  Check,
+  X,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+} from "lucide-react";
+import { toast } from "sonner";
+
+interface ProductDetailProps {
+  slug: string;
+}
+
+export default function ProductDetail({ slug }: ProductDetailProps) {
+  const { data: product, isLoading } = useProductBySlug(slug);
+  const { data: allProducts } = useProducts();
+
+  // State
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [quantity, setQuantity] = useState(1);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImageIndex, setModalImageIndex] = useState(0);
+
+  const cart = useCartStore();
+  const wishlist = useWishlistStore();
+
+  // Mock reviews data with enhanced content
+  const reviews = [
+    {
+      _id: "1",
+      customerName: "Priya Sharma",
+      rating: 5,
+      reviewText: "Absolutely stunning saree! The craftsmanship is exceptional and the colors are vibrant. The Kalamkari work is incredibly detailed and authentic. I wore it to a wedding and received so many compliments. The fabric drapes beautifully and feels luxurious. Worth every penny!",
+      reviewDate: new Date("2024-12-15"),
+      isVerifiedPurchase: true,
+    },
+    {
+      _id: "2",
+      customerName: "Anjali Mehta",
+      rating: 5,
+      reviewText: "Beautiful traditional work that showcases true Indian artistry. The fabric quality is excellent - soft yet sturdy, and drapes beautifully. The natural dyes give it such an elegant, timeless look. Packaging was premium and delivery was prompt. Highly recommend to anyone looking for authentic Kalamkari!",
+      reviewDate: new Date("2024-12-10"),
+      isVerifiedPurchase: true,
+    },
+    {
+      _id: "3",
+      customerName: "Sneha Patel",
+      rating: 4,
+      reviewText: "Lovely piece with intricate hand-painted details. The colors are more vibrant in person which I love! Shipping was fast and the saree came beautifully packaged in a reusable cotton bag. Only minor point - wish there were more color options. Overall very satisfied with my purchase.",
+      reviewDate: new Date("2024-12-05"),
+      isVerifiedPurchase: true,
+    },
+    {
+      _id: "4",
+      customerName: "Kavita Reddy",
+      rating: 5,
+      reviewText: "This is my third purchase from Shri Kailash Kalamkari and they never disappoint! The quality is consistently excellent. The natural dyes give such a rich, earthy look that improves with each wash. Supporting authentic artisan work feels great. Already planning my next purchase!",
+      reviewDate: new Date("2024-11-28"),
+      isVerifiedPurchase: true,
+    },
+  ];
+
+  // Set default size when product loads
+  useEffect(() => {
+    if (product?.availableSizes) {
+      const sizes = product.availableSizes.split(",").map((s) => s.trim());
+      setSelectedSize(sizes[0]);
+    }
+  }, [product]);
+
+  // Sticky bar scroll handler
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setShowStickyBar(scrollPosition > 600);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-heading font-bold text-foreground mb-4">
+          Product not found
+        </h1>
+        <Link href="/products">
+          <Button className="bg-primary hover:bg-primary/90 text-wix-dark">
+            Back to Shop
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const availableSizes = product.availableSizes
+    ? product.availableSizes.split(",").map((s) => s.trim())
+    : [];
+
+  // Calculate average rating
+  const avgRating =
+    reviews.length > 0
+      ? (reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
+      : "4.5";
+
+  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 3);
+
+  // Mock stock and viewers
+  const stockCount = product.stockQuantity || 8;
+
+  // Gallery images - single image only
+  const galleryImages = product.mainImage ? [product.mainImage] : [];
+
+  // Related products (featured products excluding current)
+  const relatedProducts =
+    allProducts
+      ?.filter((p) => p._id !== product._id && p.isFeatured)
+      .slice(0, 4) || [];
+
+  const handlePrevImage = () => {
+    setSelectedImageIndex((prev) =>
+      prev === 0 ? galleryImages.length - 1 : prev - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    setSelectedImageIndex((prev) =>
+      prev === galleryImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const handleModalPrev = () => {
+    setModalImageIndex((prev) =>
+      prev === 0 ? galleryImages.length - 1 : prev - 1
+    );
+  };
+
+  const handleModalNext = () => {
+    setModalImageIndex((prev) =>
+      prev === galleryImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const handleAddToCart = () => {
+    cart.addItem(product, quantity);
+    toast.success(`Added ${quantity} item(s) to cart`);
+  };
+
+  const handleToggleWishlist = () => {
+    wishlist.toggleItem(product._id);
+    toast.success(
+      wishlist.isInWishlist(product._id)
+        ? "Removed from wishlist"
+        : "Added to wishlist"
+    );
+  };
+
+  const isInWishlist = wishlist.isInWishlist(product._id);
+
+  return (
+    <div className="w-full min-h-screen bg-background relative">
+      {/* Sticky Add to Cart Bar */}
+      {showStickyBar && (
+        <motion.div
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 py-3"
+        >
+          <div className="max-w-[100rem] mx-auto px-4 md:px-8 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {product.mainImage && (
+                <Image
+                  src={product.mainImage}
+                  alt={product.title || "Product"}
+                  className="w-12 h-12 object-cover rounded"
+                  width={48}
+                  height={48}
+                />
+              )}
+              <div>
+                <h3 className="font-heading font-semibold text-foreground text-sm">
+                  {product.title}
+                </h3>
+                <p className="text-primary font-bold">
+                  ₹{product.price?.toLocaleString("en-IN")}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-primary transition-colors text-sm"
+                >
+                  −
+                </button>
+                <span className="text-sm font-semibold w-6 text-center">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-primary transition-colors text-sm"
+                >
+                  +
+                </button>
+              </div>
+              <Button
+                onClick={handleAddToCart}
+                className="bg-primary hover:bg-primary/90 text-wix-dark px-6 py-2 h-auto rounded-sm"
+              >
+                Add to Cart
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Breadcrumb */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-foreground/70">
+              <Link
+                href="/products"
+                className="hover:text-primary transition-colors"
+              >
+                Shop
+              </Link>
+              <span>/</span>
+              <span className="text-foreground truncate max-w-[200px] md:max-w-none">{product.title}</span>
+            </div>
+            <Link
+              href="/products"
+              className="flex items-center gap-1 text-primary hover:text-primary/80 text-sm"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Product Detail */}
+      <div className="max-w-[100rem] mx-auto px-4 md:px-8 py-8 relative z-10">
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Product Image Gallery - 60% */}
+          <div className="lg:col-span-7">
+            {product.mainImage && (
+              <div className="sticky top-4 space-y-4">
+                {/* Main Image with Navigation */}
+                <motion.div
+                  className="relative overflow-hidden rounded-lg bg-white"
+                  layoutId="product-image"
+                >
+                  <Image
+                    src={galleryImages[selectedImageIndex]}
+                    alt={product.title || "Product"}
+                    className="w-full h-[500px] md:h-[600px] object-cover cursor-pointer"
+                    width={600}
+                    height={600}
+                    onClick={() => {
+                      setModalImageIndex(selectedImageIndex);
+                      setIsModalOpen(true);
+                    }}
+                  />
+
+                  {/* Navigation Arrows */}
+                  {galleryImages.length > 1 && (
+                    <>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handlePrevImage}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary p-2 rounded-full transition-colors"
+                      >
+                        <ChevronLeftIcon className="w-5 h-5" />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleNextImage}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary p-2 rounded-full transition-colors"
+                      >
+                        <ChevronRightIcon className="w-5 h-5" />
+                      </motion.button>
+                    </>
+                  )}
+
+                  {/* Image Counter */}
+                  {galleryImages.length > 1 && (
+                    <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {selectedImageIndex + 1} / {galleryImages.length}
+                    </div>
+                  )}
+                </motion.div>
+
+                {/* Thumbnail Gallery */}
+                {galleryImages.length > 1 && (
+                  <div className="flex gap-3 overflow-x-auto pb-2">
+                    {galleryImages.map((img, idx) => (
+                      <motion.button
+                        key={idx}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setSelectedImageIndex(idx)}
+                        className={`flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors ${
+                          selectedImageIndex === idx
+                            ? "border-primary"
+                            : "border-gray-300 hover:border-primary/50"
+                        }`}
+                      >
+                        <Image
+                          src={img}
+                          alt={`Thumbnail ${idx + 1}`}
+                          className="w-20 h-20 object-cover"
+                          width={80}
+                          height={80}
+                        />
+                      </motion.button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Product Info - 40% */}
+          <div className="lg:col-span-5">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              {/* Title and Rating */}
+              <div>
+                <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-2">
+                  {product.title}
+                </h1>
+
+                {/* Rating and Reviews - Compact */}
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < Math.floor(parseFloat(avgRating))
+                            ? "text-yellow-400 fill-current"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">
+                    {avgRating}
+                  </span>
+                  <span className="text-sm text-foreground/60">
+                    ({reviews.length} reviews)
+                  </span>
+                </div>
+              </div>
+
+              <Separator className="my-3" />
+
+              {/* Price and Badges - Compact */}
+              <div className="flex items-center gap-3">
+                <p className="text-3xl font-bold text-primary">
+                  ₹{product.price?.toLocaleString("en-IN")}
+                </p>
+                {product.isFeatured && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-primary/10 text-primary text-xs"
+                  >
+                    Featured
+                  </Badge>
+                )}
+              </div>
+
+              {/* Stock and Shipping - Compact */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-foreground/70">
+                    {stockCount} in stock
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded">
+                  <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
+                  <span className="text-xs text-green-700 font-medium">
+                    Free shipping on orders over ₹2,000
+                  </span>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Key Features Highlights - Moved Higher for Better Hierarchy */}
+              <div className="bg-gradient-to-br from-primary/5 to-accent-color/5 rounded-lg p-5 border border-primary/10">
+                <h2 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2 tracking-tight">
+                  <Star className="w-5 h-5 text-primary" />
+                  Why Choose This Saree
+                </h2>
+                <div className="space-y-3 text-sm text-foreground/70 leading-relaxed">
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">Handcrafted Artistry:</strong> 15-20 days of expert craftsmanship using traditional techniques</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">Eco-Friendly:</strong> 100% natural dyes extracted from plants & minerals</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Truck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">Free Shipping:</strong> On all orders above ₹2,000 across India</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Shield className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span><strong className="text-foreground">Quality Assured:</strong> 30-day hassle-free return & exchange</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description - Enhanced */}
+              <div className="space-y-3">
+                <p className="text-sm text-foreground/70 font-paragraph leading-loose">
+                  {product.description}
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <Badge variant="outline" className="text-xs tracking-wide">Handcrafted</Badge>
+                  <Badge variant="outline" className="text-xs tracking-wide">Natural Dyes</Badge>
+                  <Badge variant="outline" className="text-xs tracking-wide">Eco-Friendly</Badge>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Size Selection - Enhanced */}
+              {availableSizes.length > 0 && (
+                <div>
+                  <Label className="text-sm font-semibold text-foreground mb-3 block tracking-tight">
+                    Select Size
+                  </Label>
+                  <RadioGroup
+                    value={selectedSize}
+                    onValueChange={setSelectedSize}
+                  >
+                    <div className="flex flex-wrap gap-2">
+                      {availableSizes.map((size) => (
+                        <div key={size} className="flex items-center">
+                          <RadioGroupItem
+                            value={size}
+                            id={`size-${size}`}
+                            className="sr-only"
+                          />
+                          <Label
+                            htmlFor={`size-${size}`}
+                            className={`cursor-pointer border px-4 py-2 rounded text-sm font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                              selectedSize === size
+                                ? "border-primary bg-primary/10 text-primary shadow-sm"
+                                : "border-gray-300 text-foreground hover:border-primary hover:bg-gray-50"
+                            }`}
+                          >
+                            {size}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
+
+              {/* Quantity Selection - Enhanced Mobile Tap Targets */}
+              <div>
+                <Label className="text-sm font-semibold text-foreground mb-3 block tracking-tight">
+                  Quantity
+                </Label>
+                <div className="flex items-center gap-3 w-fit">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 border-2 border-gray-300 rounded flex items-center justify-center hover:border-primary hover:bg-gray-50 transition-all duration-200 text-base font-semibold focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    aria-label="Decrease quantity"
+                  >
+                    −
+                  </button>
+                  <span className="text-base font-bold text-foreground min-w-[2rem] text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 border-2 border-gray-300 rounded flex items-center justify-center hover:border-primary hover:bg-gray-50 transition-all duration-200 text-base font-semibold focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons - Enhanced */}
+              <div className="space-y-4 pt-2">
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    onClick={handleAddToCart}
+                    className="w-full bg-primary hover:bg-primary/90 text-wix-dark py-4 text-base rounded-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
+                    <ShoppingBag className="w-5 h-5 mr-2" />
+                    Add to Cart
+                  </Button>
+                </motion.div>
+
+                {/* Trust Badges Below CTA */}
+                <div className="flex items-center justify-center gap-4 py-3 px-4 bg-gray-50 rounded-md border border-gray-200">
+                  <div className="flex items-center gap-2 text-xs text-gray-700">
+                    <Shield className="w-4 h-4 text-green-600" />
+                    <span className="font-medium">Secure Payment</span>
+                  </div>
+                  <div className="w-px h-4 bg-gray-300"></div>
+                  <div className="flex items-center gap-2 text-xs text-gray-700">
+                    <Truck className="w-4 h-4 text-green-600" />
+                    <span className="font-medium">Free Shipping</span>
+                  </div>
+                  <div className="w-px h-4 bg-gray-300"></div>
+                  <div className="flex items-center gap-2 text-xs text-gray-700">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="font-medium">Easy Returns</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <motion.button
+                    onClick={handleToggleWishlist}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`flex-1 py-3 border-2 rounded-sm flex items-center justify-center gap-2 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                      isInWishlist
+                        ? "bg-primary/10 border-primary text-primary"
+                        : "border-gray-300 text-foreground/70 hover:border-primary hover:bg-primary/5"
+                    }`}
+                    aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+                  >
+                    <Heart
+                      className="w-5 h-5"
+                      fill={isInWishlist ? "currentColor" : "none"}
+                    />
+                    <span className="text-sm font-medium hidden sm:inline">Wishlist</span>
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex-1 py-3 border-2 border-gray-300 rounded-sm flex items-center justify-center gap-2 text-foreground/70 hover:border-primary hover:bg-gray-50 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    aria-label="Share product"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    <span className="text-sm font-medium hidden sm:inline">Share</span>
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Product Details Accordion - Enhanced Spacing */}
+        <section className="mt-16 pt-12 border-t border-gray-200">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="description">
+              <AccordionTrigger className="text-lg font-heading font-semibold text-foreground hover:text-primary">
+                Product Details
+              </AccordionTrigger>
+              <AccordionContent className="text-foreground/70 font-paragraph leading-relaxed">
+                {product.description}
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="material">
+              <AccordionTrigger className="text-lg font-heading font-semibold text-foreground hover:text-primary">
+                Material & Craft
+              </AccordionTrigger>
+              <AccordionContent className="text-foreground/70 font-paragraph leading-loose space-y-4">
+                <p>
+                  <strong className="text-foreground">Premium Quality Fabric:</strong> Made from 100% pure cotton/silk blend
+                  that offers the perfect balance of comfort and luxury. The fabric drapes beautifully and feels soft against the skin.
+                </p>
+                <p>
+                  <strong className="text-foreground">Traditional Kalamkari Art:</strong> Hand-painted using authentic block printing
+                  and hand-painting techniques passed down through generations. Each piece takes 15-20 days to complete.
+                </p>
+                <p>
+                  <strong className="text-foreground">Natural Dyes:</strong> Colored using eco-friendly natural dyes extracted from
+                  plants, minerals, and flowers. The colors are vibrant yet gentle, and they improve with age.
+                </p>
+                <p>
+                  <strong className="text-foreground">Artisan Crafted:</strong> Created by master artisans from Kalahasti and Machilipatnam,
+                  preserving centuries-old artistic traditions and supporting local communities.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="care">
+              <AccordionTrigger className="text-lg font-heading font-semibold text-foreground hover:text-primary">
+                Care Instructions
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="text-foreground/70 font-paragraph leading-relaxed space-y-2">
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    Dry clean recommended for best results
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    Hand wash in cold water with mild detergent if preferred
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    Avoid direct sunlight while drying
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    Iron on low heat on the reverse side
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    Store in a cool, dry place away from moisture
+                  </li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="shipping">
+              <AccordionTrigger className="text-lg font-heading font-semibold text-foreground hover:text-primary">
+                Shipping & Returns
+              </AccordionTrigger>
+              <AccordionContent className="text-foreground/70 font-paragraph leading-relaxed">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2 text-sm">Shipping Information</h4>
+                    <ul className="space-y-1.5 text-sm">
+                      <li className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Free Shipping:</strong> On all orders above ₹2,000 across India</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Standard Delivery:</strong> 3-5 business days to major cities, 5-7 days to remote areas</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Express Delivery:</strong> Available for ₹200 - Get it in 1-2 business days</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>International Shipping:</strong> Available to select countries - contact us for rates</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2 text-sm">Return & Exchange Policy</h4>
+                    <ul className="space-y-1.5 text-sm">
+                      <li className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>30-Day Returns:</strong> Easy returns within 30 days of delivery</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Easy Exchanges:</strong> Free size or color exchanges within 15 days</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Quality Guarantee:</strong> 100% satisfaction guaranteed or your money back</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </section>
+
+        {/* Customer Reviews Section */}
+        <section className="mt-12 pt-8 border-t border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
+                Customer Reviews
+              </h2>
+              {reviews.length > 0 && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < Math.floor(parseFloat(avgRating))
+                            ? "text-yellow-400 fill-current"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">
+                    {avgRating}
+                  </span>
+                  <span className="text-xs text-foreground/60">
+                    ({reviews.length})
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Reviews List */}
+          {reviews.length > 0 ? (
+            <div className="space-y-4 mb-6">
+              {displayedReviews.map((review, index) => (
+                <motion.div
+                  key={review._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+                >
+                  {/* Reviewer Info */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-heading font-semibold text-foreground text-sm">
+                          {review.customerName}
+                        </h3>
+                        {review.isVerifiedPurchase && (
+                          <Badge className="bg-green-50 text-green-700 border border-green-200 text-xs px-2 py-0.5">
+                            Verified Purchase
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-foreground/60">
+                        {review.reviewDate
+                          ? new Date(review.reviewDate).toLocaleDateString(
+                              "en-IN",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )
+                          : "Recently"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Rating Stars */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3 h-3 ${
+                            i < (review.rating || 0)
+                              ? "text-yellow-400 fill-current"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs font-semibold text-foreground">
+                      {review.rating}/5
+                    </span>
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-sm text-foreground/70 font-paragraph leading-relaxed">
+                    {review.reviewText}
+                  </p>
+
+                  {index < displayedReviews.length - 1 && (
+                    <Separator className="mt-3" />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-6 bg-white rounded-lg border border-gray-200 text-center mb-6">
+              <p className="text-foreground/60 font-paragraph text-sm">
+                No reviews yet. Be the first to share your experience!
+              </p>
+            </div>
+          )}
+
+          {/* Show More Reviews Button */}
+          {reviews.length > 3 && (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowAllReviews(!showAllReviews)}
+              className="w-full px-6 py-3 border border-primary text-primary rounded-sm font-paragraph font-medium hover:bg-primary/5 transition-colors"
+            >
+              {showAllReviews
+                ? "Show Less Reviews"
+                : `Show More Reviews (${reviews.length - 3} more)`}
+            </motion.button>
+          )}
+        </section>
+
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <section className="mt-16 pt-8 border-t border-gray-200">
+            <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-6">
+              You Might Also Like
+            </h2>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((relProduct) => (
+                <motion.div
+                  key={relProduct._id}
+                  whileHover={{ y: -4 }}
+                  className="group"
+                >
+                  <Link href={`/products/${relProduct.slug || relProduct._id}`}>
+                    <div className="relative overflow-hidden rounded-lg bg-white border border-gray-200 hover:border-gray-300 transition-colors mb-3">
+                      {relProduct.mainImage && (
+                        <Image
+                          src={relProduct.mainImage}
+                          alt={relProduct.title || "Product"}
+                          className="w-full h-48 md:h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                          width={300}
+                          height={256}
+                        />
+                      )}
+                      {relProduct.isFeatured && (
+                        <Badge className="absolute top-2 left-2 bg-primary text-wix-dark text-xs">
+                          Featured
+                        </Badge>
+                      )}
+                    </div>
+                    <h3 className="text-sm md:text-base font-heading font-semibold text-foreground mb-1 group-hover:text-primary transition-colors line-clamp-2">
+                      {relProduct.title}
+                    </h3>
+                    <p className="text-primary font-bold text-sm md:text-base">
+                      ₹{relProduct.price?.toLocaleString("en-IN")}
+                    </p>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+
+      {/* Fullscreen Image Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsModalOpen(false)}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-4xl"
+            >
+              {/* Close Button */}
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsModalOpen(false)}
+                className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+              >
+                <X className="w-8 h-8" />
+              </motion.button>
+
+              {/* Main Image */}
+              <Image
+                src={galleryImages[modalImageIndex]}
+                alt={product.title || "Product"}
+                className="w-full h-auto max-h-[80vh] object-contain"
+                width={800}
+                height={800}
+              />
+
+              {/* Navigation Arrows */}
+              {galleryImages.length > 1 && (
+                <>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleModalPrev}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-colors"
+                  >
+                    <ChevronLeftIcon className="w-6 h-6" />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleModalNext}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-colors"
+                  >
+                    <ChevronRightIcon className="w-6 h-6" />
+                  </motion.button>
+
+                  {/* Image Counter */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    {modalImageIndex + 1} / {galleryImages.length}
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
