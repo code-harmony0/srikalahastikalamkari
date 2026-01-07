@@ -44,7 +44,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/shared/ui/use-toast";
 import { Separator } from "@/shared/ui/separator";
-import PackingMode from "@/dashboard/components/PackingMode";
+import PackingMode from "@/app/dashboard/components/PackingMode";
 
 import { shipOrder, getOrderStatistics, deliverOrder, updateOrderStatus, cancelOrder } from "@/backend/orders";
 import { Label } from "@/shared/ui/label";

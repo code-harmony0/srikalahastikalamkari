@@ -1,4 +1,4 @@
-import ProductList from "@/dashboard/components/ProductList";
+import ProductList from "@/app/dashboard/components/ProductList";
 
 const Products = () => {
   return <ProductList />;
