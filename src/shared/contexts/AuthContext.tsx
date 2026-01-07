@@ -23,11 +23,15 @@ import { auth } from "../config/firebase"
 type AuthContextType = {
   user: FirebaseUser | null
   loading: boolean
+  role?: string | null
   signUp: (email: string, password: string) => Promise<UserCredential>
   signIn: (email: string, password: string) => Promise<UserCredential>
   signInWithGoogle: () => Promise<UserCredential>
   resetPassword: (email: string) => Promise<void>
   signOut: () => Promise<void>
+  signInWithEmailOTP: (email: string) => Promise<{ error: any }>
+  verifyEmailOTP: (email: string, otp: string) => Promise<{ error: any }>
+  logout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -74,14 +78,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return firebaseSignOut(auth)
   }
 
+  const logout = () => {
+    return firebaseSignOut(auth)
+  }
+
+  const signInWithEmailOTP = async (email: string) => {
+    // TODO: Implement OTP authentication
+    console.log("OTP authentication not yet implemented")
+    return { error: { message: "OTP authentication not implemented" } }
+  }
+
+  const verifyEmailOTP = async (email: string, otp: string) => {
+    // TODO: Implement OTP verification
+    console.log("OTP verification not yet implemented")
+    return { error: { message: "OTP verification not implemented" } }
+  }
+
   const value = {
     user,
     loading,
+    role: null,
     signUp,
     signIn,
     signInWithGoogle,
     resetPassword,
     signOut,
+    logout,
+    signInWithEmailOTP,
+    verifyEmailOTP,
   }
 
   return (

@@ -3,10 +3,10 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/shared/contexts/AuthContext"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
+import { Button } from "@/shared/ui/button"
+import { Input } from "@/shared/ui/input"
+import { Label } from "@/shared/ui/label"
+import { toast } from "sonner"
 import { FiMail, FiLock, FiAlertCircle } from "react-icons/fi"
 import { FcGoogle } from "react-icons/fc"
 
@@ -28,11 +28,7 @@ export function LoginForm() {
       router.push("/dashboard")
     } catch (error: any) {
       setError(error.message || "Failed to sign in")
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      })
+      toast.error(error.message || "Failed to sign in")
     } finally {
       setLoading(false)
     }
@@ -45,11 +41,7 @@ export function LoginForm() {
       router.push("/dashboard")
     } catch (error: any) {
       setError(error.message)
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      })
+      toast.error(error.message || "Failed to sign in with Google")
     } finally {
       setLoading(false)
     }

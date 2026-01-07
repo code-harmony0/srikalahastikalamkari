@@ -22,19 +22,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/dialog";
-import { 
-  RefreshCw, 
-  MapPin, 
-  Phone, 
-  User, 
-  Package, 
-  Filter, 
-  Search, 
-  Truck, 
-  CheckCircle2, 
-  Clock, 
-  PackageCheck, 
-  MoreHorizontal, 
+import {
+  RefreshCw,
+  MapPin,
+  Phone,
+  User,
+  Package,
+  Filter,
+  Search,
+  Truck,
+  CheckCircle2,
+  Clock,
+  PackageCheck,
+  MoreHorizontal,
   ArrowRight,
   AlertCircle,
   XCircle,
@@ -91,20 +91,20 @@ const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  
+
   // Filter and search state
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Packing mode state
   const [packingOrder, setPackingOrder] = useState<Order | null>(null);
-  
+
   // Shipping dialog state
   const [shippingOrder, setShippingOrder] = useState<Order | null>(null);
   const [shippingCompany, setShippingCompany] = useState("DTDC");
   const [trackingId, setTrackingId] = useState("");
   const [isShipping, setIsShipping] = useState(false);
-  
+
   // Cancel dialog state
   const [cancelOrderData, setCancelOrderData] = useState<Order | null>(null);
   const [cancelReason, setCancelReason] = useState("");
@@ -127,17 +127,17 @@ const Orders = () => {
     }
 
     setIsShipping(true);
-    
+
     // For manual/instore, we might not have a tracking ID, so we use a placeholder or empty
-    const finalTrackingId = (shippingCompany === "Manual" || shippingCompany === "InStore") 
-      ? (trackingId || "MANUAL_DELIVERY") 
+    const finalTrackingId = (shippingCompany === "Manual" || shippingCompany === "InStore")
+      ? (trackingId || "MANUAL_DELIVERY")
       : trackingId;
 
     const { data, error } = await shipOrder(shippingOrder.id, {
       shipping_company: shippingCompany,
       tracking_id: finalTrackingId
     });
-    
+
     setIsShipping(false);
 
     if (error) {
@@ -150,7 +150,6 @@ const Orders = () => {
       toast({
         title: "Order Shipped!",
         description: `Order #${shippingOrder.id} marked as shipped via ${shippingCompany}`,
-        className: "bg-green-50 border-green-200",
       });
       setShippingOrder(null);
       setTrackingId("");
@@ -183,7 +182,6 @@ const Orders = () => {
       toast({
         title: "Order Cancelled",
         description: `Order #${cancelOrderData.id} has been cancelled.`,
-        className: "bg-red-50 border-red-200",
       });
       setCancelOrderData(null);
       setCancelReason("");
@@ -192,8 +190,8 @@ const Orders = () => {
   };
 
   const handleStatusUpdate = async (orderId: number, newStatus: string) => {
-    const { error } = await updateOrderStatus(orderId, newStatus);
-    if (error) {
+    const success = await updateOrderStatus(orderId.toString(), newStatus as any);
+    if (!success) {
       toast({
         title: "Error",
         description: "Failed to update status",
@@ -203,7 +201,6 @@ const Orders = () => {
       toast({
         title: "Status Updated",
         description: `Order #${orderId} moved to ${newStatus.replace('_', ' ')}`,
-        className: "bg-blue-50 border-blue-200",
       });
       fetchOrders();
     }
@@ -238,7 +235,7 @@ const Orders = () => {
   }, []);
 
   const fetchStats = async () => {
-    const { data } = await getOrderStatistics();
+    const data = await getOrderStatistics();
     if (data) {
       setStats(data);
     }
@@ -309,10 +306,10 @@ const Orders = () => {
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Orders</h1>
           <p className="text-slate-500 mt-1">Manage and track all customer orders</p>
         </div>
-        <Button 
-          onClick={fetchOrders} 
-          disabled={loading} 
-          variant="outline" 
+        <Button
+          onClick={fetchOrders}
+          disabled={loading}
+          variant="outline"
           className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm"
         >
           <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
@@ -332,7 +329,7 @@ const Orders = () => {
               <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
             </div>
           </div>
-          
+
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center text-green-600">
               <Clock className="h-6 w-6" />
@@ -370,8 +367,8 @@ const Orders = () => {
         <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full md:w-auto">
           <TabsList className="bg-white border border-slate-200 p-1 h-auto rounded-xl shadow-sm">
             {["all", "paid", "in_packing", "packed", "shipped", "cancelled"].map((tab) => (
-              <TabsTrigger 
-                key={tab} 
+              <TabsTrigger
+                key={tab}
                 value={tab}
                 className="rounded-lg data-[state=active]:bg-slate-900 data-[state=active]:text-white px-4 py-2 capitalize transition-all"
               >
@@ -422,7 +419,7 @@ const Orders = () => {
               </TableRow>
             ) : (
               filteredOrders.map((order) => (
-                <TableRow 
+                <TableRow
                   key={order.id}
                   className="cursor-pointer hover:bg-slate-50/80 transition-colors group border-slate-50"
                   onClick={() => router.push(`/dashboard/orders/${order.id}`)}
@@ -438,7 +435,7 @@ const Orders = () => {
                       <div className="flex -space-x-2 overflow-hidden">
                         {order.items.slice(0, 3).map((item, i) => (
                           <div key={i} className="h-8 w-8 rounded-full ring-2 ring-white bg-slate-100 overflow-hidden border border-slate-200">
-                            <img 
+                            <img
                               className="h-full w-full object-cover"
                               src={item.image || "/placeholder.svg"}
                               alt={item.name}
@@ -460,22 +457,22 @@ const Orders = () => {
                   </TableCell>
                   <TableCell className="text-right pr-6 py-4">
                     {/* INLINE ACTIONS - VISIBLE ON HOVER */}
-                    <div 
+                    <div
                       className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-2 group-hover:translate-x-0"
                       onClick={(e) => e.stopPropagation()} // Prevent row click
                     >
                       {/* ORDER PLACED (Paid) */}
                       {order.status === 'paid' && (
                         <>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             className="h-8 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                             onClick={() => handleStatusUpdate(order.id, 'in_packing')}
                           >
                             Mark Processing
                           </Button>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="outline"
                             className="h-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
                             onClick={() => setCancelOrderData(order)}
@@ -488,16 +485,16 @@ const Orders = () => {
                       {/* PROCESSING (In Packing) */}
                       {order.status === 'in_packing' && (
                         <>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             className="h-8 bg-amber-600 hover:bg-amber-700 text-white shadow-sm"
                             onClick={() => setPackingOrder(order)}
                           >
                             <Package className="mr-1.5 h-3.5 w-3.5" />
                             Mark Packed
                           </Button>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="outline"
                             className="h-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
                             onClick={() => setCancelOrderData(order)}
@@ -510,16 +507,16 @@ const Orders = () => {
                       {/* PACKED */}
                       {order.status === 'packed' && (
                         <>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             className="h-8 bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm"
                             onClick={() => setShippingOrder(order)}
                           >
                             <Truck className="mr-1.5 h-3.5 w-3.5" />
                             Mark Shipped
                           </Button>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="outline"
                             className="h-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
                             onClick={() => setCancelOrderData(order)}
@@ -532,16 +529,16 @@ const Orders = () => {
                       {/* SHIPPED */}
                       {order.status === 'shipped' && (
                         <>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="outline"
                             className="h-8 border-slate-200 text-slate-600 hover:bg-slate-50"
                             onClick={() => setShippingOrder(order)}
                           >
                             Edit Tracking
                           </Button>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="ghost"
                             className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
                             onClick={() => setCancelOrderData(order)}
@@ -553,8 +550,8 @@ const Orders = () => {
 
                       {/* DELIVERED / CANCELLED */}
                       {(order.status === 'delivered' || order.status === 'cancelled') && (
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           className="h-8 border-slate-200 text-slate-600 hover:bg-slate-50"
                           onClick={() => router.push(`/dashboard/orders/${order.id}`)}
@@ -605,8 +602,8 @@ const Orders = () => {
             {shippingCompany !== "Manual" && shippingCompany !== "InStore" ? (
               <div className="space-y-2">
                 <Label>Tracking ID / AWB</Label>
-                <Input 
-                  value={trackingId} 
+                <Input
+                  value={trackingId}
                   onChange={(e) => setTrackingId(e.target.value)}
                   placeholder="e.g. D123456789"
                   className="font-mono uppercase rounded-xl h-11"
@@ -634,9 +631,9 @@ const Orders = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShippingOrder(null)} className="rounded-lg h-11">Cancel</Button>
-            <Button 
-              onClick={handleShipOrder} 
-              disabled={isShipping || (shippingCompany !== "Manual" && shippingCompany !== "InStore" && !trackingId)} 
+            <Button
+              onClick={handleShipOrder}
+              disabled={isShipping || (shippingCompany !== "Manual" && shippingCompany !== "InStore" && !trackingId)}
               className="bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md shadow-blue-200 h-11 px-6"
             >
               {isShipping ? (
@@ -670,9 +667,9 @@ const Orders = () => {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="cancel-reason">Reason for Cancellation <span className="text-red-500">*</span></Label>
-              <Textarea 
+              <Textarea
                 id="cancel-reason"
-                value={cancelReason} 
+                value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
                 placeholder="e.g. Customer requested cancellation, Out of stock..."
                 className="rounded-xl resize-none"
@@ -682,9 +679,9 @@ const Orders = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancelOrderData(null)} className="rounded-lg h-11">Keep Order</Button>
-            <Button 
-              onClick={handleCancelOrder} 
-              disabled={isCancelling || !cancelReason.trim()} 
+            <Button
+              onClick={handleCancelOrder}
+              disabled={isCancelling || !cancelReason.trim()}
               variant="destructive"
               className="rounded-lg shadow-md shadow-red-200 h-11 px-6"
             >
@@ -711,7 +708,6 @@ const Orders = () => {
             toast({
               title: "Packing Complete!",
               description: `Order #${packingOrder.id} is ready for shipping`,
-              className: "bg-green-50 border-green-200",
             });
           }}
           onCancel={() => setPackingOrder(null)}

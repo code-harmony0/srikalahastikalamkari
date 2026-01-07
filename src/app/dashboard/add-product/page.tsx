@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -32,27 +32,15 @@ import {
 
 const AddProduct = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const { addProduct, updateProduct } = useInventory();
 
-  // Check if we are in edit mode (from localStorage since Next.js doesn't support router state)
+  // Check if we are in edit mode - get product data from URL params or session storage
+  const editingProductId = searchParams.get('edit');
   const [editingProduct, setEditingProduct] = useState<any>(null);
-  const isEditMode = !!editingProduct;
+  const isEditMode = !!editingProductId;
 
-  // Load edit product from localStorage on mount
-  useEffect(() => {
-    const storedProduct = localStorage.getItem('editProduct');
-    if (storedProduct) {
-      try {
-        setEditingProduct(JSON.parse(storedProduct));
-        // Clear it after loading
-        localStorage.removeItem('editProduct');
-      } catch (e) {
-        console.error('Error parsing edit product:', e);
-      }
-    }
-  }, []);
-  
   // Track if we're in the initial edit mode population
   const isInitialPopulation = useRef(false);
   const targetSubCategoryId = useRef<string | null>(null);
@@ -84,7 +72,7 @@ const AddProduct = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [generatedBarcode, setGeneratedBarcode] = useState<string | null>(null);
-  
+
   // Duplicate prevention state
   const [duplicateProduct, setDuplicateProduct] = useState<any | null>(null);
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
@@ -118,7 +106,7 @@ const AddProduct = () => {
   useEffect(() => {
     const fetchData = async () => {
       let { data: cats } = await getCategories();
-      
+
       // Auto-seed if no categories exist
       if (!cats || cats.length === 0) {
         console.log("No categories found. Auto-seeding...");
@@ -128,7 +116,7 @@ const AddProduct = () => {
       }
 
       const { data: subCats } = await getSubCategories();
-      
+
       if (cats) {
         setCategories(cats);
       }
@@ -137,15 +125,26 @@ const AddProduct = () => {
     fetchData();
   }, []);
 
+  // Load product data if in edit mode
+  useEffect(() => {
+    if (editingProductId && !editingProduct) {
+      // Try to load from session storage
+      const stored = sessionStorage.getItem(`product_${editingProductId}`);
+      if (stored) {
+        setEditingProduct(JSON.parse(stored));
+      }
+    }
+  }, [editingProductId]);
+
   // Populate form if editing - runs when product loads AND when categories/subcategories load
   useEffect(() => {
     if (isEditMode && editingProduct && categories.length > 0 && subCategories.length > 0) {
       console.log("🔄 Populating edit form with:", editingProduct);
       isInitialPopulation.current = true;
-      
+
       // Helper to get value from either camelCase or snake_case
       const getVal = (camel: string, snake: string) => {
-        return editingProduct[camel] !==undefined ? editingProduct[camel] : editingProduct[snake];
+        return editingProduct[camel] !== undefined ? editingProduct[camel] : editingProduct[snake];
       };
 
       const categoryId = getVal("category", "category_id");
@@ -171,7 +170,7 @@ const AddProduct = () => {
         originalPrice: originalPrice?.toString() || "",
         category: categoryId?.toString() || "",
         subCategory: "", // Will be set by the effect below
-        colors: "", 
+        colors: "",
         quantity: quantity?.toString() || "1",
         inStock: inStock ?? true,
       }));
@@ -179,9 +178,9 @@ const AddProduct = () => {
       // Handle colors - they might be array, JSON string, or comma-separated string
       let colorsToSet: string[] = [];
       const rawColors = editingProduct.colors;
-      
+
       console.log("🎨 Raw colors from DB:", rawColors, typeof rawColors);
-      
+
       if (rawColors) {
         if (Array.isArray(rawColors)) {
           colorsToSet = rawColors;
@@ -196,17 +195,17 @@ const AddProduct = () => {
           }
         }
       }
-      
+
       console.log("🎨 Setting colors:", colorsToSet);
       setSelectedColors(colorsToSet);
 
       // Handle specifications
       if (editingProduct.specifications) {
         try {
-          const specs = typeof editingProduct.specifications === 'string' 
-            ? JSON.parse(editingProduct.specifications) 
+          const specs = typeof editingProduct.specifications === 'string'
+            ? JSON.parse(editingProduct.specifications)
             : editingProduct.specifications;
-            
+
           if (specs && typeof specs === 'object') {
             const specsArray = Object.entries(specs).map(([key, value]) => ({
               key,
@@ -231,11 +230,11 @@ const AddProduct = () => {
       } else if (editingProduct.image) {
         existingImages.push(editingProduct.image);
       }
-      
+
       if (existingImages.length > 0) {
         setImagePreviews(existingImages);
       }
-      
+
       // Clear the flag after a short delay
       setTimeout(() => {
         isInitialPopulation.current = false;
@@ -248,7 +247,7 @@ const AddProduct = () => {
     if (targetSubCategoryId.current && filteredSubCategories.length > 0) {
       const target = targetSubCategoryId.current;
       const exists = filteredSubCategories.find(s => s.id.toString() === target);
-      
+
       if (exists) {
         console.log("🎯 Applying target subcategory:", target);
         setFormData(prev => ({ ...prev, subCategory: target }));
@@ -267,21 +266,21 @@ const AddProduct = () => {
       );
       setFilteredSubCategories(filtered);
       console.log("📋 Filtered subcategories:", filtered);
-      
+
       // Only reset subcategory if it's not valid for the new category
       // BUT: Don't reset if we're in the initial edit mode population
       if (!isInitialPopulation.current && formData.subCategory && !filtered.find(s => s.id === parseInt(formData.subCategory))) {
         console.log("⚠️ Subcategory not in filtered list, clearing");
         setFormData(prev => ({ ...prev, subCategory: "" }));
       }
-      
+
     } else {
       setFilteredSubCategories([]);
     }
   }, [formData.category, subCategories]);
 
   // Handle multiple image uploads with compression
-  const handleImageChange = async (e) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []) as File[];
     await processFiles(files);
   };
@@ -392,7 +391,7 @@ const AddProduct = () => {
   };
 
   // Handle input changes
-  const handleChange = (field, value) => {
+  const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error for this field
     if (errors[field]) {
@@ -424,13 +423,13 @@ const AddProduct = () => {
   // Validate form
 const validateForm = () => {
   const newErrors: Record<string, string> = {};
-  
+
   if (!formData.name.trim()) newErrors.name = "Product name is required";
   if (!formData.description.trim()) newErrors.description = "Description is required";
   if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = "Valid price is required";
   if (!formData.category) newErrors.category = "Category is required";
   if (!formData.quantity || parseInt(formData.quantity) < 0) newErrors.quantity = "Valid quantity is required";
-  
+
   // Mandatory image validation
   if (imagePreviews.length === 0) {
     newErrors.images = "At least one product image is required";
@@ -440,15 +439,15 @@ const validateForm = () => {
       variant: "destructive",
     });
   }
-  
+
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;
 };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       toast({
         title: "Validation Error",
@@ -464,50 +463,28 @@ const validateForm = () => {
       let imageUrls: string[] = [];
 
       // 1. Keep existing images that haven't been removed
-      // We need to know which previews correspond to existing URLs vs new files
-      // For simplicity, we can check if the preview string starts with "http" (existing) or "data:" (new)
-      // BUT, we also have imageFiles which are ONLY the new files.
-      // So we need to reconstruct the final list of images.
-      
-      // Strategy:
-      // - We have `imagePreviews` which shows everything currently in the UI.
-      // - If a preview is a URL (starts with http), it's an existing image we want to keep.
-      // - If it's a data URL, it corresponds to a file in `imageFiles` that needs uploading.
-      
-      // However, mapping `imageFiles` to specific previews is tricky if we deleted some in the middle.
-      // A better approach for this form:
-      // - Upload ALL new files in `imageFiles`.
-      // - Combine their new URLs with the existing URLs found in `imagePreviews`.
-      
-      // Wait, `imageFiles` contains ALL files currently selected? 
-      // No, `handleImageChange` appends to `imageFiles`. `removeImage` removes from `imageFiles`.
-      // So `imageFiles` should accurately represent the NEW files to be uploaded.
-      // But what about existing images that were pre-loaded? They are NOT in `imageFiles`.
-      // They are only in `imagePreviews`.
-      
-      // So:
-      // 1. Filter `imagePreviews` for strings starting with "http" -> these are existing images to keep.
       const existingUrls = imagePreviews.filter(url => url.startsWith("http"));
-      
+
       // 2. Upload all files in `imageFiles`
       const newUploadPromises = imageFiles.map(file => uploadImage(file));
       const uploadResults = await Promise.all(newUploadPromises);
-      
+
       // Check for errors
       const failedUploads = uploadResults.filter(r => r.error);
       if (failedUploads.length > 0) {
         throw new Error(`Failed to upload ${failedUploads.length} images`);
       }
-      
+
       const newUrls = uploadResults.map(r => r.url as string);
-      
+
       // 3. Combine
       imageUrls = [...existingUrls, ...newUrls];
 
       // Generate unique barcode for new products
     let barcode = editingProduct?.barcode; // Keep existing barcode if updating
     if (!isEditMode) {
-      barcode = generateBarcode();
+      const uniqueId = `${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
+      barcode = generateBarcode(uniqueId);
       setGeneratedBarcode(barcode); // Store for display
     }
 
@@ -563,19 +540,17 @@ const validateForm = () => {
       material: materialValue, // Add material from specifications
     };
 
-      if (isEditMode) {
+      if (isEditMode && editingProduct) {
         await updateProduct(editingProduct.id, productData);
         toast({
           title: "Success!",
           description: "Product updated successfully",
-          className: "bg-green-50 border-green-200",
         });
       } else {
         await addProduct(productData);
         toast({
           title: "Success!",
           description: "Product created successfully",
-          className: "bg-green-50 border-green-200",
         });
       }
 
@@ -622,13 +597,12 @@ const validateForm = () => {
       toast({
         title: "Stock Updated!",
         description: `Stock increased from ${currentStock} to ${newStock} units`,
-        className: "bg-green-50 border-green-200",
       });
 
       setShowDuplicateDialog(false);
       setDuplicateProduct(null);
       setStockToAdd("");
-      
+
       // Navigate to products list
       setTimeout(() => {
         router.push("/dashboard/products");
@@ -648,9 +622,9 @@ const validateForm = () => {
   // Handle edit product from duplicate dialog
   const handleEditDuplicate = () => {
     setShowDuplicateDialog(false);
-    // Store product in localStorage for edit mode
-    localStorage.setItem('editProduct', JSON.stringify(duplicateProduct));
-    router.push("/dashboard/add-product");
+    // Store product in session storage and navigate
+    sessionStorage.setItem(`product_${duplicateProduct.id}`, JSON.stringify(duplicateProduct));
+    router.push(`/dashboard/add-product?edit=${duplicateProduct.id}`);
   };
 
   return (
@@ -807,7 +781,7 @@ const validateForm = () => {
             {/* Product Colors - Modern Color Picker */}
             <div className="space-y-4">
               <Label className="text-slate-700 font-medium">Product Colors (Optional)</Label>
-              
+
               {/* Selected Colors Display */}
               {selectedColors.length > 0 && (
                 <div className="space-y-2">
@@ -830,7 +804,7 @@ const validateForm = () => {
                           className="ml-1 p-1 rounded-md hover:bg-red-100 text-gray-400 hover:text-red-600 transition-colors"
                           title="Remove color"
                         >
-                          <X className="w-4 w-4" />
+                          <X className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
@@ -863,8 +837,8 @@ const validateForm = () => {
                         className={`
                           relative w-10 h-10 rounded-lg cursor-pointer
                           transform transition-all duration-200 ease-out
-                          ${isSelected 
-                            ? 'scale-110 ring-3 ring-[#D49217] ring-offset-2 shadow-lg' 
+                          ${isSelected
+                            ? 'scale-110 ring-3 ring-[#D49217] ring-offset-2 shadow-lg'
                             : 'hover:scale-105 hover:shadow-md ring-1 ring-gray-300'
                           }
                         `}
@@ -873,9 +847,9 @@ const validateForm = () => {
                       >
                         {isSelected && (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <svg 
-                              className="w-5 h-5 drop-shadow-lg" 
-                              fill="white" 
+                            <svg
+                              className="w-5 h-5 drop-shadow-lg"
+                              fill="white"
                               stroke="white"
                               strokeWidth="3"
                               viewBox="0 0 24 24"
@@ -941,7 +915,6 @@ const validateForm = () => {
                           toast({
                             title: "Color Added!",
                             description: e.target.value.toUpperCase(),
-                            className: "bg-green-50 border-green-200",
                           });
                         }}
                         className="w-20 h-11 rounded-lg cursor-pointer border-2 border-gray-300 hover:border-[#D49217] transition-colors shadow-sm"
@@ -962,7 +935,7 @@ const validateForm = () => {
             <div className="space-y-4">
               <Label className="text-slate-700 font-medium">Product Specifications (Optional)</Label>
               <p className="text-sm text-muted-foreground">Add details like Material, Origin, Craft, Dimensions, etc.</p>
-              
+
               {/* Existing Specs */}
               {specifications.length > 0 && (
                 <div className="grid gap-3 md:grid-cols-2">
@@ -1029,10 +1002,10 @@ const validateForm = () => {
             <div className="space-y-2">
               <Label>Product Images (Multiple)</Label>
               {imagePreviews.length === 0 ? (
-                <div 
+                <div
                   className={`border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${
-                    isDragging 
-                      ? 'border-[#D49217] bg-[#D49217]/10 scale-105' 
+                    isDragging
+                      ? 'border-[#D49217] bg-[#D49217]/10 scale-105'
                       : 'border-gray-300 hover:border-[#D49217] hover:bg-gray-50'
                   }`}
                   onDragOver={handleDragOver}
@@ -1086,7 +1059,7 @@ const validateForm = () => {
 
                   {/* Add More Button */}
                   {imageFiles.length < 5 && (
-                    <div 
+                    <div
                       className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-[#D49217] transition-colors"
                       onClick={handleBoxClick}
                     >
@@ -1115,7 +1088,7 @@ const validateForm = () => {
                   )}
                 </div>
               )}
-              
+
               {/* Hidden file input - always present */}
               <Input
                 id="image"
@@ -1160,7 +1133,7 @@ const validateForm = () => {
                   isEditMode ? "Update Product" : "Add Product"
                 )}
               </Button>
-              
+
               <Button
                 type="button"
                 variant="outline"
@@ -1298,7 +1271,7 @@ const validateForm = () => {
                   <div className="flex items-center px-4 py-2 bg-green-50 rounded-lg border border-green-200">
                     <span className="text-sm text-muted-foreground">New Stock:</span>
                     <span className="ml-2 font-bold text-green-700 text-lg">
-                      {(duplicateProduct.stock_quantity || duplicateProduct.quantity || 0) + 
+                      {(duplicateProduct.stock_quantity || duplicateProduct.quantity || 0) +
                         (parseInt(stockToAdd) || 0)}
                     </span>
                   </div>

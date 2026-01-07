@@ -111,11 +111,10 @@ const PackingMode: React.FC<PackingModeProps> = ({ order, onComplete, onCancel }
           toast({
             title: "Resuming Packing",
             description: "Continuing from your last session",
-            className: "bg-blue-50 border-blue-200",
           });
         } else {
           // Create new session (if table exists)
-          const adminEmail = import.meta.env.VITE_ADMIN_EMAILS?.split(',')[0] || 'admin@example.com';
+          const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'admin@example.com';
           const { data: newSession, error } = await createPackingSession(order.id, adminEmail);
           
           if (error) {
@@ -224,7 +223,6 @@ const PackingMode: React.FC<PackingModeProps> = ({ order, onComplete, onCancel }
     toast({
       title: "✓ Item Scanned",
       description: `${matchingItem.name} (${newCount}/${requiredCount})`,
-      className: "bg-green-50 border-green-200",
     });
 
     setCurrentBarcode("");
@@ -311,7 +309,6 @@ const PackingMode: React.FC<PackingModeProps> = ({ order, onComplete, onCancel }
       toast({
         title: "✓ Packing Complete!",
         description: `Order #${order.id} is ready for shipping`,
-        className: "bg-green-50 border-green-200",
       });
 
       setTimeout(() => {
@@ -465,7 +462,6 @@ const PackingMode: React.FC<PackingModeProps> = ({ order, onComplete, onCancel }
                               toast({
                                 title: "Copied!",
                                 description: `Barcode ${itemBarcode} copied to clipboard`,
-                                className: "bg-blue-50 border-blue-200",
                               });
                             }}
                           >

@@ -1178,15 +1178,15 @@ export default function HomePage() {
                   
                   {/* Handcrafted Card Container */}
                   <motion.div
-                    whileHover={{ 
-                      y: -6, 
+                    whileHover={{
+                      y: -6,
                       scale: 1.01
                     }}
-                    transition={{ 
-                      duration: 0.4, 
+                    transition={{
+                      duration: 0.4,
                       ease: "easeOut"
                     }}
-                    className="relative bg-white/95 backdrop-blur-sm rounded-[1.5rem] p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all duration-500 border border-white/60 group-hover:border-accent-color/20 overflow-hidden"
+                    className="relative bg-gradient-to-br from-blue-500 to-blue-600 backdrop-blur-sm rounded-[1.5rem] p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all duration-500 border border-blue-400/30 group-hover:border-blue-300/40 overflow-hidden"
                   >
                     {/* Subtle Handcrafted Texture on Card */}
                     <div 
@@ -1210,17 +1210,17 @@ export default function HomePage() {
                       }}
                     >
                       {/* Layered Background */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent-color/15 via-accent-color/25 to-accent-color/15 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-500"></div>
-                      <div className="absolute inset-1 bg-gradient-to-br from-accent-color/8 via-white/10 to-transparent rounded-xl"></div>
-                      <div className="absolute inset-3 bg-gradient-to-br from-white/20 to-transparent rounded-lg"></div>
-                      
+                      <div className="absolute inset-0 bg-white/20 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-500"></div>
+                      <div className="absolute inset-1 bg-white/10 rounded-xl"></div>
+                      <div className="absolute inset-3 bg-white/5 rounded-lg"></div>
+
                       {/* Icon */}
-                      <item.icon className="w-10 h-10 text-accent-color relative z-10" />
+                      <item.icon className="w-10 h-10 text-white relative z-10" />
                     </motion.div>
                     
                     {/* Content with Smooth Animations */}
-                    <motion.h3 
-                      className="font-heading text-xl lg:text-2xl text-foreground mb-6 text-center leading-tight group-hover:text-primary transition-colors duration-400 font-light tracking-tight"
+                    <motion.h3
+                      className="font-heading text-xl lg:text-2xl text-white mb-6 text-center leading-tight transition-colors duration-400 font-light tracking-tight"
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: index * 0.15 + 0.2 }}
@@ -1228,9 +1228,9 @@ export default function HomePage() {
                     >
                       {item.title}
                     </motion.h3>
-                    
-                    <motion.p 
-                      className="font-paragraph text-base text-foreground/70 leading-relaxed text-center mb-8 font-light"
+
+                    <motion.p
+                      className="font-paragraph text-base text-white/90 leading-relaxed text-center mb-8 font-light"
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: index * 0.15 + 0.3 }}
@@ -1247,10 +1247,10 @@ export default function HomePage() {
                         transition={{ duration: 0.6, delay: index * 0.15 + 0.4 }}
                         viewport={{ once: true }}
                         whileHover={{ scale: 1.02 }}
-                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-color/8 via-accent-color/12 to-accent-color/8 text-primary rounded-xl border border-accent-color/15 shadow-sm group-hover:shadow-md transition-all duration-500 backdrop-blur-sm"
+                        className="inline-flex items-center px-6 py-3 bg-white/20 rounded-xl border border-white/30 shadow-sm group-hover:shadow-md transition-all duration-500 backdrop-blur-sm"
                       >
-                        <Sparkles className="w-4 h-4 text-accent-color mr-2" />
-                        <span className="font-heading font-light text-sm tracking-wide">
+                        <Sparkles className="w-4 h-4 text-white mr-2" />
+                        <span className="font-heading font-light text-sm tracking-wide text-white">
                           {index === 0 && (
                             <>
                               <CountUpNumber 

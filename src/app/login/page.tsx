@@ -13,7 +13,7 @@ export default function UserLoginPage() {
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<'email' | 'otp'>('email');
   const [loading, setLoading] = useState(false);
-  const { signInWithEmailOTP, verifyEmailOTP, role, user } = useAuth();
+  const { role, user, signInWithEmailOTP, verifyEmailOTP } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 

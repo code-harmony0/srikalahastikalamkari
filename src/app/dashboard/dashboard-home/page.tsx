@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/shared/ui/button";
-import { Card, CardContent } from "@/shared/ui/card";
-import { Badge } from "@/shared/ui/badge";
+import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/shared/ui/button"
+import { Card, CardContent } from "@/shared/ui/card"
+import { Badge } from "@/shared/ui/badge"
 import {
   Table,
   TableBody,
@@ -12,123 +12,119 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
-import { 
-  Plus, 
-  Package, 
-  Truck, 
-  ShoppingBag, 
-  TrendingUp, 
+} from "@/shared/ui/table"
+import {
+  Plus,
+  Package,
+  Truck,
+  ShoppingBag,
+  TrendingUp,
   IndianRupee,
   ArrowRight,
   Sparkles,
-  BarChart3
-} from "lucide-react";
-import { getOrderStatistics } from "@/backend/orders";
-import { supabase } from "@/backend/supabase/client";
-
-interface DashboardStats {
-  total: number;
-  todayCount: number;
-  todayRevenue: number;
-  paid: number;
-  inPacking: number;
-  packed: number;
-  shipped: number;
-  delivered: number;
-  cancelled: number;
-}
+  BarChart3,
+} from "lucide-react"
+import { getOrderStatistics, OrderStats } from "@/backend/orders"
+import { supabase } from "@/backend/supabase/client"
 
 interface OrderPreview {
-  id: number;
-  customer_name: string;
-  total_amount: number;
-  status: string;
-  created_at: string;
+  id: number
+  customer_name: string
+  total_amount: number
+  status: string
+  created_at: string
 }
 
 interface TopProduct {
-  id: number;
-  name: string;
-  image: string;
-  total_sold: number;
-  revenue: number;
+  id: number
+  name: string
+  image: string
+  total_sold: number
+  revenue: number
 }
 
 const Dashboard = () => {
-  const router = useRouter();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentOrders, setRecentOrders] = useState<OrderPreview[]>([]);
-  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
-  const [productCount, setProductCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const router = useRouter()
+  const [stats, setStats] = useState<OrderStats | null>(null)
+  const [recentOrders, setRecentOrders] = useState<OrderPreview[]>([])
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([])
+  const [productCount, setProductCount] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    fetchDashboardData()
+  }, [])
 
   const fetchDashboardData = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
       // 1. Fetch Order Stats
-      const { data: statsData } = await getOrderStatistics();
-      if (statsData) setStats(statsData);
+      const statsData = await getOrderStatistics()
+      if (statsData) setStats(statsData)
 
       // 2. Fetch Recent Orders (last 5)
       const { data: ordersData } = await supabase
         .from("orders")
         .select("id, customer_name, total_amount, status, created_at")
         .order("created_at", { ascending: false })
-        .limit(5);
-      
-      if (ordersData) setRecentOrders(ordersData);
+        .limit(5)
+
+      if (ordersData) setRecentOrders(ordersData)
 
       // 3. Fetch Top 5 Products by revenue (simplified: using order items)
       const { data: productsData } = await supabase
         .from("products")
         .select("id, name, images")
         .order("created_at", { ascending: false })
-        .limit(5);
-      
+        .limit(5)
+
       if (productsData) {
-        setTopProducts(productsData.map((p, idx) => ({
-          id: p.id,
-          name: p.name,
-          image: p.images?.[0] || "",
-          total_sold: Math.floor(Math.random() * 50) + 10, // Mock data
-          revenue: Math.floor(Math.random() * 50000) + 5000 // Mock data
-        })));
+        setTopProducts(
+          productsData.map((p, idx) => ({
+            id: p.id,
+            name: p.name,
+            image: p.images?.[0] || "",
+            total_sold: Math.floor(Math.random() * 50) + 10, // Mock data
+            revenue: Math.floor(Math.random() * 50000) + 5000, // Mock data
+          }))
+        )
       }
 
       // 4. Get total product count
       const { count } = await supabase
         .from("products")
-        .select("*", { count: 'exact', head: true });
-      
-      if (count !== null) setProductCount(count);
+        .select("*", { count: "exact", head: true })
 
+      if (count !== null) setProductCount(count)
     } catch (error) {
-      console.error("Error loading dashboard:", error);
+      console.error("Error loading dashboard:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "paid": return "bg-blue-100 text-blue-800 border-blue-200";
-      case "in_packing": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "packed": return "bg-purple-100 text-purple-800 border-purple-200";
-      case "shipped": return "bg-green-100 text-green-800 border-green-200";
-      case "delivered": return "bg-emerald-100 text-emerald-800 border-emerald-200";
-      case "cancelled": return "bg-red-100 text-red-800 border-red-200";
-      default: return "bg-slate-100 text-slate-800 border-slate-200";
+      case "paid":
+        return "bg-blue-100 text-blue-800 border-blue-200"
+      case "in_packing":
+        return "bg-orange-100 text-orange-800 border-orange-200"
+      case "packed":
+        return "bg-purple-100 text-purple-800 border-purple-200"
+      case "shipped":
+        return "bg-green-100 text-green-800 border-green-200"
+      case "delivered":
+        return "bg-emerald-100 text-emerald-800 border-emerald-200"
+      case "cancelled":
+        return "bg-red-100 text-red-800 border-red-200"
+      default:
+        return "bg-slate-100 text-slate-800 border-slate-200"
     }
-  };
+  }
 
   const formatCurrency = (amount: number) => {
-    return `₹${amount.toLocaleString('en-IN')}`;
-  };
+    return `₹${amount.toLocaleString("en-IN")}`
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 p-6 md:p-8 font-sans space-y-8">
@@ -139,7 +135,9 @@ const Dashboard = () => {
             <Sparkles className="h-8 w-8 text-amber-500" />
             Dashboard
           </h1>
-          <p className="text-slate-500 mt-1">Welcome back! Here's your store overview</p>
+          <p className="text-slate-500 mt-1">
+            Welcome back! Here's your store overview
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <Button
@@ -176,12 +174,16 @@ const Dashboard = () => {
                 <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justifycenter">
                   <IndianRupee className="h-5 w-5 text-white mx-auto" />
                 </div>
-                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">Revenue</p>
+                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
+                  Revenue
+                </p>
               </div>
-              <h3 className="text-3xl font-bold text-white">{formatCurrency(stats?.todayRevenue || 0)}</h3>
+              <h3 className="text-3xl font-bold text-white">
+                {formatCurrency(stats?.total_revenue || 0)}
+              </h3>
               <p className="text-xs text-blue-100 mt-2 flex items-center gap-1">
                 <TrendingUp className="h-3 w-3" />
-                Today's earnings
+                Total Revenue
               </p>
             </div>
           </CardContent>
@@ -189,58 +191,85 @@ const Dashboard = () => {
 
         {/* Today's Orders */}
         <Card
-          className="bg-white border border-green-200 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
+          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
           onClick={() => router.push("/dashboard/orders")}
         >
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
-                <ShoppingBag className="h-5 w-5 text-green-600" />
-              </div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Today's Orders</p>
+          <CardContent className="p-6 relative">
+            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
+              <ShoppingBag className="h-24 w-24 text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-slate-900">{stats?.todayCount || 0}</h3>
-            <p className="text-xs text-green-600 mt-2 bg-green-50 px-2 py-1 rounded-full w-fit">
-              +{stats?.paid || 0} Pending
-            </p>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <ShoppingBag className="h-5 w-5 text-white" />
+                </div>
+                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
+                  Today's Orders
+                </p>
+              </div>
+              <h3 className="text-3xl font-bold text-white">
+                {stats?.total_orders || 0}
+              </h3>
+              <p className="text-xs text-blue-100 mt-2 bg-white/20 px-2 py-1 rounded-full w-fit">
+                +{stats?.pending_orders || 0} Pending
+              </p>
+            </div>
           </CardContent>
         </Card>
 
         {/* Total Products */}
         <Card
-          className="bg-white border border-purple-200 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
+          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
           onClick={() => router.push("/dashboard/products")}
         >
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                <Package className="h-5 w-5 text-purple-600" />
-              </div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Products</p>
+          <CardContent className="p-6 relative">
+            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Package className="h-24 w-24 text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-slate-900">{productCount}</h3>
-            <p className="text-xs text-purple-600 mt-2 bg-purple-50 px-2 py-1 rounded-full w-fit">
-              In Inventory
-            </p>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <Package className="h-5 w-5 text-white" />
+                </div>
+                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
+                  Products
+                </p>
+              </div>
+              <h3 className="text-3xl font-bold text-white">
+                {productCount}
+              </h3>
+              <p className="text-xs text-blue-100 mt-2 bg-white/20 px-2 py-1 rounded-full w-fit">
+                In Inventory
+              </p>
+            </div>
           </CardContent>
         </Card>
 
         {/* Ready to Ship */}
         <Card
-          className="bg-white border border-orange-200 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
+          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
           onClick={() => router.push("/dashboard/orders?status=packed")}
         >
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center animate-pulse">
-                <Truck className="h-5 w-5 text-orange-600" />
-              </div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ready to Ship</p>
+          <CardContent className="p-6 relative">
+            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Truck className="h-24 w-24 text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-slate-900">{stats?.packed || 0}</h3>
-            <p className="text-xs text-orange-600 mt-2 bg-orange-50 px-2 py-1 rounded-full w-fit">
-              Needs Dispatch
-            </p>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <Truck className="h-5 w-5 text-white" />
+                </div>
+                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
+                  Ready to Ship
+                </p>
+              </div>
+              <h3 className="text-3xl font-bold text-white">
+                {stats?.shipped_orders || 0}
+              </h3>
+              <p className="text-xs text-blue-100 mt-2 bg-white/20 px-2 py-1 rounded-full w-fit">
+                Shipped
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -249,7 +278,7 @@ const Dashboard = () => {
         {/* Recent Orders */}
         <div className="lg:col-span-2">
           <Card className="border border-slate-200 shadow-md">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between ">
               <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-slate-500" />
                 Recent Orders
@@ -268,16 +297,27 @@ const Dashboard = () => {
               <Table>
                 <TableHeader className="bg-white border-b-2 border-slate-200">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="font-bold text-slate-900 py-4">Order ID</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Customer</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Amount</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Status</TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Order ID
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Customer
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Amount
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Status
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {recentOrders.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-12 text-slate-400">
+                      <TableCell
+                        colSpan={4}
+                        className="text-center py-12 text-slate-400"
+                      >
                         <div className="flex flex-col items-center gap-2">
                           <ShoppingBag className="h-8 w-8 text-slate-300" />
                           <p>No recent orders</p>
@@ -289,14 +329,26 @@ const Dashboard = () => {
                       <TableRow
                         key={order.id}
                         className="cursor-pointer hover:bg-slate-50/70 transition-colors border-b border-slate-100 last:border-0"
-                        onClick={() => router.push(`/dashboard/orders/${order.id}`)}
+                        onClick={() =>
+                          router.push(`/dashboard/orders/${order.id}`)
+                        }
                       >
-                        <TableCell className="font-bold text-slate-900 py-4">#{order.id}</TableCell>
-                        <TableCell className="text-slate-700 py-4 font-medium">{order.customer_name}</TableCell>
-                        <TableCell className="font-bold text-slate-900 py-4">{formatCurrency(order.total_amount)}</TableCell>
+                        <TableCell className="font-bold text-slate-900 py-4">
+                          #{order.id}
+                        </TableCell>
+                        <TableCell className="text-slate-700 py-4 font-medium">
+                          {order.customer_name}
+                        </TableCell>
+                        <TableCell className="font-bold text-slate-900 py-4">
+                          {formatCurrency(order.total_amount)}
+                        </TableCell>
                         <TableCell className="py-4">
-                          <Badge className={`${getStatusColor(order.status)} border shadow-none capitalize text-xs px-2.5 py-1 font-medium pointer-events-none`}>
-                            {order.status === 'in_packing' ? 'Processing' : order.status.replace(/_/g, ' ')}
+                          <Badge
+                            className={`${getStatusColor(order.status)} border shadow-none capitalize text-xs px-2.5 py-1 font-medium pointer-events-none`}
+                          >
+                            {order.status === "in_packing"
+                              ? "Processing"
+                              : order.status.replace(/_/g, " ")}
                           </Badge>
                         </TableCell>
                       </TableRow>
@@ -330,16 +382,27 @@ const Dashboard = () => {
               <Table>
                 <TableHeader className="bg-white border-b-2 border-slate-200">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="font-bold text-slate-900 py-4">Rank</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Product</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Sold</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Revenue</TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Rank
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Product
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Sold
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-900 py-4">
+                      Revenue
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {topProducts.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-12 text-slate-400">
+                      <TableCell
+                        colSpan={4}
+                        className="text-center py-12 text-slate-400"
+                      >
                         <div className="flex flex-col items-center gap-2">
                           <Package className="h-8 w-8 text-slate-300" />
                           <p>No products found</p>
@@ -351,7 +414,9 @@ const Dashboard = () => {
                       <TableRow
                         key={product.id}
                         className="cursor-pointer hover:bg-slate-50/70 transition-colors border-b border-slate-100 last:border-0"
-                        onClick={() => router.push(`/dashboard/products/${product.id}`)}
+                        onClick={() =>
+                          router.push(`/dashboard/products/${product.id}`)
+                        }
                       >
                         <TableCell className="py-4">
                           <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-sm">
@@ -361,17 +426,23 @@ const Dashboard = () => {
                         <TableCell className="py-4">
                           <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                              <img 
-                                src={product.image || "/placeholder.svg"} 
+                              <img
+                                src={product.image || "/placeholder.svg"}
                                 alt={product.name}
                                 className="h-full w-full object-cover"
                               />
                             </div>
-                            <p className="font-semibold text-slate-900 text-sm">{product.name}</p>
+                            <p className="font-semibold text-slate-900 text-sm">
+                              {product.name}
+                            </p>
                           </div>
                         </TableCell>
-                        <TableCell className="font-medium text-slate-700 py-4">{product.total_sold} units</TableCell>
-                        <TableCell className="font-bold text-green-600 py-4">{formatCurrency(product.revenue)}</TableCell>
+                        <TableCell className="font-medium text-slate-700 py-4">
+                          {product.total_sold} units
+                        </TableCell>
+                        <TableCell className="font-bold text-green-600 py-4">
+                          {formatCurrency(product.revenue)}
+                        </TableCell>
                       </TableRow>
                     ))
                   )}
@@ -382,7 +453,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

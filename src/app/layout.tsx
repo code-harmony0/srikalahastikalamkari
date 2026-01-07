@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, Open_Sans } from "next/font/google";
-import "./globals.css";
-import { Providers } from "@/shared/providers";
-import Header from "@/storefront/components/layout/Header";
-import Footer from "@/storefront/components/layout/Footer";
-import FloatingAdminButton from "@/storefront/components/layout/FloatingAdminButton";
+import type { Metadata } from "next"
+import { Cormorant_Garamond, Open_Sans } from "next/font/google"
+import "./globals.css"
+import { Providers } from "@/shared/providers"
+import AppWrapper from "./AppWrapper"
+import { InventoryProvider } from "@/shared/contexts/InventoryContext"
 
 // ORIGINAL WIX FONTS
 const cormorant = Cormorant_Garamond({
@@ -13,19 +12,26 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-heading",
   display: "swap",
   preload: true,
-});
+})
 
 const openSans = Open_Sans({
   subsets: ["latin"],
   variable: "--font-paragraph",
   display: "swap",
   preload: true,
-});
+})
 
 export const metadata: Metadata = {
   title: "Shri Kailash Kalamkari - Traditional Handcrafted Art",
-  description: "Authentic Kalamkari sarees and fabrics, handcrafted with traditional techniques",
-  keywords: ["kalamkari", "sarees", "traditional", "handcrafted", "indian fabric"],
+  description:
+    "Authentic Kalamkari sarees and fabrics, handcrafted with traditional techniques",
+  keywords: [
+    "kalamkari",
+    "sarees",
+    "traditional",
+    "handcrafted",
+    "indian fabric",
+  ],
   icons: {
     icon: [
       {
@@ -34,25 +40,22 @@ export const metadata: Metadata = {
       },
     ],
   },
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${openSans.className} ${cormorant.variable} ${openSans.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${openSans.variable}`}>
+      <body>
         <Providers>
-          <div className="flex flex-col min-h-screen bg-[#F5F5DC]">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <FloatingAdminButton />
-          </div>
+          <InventoryProvider>
+            <AppWrapper>{children}</AppWrapper>
+          </InventoryProvider>
         </Providers>
       </body>
     </html>
-  );
+  )
 }
