@@ -1,0 +1,22 @@
+/* Table Styles - Dashboard Only */
+
+/* Table headers - white background */
+.dashboard-root table thead {
+  background-color: #ffffff;
+}
+
+.dashboard-root table thead th {
+  background-color: transparent;
+  color: rgb(51 65 85);
+}
+
+/* Dialogs/Popups - white background */
+.dashboard-root [role="dialog"],
+.dashboard-root [role="alertdialog"] {
+  background-color: #ffffff !important;
+}
+
+/* Table row hover */
+.dashboard-root table tbody tr:hover {
+  background-color: rgb(248 250 252 / 0.8);
+}

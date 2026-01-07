@@ -3,6 +3,8 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import { Toaster } from "@/shared/ui/toaster";
+import "../styles/dashboard.css";
+import "../styles/tables.css";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -10,7 +12,7 @@ interface DashboardLayoutProps {
 
 function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="app">
+    <div className="dashboard-root">
       <Sidebar />
       <main className="main-content">
         {children}

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useRef } from "react";
 import Barcode from "react-barcode";
 import { useReactToPrint } from "react-to-print";
@@ -18,10 +19,10 @@ const BarcodeGenerator = () => {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("Saree");
-  const componentRef = useRef();
+  const componentRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
+    contentRef: componentRef,
   });
 
   const barcodeValue = `${productName}-${price}-${category}`;

@@ -1,8 +1,6 @@
-"use client"
-
-import React from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter, usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   FiGrid,
   FiBox,
@@ -21,19 +19,19 @@ const Sidebar = () => {
   const router = useRouter()
   const pathname = usePathname()
   const { user, logout } = useAuth()
-  const role = user?.metadata?.role
+  const role = (user as any)?.metadata?.role
 
   const { toast } = useToast()
 
   const handleLogout = async () => {
     await logout()
     localStorage.removeItem("isLoggedIn") // Clear legacy auth just in case
-    router.push("/dashboard/login")
+    router.push("/login")
   }
 
   const menuItems = [
     {
-      to: "/dashboard/dashboard-home",
+      to: "/dashboard",
       icon: FiGrid,
       label: "Dashboard",
       roles: ["super_admin", "admin"],
