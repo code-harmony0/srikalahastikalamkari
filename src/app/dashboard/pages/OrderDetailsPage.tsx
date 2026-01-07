@@ -67,7 +67,6 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
         toast({
           title: "Order Delivered",
           description: `Order #${order.id} marked as delivered`,
-          className: "bg-green-50 border-green-200",
         });
       } else {
         toast({

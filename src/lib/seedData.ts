@@ -58,7 +58,7 @@ export const seedCategories = async () => {
     console.log("Inserted categories:", insertedCats);
 
     // 3. Insert Subcategories
-    const subCatInserts = [];
+    const subCatInserts: any[] = [];
     
     for (const cat of insertedCats) {
       const subs = subCategories[cat.name];

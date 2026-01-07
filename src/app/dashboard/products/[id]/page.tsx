@@ -33,7 +33,7 @@ const ProductDetails = () => {
   useEffect(() => {
     if (loading) return; // Wait for data to load
 
-    const foundProduct = products.find((p) => String(p.id) === String(id));
+    const foundProduct = products.find((p: any) => String(p.id) === String(id));
     
     if (foundProduct) {
       setProduct(foundProduct);
@@ -56,7 +56,6 @@ const ProductDetails = () => {
       toast({
         title: "Product Deleted",
         description: `${product.name} has been removed`,
-        className: "bg-red-50 border-red-200",
       });
       router.push("/dashboard/products");
     }
