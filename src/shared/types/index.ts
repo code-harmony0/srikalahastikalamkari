@@ -3,6 +3,9 @@
  * Migrated from Wix entities - zero Wix dependencies
  */
 
+// Re-export from supabase types
+export type { Category, SubCategory } from './supabase';
+
 export interface Product {
   _id: string;
   _createdDate?: Date;

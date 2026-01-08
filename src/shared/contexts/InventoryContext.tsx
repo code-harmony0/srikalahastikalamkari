@@ -109,7 +109,8 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({
       )
 
       // Transform products to match Product interface
-      const transformedProds: Product[] = rawProds.map((p: any) => ({
+      const transformedProds = rawProds.map((p: any) => ({
+        _id: String(p.id),
         id: String(p.id),
         name: p.name || "",
         price: typeof p.price === "string" ? parseFloat(p.price) : p.price || 0,
@@ -158,9 +159,11 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({
       }))
 
       // Build category hierarchy with subcategories
-      const structuredCategories: Category[] = rawCats.map((cat: any) => ({
+      const structuredCategories = rawCats.map((cat: any) => ({
         id: String(cat.id),
         name: cat.name,
+        category: cat.name,
+        image: cat.image_url || "",
         description: cat.description || undefined,
         subCategories: rawSubCats
           .filter((sub: any) => sub.category_id === cat.id)
@@ -175,7 +178,7 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({
           })),
       }))
 
-      setCategories(structuredCategories)
+      setCategories(structuredCategories as any)
       setProducts(transformedProds)
       console.log("✅ Inventory Context Updated")
     } catch (err: any) {

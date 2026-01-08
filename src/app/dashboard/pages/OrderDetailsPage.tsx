@@ -20,8 +20,8 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
     const fetchOrder = async () => {
       if (!id) return;
       setLoading(true);
-      const { data, error } = await getOrderById(id);
-      if (error) {
+      const data = await getOrderById(id);
+      if (!data) {
         toast({
           title: "Error",
           description: "Failed to load order details",
@@ -67,7 +67,6 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
         toast({
           title: "Order Delivered",
           description: `Order #${order.id} marked as delivered`,
-          className: "bg-green-50 border-green-200",
         });
       } else {
         toast({

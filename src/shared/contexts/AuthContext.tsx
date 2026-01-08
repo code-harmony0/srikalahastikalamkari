@@ -17,6 +17,9 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   UserCredential,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  ConfirmationResult,
 } from "firebase/auth"
 import { auth } from "../config/firebase"
 
@@ -31,6 +34,8 @@ type AuthContextType = {
   signOut: () => Promise<void>
   signInWithEmailOTP: (email: string) => Promise<{ error: any }>
   verifyEmailOTP: (email: string, otp: string) => Promise<{ error: any }>
+  signInWithPhone: (phoneNumber: string, recaptchaContainer: string) => Promise<{ error?: any }>
+  verifyPhoneOTP: (otp: string) => Promise<{ error?: any; user?: FirebaseUser }>
   logout: () => Promise<void>
 }
 
@@ -47,6 +52,7 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null)
   const googleProvider = new GoogleAuthProvider()
 
   useEffect(() => {
@@ -94,6 +100,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: { message: "OTP verification not implemented" } }
   }
 
+  // Phone Authentication with OTP
+  const signInWithPhone = async (phoneNumber: string, recaptchaContainer: string) => {
+    try {
+      // Initialize reCAPTCHA verifier
+      const recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainer, {
+        size: 'invisible',
+        callback: () => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber
+        },
+        'expired-callback': () => {
+          // Response expired. Ask user to solve reCAPTCHA again
+          console.log('reCAPTCHA expired')
+        }
+      })
+
+      // Send OTP to phone number
+      const confirmation = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier)
+      setConfirmationResult(confirmation)
+
+      return { error: null }
+    } catch (error: any) {
+      console.error("Error sending OTP:", error)
+      return { error }
+    }
+  }
+
+  // Verify OTP code
+  const verifyPhoneOTP = async (otp: string) => {
+    try {
+      if (!confirmationResult) {
+        return { error: { message: "No confirmation result. Please request OTP first." } }
+      }
+
+      const result = await confirmationResult.confirm(otp)
+      setUser(result.user)
+      return { user: result.user, error: null }
+    } catch (error: any) {
+      console.error("Error verifying OTP:", error)
+      return { error }
+    }
+  }
+
   const value = {
     user,
     loading,
@@ -106,6 +154,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     signInWithEmailOTP,
     verifyEmailOTP,
+    signInWithPhone,
+    verifyPhoneOTP,
   }
 
   return (

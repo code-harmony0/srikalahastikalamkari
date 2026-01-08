@@ -14,8 +14,12 @@ export function Toaster() {
   return (
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
+        // Filter variant to only supported values
+        const { variant, ...restProps } = props
+        const supportedVariant = variant === "destructive" ? "destructive" : "default"
+
         return (
-          <Toast key={id} {...props}>
+          <Toast key={id} variant={supportedVariant} {...restProps}>
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (

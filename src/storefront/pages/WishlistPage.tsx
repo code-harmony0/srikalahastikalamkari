@@ -31,7 +31,7 @@ export default function WishlistPage() {
   const wishlistItems = useMemo(
     () =>
       wishlist.items
-        .map((item) => products.find((p) => p._id === item.productId))
+        .map((item) => products.find((p) => p._id === item))
         .filter((p): p is Product => Boolean(p)),
     [wishlist.items, products]
   );

@@ -46,8 +46,9 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const data = await getProducts()
-      setProducts(data)
+      const { data, error } = await getProducts()
+      if (error) throw error
+      setProducts(data || [])
     } catch (error) {
       toast({
         title: "Error",
