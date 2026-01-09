@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { Toaster } from "@/shared/ui/toaster";
 import "../styles/dashboard.css";
@@ -11,6 +11,13 @@ interface DashboardLayoutProps {
 }
 
 function DashboardLayout({ children }: DashboardLayoutProps) {
+  useEffect(() => {
+    document.body.classList.add("dashboard");
+    return () => {
+      document.body.classList.remove("dashboard");
+    };
+  }, []);
+
   return (
     <div className="dashboard-root">
       <Sidebar />

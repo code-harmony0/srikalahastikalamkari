@@ -132,7 +132,7 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
-            <Sparkles className="h-8 w-8 text-amber-500" />
+            <Sparkles className="h-8 w-8 text-slate-900" />
             Dashboard
           </h1>
           <p className="text-slate-500 mt-1">

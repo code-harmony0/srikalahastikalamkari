@@ -39,50 +39,38 @@ const config: Config = {
       },
       // ORIGINAL WIX DESIGN - Color Palette (Exact Hex Values from Wix)
       colors: {
-        // Original Wix brand colors
-        "accent-color": "#B8860B", // Dark goldenrod
-        "light-brown": "#F5F5DC", // Beige
-        "light-brown-unused": "#DEB887",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#A0522D", // Sienna brown - ORIGINAL WIX
-          foreground: "#FFFFFF", // White text on primary
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#D2B48C", // Tan - ORIGINAL WIX
-          foreground: "#333333",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
-        background: "#F5F5DC", // Beige - ORIGINAL WIX
-        foreground: "#333333", // Dark gray - ORIGINAL WIX
-        footerbackground: "#333333",
-        linkcolor: "#A0522D",
-        buttonborder: "#A0522D",
-        softgraytext: "#B8860B",
-        creamhighlight: "#F5F5DC",
-        pastelblue: "#F5F5DC",
-        foregroungd: "#333333", // Typo from original but keeping for compatibility
         destructive: {
-          DEFAULT: "#DC143C", // Crimson
-          foreground: "#FFFFFF",
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
-        // shadcn/ui compatibility
-        border: "#D2B48C",
-        input: "#D2B48C",
-        ring: "#A0522D",
         muted: {
-          DEFAULT: "#F5F5DC",
-          foreground: "#666666",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "#B8860B",
-          foreground: "#FFFFFF",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#333333",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#333333",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
       },
       borderRadius: {
