@@ -277,7 +277,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Orders */}
         <div className="lg:col-span-2">
-          <Card className="border border-slate-200 shadow-md">
+          <Card variant="dashboard">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between ">
               <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-slate-500" />
@@ -362,7 +362,7 @@ const Dashboard = () => {
 
         {/* Top Products */}
         <div>
-          <Card className="border border-slate-200 shadow-md h-full">
+          <Card variant="dashboard" className="h-full">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-slate-500" />

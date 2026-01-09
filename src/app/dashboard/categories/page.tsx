@@ -636,7 +636,7 @@ const Categories = () => {
 
       {/* Category Dialog */}
       <Dialog open={categoryDialog} onOpenChange={setCategoryDialog}>
-        <DialogContent className="rounded-2xl shadow-2xl border-0">
+        <DialogContent variant="dashboard">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-slate-900">
               {editingCategory ? "Edit Category" : "Add New Category"}
