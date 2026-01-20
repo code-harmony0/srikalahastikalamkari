@@ -3,10 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useInventory } from "@/shared/contexts/InventoryContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
 import { Badge } from "@/shared/ui/badge";
-import { ArrowLeft, Edit, Trash2, Package } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Package, ChevronDown, ChevronUp, FileText, Palette, Settings, Eye, EyeOff, DollarSign, Boxes } from "lucide-react";
 import Barcode from "react-barcode";
 import {
   AlertDialog,
@@ -20,6 +19,46 @@ import {
 } from "@/shared/ui/alert-dialog";
 import { useToast } from "@/shared/ui/use-toast";
 
+// Collapsible Section Component for Product Details
+const DetailSection = ({
+  title,
+  icon,
+  children,
+  defaultOpen = true,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-5 hover:bg-slate-50/50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+            {icon}
+          </div>
+          <span className="text-base font-semibold text-slate-900">{title}</span>
+        </div>
+        <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+          {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+        </div>
+      </button>
+      {isOpen && (
+        <div className="px-5 pb-5 pt-0 border-t border-slate-100">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ProductDetails = () => {
   const params = useParams();
   const id = params.id as string;
@@ -31,14 +70,13 @@ const ProductDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    if (loading) return; // Wait for data to load
+    if (loading) return;
 
     const foundProduct = products.find((p: any) => String(p.id) === String(id));
-    
+
     if (foundProduct) {
       setProduct(foundProduct);
     } else {
-      // Only redirect if we are sure data is loaded and product is missing
       if (products.length > 0) {
         toast({
           title: "Product Not Found",
@@ -62,9 +100,8 @@ const ProductDetails = () => {
   };
 
   const handleEdit = () => {
-    // Store product in localStorage for edit mode
-    localStorage.setItem('editProduct', JSON.stringify(product));
-    router.push("/dashboard/add-product");
+    sessionStorage.setItem(`product_${product.id}`, JSON.stringify(product));
+    router.push(`/dashboard/add-product?edit=${product.id}`);
   };
 
   if (loading || !product) {
@@ -80,46 +117,83 @@ const ProductDetails = () => {
 
   const images = product.images || (product.image ? [product.image] : []);
   const currentImage = images[currentImageIndex] || "https://placehold.co/600x600?text=No+Image";
+  const isVisible = product.isVisible !== false;
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-slate-50/50 min-h-screen font-sans">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Button
-          variant="ghost"
-          onClick={() => router.push("/dashboard/products")}
-          className="hover:bg-white rounded-xl h-11 px-4"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Products
-        </Button>
-        <div className="flex gap-3">
-          <Button 
-            variant="outline" 
-            onClick={handleEdit}
-            className="h-11 border-slate-200 hover:bg-white rounded-xl"
-          >
-            <Edit className="h-4 w-4 mr-2" />
-            Edit Product
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={() => setIsDeleteDialogOpen(true)}
-            className="h-11 bg-red-600 hover:bg-red-700 rounded-xl shadow-md shadow-red-200"
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete
-          </Button>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 bg-[#f8fafc] min-h-screen font-sans">
+      {/* Header with Product Title */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => router.push("/dashboard/products")}
+              className="hover:bg-slate-100 rounded-xl h-10 w-10 shrink-0"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">{product.name}</h1>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                {product.in_stock || product.inStock ? (
+                  <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 px-2.5 py-0.5 rounded-full text-xs">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+                    In Stock
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 px-2.5 py-0.5 rounded-full text-xs">
+                    <div className="h-1.5 w-1.5 rounded-full bg-red-500 mr-1.5" />
+                    Out of Stock
+                  </Badge>
+                )}
+                {isVisible ? (
+                  <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-2.5 py-0.5 rounded-full text-xs">
+                    <Eye className="h-3 w-3 mr-1" />
+                    Visible
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-200 px-2.5 py-0.5 rounded-full text-xs">
+                    <EyeOff className="h-3 w-3 mr-1" />
+                    Hidden
+                  </Badge>
+                )}
+                {product.categoryName && (
+                  <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 px-2.5 py-0.5 rounded-full text-xs">
+                    {product.categoryName}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-2 md:gap-3">
+            <Button
+              variant="outline"
+              onClick={handleEdit}
+              className="h-10 border-slate-200 hover:bg-slate-50 rounded-xl"
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="h-10 bg-red-600 hover:bg-red-700 rounded-xl shadow-sm"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Column - Images */}
-        <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Left Column - Images (2 cols) */}
+        <div className="lg:col-span-2 space-y-4">
           {/* Main Image */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group">
-            <div className="aspect-square bg-slate-50 flex items-center justify-center p-8">
+            <div className="aspect-square bg-slate-50 flex items-center justify-center p-6">
               <img
                 src={currentImage}
                 alt={product.name}
@@ -127,10 +201,10 @@ const ProductDetails = () => {
               />
             </div>
           </div>
-          
+
           {/* Thumbnails */}
           {images.length > 1 && (
-            <div className="grid grid-cols-5 gap-3">
+            <div className="grid grid-cols-5 gap-2">
               {images.map((img: string, index: number) => (
                 <button
                   key={index}
@@ -151,18 +225,18 @@ const ProductDetails = () => {
             </div>
           )}
 
-          {/* Barcode Card (if exists) */}
+          {/* Barcode Card */}
           {product.barcode && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-              <h3 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <Package className="h-5 w-5 text-slate-400" />
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+              <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                <Package className="h-4 w-4 text-slate-400" />
                 Product Barcode
               </h3>
-              <div className="flex flex-col items-center gap-3 p-4 bg-slate-50 rounded-xl">
-                <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-                  <Barcode value={product.barcode} height={60} />
+              <div className="flex flex-col items-center gap-2 p-3 bg-slate-50 rounded-xl">
+                <div className="bg-white p-3 rounded-lg border border-slate-200">
+                  <Barcode value={product.barcode} height={50} width={1.5} />
                 </div>
-                <p className="text-sm text-slate-500 font-mono font-medium">
+                <p className="text-xs text-slate-500 font-mono">
                   {product.barcode}
                 </p>
               </div>
@@ -170,138 +244,163 @@ const ProductDetails = () => {
           )}
         </div>
 
-        {/* Right Column - Details */}
-        <div className="space-y-6">
-          {/* Title and Status */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
-            <div className="flex items-start justify-between mb-4">
-              <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{product.name}</h1>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 mb-6">
-              {product.in_stock || product.inStock ? (
-                <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 px-3 py-1 rounded-full">
-                  <div className="h-2 w-2 rounded-full bg-emerald-500 mr-2" />
-                  In Stock
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 px-3 py-1 rounded-full">
-                  <div className="h-2 w-2 rounded-full bg-red-500 mr-2" />
-                  Out of Stock
-                </Badge>
-              )}
-              {product.category_name && (
-                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 px-3 py-1 rounded-full">
-                  {product.category_name}
-                </Badge>
-              )}
-              {product.sub_category_name && (
-                <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 px-3 py-1 rounded-full">
-                  {product.sub_category_name}
-                </Badge>
-              )}
-            </div>
-
-            {/* Price */}
-            <div className="p-6 bg-slate-50 rounded-xl border border-slate-100">
-              <p className="text-sm font-medium text-slate-500 mb-2">Price</p>
-              <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-slate-900 tracking-tight">
-                  ₹{product.price?.toLocaleString()}
-                </span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <>
-                    <span className="text-xl text-slate-400 line-through">
-                      ₹{product.originalPrice?.toLocaleString()}
-                    </span>
-                    <Badge className="bg-red-600 hover:bg-red-600 text-white px-2.5 py-1 rounded-full">
-                      {Math.round(
-                        ((product.originalPrice - product.price) /
-                          product.originalPrice) *
-                          100
-                      )}
-                      % OFF
-                    </Badge>
-                  </>
-                )}
+        {/* Right Column - Details (3 cols) */}
+        <div className="lg:col-span-3 space-y-4">
+          {/* Pricing Card */}
+          <DetailSection
+            title="Pricing & Inventory"
+            icon={<DollarSign className="h-4 w-4" />}
+          >
+            <div className="pt-4 space-y-4">
+              <div className="p-5 bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-xl border border-slate-100">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Current Price</p>
+                <div className="flex items-baseline gap-3 flex-wrap">
+                  <span className="text-3xl font-bold text-slate-900 tracking-tight">
+                    ₹{product.price?.toLocaleString()}
+                  </span>
+                  {product.originalPrice && product.originalPrice > product.price && (
+                    <>
+                      <span className="text-lg text-slate-400 line-through">
+                        ₹{product.originalPrice?.toLocaleString()}
+                      </span>
+                      <Badge className="bg-red-600 hover:bg-red-600 text-white px-2 py-0.5 rounded-full text-xs">
+                        {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                      </Badge>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-4 bg-slate-50 rounded-xl">
+                  <p className="text-xs font-medium text-slate-500 mb-1">Stock Quantity</p>
+                  <p className="text-xl font-bold text-slate-900">
+                    {product.quantity || product.stock_quantity || 0}
+                    <span className="text-sm font-normal text-slate-500 ml-1">units</span>
+                  </p>
+                </div>
+                <div className="p-4 bg-slate-50 rounded-xl">
+                  <p className="text-xs font-medium text-slate-500 mb-1">Status</p>
+                  <p className={`text-xl font-bold ${(product.quantity || 0) > 5 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                    {(product.quantity || 0) > 5 ? 'Healthy' : 'Low Stock'}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </DetailSection>
 
           {/* Description */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Product Description</h3>
-            <p className="text-slate-600 leading-relaxed whitespace-pre-wrap">
-              {product.description || "No description available."}
-            </p>
-          </div>
-
-          {/* Product Information */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
-            <h3 className="text-lg font-bold text-slate-900 mb-6">Product Information</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
-                <span className="text-sm font-medium text-slate-500">Stock Quantity</span>
-                <span className="text-base font-bold text-slate-900">
-                  {product.quantity || product.stock_quantity || 0} units
-                </span>
-              </div>
-              
-              {product.colors && Array.isArray(product.colors) && product.colors.length > 0 && (
-                <div className="p-4 bg-slate-50 rounded-xl">
-                  <span className="text-sm font-medium text-slate-500 block mb-3">
-                    Available Colors
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {product.colors.map((color: string, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:shadow-sm transition-shadow"
-                      >
-                        <div
-                          className="w-5 h-5 rounded-full border-2 border-slate-200 shadow-inner"
-                          style={{ backgroundColor: color }}
-                        />
-                        <span className="text-xs font-mono font-medium text-slate-600">{color}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {product.material && (
-                <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
-                  <span className="text-sm font-medium text-slate-500">Material</span>
-                  <span className="text-base font-semibold text-slate-900">{product.material}</span>
-                </div>
-              )}
-
-              {product.dimensions && (
-                <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
-                  <span className="text-sm font-medium text-slate-500">Dimensions</span>
-                  <span className="text-base font-semibold text-slate-900">{product.dimensions}</span>
-                </div>
-              )}
-              
-              {/* Specifications Section */}
-              {product.specifications && Object.keys(product.specifications).length > 0 && (
-                <div className="mt-4 pt-4 border-t border-slate-100">
-                  <h4 className="text-sm font-bold text-slate-900 mb-3">Specifications</h4>
-                  <div className="grid grid-cols-1 gap-3">
-                    {Object.entries(product.specifications).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
-                        <span className="text-sm font-medium text-slate-500 capitalize">
-                          {key.replace(/([A-Z])/g, ' $1').trim()}
-                        </span>
-                        <span className="text-base font-semibold text-slate-900">
-                          {value as string}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+          <DetailSection
+            title="Description"
+            icon={<FileText className="h-4 w-4" />}
+          >
+            <div className="pt-4">
+              <p className="text-slate-600 leading-relaxed whitespace-pre-wrap text-sm">
+                {product.description || "No description available."}
+              </p>
             </div>
-          </div>
+          </DetailSection>
+
+          {/* Colors */}
+          {product.colors && Array.isArray(product.colors) && product.colors.length > 0 && (
+            <DetailSection
+              title="Available Colors"
+              icon={<Palette className="h-4 w-4" />}
+              defaultOpen={false}
+            >
+              <div className="pt-4">
+                <div className="flex flex-wrap gap-2">
+                  {product.colors.map((color: string, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg"
+                    >
+                      <div
+                        className="w-5 h-5 rounded-full border-2 border-white shadow-sm"
+                        style={{ backgroundColor: color }}
+                      />
+                      <span className="text-xs font-mono font-medium text-slate-600">{color}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </DetailSection>
+          )}
+
+          {/* Specifications */}
+          {product.specifications && Object.keys(product.specifications).length > 0 && (
+            <DetailSection
+              title="Specifications"
+              icon={<Settings className="h-4 w-4" />}
+              defaultOpen={false}
+            >
+              <div className="pt-4 space-y-2">
+                {Object.entries(product.specifications).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                    <span className="text-sm font-medium text-slate-500 capitalize">
+                      {key.replace(/([A-Z])/g, ' $1').trim()}
+                    </span>
+                    <span className="text-sm font-semibold text-slate-900">
+                      {value as string}
+                    </span>
+                  </div>
+                ))}
+                {product.material && (
+                  <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                    <span className="text-sm font-medium text-slate-500">Material</span>
+                    <span className="text-sm font-semibold text-slate-900">{product.material}</span>
+                  </div>
+                )}
+              </div>
+            </DetailSection>
+          )}
+
+          {/* Variants */}
+          {product.variants && Array.isArray(product.variants) && product.variants.length > 0 && (
+            <DetailSection
+              title={`Product Variants (${product.variants.length})`}
+              icon={<Boxes className="h-4 w-4" />}
+              defaultOpen={false}
+            >
+              <div className="pt-4 space-y-3">
+                {product.variants.map((variant: any, index: number) => (
+                  <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      {variant.size && (
+                        <div>
+                          <p className="text-xs text-slate-500 mb-0.5">Size</p>
+                          <p className="font-semibold text-slate-900">{variant.size}</p>
+                        </div>
+                      )}
+                      {variant.color && (
+                        <div>
+                          <p className="text-xs text-slate-500 mb-0.5">Color</p>
+                          <div className="flex items-center gap-1.5">
+                            {variant.color.startsWith('#') && (
+                              <div
+                                className="w-4 h-4 rounded-full border border-slate-200"
+                                style={{ backgroundColor: variant.color }}
+                              />
+                            )}
+                            <p className="font-semibold text-slate-900">{variant.color}</p>
+                          </div>
+                        </div>
+                      )}
+                      {variant.sku && (
+                        <div>
+                          <p className="text-xs text-slate-500 mb-0.5">SKU</p>
+                          <p className="font-mono font-semibold text-slate-900">{variant.sku}</p>
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-xs text-slate-500 mb-0.5">Stock</p>
+                        <p className="font-semibold text-slate-900">{variant.stock_quantity || 0}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </DetailSection>
+          )}
         </div>
       </div>
 

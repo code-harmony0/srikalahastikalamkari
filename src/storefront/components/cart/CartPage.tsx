@@ -16,7 +16,7 @@ export default function CartPage() {
 
   const cartItems = useMemo(() => {
     return cart.items.map((item) => {
-      const product = products.find((p) => p._id === item.productId);
+      const product = products.find((p) => p.id === item.productId);
       return { ...item, product };
     }).filter((item) => item.product);
   }, [cart.items, products]);
@@ -103,7 +103,7 @@ export default function CartPage() {
                 {cartItems.map(({ productId, quantity, product }, index) => {
                   if (!product) return null;
 
-                  const stockLevel = product.stockQuantity || 10;
+                  const stockLevel = product.stock_quantity || 10;
                   const isLowStock = stockLevel <= 5;
 
                   return (
@@ -116,54 +116,45 @@ export default function CartPage() {
                       layout
                       className="bg-white rounded-lg p-4 shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 group"
                     >
-                      <div className="flex gap-4 items-start">
+                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full">
                         {/* Product Image */}
                         <div className="flex-shrink-0">
                           <div className="relative">
                             <Image
                               src={product.mainImage || "/placeholder.png"}
                               alt={product.title || "Product"}
-                              className="w-20 h-24 object-cover rounded-md"
-                              width={80}
-                              height={96}
+                              className="w-20 h-24 sm:w-24 sm:h-32 object-cover rounded-md border border-border"
+                              width={96}
+                              height={128}
                             />
                             {isLowStock && (
-                              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-sm">
                                 Low Stock
                               </div>
                             )}
                           </div>
                         </div>
 
-                        {/* Product Details */}
-                        <div className="flex-grow min-w-0">
-                          <div className="flex justify-between items-start mb-2">
-                            <h3 className="text-lg font-heading font-bold text-foreground truncate pr-2">
-                              {product.title}
-                            </h3>
-                            <button
-                              onClick={() => handleRemoveItem(productId)}
-                              className="text-gray-400 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-
-                          <div className="flex justify-between items-center mt-4">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xl font-bold text-primary">
-                                {formatPrice((product.price || 0) * quantity)}
-                              </span>
+                        {/* Product Details - Aligned Row on Desktop */}
+                        <div className="flex-grow w-full">
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-heading font-bold text-foreground mb-1">
+                                {product.title}
+                              </h3>
+                              <p className="text-sm text-muted-foreground line-clamp-1">
+                                {product.description}
+                              </p>
                             </div>
 
                             {/* Quantity Controls */}
-                            <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-1">
+                            <div className="flex items-center gap-3 bg-secondary/10 rounded-lg p-1.5 border border-border/50">
                               <button
                                 onClick={() => handleUpdateQuantity(productId, quantity - 1)}
                                 disabled={quantity <= 1}
-                                className="p-1 hover:bg-gray-200 rounded transition-colors disabled:opacity-50"
+                                className="p-1 hover:bg-white rounded shadow-sm transition-all disabled:opacity-50 disabled:shadow-none"
                               >
-                                <Minus className="w-3 h-3 text-foreground" />
+                                <Minus className="w-3.5 h-3.5 text-foreground" />
                               </button>
                               <span className="w-8 text-center text-sm font-semibold text-foreground">
                                 {quantity}
@@ -171,9 +162,22 @@ export default function CartPage() {
                               <button
                                 onClick={() => handleUpdateQuantity(productId, quantity + 1)}
                                 disabled={quantity >= stockLevel}
-                                className="p-1 hover:bg-gray-200 rounded transition-colors disabled:opacity-50"
+                                className="p-1 hover:bg-white rounded shadow-sm transition-all disabled:opacity-50 disabled:shadow-none"
                               >
-                                <Plus className="w-3 h-3 text-foreground" />
+                                <Plus className="w-3.5 h-3.5 text-foreground" />
+                              </button>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                              <span className="text-xl font-bold text-primary min-w-[5rem] text-right">
+                                {formatPrice((product.price || 0) * quantity)}
+                              </span>
+                              <button
+                                onClick={() => handleRemoveItem(productId)}
+                                className="text-muted-foreground hover:text-destructive transition-colors p-2 hover:bg-destructive/10 rounded-full"
+                                title="Remove item"
+                              >
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           </div>

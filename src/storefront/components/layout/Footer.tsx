@@ -45,7 +45,7 @@ export default function Footer() {
         viewport={{ once: true }}
       />
 
-      <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-12 relative z-10">
+      <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-10 relative z-10">
         {/* 4-Column Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand Section */}

@@ -81,8 +81,8 @@ export default function AboutPage() {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/45 to-black/60"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20"></div>
+          <div className="absolute inset-0 bg-black/40"></div> {/* Enhanced overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
         </div>
 
         <div className="relative z-10 max-w-[100rem] mx-auto px-4 md:px-8 text-center">
@@ -90,16 +90,16 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-4"
+            className="space-y-6"
           >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-snug tracking-tight [text-shadow:0_2px_8px_rgba(0,0,0,0.5)]">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-snug tracking-tight drop-shadow-lg">
               Our Story
             </h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed font-paragraph [text-shadow:0_1px_4px_rgba(0,0,0,0.4)]"
+              className="text-lg md:text-xl text-white/95 max-w-[65ch] mx-auto leading-relaxed font-paragraph drop-shadow-md"
             >
               Celebrating the timeless art of Kalamkari and the master artisans
               who keep this ancient heritage alive through every brushstroke.
@@ -271,7 +271,7 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {values.map((value, index) => {
               const IconComponent = value.icon;
               return (

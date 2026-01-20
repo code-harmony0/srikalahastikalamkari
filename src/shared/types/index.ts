@@ -7,49 +7,54 @@
 export type { Category, SubCategory } from './supabase';
 
 export interface Product {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
+  id: string;
+  created_at?: string;
+  updated_at?: string;
   sku?: string;
-  stockQuantity?: number;
-  title?: string;
+  stock_quantity?: number;
+  quantity?: number; // fallback/compatibility
+  name?: string;
+  title?: string; // compatibility
   description?: string;
   price?: number;
-  discountedPrice?: number;
+  original_price?: number;
+  originalPrice?: number; // compatibility
   onSale?: boolean;
-  mainImage?: string;
-  availableSizes?: string;
-  isFeatured?: boolean;
-  slug?: string; // For URL routing
-}
-
-export interface ProductCategory {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  name?: string;
-  description?: string;
-  slug?: string;
   image?: string;
-  isActive?: boolean;
-  displayOrder?: number;
+  mainImage?: string; // compatibility
+  images?: string[];
+  availableSizes?: string; // legacy
+  colors?: string[];
+  is_featured?: boolean;
+  isFeatured?: boolean; // compatibility
+  is_visible?: boolean;
+  isVisible?: boolean; // compatibility
+  slug?: string;
+  category_id?: string;
+  categoryName?: string;
+  specifications?: Record<string, string>;
+  material?: string;
+  barcode?: string;
+  variants?: ProductVariant[];
+  selectedVariant?: ProductVariant;
 }
 
 export interface ProductVariant {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  productId?: string;
-  variantName?: string;
+  id: string;
+  product_id?: string;
+  name?: string;
+  size?: string;
   color?: string;
-  pattern?: string;
-  variantImage?: string;
-  priceModifier?: number;
   sku?: string;
+  price_modifier?: number;
+  stock_quantity?: number;
+  image_url?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ProductReview {
-  _id: string;
+  id: string;
   _createdDate?: Date;
   _updatedDate?: Date;
   productName?: string;
@@ -61,7 +66,7 @@ export interface ProductReview {
 }
 
 export interface Promotion {
-  _id: string;
+  id: string;
   _createdDate?: Date;
   _updatedDate?: Date;
   title?: string;
@@ -74,7 +79,7 @@ export interface Promotion {
 }
 
 export interface Order {
-  _id: string;
+  id: string;
   _createdDate?: Date;
   _updatedDate?: Date;
   customerName?: string;

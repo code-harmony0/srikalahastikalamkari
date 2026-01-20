@@ -20,7 +20,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Eye,
-  EyeOff
+  EyeOff,
+  RefreshCw
 } from "lucide-react";
 import { useToast } from "@/shared/ui/use-toast";
 import {
@@ -257,25 +258,31 @@ const ProductList = () => {
   }, [filters]);
 
   return (
-    <div className="p-8 space-y-8 bg-slate-50/50 min-h-screen font-sans">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div className="min-h-screen bg-[#f8fafc] p-4 md:p-6 font-sans space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Product Inventory</h1>
-          <p className="text-slate-500 mt-2 text-lg">
-            Manage your inventory, prices, and stock levels.
-          </p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Products</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage your inventory and variants</p>
         </div>
-        <Button
-          onClick={() => router.push("/dashboard/add-product")}
-          className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20 h-11 px-6 text-base transition-all hover:scale-105 active:scale-95 gap-2"
-        >
-          <Plus className="h-5 w-5" />
-          Add Product
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            onClick={fetchData}
+            className="h-9 hover:bg-slate-200/50 border-0 text-slate-600"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refresh
+          </Button>
+          <Button 
+            onClick={() => router.push("/dashboard/add-product")}
+            className="bg-slate-900 hover:bg-slate-800 text-white shadow-md h-9 gap-2 px-4 rounded-lg transition-all"
+          >
+            <Plus className="h-4 w-4" />
+            New Product
+          </Button>
+        </div>
       </div>
-
-
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
@@ -490,15 +497,15 @@ const ProductList = () => {
       {/* Product Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <Table>
-          <TableHeader className="bg-slate-50/50">
-            <TableRow className="hover:bg-transparent border-slate-100">
-              <TableHead className="w-[100px] pl-6">Image</TableHead>
-              <TableHead>Product Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead className="w-[100px]">Visible</TableHead>
-              <TableHead className="text-right pr-6">Actions</TableHead>
+          <TableHeader className="bg-slate-50/80">
+            <TableRow className="hover:bg-transparent border-b border-slate-200">
+              <TableHead className="w-[80px] font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 pl-6">Image</TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">Product</TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">Category</TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-right">Price</TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-right">Stock</TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">Status</TableHead>
+              <TableHead className="text-right font-semibold text-xs uppercase tracking-wider text-slate-500 pr-6 py-4">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -550,18 +557,25 @@ const ProductList = () => {
                       {product.categoryName || "Uncategorized"}
                     </Badge>
                   </TableCell>
-                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)}>
+                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)} className="text-right tabular-nums">
                     <div className="font-bold text-slate-900">₹{product.price?.toLocaleString()}</div>
                     {product.originalPrice && product.originalPrice > product.price && (
                       <div className="text-xs text-slate-400 line-through">₹{product.originalPrice?.toLocaleString()}</div>
                     )}
                   </TableCell>
-                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)}>
-                    <div className="flex items-center gap-2">
-                      <div className={`h-2.5 w-2.5 rounded-full ${(product.quantity || 0) > 5 ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                      <span className={`font-medium ${(product.quantity || 0) > 5 ? 'text-slate-700' : 'text-amber-700'}`}>
-                        {product.quantity || 0} Units
-                      </span>
+                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)} className="text-right tabular-nums">
+                    <div className="flex items-center justify-end gap-2">
+                      <div className="flex flex-col items-end">
+                        <span className={`font-medium ${(product.quantity || 0) > 5 ? 'text-slate-700' : 'text-amber-700'}`}>
+                          {product.quantity || 0}
+                        </span>
+                        {product.variants && product.variants.length > 0 && (
+                          <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-tight">
+                            {product.variants.length} Var
+                          </span>
+                        )}
+                      </div>
+                      <div className={`h-2 w-2 rounded-full shrink-0 ${(product.quantity || 0) > 5 ? 'bg-emerald-500' : 'bg-amber-500'}`} />
                     </div>
                   </TableCell>
                   <TableCell>
@@ -580,24 +594,25 @@ const ProductList = () => {
                     </div>
                   </TableCell>
                   <TableCell className="text-right pr-6">
-                    <div 
-                      className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-2 group-hover:translate-x-0"
+                    <div
+                      className="flex items-center justify-end gap-1"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        className="h-8 border-slate-200 text-slate-600 hover:bg-slate-50"
-                        onClick={() => handleEdit(product)}
-                      >
-                        <Edit className="mr-1.5 h-3.5 w-3.5" />
-                        Edit
-                      </Button>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="icon"
                         variant="ghost"
-                        className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        className="h-8 w-8 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+                        onClick={() => handleEdit(product)}
+                        title="Edit product"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
                         onClick={() => handleDeleteClick(product)}
+                        title="Delete product"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

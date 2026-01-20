@@ -12,13 +12,13 @@ import { formatPrice } from "@/shared/utils";
 import { toast } from "sonner";
 
 type Product = {
-  _id: string;
+  id: string;
   slug?: string;
   title?: string;
   description?: string;
   mainImage?: string;
   price?: number;
-  stockQuantity?: number;
+  stock_quantity?: number;
   availableSizes?: string;
   isFeatured?: boolean;
 };
@@ -31,7 +31,7 @@ export default function WishlistPage() {
   const wishlistItems = useMemo(
     () =>
       wishlist.items
-        .map((item) => products.find((p) => p._id === item))
+        .map((item) => products.find((p) => p.id === item))
         .filter((p): p is Product => Boolean(p)),
     [wishlist.items, products]
   );
@@ -172,7 +172,7 @@ export default function WishlistPage() {
           <AnimatePresence>
             {wishlistItems.map((product, index) => (
               <motion.div
-                key={product._id}
+                key={product.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
@@ -180,7 +180,7 @@ export default function WishlistPage() {
                 className="group bg-white/80 backdrop-blur-md rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 overflow-hidden border border-border"
               >
                 {/* Product Image */}
-                <Link href={`/products/${product.slug || product._id}`}>
+                <Link href={`/products/${product.slug || product.id}`}>
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <Image
                       src={product.mainImage || "/placeholder.png"}
@@ -196,7 +196,7 @@ export default function WishlistPage() {
                       whileTap={{ scale: 0.9 }}
                       onClick={(e) => {
                         e.preventDefault();
-                        handleRemoveFromWishlist(product._id);
+                        handleRemoveFromWishlist(product.id);
                       }}
                       className="absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors border border-border"
                     >
@@ -212,7 +212,7 @@ export default function WishlistPage() {
                     )}
 
                     {/* Stock Status */}
-                    {(product.stockQuantity || 0) <= 0 && (
+                    {(product.stock_quantity || 0) <= 0 && (
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                         <div className="px-4 py-2 text-xs font-semibold rounded-full bg-destructive text-white">
                           Out of Stock
@@ -224,7 +224,7 @@ export default function WishlistPage() {
 
                 {/* Product Details */}
                 <div className="p-4 md:p-6">
-                  <Link href={`/products/${product.slug || product._id}`}>
+                  <Link href={`/products/${product.slug || product.id}`}>
                     <h3 className="font-heading font-bold text-lg mb-1 line-clamp-2 transition-colors cursor-pointer text-foreground hover:text-primary">
                       {product.title}
                     </h3>
@@ -261,9 +261,9 @@ export default function WishlistPage() {
                   )}
 
                   {/* Stock Status Text */}
-                  {product.stockQuantity && product.stockQuantity > 0 ? (
+                  {product.stock_quantity && product.stock_quantity > 0 ? (
                     <p className="text-xs font-paragraph mb-4 text-green-500">
-                      In Stock ({product.stockQuantity} available)
+                      In Stock ({product.stock_quantity} available)
                     </p>
                   ) : (
                     <p className="text-xs font-paragraph mb-4 text-destructive">
@@ -276,7 +276,7 @@ export default function WishlistPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleAddToCart(product)}
-                    disabled={(product.stockQuantity || 0) <= 0}
+                    disabled={(product.stock_quantity || 0) <= 0}
                     className="w-full py-2.5 rounded-sm font-paragraph font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-background disabled:bg-muted"
                   >
                     <ShoppingBag className="w-4 h-4" />

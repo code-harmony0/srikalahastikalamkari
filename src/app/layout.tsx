@@ -48,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${openSans.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${openSans.variable}`} suppressHydrationWarning>
       <body>
         <Providers>
           <InventoryProvider>

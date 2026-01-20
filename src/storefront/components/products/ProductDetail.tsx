@@ -37,7 +37,7 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
   const { data: product, isLoading } = useProductBySlug(slug);
   const { data: allProducts } = useProducts();
 
-  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
@@ -50,7 +50,7 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
 
   const reviews = [
     {
-      _id: "1",
+      id: "1",
       customerName: "Priya Sharma",
       rating: 5,
       reviewText: "Absolutely stunning saree! The craftsmanship is exceptional and the colors are vibrant. The Kalamkari work is incredibly detailed and authentic. I wore it to a wedding and received so many compliments. The fabric drapes beautifully and feels luxurious. Worth every penny!",
@@ -58,7 +58,7 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
       isVerifiedPurchase: true,
     },
     {
-      _id: "2",
+      id: "2",
       customerName: "Anjali Mehta",
       rating: 5,
       reviewText: "Beautiful traditional work that showcases true Indian artistry. The fabric quality is excellent - soft yet sturdy, and drapes beautifully. The natural dyes give it such an elegant, timeless look. Packaging was premium and delivery was prompt. Highly recommend to anyone looking for authentic Kalamkari!",
@@ -66,7 +66,7 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
       isVerifiedPurchase: true,
     },
     {
-      _id: "3",
+      id: "3",
       customerName: "Sneha Patel",
       rating: 4,
       reviewText: "Lovely piece with intricate hand-painted details. The colors are more vibrant in person which I love! Shipping was fast and the saree came beautifully packaged in a reusable cotton bag. Only minor point - wish there were more color options. Overall very satisfied with my purchase.",
@@ -74,7 +74,7 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
       isVerifiedPurchase: true,
     },
     {
-      _id: "4",
+      id: "4",
       customerName: "Kavita Reddy",
       rating: 5,
       reviewText: "This is my third purchase from Shri Kailash Kalamkari and they never disappoint! The quality is consistently excellent. The natural dyes give such a rich, earthy look that improves with each wash. Supporting authentic artisan work feels great. Already planning my next purchase!",
@@ -84,9 +84,8 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
   ];
 
   useEffect(() => {
-    if (product?.availableSizes) {
-      const sizes = product.availableSizes.split(",").map((s) => s.trim());
-      setSelectedSize(sizes[0]);
+    if (product?.variants && product.variants.length > 0) {
+      setSelectedVariant(product.variants[0]);
     }
   }, [product]);
 
@@ -126,19 +125,22 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
     ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
     : "4.5";
   const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 3);
-  const stockCount = product.stockQuantity || 8;
+  const stockCount = product.stock_quantity || 8;
   const galleryImages = product.mainImage ? [product.mainImage] : [];
-  const relatedProducts = allProducts?.filter((p) => p._id !== product._id && p.isFeatured).slice(0, 4) || [];
-  const isInWishlist = wishlist.isInWishlist(product._id);
+  const relatedProducts = allProducts?.filter((p) => p.id !== product.id && p.isFeatured).slice(0, 4) || [];
+  const isInWishlist = wishlist.isInWishlist(product.id);
 
   const handleAddToCart = () => {
-    cart.addItem(product, quantity);
+    cart.addItem({
+      ...product,
+      selectedVariant: selectedVariant
+    }, quantity);
     toast.success(`Added ${quantity} item(s) to cart`);
   };
 
   const handleToggleWishlist = () => {
-    wishlist.toggleItem(product._id);
-    toast.success(wishlist.isInWishlist(product._id) ? "Removed from wishlist" : "Added to wishlist");
+    wishlist.toggleItem(product.id);
+    toast.success(wishlist.isInWishlist(product.id) ? "Removed from wishlist" : "Added to wishlist");
   };
 
   return (
@@ -267,8 +269,10 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
 
               {/* Price and Badges */}
               <div className="flex items-center gap-3">
-                <p className="text-3xl font-bold text-primary">{formatPrice(product.price || 0)}</p>
-                {product.isFeatured && (
+                <p className="text-3xl font-bold text-primary">
+                  {formatPrice((product.price || 0) + (selectedVariant?.price_modifier || 0))}
+                </p>
+                {product.is_featured && (
                   <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
                     Featured
                   </Badge>
@@ -298,29 +302,29 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
 
               <Separator className="my-3" />
 
-              {/* Size Selection */}
-              {availableSizes.length > 0 && (
-                <div>
-                  <Label className="text-xs font-semibold text-foreground mb-2 block">Size</Label>
-                  <RadioGroup value={selectedSize} onValueChange={setSelectedSize}>
+              {/* Variant Selection */}
+              {product.variants && product.variants.length > 0 && (
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-xs font-semibold text-foreground mb-2 block uppercase tracking-wider">Select Variant</Label>
                     <div className="flex flex-wrap gap-2">
-                      {availableSizes.map((size) => (
-                        <div key={size} className="flex items-center">
-                          <RadioGroupItem value={size} id={`size-${size}`} className="sr-only" />
-                          <Label
-                            htmlFor={`size-${size}`}
-                            className={`cursor-pointer border px-3 py-1 rounded text-xs font-medium transition-colors ${
-                              selectedSize === size
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-gray-300 text-foreground hover:border-primary"
-                            }`}
-                          >
-                            {size}
-                          </Label>
-                        </div>
+                      {product.variants.map((v: any) => (
+                        <button
+                          key={v.id}
+                          onClick={() => setSelectedVariant(v)}
+                          className={`
+                            px-4 py-2 text-sm font-medium rounded-lg border transition-all
+                            ${selectedVariant?.id === v.id
+                              ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
+                              : "border-gray-200 text-foreground hover:border-primary"
+                            }
+                          `}
+                        >
+                          {v.size && v.color ? `${v.size} / ${v.color}` : v.size || v.color || v.name}
+                        </button>
                       ))}
                     </div>
-                  </RadioGroup>
+                  </div>
                 </div>
               )}
 
@@ -401,8 +405,29 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
               <AccordionTrigger className="text-lg font-heading font-semibold text-foreground hover:text-primary">
                 Product Details
               </AccordionTrigger>
-              <AccordionContent className="text-foreground/70 font-paragraph leading-relaxed">
-                {product.description}
+              <AccordionContent className="space-y-6">
+                <p className="text-foreground/70 font-paragraph leading-relaxed">
+                  {product.description}
+                </p>
+
+                {product.specifications && Object.keys(product.specifications).length > 0 && (
+                  <div className="mt-6 border rounded-xl overflow-hidden bg-white/50">
+                    <table className="w-full text-sm">
+                      <tbody>
+                        {Object.entries(product.specifications).map(([key, value], idx) => (
+                          <tr key={key} className={idx % 2 === 0 ? "bg-slate-50/50" : ""}>
+                            <td className="px-4 py-3 font-semibold text-slate-600 uppercase text-[10px] tracking-wider border-r border-slate-100 w-1/3">
+                              {key}
+                            </td>
+                            <td className="px-4 py-3 text-slate-800">
+                              {value}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </AccordionContent>
             </AccordionItem>
 
@@ -468,8 +493,8 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relProduct) => (
-                <motion.div key={relProduct._id} whileHover={{ y: -4 }} className="group">
-                  <Link href={`/products/${relProduct.slug || relProduct._id}`}>
+                <motion.div key={relProduct.id} whileHover={{ y: -4 }} className="group">
+                  <Link href={`/products/${relProduct.slug || relProduct.id}`}>
                     <div className="relative overflow-hidden rounded-lg bg-white border border-gray-200 hover:border-gray-300 transition-colors mb-3">
                       {relProduct.mainImage && (
                         <Image
@@ -531,7 +556,7 @@ export default function ProductDetail({ slug }: ProductDetailProps) {
             <div className="space-y-4 mb-6">
               {displayedReviews.map((review, index) => (
                 <motion.div
-                  key={review._id}
+                  key={review.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}

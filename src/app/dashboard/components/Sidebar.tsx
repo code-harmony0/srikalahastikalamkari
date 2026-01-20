@@ -1,6 +1,9 @@
+"use client";
+
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import {
   FiGrid,
   FiBox,
@@ -8,25 +11,33 @@ import {
   FiPlusSquare,
   FiLogOut,
   FiTag,
+  FiChevronLeft,
+  FiChevronRight,
+  FiShoppingBag,
 } from "react-icons/fi"
 import "./Sidebar.css"
 import { useAuth } from "@/shared/contexts/AuthContext"
-import { signOut } from "firebase/auth"
-import { auth } from "@/shared/config/firebase"
+import { useSidebar } from "@/shared/contexts/SidebarContext"
 import { useToast } from "@/shared/ui/use-toast"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/ui/tooltip"
 
 const Sidebar = () => {
   const router = useRouter()
   const pathname = usePathname()
   const { user, logout } = useAuth()
+  const { isCollapsed, toggleSidebar } = useSidebar()
   const role = (user as any)?.metadata?.role
 
   const { toast } = useToast()
 
   const handleLogout = async () => {
     await logout()
-    localStorage.removeItem("isLoggedIn") // Clear legacy auth just in case
-    router.push("/login")
+    localStorage.removeItem("isLoggedIn")
+    localStorage.removeItem("userRole")
+    localStorage.removeItem("rememberMe")
+    // Clear cookie
+    document.cookie = "isLoggedIn=; path=/; max-age=0"
+    router.push("/dashboard/login")
   }
 
   const menuItems = [
@@ -62,53 +73,112 @@ const Sidebar = () => {
     },
   ]
 
-  // const filteredItems = menuItems.filter(
-  // (item) =>
-  // Filter items based on user roles
-  // !item.roles || (role && item.roles.includes(role))
-  // )
-  const filteredItems = menuItems // Show all items for debu
+  const filteredItems = menuItems
 
   return (
-    <div className="sidebar">
+    <motion.div
+      className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
+      animate={{ width: isCollapsed ? 80 : 280 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        mass: 0.8
+      }}
+    >
       <div className="sidebar-content">
         <div className="sidebar-header">
           <div className="logo-container">
-            <div className="logo-icon">KK</div>
-            <div>
-              <h2 className="brand-name">Kailash Kalamkari</h2>
-              <p className="brand-subtitle">Admin Panel</p>
-              {role && (
-                <span className="text-xs text-gray-400 capitalize">
-                  {role.replace("_", " ")}
-                </span>
-              )}
+            <div className="logo-icon shrink-0">
+              <FiShoppingBag className="w-5 h-5" />
             </div>
+            {!isCollapsed && (
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+              >
+                <h2 className="brand-name">Kailash Kalamkari</h2>
+                <p className="brand-subtitle">Admin Panel</p>
+                {role && (
+                  <span className="text-xs text-gray-400 capitalize">
+                    {role.replace("_", " ")}
+                  </span>
+                )}
+              </motion.div>
+            )}
           </div>
+          
+          <button 
+            className="sidebar-toggle-btn"
+            onClick={toggleSidebar}
+            title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            {isCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
+          </button>
         </div>
+
         <nav className="sidebar-nav">
-          <ul>
-            {filteredItems.map((item) => (
-              <li key={item.to}>
-                <Link
-                  href={item.to}
-                  className={pathname === item.to ? "active" : ""}
-                >
-                  <item.icon className="nav-icon" />
-                  <span>{item.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <TooltipProvider delayDuration={0}>
+            <ul>
+              {filteredItems.map((item) => (
+                <li key={item.to}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={item.to}
+                        className={pathname === item.to ? "active" : ""}
+                      >
+                        <item.icon className="nav-icon" />
+                        {!isCollapsed && (
+                          <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {item.label}
+                          </motion.span>
+                        )}
+                      </Link>
+                    </TooltipTrigger>
+                    {isCollapsed && (
+                      <TooltipContent side="right">
+                        {item.label}
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </li>
+              ))}
+            </ul>
+          </TooltipProvider>
         </nav>
       </div>
+
       <div className="sidebar-footer">
-        <button className="logout-btn" onClick={handleLogout}>
-          <FiLogOut className="logout-icon" />
-          <span>Logout</span>
-        </button>
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="logout-btn" onClick={handleLogout}>
+                <FiLogOut className="logout-icon shrink-0" />
+                {!isCollapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                  >
+                    Logout
+                  </motion.span>
+                )}
+              </button>
+            </TooltipTrigger>
+            {isCollapsed && (
+              <TooltipContent side="right">
+                Logout
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

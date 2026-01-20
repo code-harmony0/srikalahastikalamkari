@@ -14,7 +14,6 @@ const config: Config = {
       },
     },
     extend: {
-      // ORIGINAL WIX DESIGN - Custom Typography
       fontSize: {
         xs: ["0.75rem", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "400" }],
         sm: ["0.875rem", { lineHeight: "1.25", letterSpacing: "0.025em", fontWeight: "400" }],
@@ -22,73 +21,79 @@ const config: Config = {
         lg: ["1.125rem", { lineHeight: "1.75", letterSpacing: "0em", fontWeight: "400" }],
         xl: ["1.25rem", { lineHeight: "1.75", letterSpacing: "0em", fontWeight: "500" }],
         "2xl": ["1.5rem", { lineHeight: "2", letterSpacing: "-0.01em", fontWeight: "500" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25", letterSpacing: "-0.015em", fontWeight: "600" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5", letterSpacing: "-0.02em", fontWeight: "600" }],
+        "3xl": ["1.75rem", { lineHeight: "2.25", letterSpacing: "-0.015em", fontWeight: "600" }], // ~28px as requested
+        "4xl": ["2.25rem", { lineHeight: "2.5", letterSpacing: "-0.02em", fontWeight: "600" }], // 36px-40px range
         "5xl": ["3rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
         "6xl": ["3.75rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
         "7xl": ["4.5rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
         "8xl": ["6rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
         "9xl": ["8rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
       },
-      // ORIGINAL WIX DESIGN - Fonts
       fontFamily: {
         heading: ["Cormorant Garamond", "serif"],
         paragraph: ["Open Sans", "sans-serif"],
         sans: ["Open Sans", "sans-serif"],
         serif: ["Cormorant Garamond", "serif"],
       },
-      // ORIGINAL WIX DESIGN - Color Palette (Exact Hex Values from Wix)
       colors: {
-        // Original Wix brand colors
-        "accent-color": "#B8860B", // Dark goldenrod
-        "light-brown": "#F5F5DC", // Beige
-        "light-brown-unused": "#DEB887",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#A0522D", // Sienna brown - ORIGINAL WIX
-          foreground: "#FFFFFF", // White text on primary
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#D2B48C", // Tan - ORIGINAL WIX
-          foreground: "#333333",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
-        background: "#F5F5DC", // Beige - ORIGINAL WIX
-        foreground: "#333333", // Dark gray - ORIGINAL WIX
-        footerbackground: "#333333",
-        linkcolor: "#A0522D",
-        buttonborder: "#A0522D",
-        softgraytext: "#B8860B",
-        creamhighlight: "#F5F5DC",
-        pastelblue: "#F5F5DC",
-        foregroungd: "#333333", // Typo from original but keeping for compatibility
         destructive: {
-          DEFAULT: "#DC143C", // Crimson
-          foreground: "#FFFFFF",
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
-        // shadcn/ui compatibility
-        border: "#D2B48C",
-        input: "#D2B48C",
-        ring: "#A0522D",
         muted: {
-          DEFAULT: "#F5F5DC",
-          foreground: "#666666",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "#B8860B",
-          foreground: "#FFFFFF",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+          secondary: "hsl(var(--accent-secondary))", // Added secondary accent
+        },
+        surface: {
+          1: "hsl(var(--surface-1))",
+          2: "hsl(var(--surface-2))",
+        },
+        text: {
+          heading: "hsl(var(--text-heading))",
+          body: "hsl(var(--text-body))",
+          muted: "hsl(var(--text-muted))",
         },
         popover: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#333333",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#333333",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
+        // Legacy/Custom colors mapped to variables or kept for backward compatibility
+        "accent-color": "hsl(var(--accent))",
+        "light-brown": "hsl(var(--background))", // Mapping to background (Beige)
+        footerbackground: "#333333", // Keeping fixed for now
+        linkcolor: "hsl(var(--primary))",
+        buttonborder: "hsl(var(--primary))",
+        softgraytext: "hsl(var(--accent))",
       },
       borderRadius: {
-        lg: "0.5rem",
-        md: "calc(0.5rem - 2px)",
-        sm: "calc(0.5rem - 4px)",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        DEFAULT: "0 2px 8px rgba(0, 0, 0, 0.06)", // Unified shadow
       },
       keyframes: {
         "accordion-down": {

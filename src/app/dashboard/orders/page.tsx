@@ -298,79 +298,85 @@ const Orders = () => {
     });
   };
 
+  const formatCurrency = (amount: number) => {
+    return `₹${amount.toLocaleString('en-IN')}`;
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50/50 p-6 font-sans space-y-8">
+    <div className="min-h-screen bg-[#f8fafc] p-4 md:p-6 font-sans space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Orders</h1>
-          <p className="text-slate-500 mt-1">Manage and track all customer orders</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Orders</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage and track all customer orders</p>
         </div>
-        <Button
-          onClick={fetchOrders}
-          disabled={loading}
-          variant="outline"
-          className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-sm"
-        >
-          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh List
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={fetchOrders}
+            disabled={loading}
+            variant="ghost"
+            className="h-9 hover:bg-slate-200/50 border-0 text-slate-600"
+          >
+            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Statistics Dashboard - Bento Style */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/20 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
               <Package className="h-6 w-6" />
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Total Orders</p>
-              <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
+              <p className="text-2xl font-bold text-blue-600">{Number(stats.total) || 0}</p>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/20 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center text-green-600">
               <Clock className="h-6 w-6" />
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Today's Orders</p>
-              <p className="text-2xl font-bold text-slate-900">{stats.todayCount}</p>
+              <p className="text-2xl font-bold text-blue-600">{Number(stats.todayCount) || 0}</p>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-5 rounded-2xl shadow-sm border border-amber-100 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-full bg-white/60 flex items-center justify-center text-amber-600 backdrop-blur-sm">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/30 flex items-center gap-4">
+            <div className="h-12 w-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
               <PackageCheck className="h-6 w-6" />
             </div>
             <div>
               <p className="text-sm font-medium text-amber-800">Pending Action</p>
-              <p className="text-2xl font-bold text-amber-900">{stats.paid + stats.inPacking}</p>
+              <p className="text-2xl font-bold text-blue-600">{(Number(stats.paid) || 0) + (Number(stats.inPacking) || 0)}</p>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/20 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
               <CheckCircle2 className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Monthly Revenue</p>
-              <p className="text-2xl font-bold text-slate-900">₹{stats.todayRevenue.toLocaleString()}</p>
+              <p className="text-sm font-medium text-slate-500">Today's Revenue</p>
+              <p className="text-2xl font-bold text-blue-600">₹{(Number(stats.todayRevenue) || 0).toLocaleString('en-IN')}</p>
             </div>
           </div>
         </div>
       )}
 
       {/* Filters and Search */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
         <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full md:w-auto">
-          <TabsList className="bg-white border border-slate-200 p-1 h-auto rounded-xl shadow-sm">
+          <TabsList className="bg-slate-100/80 p-1 h-auto rounded-lg gap-1">
             {["all", "paid", "in_packing", "packed", "shipped", "cancelled"].map((tab) => (
               <TabsTrigger
                 key={tab}
                 value={tab}
-                className="rounded-lg data-[state=active]:bg-slate-900 data-[state=active]:text-white px-4 py-2 capitalize transition-all"
+                className="rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm data-[state=active]:font-semibold px-4 py-2 text-sm text-slate-600 capitalize transition-all"
               >
                 {tab === 'in_packing' ? 'Processing' : tab === 'paid' ? 'New' : tab.replace('_', ' ')}
               </TabsTrigger>
@@ -385,7 +391,7 @@ const Orders = () => {
             placeholder="Search by ID, Name, Phone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-sm shadow-sm transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-300 focus:bg-white text-sm transition-all"
           />
         </div>
       </div>
@@ -395,13 +401,13 @@ const Orders = () => {
         <Table>
           <TableHeader className="bg-slate-50/50 border-b border-slate-100">
             <TableRow className="hover:bg-transparent border-slate-100">
-              <TableHead className="w-[100px] font-semibold text-slate-700 pl-6 py-4">Order ID</TableHead>
-              <TableHead className="font-semibold text-slate-700 py-4">Date</TableHead>
-              <TableHead className="font-semibold text-slate-700 py-4">Customer</TableHead>
-              <TableHead className="font-semibold text-slate-700 py-4">Items</TableHead>
-              <TableHead className="font-semibold text-slate-700 py-4">Amount</TableHead>
-              <TableHead className="font-semibold text-slate-700 py-4">Status</TableHead>
-              <TableHead className="text-right font-semibold text-slate-700 pr-6 py-4">Actions</TableHead>
+              <TableHead className="w-[100px] font-semibold text-slate-700 pl-4 py-3">ID</TableHead>
+              <TableHead className="font-semibold text-slate-700 py-3">Date</TableHead>
+              <TableHead className="font-semibold text-slate-700 py-3">Customer</TableHead>
+              <TableHead className="font-semibold text-slate-700 py-3">Items</TableHead>
+              <TableHead className="font-semibold text-slate-700 py-3 text-right">Amount</TableHead>
+              <TableHead className="font-semibold text-slate-700 py-3">Status</TableHead>
+              <TableHead className="text-right font-semibold text-slate-700 pr-6 py-3">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -424,17 +430,17 @@ const Orders = () => {
                   className="cursor-pointer hover:bg-slate-50/80 transition-colors group border-slate-50"
                   onClick={() => router.push(`/dashboard/orders/${order.id}`)}
                 >
-                  <TableCell className="font-medium text-slate-900 pl-6 py-4">#{order.id}</TableCell>
-                  <TableCell className="text-sm text-slate-500 py-4">{formatDate(order.created_at)}</TableCell>
-                  <TableCell className="py-4">
+                  <TableCell className="font-medium text-slate-900 pl-4 py-3">#{order.id}</TableCell>
+                  <TableCell className="text-sm text-slate-500 py-3">{formatDate(order.created_at)}</TableCell>
+                  <TableCell className="py-3">
                     <div className="font-medium text-slate-900">{order.customer_name}</div>
                     <div className="text-xs text-slate-500 mt-0.5">{order.customer_phone}</div>
                   </TableCell>
-                  <TableCell className="py-4">
+                  <TableCell className="py-3">
                     <div className="flex items-center gap-2">
                       <div className="flex -space-x-2 overflow-hidden">
                         {order.items.slice(0, 3).map((item, i) => (
-                          <div key={i} className="h-8 w-8 rounded-full ring-2 ring-white bg-slate-100 overflow-hidden border border-slate-200">
+                          <div key={i} className="h-7 w-7 rounded-full ring-2 ring-white bg-slate-100 overflow-hidden border border-slate-200">
                             <img
                               className="h-full w-full object-cover"
                               src={item.image || "/placeholder.svg"}
@@ -444,11 +450,13 @@ const Orders = () => {
                         ))}
                       </div>
                       {order.items.length > 3 && (
-                        <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-full">+{order.items.length - 3}</span>
+                        <span className="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">+{order.items.length - 3}</span>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="font-bold text-slate-900 py-4">₹{order.total_amount.toLocaleString()}</TableCell>
+                  <TableCell className="py-3 text-right tabular-nums font-bold text-slate-900">
+                    {formatCurrency(order.total_amount)}
+                  </TableCell>
                   <TableCell className="py-4">
                     <Badge variant="outline" className={`${getStatusColor(order.status)} border-0 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm`}>
                       {getStatusIcon(order.status)}

@@ -50,15 +50,27 @@ const sanitizePayload = (payload: Partial<Product>) => {
     images: "images",
   }
 
+  if (p.specifications !== undefined && typeof p.specifications === 'string') {
+    try {
+      p.specifications = JSON.parse(p.specifications)
+    } catch (e) {
+      console.error("Error parsing specifications JSON:", e)
+      p.specifications = {}
+    }
+  }
+
   const mapped: any = {}
   Object.keys(p).forEach((k) => {
     const mappedKey = keyMap[k] ?? k
-    if (mappedKey.endsWith("_id")) {
+    if (mappedKey.endsWith("_id") && k !== 'product_id') { // Don't coerce product_id if it's already a UUID
       const val = p[k]
       if (val === null || val === undefined) {
         mapped[mappedKey] = null
       } else if (typeof val === "number") {
         mapped[mappedKey] = Number.isFinite(val) ? val : null
+      } else if (typeof val === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val)) {
+        // It's a UUID, pass it as is
+        mapped[mappedKey] = val
       } else {
         const coerced = Number(val)
         mapped[mappedKey] = Number.isNaN(coerced) ? null : coerced
@@ -87,25 +99,74 @@ export const getProducts = async (): Promise<{
   data: Product[] | null
   error: any
 }> => {
-  const { data, error } = await supabase.from("products").select("*")
-  return { data: (data as Product[]) ?? null, error }
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*, product_variants(*)")
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      // If product_variants join fails (PGRST204 or missing relationship/table)
+      // code 42P01 is table does not exist
+      if (error.code === '42P01' || error.message?.includes('product_variants')) {
+        console.warn("Variants table not found, falling back to products only join");
+        const { data: productsOnly, error: productsError } = await supabase
+          .from("products")
+          .select("*")
+          .order('created_at', { ascending: false });
+        return { data: (productsOnly as Product[]) ?? null, error: productsError };
+      }
+      return { data: null, error }
+    }
+
+    // Map product_variants to variants
+    const mapped = data?.map(p => ({
+      ...p,
+      variants: (p as any).product_variants
+    }))
+    return { data: (mapped as Product[]) ?? null, error: null }
+  } catch (err) {
+    return { data: null, error: err }
+  }
 }
 
 export const getProductById = async (
   id: string
 ): Promise<{ data: Product | null; error: any }> => {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle()
-  if (!error && !data) {
-    return {
-      data: null,
-      error: { message: "Product not found", code: "NOT_FOUND", status: 404 },
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*, product_variants(*)")
+      .eq("id", id)
+      .maybeSingle()
+
+    if (error) {
+      if (error.code === '42P01' || error.message?.includes('product_variants')) {
+        console.warn("Variants table not found, falling back to product only join");
+        const { data: productOnly, error: productError } = await supabase
+          .from("products")
+          .select("*")
+          .eq("id", id)
+          .maybeSingle();
+        return { data: (productOnly as Product) ?? null, error: productError };
+      }
+      return { data: null, error };
     }
+
+    if (!data) {
+      return {
+        data: null,
+        error: { message: "Product not found", code: "NOT_FOUND", status: 404 },
+      }
+    }
+
+    if (data) {
+      data.variants = (data as any).product_variants
+    }
+    return { data: (data as Product) ?? null, error: null }
+  } catch (err) {
+    return { data: null, error: err }
   }
-  return { data: (data as Product) ?? null, error }
 }
 
 export const createProduct = async (
@@ -131,8 +192,23 @@ export const createProduct = async (
   const attemptInsert = async (obj: any) =>
     await supabase.from("products").insert([obj]).select().single()
 
-  const { data, error, status } = await attemptInsert(sanitized)
-  if (!error) return { data: (data as Product) ?? null, error: null }
+  const { variants, ...productPayload } = sanitized as any
+  const { data: product, error, status } = await attemptInsert(productPayload)
+  if (error) {
+    // Handle missing columns fallback logic
+    // ... (omitting existing fallback logic for brevity in this tool call, will keep it in actual file)
+  }
+
+  if (!error && product && variants && Array.isArray(variants)) {
+    const variantsWithId = variants.map(v => ({
+      ...v,
+      product_id: product.id
+    }))
+    const { error: variantError } = await supabase.from("product_variants").insert(variantsWithId)
+    if (variantError) console.error("Error inserting variants:", variantError)
+  }
+
+  if (!error) return { data: (product as Product) ?? null, error: null }
 
   const missingMatch =
     typeof error?.message === "string" &&
@@ -227,14 +303,40 @@ export const updateProduct = async (
       .select()
       .maybeSingle()
 
-  const { data, error, status } = await attemptUpdate(sanitized)
+  const { variants, ...productPayload } = sanitized as any
+  const { data: product, error, status } = await attemptUpdate(productPayload)
+  
+  if (!error && product && variants && Array.isArray(variants)) {
+    // Basic sync: delete old and insert new (could be improved to upsert)
+    // For now, let's do a more robust approach if IDs exist
+    const { data: existingVariants } = await supabase.from("product_variants").select("id").eq("product_id", id)
+    const existingIds = existingVariants?.map(v => v.id) || []
+    
+    const toUpdate = variants.filter(v => v.id && existingIds.includes(v.id))
+    const toInsert = variants.filter(v => !v.id).map(v => ({ ...v, product_id: id }))
+    const providedIds = variants.filter(v => v.id).map(v => v.id)
+    const toDelete = existingIds.filter(id => !providedIds.includes(id))
+
+    if (toDelete.length > 0) {
+      await supabase.from("product_variants").delete().in("id", toDelete)
+    }
+    if (toUpdate.length > 0) {
+      for (const v of toUpdate) {
+        await supabase.from("product_variants").update(v).eq("id", v.id)
+      }
+    }
+    if (toInsert.length > 0) {
+      await supabase.from("product_variants").insert(toInsert)
+    }
+  }
+
   if (!error) {
-    if (!data)
+    if (!product)
       return {
         data: null,
         error: { message: "Product not found", code: "NOT_FOUND", status: 404 },
       }
-    return { data: (data as Product) ?? null, error: null }
+    return { data: (product as Product) ?? null, error: null }
   }
 
   const missingMatch =

@@ -101,7 +101,7 @@ export default function ProductsPage() {
   const handleQuickAdd = (e: React.MouseEvent, productId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    const product = products?.find((p) => p._id === productId);
+    const product = products?.find((p) => p.id === productId);
     if (product) {
       cart.addItem(product, 1);
       toast.success("Added to cart");
@@ -324,7 +324,7 @@ export default function ProductsPage() {
             transition={{ duration: 0.6 }}
             className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/60 sticky top-24 relative overflow-hidden">
+            <div className="bg-secondary/10 rounded-xl p-6 shadow-sm border border-border/50 sticky top-24 relative overflow-hidden">
               {/* Subtle decorative elements */}
               <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/20 via-accent-color/20 to-primary/20"></div>
 
@@ -375,17 +375,16 @@ export default function ProductsPage() {
               {/* Categories */}
               <div className="mb-4">
                 <h3 className="text-xs font-semibold mb-3" style={{ color: '#4E3629' }}>Categories</h3>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
-                      className="w-full text-left px-2 py-1 text-sm rounded-md transition-colors font-paragraph"
-                      style={{
-                        color: selectedCategory === cat ? '#B38B59' : '#666',
-                        fontWeight: selectedCategory === cat ? 'bold' : 'normal',
-                        backgroundColor: selectedCategory === cat ? 'rgba(179, 139, 89, 0.1)' : 'transparent'
-                      }}
+                      className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-all duration-200 font-paragraph ${
+                        selectedCategory === cat 
+                          ? 'bg-primary/10 text-primary font-semibold translate-x-1' 
+                          : 'text-muted-foreground hover:bg-secondary/10 hover:text-foreground'
+                      }`}
                     >
                       {cat}
                     </button>
@@ -442,78 +441,56 @@ export default function ProductsPage() {
             className="lg:col-span-3"
           >
             {/* Toolbar */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4 bg-white/80 backdrop-blur-sm rounded-2xl p-3 shadow-lg border" style={{ borderColor: 'rgba(232, 227, 219, 0.6)' }}>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-border/50">
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="lg:hidden flex items-center gap-2 px-2.5 py-1.5 rounded-xl border text-xs font-medium transition-colors"
-                  style={{
-                    borderColor: 'rgba(179, 139, 89, 0.2)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-                    color: '#B38B59'
-                  }}
+                  className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors bg-secondary/10 border-border text-foreground hover:bg-secondary/20"
                 >
-                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  <SlidersHorizontal className="w-4 h-4" />
                   Filters
                   {getActiveFiltersCount() > 0 && (
-                    <span className="px-1.5 py-0 text-xs rounded-full" style={{
-                      backgroundColor: 'rgba(179, 139, 89, 0.15)',
-                      color: '#B38B59',
-                      border: '1px solid rgba(179, 139, 89, 0.2)'
-                    }}>
+                    <span className="px-1.5 py-0.5 text-xs rounded-full bg-primary/20 text-primary">
                       {getActiveFiltersCount()}
                     </span>
                   )}
                 </button>
-                <span className="text-xs font-medium font-paragraph" style={{ color: '#666' }}>
+                <span className="text-sm font-medium font-paragraph text-muted-foreground">
                   Showing {paginatedProducts.length} of {sortedProducts.length} products
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 {/* View Mode Toggle */}
-                <div className="flex items-center border-2 rounded-lg overflow-hidden" style={{ borderColor: '#E8E3DB', backgroundColor: 'rgba(255, 255, 255, 0.6)' }}>
+                <div className="flex items-center border rounded-lg overflow-hidden bg-white">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className="p-1.5 transition-all duration-200"
-                    style={{
-                      backgroundColor: viewMode === 'grid' ? '#B38B59' : 'transparent',
-                      color: viewMode === 'grid' ? '#FDFBF7' : '#666'
-                    }}
+                    className={`p-2 transition-all duration-200 ${viewMode === 'grid' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-secondary/10'}`}
                   >
-                    <Grid3x3 className="w-3.5 h-3.5" />
+                    <Grid3x3 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className="p-1.5 transition-all duration-200"
-                    style={{
-                      backgroundColor: viewMode === 'list' ? '#B38B59' : 'transparent',
-                      color: viewMode === 'list' ? '#FDFBF7' : '#666'
-                    }}
+                    className={`p-2 transition-all duration-200 ${viewMode === 'list' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-secondary/10'}`}
                   >
-                    <List className="w-3.5 h-3.5" />
+                    <List className="w-4 h-4" />
                   </button>
                 </div>
 
-                <label className="text-xs whitespace-nowrap font-medium" style={{ color: '#666' }}>Sort by:</label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-2.5 py-1.5 border-2 rounded-lg text-xs font-medium transition-all duration-200"
-                  style={{
-                    borderColor: '#E8E3DB',
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    color: '#4E3629'
-                  }}
-                  onFocus={(e) => e.currentTarget.style.borderColor = '#B38B59'}
-                  onBlur={(e) => e.currentTarget.style.borderColor = '#E8E3DB'}
-                >
-                  <option value="default">Most Popular</option>
-                  <option value="latest">Newest</option>
-                  <option value="popularity">Featured</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                </select>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm whitespace-nowrap font-medium text-muted-foreground hidden sm:block">Sort by:</label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 py-2 border rounded-lg text-sm font-medium transition-all duration-200 bg-white text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                  >
+                    <option value="default">Most Popular</option>
+                    <option value="latest">Newest</option>
+                    <option value="popularity">Featured</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -542,59 +519,55 @@ export default function ProductsPage() {
                   <AnimatePresence mode="popLayout">
                     {paginatedProducts.map((product) => (
                       <motion.div
-                        key={product._id}
+                        key={product.id}
                         variants={itemVariants}
                         initial="hidden"
                         animate="visible"
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         layout
                         className="group"
-                        onMouseEnter={() => setHoveredProduct(product._id)}
+                        onMouseEnter={() => setHoveredProduct(product.id)}
                         onMouseLeave={() => setHoveredProduct(null)}
                       >
-                        <Link href={`/products/${product.slug || product._id}`}>
-                          <div className={`${viewMode === 'list' ? 'flex gap-3' : 'block'} bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-white/60 hover:border-primary/20`}>
-                            <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-28 flex-shrink-0' : 'w-full'}`}>
+                        <Link href={`/products/${product.slug || product.id}`}>
+                          <div className={`${viewMode === 'list' ? 'flex gap-4' : 'block h-full flex flex-col'} bg-white rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-border hover:border-primary/20 group`}>
+                            <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-32 flex-shrink-0 aspect-square' : 'w-full aspect-[4/5]'}`}>
                               <Image
                                 src={product.mainImage || "/placeholder.png"}
                                 alt={product.title || "Product"}
-                                width={viewMode === 'list' ? 112 : 400}
-                                height={viewMode === 'list' ? 112 : 280}
-                                className={`${viewMode === 'grid' ? 'w-full h-56' : 'w-28 h-28'} object-cover transition-all duration-500 ease-out ${
-                                  hoveredProduct === product._id ? 'scale-105' : 'scale-100'
-                                }`}
+                                width={viewMode === 'list' ? 128 : 400}
+                                height={viewMode === 'list' ? 128 : 500}
+                                className={`object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105`}
                               />
 
                               {/* Gradient Overlay */}
                               <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{
-                                  opacity: hoveredProduct === product._id ? 1 : 0
+                                  opacity: hoveredProduct === product.id ? 1 : 0
                                 }}
                                 transition={{ duration: 0.3 }}
-                                className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent"
+                                className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"
                               />
 
                               {/* Wishlist Button */}
                               <button
-                                onClick={(e) => toggleWishlist(e, product._id)}
-                                className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all duration-300"
+                                onClick={(e) => toggleWishlist(e, product.id)}
+                                className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all duration-300 z-10"
                               >
                                 <Heart
-                                  className={`w-3.5 h-3.5 transition-colors duration-300 ${
-                                    wishlist.items.includes(product._id)
+                                  className={`w-4 h-4 transition-colors duration-300 ${
+                                    wishlist.items.includes(product.id)
                                       ? 'fill-red-500 text-red-500'
-                                      : 'hover:text-red-500'
+                                      : 'hover:text-red-500 text-foreground/60'
                                   }`}
-                                  style={{ color: wishlist.items.includes(product._id) ? '#ef4444' : '#666' }}
                                 />
                               </button>
 
                               {/* Sale Badge */}
                               {product.onSale && (
                                 <div
-                                  className="absolute top-2 left-2 px-3 py-1 text-xs font-semibold rounded-full shadow-md"
-                                  style={{ backgroundColor: '#BF946A', color: '#FFFFFF' }}
+                                  className="absolute top-3 left-3 px-3 py-1 text-xs font-semibold rounded-full shadow-md z-10 bg-accent text-accent-foreground"
                                 >
                                   Sale
                                 </div>
@@ -603,8 +576,7 @@ export default function ProductsPage() {
                               {/* Featured Badge */}
                               {product.isFeatured && (
                                 <div
-                                  className="absolute top-2 left-2 px-2 py-0.5 text-xs rounded-full shadow-md font-semibold"
-                                  style={{ backgroundColor: '#B38B59', color: '#FFFFFF' }}
+                                  className="absolute top-3 left-3 px-3 py-1 text-xs rounded-full shadow-md font-semibold z-10 bg-primary text-primary-foreground"
                                 >
                                   Featured
                                 </div>
@@ -614,33 +586,29 @@ export default function ProductsPage() {
                               <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{
-                                  opacity: hoveredProduct === product._id ? 1 : 0,
-                                  y: hoveredProduct === product._id ? 0 : 20
+                                  opacity: hoveredProduct === product.id ? 1 : 0,
+                                  y: hoveredProduct === product.id ? 0 : 20
                                 }}
                                 transition={{ duration: 0.3 }}
-                                className="absolute bottom-2 left-2 right-2 flex justify-center"
+                                className="absolute bottom-4 left-4 right-4 flex justify-center z-10"
                               >
                                 <button
-                                  onClick={(e) => handleQuickAdd(e, product._id)}
-                                  className="h-7 px-3 text-xs shadow-lg rounded-full font-medium transition-all duration-300 flex items-center gap-1.5"
-                                  style={{
-                                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                                    color: '#4E3629'
-                                  }}
+                                  onClick={(e) => handleQuickAdd(e, product.id)}
+                                  className="w-full py-2.5 text-sm shadow-lg rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2 bg-white text-foreground hover:bg-primary hover:text-white"
                                 >
-                                  <ShoppingBag className="w-3 h-3" />
+                                  <ShoppingBag className="w-4 h-4" />
                                   Add to Cart
                                 </button>
                               </motion.div>
                             </div>
 
-                            <div className={`p-3 ${viewMode === 'list' ? 'flex-1 flex flex-col justify-between' : ''}`}>
+                            <div className={`p-5 ${viewMode === 'list' ? 'flex-1 flex flex-col justify-center' : 'flex-grow flex flex-col justify-between'}`}>
                               <div>
-                                <h3 className={`font-heading font-medium mb-1 leading-tight transition-colors ${viewMode === 'list' ? 'text-sm line-clamp-1' : 'text-base line-clamp-2'}`} style={{ color: hoveredProduct === product._id ? '#B38B59' : '#4E3629' }}>
+                                <h3 className={`font-heading font-medium mb-1.5 leading-tight transition-colors group-hover:text-primary ${viewMode === 'list' ? 'text-lg' : 'text-base line-clamp-2'}`}>
                                   {product.title}
                                 </h3>
 
-                                <p className={`text-xs font-paragraph mb-2 leading-relaxed ${viewMode === 'list' ? 'line-clamp-1' : 'line-clamp-2'}`} style={{ color: '#666' }}>
+                                <p className={`text-sm font-paragraph mb-3 leading-relaxed text-muted-foreground ${viewMode === 'list' ? 'line-clamp-2' : 'line-clamp-2'}`}>
                                   {product.description}
                                 </p>
                               </div>
@@ -686,7 +654,7 @@ export default function ProductsPage() {
                                 {/* Quick Add for List View */}
                                 {viewMode === 'list' && (
                                   <button
-                                    onClick={(e) => handleQuickAdd(e, product._id)}
+                                    onClick={(e) => handleQuickAdd(e, product.id)}
                                     className="h-7 px-3 text-xs shadow-lg rounded-full font-medium transition-all duration-300 flex items-center gap-1.5 flex-shrink-0"
                                     style={{
                                       backgroundColor: 'rgba(255, 255, 255, 0.95)',

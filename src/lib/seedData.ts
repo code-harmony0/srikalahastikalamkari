@@ -1,91 +1,37 @@
-import { supabase } from "@/backend/supabase/client";
+// Sample seed data for initializing your database
+export const categories = [
+  {
+    id: "1",
+    name: "Kalamkari Sarees",
+    slug: "kalamkari-sarees",
+    parentId: null,
+  },
+  {
+    id: "2",
+    name: "Kalamkari Dress Materials",
+    slug: "kalamkari-dress-materials",
+    parentId: null,
+  },
+  {
+    id: "3",
+    name: "Kalamkari Kurtis",
+    slug: "kalamkari-kurtis",
+    parentId: null,
+  },
+  {
+    id: "4",
+    name: "Kalamkari Dupattas",
+    slug: "kalamkari-dupattas",
+    parentId: null,
+  },
+]
 
-export const seedCategories = async () => {
+export const products = [
+  // Add sample products here if needed
+]
 
-  const categories = [
-    { name: "Sarees" },
-    { name: "Dupattas" },
-    { name: "Fabrics" },
-    { name: "Home Decor" },
-  ];
-
-  const subCategories: Record<string, { name: string }[]> = {
-    "Sarees": [
-      { name: "Kalamkari" },
-      { name: "Kanchipuram" },
-      { name: "Bangalore Silk" },
-      { name: "Chennori Silk" },
-      { name: "Tussar Silk" },
-      { name: "Pure Crape Silk" },
-    ],
-    "Dupattas": [
-      { name: "Silk" },
-      { name: "Cotton" },
-    ],
-    "Fabrics": [
-      { name: "Cotton" },
-      { name: "Silk" },
-    ],
-    "Home Decor": [
-      { name: "Wall Art" },
-      { name: "Table Runners" },
-    ],
-  };
-
-  try {
-    // 1. Check if categories exist
-    const { data: existingCats, error: checkError } = await supabase
-      .from("categories")
-      .select("id, name");
-
-    if (checkError) throw checkError;
-
-    if (existingCats && existingCats.length > 0) {
-      console.log("Categories already exist:", existingCats);
-      return { success: true, message: "Categories already exist" };
-    }
-
-    console.log("No categories found. Seeding...");
-
-    // 2. Insert Categories
-    const { data: insertedCats, error: insertError } = await supabase
-      .from("categories")
-      .insert(categories)
-      .select();
-
-    if (insertError) throw insertError;
-
-    console.log("Inserted categories:", insertedCats);
-
-    // 3. Insert Subcategories
-    const subCatInserts: any[] = [];
-    
-    for (const cat of insertedCats) {
-      const subs = subCategories[cat.name];
-      if (subs) {
-        subs.forEach(sub => {
-          subCatInserts.push({
-            subCatName: sub.name,
-            category_id: cat.id
-          });
-        });
-      }
-    }
-
-    if (subCatInserts.length > 0) {
-      const { data: insertedSubs, error: subError } = await supabase
-        .from("sub_categories") // Changed table name from "subCategories" to "sub_categories"
-        .insert(subCatInserts)
-        .select();
-
-      if (subError) throw subError;
-      console.log("Inserted subcategories:", insertedSubs);
-    }
-
-    return { success: true, message: "Seeding completed successfully" };
-
-  } catch (error: any) {
-    console.error("Seeding failed:", error);
-    return { success: false, message: error.message };
-  }
-};
+export const seedDatabase = async () => {
+  // Add your database seeding logic here
+  console.log("Seeding database...")
+  // Example: await db.insert(categories).values(seedCategories);
+}

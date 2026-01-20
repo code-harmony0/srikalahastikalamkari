@@ -10,10 +10,10 @@ import { Textarea } from "@/shared/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { useToast } from "@/shared/ui/use-toast";
-import { Loader2, Upload, X, ArrowLeft, AlertTriangle, Package } from "lucide-react";
+import { Loader2, Upload, X, ArrowLeft, AlertTriangle, Package, Plus, ChevronDown, ChevronUp, FileText, DollarSign, FolderTree, Palette, Image, Boxes } from "lucide-react";
 import { getCategories, getSubCategories } from "@/backend/categories";
 import { uploadImage, checkDuplicateProduct, updateProductStock } from "@/backend/products";
-import { seedCategories } from "@/lib/seedData";
+import { categories as seedCategories } from "@/lib/seedData";
 import { useInventory } from "@/shared/contexts/InventoryContext";
 
 import imageCompression from 'browser-image-compression';
@@ -29,6 +29,53 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/ui/alert-dialog";
+
+// Collapsible Section Component
+const FormSection = ({
+  title,
+  icon,
+  children,
+  defaultOpen = true,
+  badge
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+  badge?: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+            {icon}
+          </div>
+          <span className="text-base font-semibold text-slate-900">{title}</span>
+          {badge && (
+            <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded-full">
+              {badge}
+            </span>
+          )}
+        </div>
+        <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+          {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+        </div>
+      </button>
+      {isOpen && (
+        <div className="p-6 pt-2 border-t border-slate-100 bg-slate-50/30">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const AddProduct = () => {
   const router = useRouter();
@@ -91,6 +138,24 @@ const AddProduct = () => {
   const [specifications, setSpecifications] = useState<{ key: string; value: string }[]>([]);
   const [newSpec, setNewSpec] = useState({ key: "", value: "" });
 
+  // Variants state
+  const [variants, setVariants] = useState<any[]>([]);
+  const [showVariants, setShowVariants] = useState(false);
+
+  const addVariant = () => {
+    setVariants([...variants, { size: "", color: "", sku: "", stock_quantity: 0, price_modifier: 0 }]);
+  };
+
+  const removeVariant = (index: number) => {
+    setVariants(variants.filter((_, i) => i !== index));
+  };
+
+  const updateVariant = (index: number, field: string, value: any) => {
+    const newVariants = [...variants];
+    newVariants[index] = { ...newVariants[index], [field]: value };
+    setVariants(newVariants);
+  };
+
   const addSpec = () => {
     if (newSpec.key.trim() && newSpec.value.trim()) {
       setSpecifications([...specifications, { key: newSpec.key.trim(), value: newSpec.value.trim() }]);
@@ -107,10 +172,10 @@ const AddProduct = () => {
     const fetchData = async () => {
       let { data: cats } = await getCategories();
 
-      // Auto-seed if no categories exist
+      // Auto-seed if no categories exist (Disabled broken call)
       if (!cats || cats.length === 0) {
-        console.log("No categories found. Auto-seeding...");
-        await seedCategories();
+        console.log("No categories found. Please seed the database manually or through the SQL editor.");
+        // await seedCategories(); // This was broken
         const { data: newCats } = await getCategories();
         cats = newCats;
       }
@@ -261,15 +326,16 @@ const AddProduct = () => {
   // Filter subcategories when category changes
   useEffect(() => {
     if (formData.category) {
+      // Compare as strings since category_id is UUID
       const filtered = subCategories.filter(
-        (sub) => sub.category_id === parseInt(formData.category)
+        (sub) => String(sub.category_id) === String(formData.category)
       );
       setFilteredSubCategories(filtered);
       console.log("📋 Filtered subcategories:", filtered);
 
       // Only reset subcategory if it's not valid for the new category
       // BUT: Don't reset if we're in the initial edit mode population
-      if (!isInitialPopulation.current && formData.subCategory && !filtered.find(s => s.id === parseInt(formData.subCategory))) {
+      if (!isInitialPopulation.current && formData.subCategory && !filtered.find(s => String(s.id) === String(formData.subCategory))) {
         console.log("⚠️ Subcategory not in filtered list, clearing");
         setFormData(prev => ({ ...prev, subCategory: "" }));
       }
@@ -538,6 +604,7 @@ const validateForm = () => {
       images: imageUrls, // All images
       barcode: barcode, // Add barcode to product data
       material: materialValue, // Add material from specifications
+      variants: showVariants ? variants : [], // Add variants if enabled
     };
 
       if (isEditMode && editingProduct) {
@@ -648,139 +715,179 @@ const validateForm = () => {
               {isEditMode ? "Update the product details below" : "Fill in the details to add a new product to your inventory"}
             </p>
           </div>
-          <div className="p-8 space-y-8">
-            {/* Basic Info */}
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-slate-700 font-medium">
-                  Product Name <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="name"
-                  placeholder="Enter product name"
-                  value={formData.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  className={`mt-2 h-11 rounded-xl border-slate-200 ${errors.name ? "border-red-500" : ""}`}
-                />
-                {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+          <div className="p-6 space-y-4">
+            {/* Section 1: Basic Details */}
+            <FormSection
+              title="Basic Details"
+              icon={<FileText className="h-4 w-4" />}
+              badge="Required"
+            >
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-slate-700 font-medium">
+                    Product Name <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="name"
+                    placeholder="Enter product name"
+                    value={formData.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    className={`h-11 rounded-xl border-slate-200 ${errors.name ? "border-red-500" : ""}`}
+                  />
+                  {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-slate-700 font-medium">
+                    Description <span className="text-red-500">*</span>
+                  </Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Enter product description"
+                    rows={4}
+                    value={formData.description}
+                    onChange={(e) => handleChange("description", e.target.value)}
+                    className={`rounded-xl border-slate-200 ${errors.description ? "border-red-500" : ""}`}
+                  />
+                  {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+                </div>
               </div>
+            </FormSection>
 
-              <div className="space-y-2">
-                <Label htmlFor="quantity" className="text-slate-700 font-medium">
-                  Quantity <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="quantity"
-                  type="number"
-                  min="0"
-                  placeholder="Enter quantity"
-                  value={formData.quantity}
-                  onChange={(e) => handleChange("quantity", e.target.value)}
-                  className={`mt-2 h-11 rounded-xl border-slate-200 ${errors.quantity ? "border-red-500" : ""}`}
-                />
-                {errors.quantity && <p className="text-sm text-red-500">{errors.quantity}</p>}
+            {/* Section 2: Pricing & Inventory */}
+            <FormSection
+              title="Pricing & Inventory"
+              icon={<DollarSign className="h-4 w-4" />}
+              badge="Required"
+            >
+              <div className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="price" className="text-slate-700 font-medium">
+                      Price (₹) <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="0.00"
+                      value={formData.price}
+                      onChange={(e) => handleChange("price", e.target.value)}
+                      className={`h-11 rounded-xl border-slate-200 ${errors.price ? "border-red-500" : ""}`}
+                    />
+                    {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="originalPrice" className="text-slate-700 font-medium">Original Price (₹)</Label>
+                    <Input
+                      id="originalPrice"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="0.00 (optional - for showing discount)"
+                      value={formData.originalPrice}
+                      onChange={(e) => handleChange("originalPrice", e.target.value)}
+                      className="h-11 rounded-xl border-slate-200"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="quantity" className="text-slate-700 font-medium">
+                      Stock Quantity <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="quantity"
+                      type="number"
+                      min="0"
+                      placeholder="Enter quantity"
+                      value={formData.quantity}
+                      onChange={(e) => handleChange("quantity", e.target.value)}
+                      className={`h-11 rounded-xl border-slate-200 ${errors.quantity ? "border-red-500" : ""}`}
+                    />
+                    {errors.quantity && <p className="text-sm text-red-500">{errors.quantity}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-slate-700 font-medium">Stock Status</Label>
+                    <div className="flex items-center gap-3 h-11 px-4 rounded-xl border border-slate-200 bg-white">
+                      <Checkbox
+                        id="inStock"
+                        checked={formData.inStock}
+                        onCheckedChange={(checked) => handleChange("inStock", checked)}
+                      />
+                      <Label htmlFor="inStock" className="cursor-pointer text-slate-600 font-normal">
+                        Product is in stock and available
+                      </Label>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </FormSection>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-slate-700 font-medium">
-                Description <span className="text-red-500">*</span>
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="Enter product description"
-                rows={4}
-                value={formData.description}
-                onChange={(e) => handleChange("description", e.target.value)}
-                className={`mt-2 rounded-xl border-slate-200 ${errors.description ? "border-red-500" : ""}`}
-              />
-              {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
-            </div>
+            {/* Section 3: Categorization */}
+            <FormSection
+              title="Categorization"
+              icon={<FolderTree className="h-4 w-4" />}
+              badge="Required"
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-slate-700 font-medium">
+                    Category <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => handleChange("category", value)}
+                  >
+                    <SelectTrigger className={`h-11 rounded-xl border-slate-200 ${errors.category ? "border-red-500" : ""}`}>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id.toString()}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
+                </div>
 
-            {/* Pricing */}
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="price" className="text-slate-700 font-medium">
-                  Price (₹) <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="price"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  value={formData.price}
-                  onChange={(e) => handleChange("price", e.target.value)}
-                  className={`mt-2 h-11 rounded-xl border-slate-200 ${errors.price ? "border-red-500" : ""}`}
-                />
-                {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
+                <div className="space-y-2">
+                  <Label htmlFor="subCategory" className="text-slate-700 font-medium">Sub Category</Label>
+                  <Select
+                    value={formData.subCategory}
+                    onValueChange={(value) => handleChange("subCategory", value)}
+                    disabled={!formData.category || filteredSubCategories.length === 0}
+                  >
+                    <SelectTrigger className="h-11 rounded-xl border-slate-200">
+                      <SelectValue placeholder={!formData.category ? "Select category first" : "Select sub category"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredSubCategories.map((sub) => (
+                        <SelectItem key={sub.id} value={sub.id.toString()}>
+                          {sub.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+            </FormSection>
 
-              <div className="space-y-2">
-                <Label htmlFor="originalPrice" className="text-slate-700 font-medium">Original Price (₹)</Label>
-                <Input
-                  id="originalPrice"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00 (optional)"
-                  value={formData.originalPrice}
-                  onChange={(e) => handleChange("originalPrice", e.target.value)}
-                  className="mt-2 h-11 rounded-xl border-slate-200"
-                />
-              </div>
-            </div>
-
-            {/* Categories */}
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="category" className="text-slate-700 font-medium">
-                  Category <span className="text-red-500">*</span>
-                </Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => handleChange("category", value)}
-                >
-                  <SelectTrigger className={`mt-2 h-11 rounded-xl border-slate-200 ${errors.category ? "border-red-500" : ""}`}>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id.toString()}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="subCategory" className="text-slate-700 font-medium">Sub Category</Label>
-                <Select
-                  value={formData.subCategory}
-                  onValueChange={(value) => handleChange("subCategory", value)}
-                  disabled={!formData.category || filteredSubCategories.length === 0}
-                >
-                  <SelectTrigger className="mt-2 h-11 rounded-xl border-slate-200">
-                    <SelectValue placeholder={!formData.category ? "Select category first" : "Select sub category"} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filteredSubCategories.map((sub) => (
-                      <SelectItem key={sub.id} value={sub.id.toString()}>
-                        {sub.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Colors */}
-            {/* Product Colors - Modern Color Picker */}
-            <div className="space-y-4">
-              <Label className="text-slate-700 font-medium">Product Colors (Optional)</Label>
+            {/* Section 4: Attributes (Colors & Specifications) */}
+            <FormSection
+              title="Attributes"
+              icon={<Palette className="h-4 w-4" />}
+              defaultOpen={false}
+            >
+              {/* Product Colors - Modern Color Picker */}
+              <div className="space-y-4">
+                <Label className="text-slate-700 font-medium text-base">Product Colors</Label>
 
               {/* Selected Colors Display */}
               {selectedColors.length > 0 && (
@@ -910,12 +1017,11 @@ const validateForm = () => {
                       <input
                         id="color-picker"
                         type="color"
-                        onChange={(e) => {
-                          addColor(e.target.value.toUpperCase());
-                          toast({
-                            title: "Color Added!",
-                            description: e.target.value.toUpperCase(),
-                          });
+                        defaultValue="#000000"
+                        onBlur={(e) => {
+                          // Handle color change on blur as well
+                          const val = e.target.value.toUpperCase();
+                          // No automatic add anymore to avoid duplicates
                         }}
                         className="w-20 h-11 rounded-lg cursor-pointer border-2 border-gray-300 hover:border-[#D49217] transition-colors shadow-sm"
                       />
@@ -925,16 +1031,31 @@ const validateForm = () => {
                         </svg>
                       </div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1.5 text-center">Pick</p>
+                    <Button 
+                      type="button" 
+                      onClick={() => {
+                        const picker = document.getElementById('color-picker') as HTMLInputElement;
+                        if (picker) {
+                          addColor(picker.value.toUpperCase());
+                          toast({
+                            title: "Color Added!",
+                            description: picker.value.toUpperCase(),
+                          });
+                        }
+                      }}
+                      className="mt-1.5 h-7 px-2 text-[10px] font-bold uppercase bg-slate-900 border-0"
+                    >
+                      Done
+                    </Button>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Specifications */}
-            <div className="space-y-4">
-              <Label className="text-slate-700 font-medium">Product Specifications (Optional)</Label>
-              <p className="text-sm text-muted-foreground">Add details like Material, Origin, Craft, Dimensions, etc.</p>
+              {/* Specifications - within Attributes section */}
+              <div className="space-y-4 mt-8 pt-6 border-t border-slate-200">
+                <Label className="text-slate-700 font-medium text-base">Product Specifications</Label>
+                <p className="text-sm text-muted-foreground">Add details like Material, Origin, Craft, Dimensions, etc.</p>
 
               {/* Existing Specs */}
               {specifications.length > 0 && (
@@ -996,11 +1117,17 @@ const validateForm = () => {
                   Add
                 </Button>
               </div>
-            </div>
+              </div>
+            </FormSection>
 
-            {/* Image Upload */}
-            <div className="space-y-2">
-              <Label>Product Images (Multiple)</Label>
+            {/* Section 5: Media (Image Upload) */}
+            <FormSection
+              title="Product Images"
+              icon={<Image className="h-4 w-4" />}
+              badge="Required"
+            >
+              <div className="space-y-2">
+                <p className="text-sm text-slate-500 mb-4">Upload up to 5 product images. The first image will be the main display image.</p>
               {imagePreviews.length === 0 ? (
                 <div
                   className={`border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${
@@ -1098,22 +1225,130 @@ const validateForm = () => {
                 className="hidden"
                 onChange={handleImageChange}
               />
-            </div>
+              </div>
+            </FormSection>
 
-            {/* In Stock */}
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="inStock"
-                checked={formData.inStock}
-                onCheckedChange={(checked) => handleChange("inStock", checked)}
-              />
-              <Label htmlFor="inStock" className="cursor-pointer">
-                In Stock
-              </Label>
-            </div>
+            {/* Section 6: Product Variants */}
+            <FormSection
+              title="Product Variants"
+              icon={<Boxes className="h-4 w-4" />}
+              defaultOpen={false}
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-slate-100/50 rounded-xl">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-slate-900">Enable variant options</p>
+                    <p className="text-xs text-slate-500">Add size, color, and SKU variants for this product</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="show-variants" className="text-sm font-medium text-slate-700 cursor-pointer">Enable</Label>
+                    <Checkbox
+                      id="show-variants"
+                      checked={showVariants}
+                      onCheckedChange={(checked) => setShowVariants(!!checked)}
+                    />
+                  </div>
+                </div>
+
+              {showVariants && (
+                <div className="space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
+                  {variants.length > 0 && (
+                    <div className="space-y-4">
+                      {variants.map((variant, index) => (
+                        <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative group">
+                          <button
+                            type="button"
+                            onClick={() => removeVariant(index)}
+                            className="absolute -top-2 -right-2 bg-red-100 text-red-600 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity border border-red-200"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                          
+                          <div className="space-y-1.5">
+                            <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Size</Label>
+                            <Input
+                              placeholder="e.g. XL"
+                              value={variant.size}
+                              onChange={(e) => updateVariant(index, "size", e.target.value)}
+                              className="h-10 border-slate-200 focus-visible:ring-slate-900"
+                            />
+                          </div>
+                                                   <div className="space-y-1.5 flex flex-col">
+                            <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Color Swatch</Label>
+                            <div className="flex items-center gap-2 mt-1">
+                              <div className="relative group/color shrink-0">
+                                <input
+                                  type="color"
+                                  value={variant.color && variant.color.startsWith('#') ? variant.color : "#000000"}
+                                  onChange={(e) => updateVariant(index, "color", e.target.value.toUpperCase())}
+                                  className="w-10 h-10 rounded-lg cursor-pointer border border-slate-200"
+                                />
+                                <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-0 group-hover/color:opacity-100 transition-opacity">
+                                  <Plus className="w-3 h-3 text-white mix-blend-difference" />
+                                </div>
+                              </div>
+                              <Input
+                                placeholder="Color Name"
+                                value={variant.color}
+                                onChange={(e) => updateVariant(index, "color", e.target.value)}
+                                className="h-10 border-slate-200 focus-visible:ring-slate-900 font-mono text-xs"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-1.5">
+                            <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">SKU</Label>
+                            <Input
+                              placeholder="SKU-123"
+                              value={variant.sku}
+                              onChange={(e) => updateVariant(index, "sku", e.target.value)}
+                              className="h-10 border-slate-200 focus-visible:ring-slate-900"
+                            />
+                          </div>
+                          
+                          <div className="space-y-1.5">
+                            <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Stock</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              placeholder="0"
+                              value={variant.stock_quantity}
+                              onChange={(e) => updateVariant(index, "stock_quantity", parseInt(e.target.value) || 0)}
+                              className="h-10 border-slate-200 focus-visible:ring-slate-900"
+                            />
+                          </div>
+                          
+                          <div className="space-y-1.5">
+                            <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Price +/-</Label>
+                            <Input
+                              type="number"
+                              placeholder="0"
+                              value={variant.price_modifier}
+                              onChange={(e) => updateVariant(index, "price_modifier", parseFloat(e.target.value) || 0)}
+                              className="h-10 border-slate-200 focus-visible:ring-slate-900"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addVariant}
+                    className="w-full border-dashed border-2 border-slate-300 hover:border-slate-900 hover:bg-slate-100 h-12 rounded-xl text-slate-600 transition-all font-medium"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Another Variant
+                  </Button>
+                </div>
+              )}
+              </div>
+            </FormSection>
 
             {/* Actions */}
-            <div className="flex gap-4 pt-6 border-t border-slate-100">
+            <div className="flex gap-4 pt-4">
               <Button
                 type="submit"
                 className="bg-slate-900 hover:bg-slate-800 text-white h-12 px-8 rounded-xl font-semibold shadow-lg shadow-slate-900/10"
@@ -1175,7 +1410,7 @@ const validateForm = () => {
                   const svgData = new XMLSerializer().serializeToString(svg);
                   const canvas = document.createElement('canvas');
                   const ctx = canvas.getContext('2d');
-                  const img = new Image();
+                  const img = document.createElement('img');
                   img.onload = () => {
                     canvas.width = img.width;
                     canvas.height = img.height;

@@ -88,9 +88,9 @@ export default function ContactPage() {
       {/* Contact Content */}
       <section className="py-16 md:py-20">
         <div className="max-w-[100rem] mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16">
             {/* Contact Info Cards */}
-            <div className="space-y-6">
+            <div className="lg:col-span-4 space-y-6">
               {contactInfo.map((info, index) => (
                 <motion.div
                   key={index}
@@ -100,7 +100,7 @@ export default function ContactPage() {
                   viewport={{ once: true }}
                   whileHover={{ y: -4 }}
                 >
-                  <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/20">
+                  <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/20 bg-secondary/5">
                     <CardContent className="p-6">
                       <info.icon className="w-8 h-8 text-primary mb-4" />
                       <h3 className="font-heading font-semibold text-lg mb-2 text-foreground">{info.title}</h3>
@@ -124,7 +124,7 @@ export default function ContactPage() {
                 viewport={{ once: true }}
                 whileHover={{ y: -4 }}
               >
-                <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/20">
+                <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/20 bg-secondary/5">
                   <CardContent className="p-6">
                     <h3 className="font-heading font-semibold text-lg mb-4 text-foreground">Business Hours</h3>
                     <div className="space-y-2 text-sm font-paragraph">
@@ -146,13 +146,18 @@ export default function ContactPage() {
               </motion.div>
             </div>
 
+            {/* Vertical Divider (Desktop Only) */}
+            <div className="hidden lg:block lg:col-span-1 relative">
+              <div className="absolute inset-y-0 left-1/2 w-px bg-border/60"></div>
+            </div>
+
             {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="lg:col-span-2"
+              className="lg:col-span-7"
             >
               <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <CardContent className="p-8 md:p-10">
@@ -167,7 +172,7 @@ export default function ContactPage() {
                           required
                           value={formData.name}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
                           placeholder="Your name"
                         />
                       </div>
@@ -179,7 +184,7 @@ export default function ContactPage() {
                           required
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
                           placeholder="your@email.com"
                         />
                       </div>
@@ -193,7 +198,7 @@ export default function ContactPage() {
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
                           placeholder="+91 XXXXX XXXXX"
                         />
                       </div>
@@ -205,7 +210,7 @@ export default function ContactPage() {
                           required
                           value={formData.subject}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200 font-paragraph text-foreground bg-white"
                           placeholder="How can we help?"
                         />
                       </div>
@@ -219,7 +224,7 @@ export default function ContactPage() {
                         rows={6}
                         value={formData.message}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none font-paragraph text-foreground bg-white"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200 resize-none font-paragraph text-foreground bg-white"
                         placeholder="Tell us more about your inquiry..."
                       />
                     </div>
@@ -227,7 +232,7 @@ export default function ContactPage() {
                     <Button
                       type="submit"
                       size="lg"
-                      className="w-full md:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 font-paragraph text-base"
+                      className="w-full md:w-auto bg-primary hover:bg-primary/80 focus:ring-2 focus:ring-accent text-primary-foreground px-8 py-3 font-paragraph text-base transition-all"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (

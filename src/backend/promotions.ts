@@ -6,7 +6,7 @@ import { Promotion } from "@/shared/types";
 
 const mockPromotions: Promotion[] = [
   {
-    _id: "1",
+    id: "1",
     title: "Summer Sale",
     description: "Get 20% off on all Kalamkari products",
     bannerImage: "/images/promotions/promo-1.png",
@@ -18,7 +18,7 @@ const mockPromotions: Promotion[] = [
     _updatedDate: new Date("2025-01-01T00:00:00.000Z"),
   },
   {
-    _id: "2",
+    id: "2",
     title: "New Collection",
     description: "Discover our latest handcrafted Kalamkari sarees",
     bannerImage: "/images/promotions/promo-2.png",

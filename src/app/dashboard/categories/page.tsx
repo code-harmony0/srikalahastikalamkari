@@ -33,6 +33,7 @@ import {
 } from "@/shared/ui/alert-dialog"
 import { useToast } from "@/shared/ui/use-toast"
 import { Plus, Pencil, Trash2, Loader2, Upload, X } from "lucide-react"
+import { categories as seedCategoriesData } from "@/lib/seedData"
 import {
   getCategories,
   getSubCategories,
@@ -44,9 +45,9 @@ import {
   deleteSubCategory,
   unlinkProductsFromCategory,
   unlinkProductsFromSubCategory,
+  seedCategories,
 } from "@/backend/categories"
 import { uploadImage } from "@/backend/products"
-import { seedCategories } from "@/lib/seedData"
 import imageCompression from "browser-image-compression"
 
 const Categories = () => {
@@ -78,7 +79,7 @@ const Categories = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [itemToDelete, setItemToDelete] = useState<{
     type: "category" | "subcategory"
-    id: number
+    id: string | number
   } | null>(null)
 
   // Fetch data on mount
@@ -95,7 +96,7 @@ const Categories = () => {
 
   const handleSeedCategories = async () => {
     setLoading(true)
-    const result = await seedCategories()
+    const result = await seedCategories(seedCategoriesData)
     setLoading(false)
     if (result.success) {
       toast({ title: "Success", description: result.message, duration: 5000 })
@@ -164,12 +165,12 @@ const Categories = () => {
     }
   }
 
-  const confirmDeleteCategory = (id: number) => {
+  const confirmDeleteCategory = (id: string | number) => {
     setItemToDelete({ type: "category", id })
     setDeleteDialogOpen(true)
   }
 
-  const confirmDeleteSubCategory = (id: number) => {
+  const confirmDeleteSubCategory = (id: string | number) => {
     setItemToDelete({ type: "subcategory", id })
     setDeleteDialogOpen(true)
   }
@@ -186,7 +187,7 @@ const Categories = () => {
     setItemToDelete(null)
   }
 
-  const handleDeleteCategory = async (id: number) => {
+  const handleDeleteCategory = async (id: string | number) => {
     console.log("Deleting category:", id)
     setLoading(true)
 
@@ -206,7 +207,7 @@ const Categories = () => {
     }
 
     // 2. Find all subcategories for this category
-    const relatedSubCats = subCategories.filter((sc) => sc.category_id === id)
+    const relatedSubCats = subCategories.filter((sc) => String(sc.category_id) === String(id))
     console.log("Found related subcategories:", relatedSubCats.length)
 
     // 3. Delete all related subcategories first
@@ -367,7 +368,7 @@ const Categories = () => {
 
     const payload = {
       name: subCategoryForm.name.trim(),
-      category_id: parseInt(subCategoryForm.category_id),
+      category_id: subCategoryForm.category_id, // UUID string, not parseInt
       image_url: imageUrl,
     }
 
@@ -397,7 +398,7 @@ const Categories = () => {
     }
   }
 
-  const handleDeleteSubCategory = async (id: number) => {
+  const handleDeleteSubCategory = async (id: string | number) => {
     console.log("Deleting subcategory:", id)
     setLoading(true)
 
@@ -440,35 +441,35 @@ const Categories = () => {
     }
   }
 
-  const getCategoryName = (categoryId: number) => {
-    return categories.find((c) => c.id === categoryId)?.name || "Unknown"
+  const getCategoryName = (categoryId: string | number) => {
+    return categories.find((c) => String(c.id) === String(categoryId))?.name || "Unknown"
   }
 
   return (
-    <div className="p-8 space-y-8 bg-slate-50/50 min-h-screen font-sans">
+    <div className="min-h-screen bg-[#f8fafc] p-4 md:p-6 font-sans space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            Category Management
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+            Categories
           </h1>
-          <p className="text-slate-500 mt-2">
+          <p className="text-slate-500 text-sm mt-1">
             Manage your product categories and subcategories
           </p>
         </div>
         <Button
           onClick={handleSeedCategories}
-          variant="outline"
+          variant="ghost"
           disabled={loading}
-          className="h-11 border-slate-200 hover:bg-white rounded-xl"
+          className="h-9 hover:bg-slate-200/50 border-0 text-slate-600"
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Seed Default Categories
+          Seed Data
         </Button>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 items-stretch">
         {/* Categories Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
           <div className="p-6 border-b border-slate-100">
             <div className="flex items-center justify-between">
               <div>
@@ -486,14 +487,14 @@ const Categories = () => {
               </Button>
             </div>
           </div>
-          <div className="p-6">
+          <div className="p-6 flex-1 overflow-auto">
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow className="hover:bg-slate-50/50 border-slate-100">
-                  <TableHead className="text-slate-700 font-semibold">
+                  <TableHead className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
                     Name
                   </TableHead>
-                  <TableHead className="w-[100px] text-slate-700 font-semibold">
+                  <TableHead className="w-[100px] text-slate-700 font-semibold text-xs uppercase tracking-wider text-right">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -503,23 +504,28 @@ const Categories = () => {
                   <TableRow>
                     <TableCell
                       colSpan={2}
-                      className="text-center py-8 text-slate-400"
+                      className="text-center py-12 text-slate-400"
                     >
-                      No categories found. Click "Seed Default Categories" to
-                      get started.
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
+                          <Plus className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <p className="text-sm">No categories found</p>
+                        <p className="text-xs text-slate-400">Click "Seed Data" to get started</p>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : (
                   categories.map((cat) => (
                     <TableRow
                       key={cat.id}
-                      className="hover:bg-slate-50/50 border-slate-50"
+                      className="hover:bg-slate-50/50 border-slate-100"
                     >
                       <TableCell className="font-medium text-slate-900">
                         {cat.name}
                       </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
+                      <TableCell className="text-right">
+                        <div className="flex gap-1 justify-end">
                           <Button
                             variant="ghost"
                             size="icon"
@@ -547,7 +553,7 @@ const Categories = () => {
         </div>
 
         {/* SubCategories Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
           <div className="p-6 border-b border-slate-100">
             <div className="flex items-center justify-between">
               <div>
@@ -568,17 +574,17 @@ const Categories = () => {
               </Button>
             </div>
           </div>
-          <div className="p-6">
+          <div className="p-6 flex-1 overflow-auto">
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow className="hover:bg-slate-50/50 border-slate-100">
-                  <TableHead className="text-slate-700 font-semibold">
+                  <TableHead className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
                     Name
                   </TableHead>
-                  <TableHead className="text-slate-700 font-semibold">
+                  <TableHead className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
                     Category
                   </TableHead>
-                  <TableHead className="w-[100px] text-slate-700 font-semibold">
+                  <TableHead className="w-[100px] text-slate-700 font-semibold text-xs uppercase tracking-wider text-right">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -588,16 +594,22 @@ const Categories = () => {
                   <TableRow>
                     <TableCell
                       colSpan={3}
-                      className="text-center py-8 text-slate-400"
+                      className="text-center py-12 text-slate-400"
                     >
-                      No subcategories found.
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
+                          <Plus className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <p className="text-sm">No subcategories found</p>
+                        <p className="text-xs text-slate-400">Add a subcategory to organize products</p>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : (
                   subCategories.map((subCat) => (
                     <TableRow
                       key={subCat.id}
-                      className="hover:bg-slate-50/50 border-slate-50"
+                      className="hover:bg-slate-50/50 border-slate-100"
                     >
                       <TableCell className="font-medium text-slate-900">
                         {subCat.name}
@@ -605,8 +617,8 @@ const Categories = () => {
                       <TableCell className="text-sm text-slate-500">
                         {getCategoryName(subCat.category_id)}
                       </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
+                      <TableCell className="text-right">
+                        <div className="flex gap-1 justify-end">
                           <Button
                             variant="ghost"
                             size="icon"
@@ -636,7 +648,7 @@ const Categories = () => {
 
       {/* Category Dialog */}
       <Dialog open={categoryDialog} onOpenChange={setCategoryDialog}>
-        <DialogContent className="rounded-2xl shadow-2xl border-0">
+        <DialogContent className="rounded-2xl shadow-2xl border-0 !bg-white">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-slate-900">
               {editingCategory ? "Edit Category" : "Add New Category"}
@@ -688,7 +700,7 @@ const Categories = () => {
         open={subCategoryDialog}
         onOpenChange={handleSubCategoryDialogToggle}
       >
-        <DialogContent className="rounded-2xl shadow-2xl border-0">
+        <DialogContent className="rounded-2xl shadow-2xl border-0 !bg-white">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-slate-900">
               {editingSubCategory ? "Edit Subcategory" : "Add New Subcategory"}

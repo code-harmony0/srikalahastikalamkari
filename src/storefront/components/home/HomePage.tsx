@@ -306,7 +306,7 @@ export default function HomePage() {
         {/* Cinematic Hero Section - Calm, High-End Look */}
         <section 
           ref={heroRef}
-          className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
+          className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden pt-16 md:pt-0" // Tightened vertical space
           role="banner"
           aria-label="Kalamkari Heritage - Cinematic Collection"
         >
@@ -330,6 +330,7 @@ export default function HomePage() {
             </div>
             
             {/* Soft Warm Gradient Overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-12%) */}
+            <div className="absolute inset-0 bg-black/40 z-[1]" />
             <div className="cinematic-overlay" />
             
             {/* Premium Textile Texture for Authentic Saree Feel */}
@@ -340,16 +341,21 @@ export default function HomePage() {
           
           {/* Hero Content - Premium Centered Design */}
           <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-6xl mx-auto w-full">
-            {/* Premium Centered Serif Title */}
-            <motion.h1
-              className="cinematic-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-8"
+            {/* Premium Centered Serif Title with Subtle Gradient */}
+            <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
+              className="relative"
             >
-              <span className="block">Kalamkari</span>
-              <span className="block font-light">Heritage</span>
-            </motion.h1>
+              {/* Subtle background gradient behind title for depth */}
+              <div className="absolute inset-0 bg-gradient-to-r from-background/0 via-background/10 to-background/0 blur-2xl -z-10 rounded-full transform scale-150 opacity-0 animate-in fade-in duration-1000 delay-1000 fill-mode-forwards"></div>
+              
+              <h1 className="cinematic-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-8 relative z-20">
+                <span className="block drop-shadow-xl">Kalamkari</span>
+                <span className="block font-light drop-shadow-lg">Heritage</span>
+              </h1>
+            </motion.div>
 
             {/* Elegant Italic Tagline */}
             <motion.p
@@ -371,12 +377,12 @@ export default function HomePage() {
               <Link href="/products" className="flex-1">
                 <Button 
                   size="lg" 
-                  className="cinematic-button-primary px-10 py-6 text-lg font-medium rounded-2xl w-full h-16"
+                  className="w-full h-14 rounded-lg text-lg font-medium"
                   aria-label="Explore our handcrafted Kalamkari collection"
                 >
                   <span className="flex items-center justify-center gap-3 font-serif">
                     Explore Collection
-                    <ArrowRight className="w-6 h-6" />
+                    <ArrowRight className="w-5 h-5" />
                   </span>
                 </Button>
               </Link>
@@ -385,12 +391,12 @@ export default function HomePage() {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="cinematic-button-secondary px-10 py-6 text-lg font-medium rounded-2xl w-full h-16"
+                  className="w-full h-14 rounded-lg text-lg font-medium bg-white/10 hover:bg-white/20 border-white/30 text-white hover:text-white hover:border-white/50 backdrop-blur-sm"
                   aria-label="Learn about our heritage and artisan story"
                 >
                   <span className="flex items-center justify-center gap-3 font-serif">
                     Our Heritage
-                    <Sparkles className="w-6 h-6" />
+                    <Sparkles className="w-5 h-5" />
                   </span>
                 </Button>
               </Link>
@@ -432,7 +438,7 @@ export default function HomePage() {
                 {[...Array(4)].map((_, i) => (
                   <div key={i} className="bg-white/85 rounded-xl overflow-hidden animate-pulse shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
                     <div className="w-full aspect-[5/6] bg-secondary/30" />
-                    <div className="p-3.5 space-y-2.5">
+                    <div className="p-6 space-y-2.5">
                       <div className="h-4 bg-secondary/30 rounded w-3/4" />
                       <div className="h-3 bg-secondary/30 rounded w-1/2" />
                       <div className="h-4 bg-secondary/30 rounded w-1/3" />
@@ -443,9 +449,9 @@ export default function HomePage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
                 {featuredProducts.map((product, index) => (
-                  <AnimatedElement key={product._id} delay={index * 80}>
+                  <AnimatedElement key={product.id} delay={index * 80}>
                     <Link
-                      href={`/products/${product.slug || product._id}`}
+                      href={`/products/${product.slug || product.id}`}
                       className="group block h-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 rounded-xl"
                       aria-label={`View ${product.title || 'Handcrafted Kalamkari Saree'} - ₹${product.price?.toLocaleString('en-IN') || 'Price on request'}`}
                     >
@@ -514,8 +520,8 @@ export default function HomePage() {
                           </motion.div>
                         </div>
 
-                        {/* Product Info - Reduced Padding */}
-                        <div className="p-3.5 flex-grow flex flex-col">
+                        {/* Product Info - Standardized Padding */}
+                        <div className="p-6 flex-grow flex flex-col">
                           <motion.h3
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -718,43 +724,49 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
                   viewport={{ once: true }}
-                  className="grid grid-cols-2 gap-4 mb-10"
+                  className="grid grid-cols-2 gap-4 md:gap-6 mb-10"
                 >
                   <motion.div 
                     whileHover={{ y: -3, scale: 1.02 }}
                     transition={{ duration: 0.3 }}
-                    className="flex items-center gap-4 p-5 bg-white/40 backdrop-blur-md rounded-xl border border-white/30 shadow-md hover:shadow-lg transition-all duration-400"
+                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-6 bg-white/40 backdrop-blur-md rounded-xl border border-white/30 shadow-md hover:shadow-lg transition-all duration-400 h-full"
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/15 to-primary/5 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary/15 to-primary/5 rounded-xl flex items-center justify-center flex-shrink-0">
                       <Users className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <CountUpNumber 
-                        end={200} 
-                        duration={2000}
-                        className="text-2xl font-heading font-bold text-primary tracking-tight"
-                        suffix="+"
-                      />
-                      <div className="text-sm font-paragraph text-foreground/60 font-medium">Artisans</div>
+                      <div className="relative inline-block">
+                        <CountUpNumber 
+                          end={200} 
+                          duration={2000}
+                          className="text-3xl font-heading font-bold text-foreground tracking-tight"
+                          suffix="+"
+                        />
+                        <div className="absolute -bottom-1 left-0 w-full h-1 bg-accent/40 rounded-full"></div>
+                      </div>
+                      <div className="text-sm font-paragraph text-foreground/70 font-semibold mt-1">Master Artisans</div>
                     </div>
                   </motion.div>
                   
                   <motion.div 
                     whileHover={{ y: -3, scale: 1.02 }}
                     transition={{ duration: 0.3 }}
-                    className="flex items-center gap-4 p-5 bg-white/40 backdrop-blur-md rounded-xl border border-white/30 shadow-md hover:shadow-lg transition-all duration-400"
+                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-6 bg-white/40 backdrop-blur-md rounded-xl border border-white/30 shadow-md hover:shadow-lg transition-all duration-400 h-full"
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-accent-color/15 to-accent-color/5 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-accent-color/15 to-accent-color/5 rounded-xl flex items-center justify-center flex-shrink-0">
                       <Palette className="w-6 h-6 text-accent-color" />
                     </div>
                     <div>
-                      <CountUpNumber 
-                        end={100} 
-                        duration={2000}
-                        className="text-2xl font-heading font-bold text-primary tracking-tight"
-                        suffix="%"
-                      />
-                      <div className="text-sm font-paragraph text-foreground/60 font-medium">Natural</div>
+                      <div className="relative inline-block">
+                        <CountUpNumber 
+                          end={100} 
+                          duration={2000}
+                          className="text-3xl font-heading font-bold text-foreground tracking-tight"
+                          suffix="%"
+                        />
+                        <div className="absolute -bottom-1 left-0 w-full h-1 bg-accent/40 rounded-full"></div>
+                      </div>
+                      <div className="text-sm font-paragraph text-foreground/70 font-semibold mt-1">Natural Dyes</div>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -824,7 +836,10 @@ export default function HomePage() {
 
         {/* Seasonal Offerings Section - Modern Tactile Cards with Editorial Feel */}
         {promotions.length > 0 && (
-          <section className="w-full py-24 md:py-32 relative overflow-hidden">
+          <section className="w-full pt-16 pb-24 md:pb-32 relative overflow-hidden">
+            <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
+               <div className="h-px w-full bg-gradient-to-r from-transparent via-[#E5B97C]/50 to-transparent" />
+            </div>
             
             <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
               {/* Editorial Header with Luxury Typography */}
@@ -1186,7 +1201,7 @@ export default function HomePage() {
                       duration: 0.4,
                       ease: "easeOut"
                     }}
-                    className="relative bg-gradient-to-br from-blue-500 to-blue-600 backdrop-blur-sm rounded-[1.5rem] p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all duration-500 border border-blue-400/30 group-hover:border-blue-300/40 overflow-hidden"
+                    className="relative bg-[#FFF4E5] rounded-xl p-8 lg:p-10 shadow-sm hover:shadow-md transition-all duration-500 border border-[#E5B97C]/30 group-hover:border-[#E5B97C] overflow-hidden"
                   >
                     {/* Subtle Handcrafted Texture on Card */}
                     <div 
@@ -1215,12 +1230,12 @@ export default function HomePage() {
                       <div className="absolute inset-3 bg-white/5 rounded-lg"></div>
 
                       {/* Icon */}
-                      <item.icon className="w-10 h-10 text-white relative z-10" />
+                      <item.icon className="w-10 h-10 text-primary relative z-10" />
                     </motion.div>
                     
                     {/* Content with Smooth Animations */}
                     <motion.h3
-                      className="font-heading text-xl lg:text-2xl text-white mb-6 text-center leading-tight transition-colors duration-400 font-light tracking-tight"
+                      className="font-heading text-xl lg:text-2xl text-foreground mb-6 text-center leading-tight transition-colors duration-400 font-light tracking-tight"
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: index * 0.15 + 0.2 }}
@@ -1230,7 +1245,7 @@ export default function HomePage() {
                     </motion.h3>
 
                     <motion.p
-                      className="font-paragraph text-base text-white/90 leading-relaxed text-center mb-8 font-light"
+                      className="font-paragraph text-base text-foreground/80 leading-relaxed text-center mb-8 font-light"
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: index * 0.15 + 0.3 }}
@@ -1247,10 +1262,10 @@ export default function HomePage() {
                         transition={{ duration: 0.6, delay: index * 0.15 + 0.4 }}
                         viewport={{ once: true }}
                         whileHover={{ scale: 1.02 }}
-                        className="inline-flex items-center px-6 py-3 bg-white/20 rounded-xl border border-white/30 shadow-sm group-hover:shadow-md transition-all duration-500 backdrop-blur-sm"
+                        className="inline-flex items-center px-6 py-3 bg-white/60 rounded-xl border border-[#E5B97C]/20 shadow-sm group-hover:shadow-md transition-all duration-500 backdrop-blur-sm"
                       >
-                        <Sparkles className="w-4 h-4 text-white mr-2" />
-                        <span className="font-heading font-light text-sm tracking-wide text-white">
+                        <Sparkles className="w-4 h-4 text-primary mr-2" />
+                        <span className="font-heading font-light text-sm tracking-wide text-primary">
                           {index === 0 && (
                             <>
                               <CountUpNumber 
@@ -1548,7 +1563,7 @@ export default function HomePage() {
                     
                     {/* Refined Border with Gentle Glow */}
                     <motion.div
-                      className="absolute inset-0 border-2 border-transparent group-hover:border-accent-color/40 rounded-3xl transition-all duration-400"
+                      className="absolute inset-0 border-2 border-transparent group-hover:border-[#E5B97C] rounded-3xl transition-all duration-400"
                       whileHover={{ 
                         borderColor: "rgba(184, 134, 11, 0.6)",
                         boxShadow: "0 0 20px rgba(184, 134, 11, 0.2)"
@@ -1691,7 +1706,7 @@ export default function HomePage() {
           
           {/* Subtle Gold Kalamkari Motif - Static */}
           <div 
-            className="absolute inset-0 opacity-6"
+            className="absolute inset-0 opacity-5"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.4'%3E%3Cpath d='M40 30c15 0 27 12 27 27 0 20-15 35-27 35s-27-15-27-35c0-15 12-27 27-27z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M120 100c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M80 40c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23B8860B' fill-opacity='0.05'/%3E%3C/g%3E%3C/svg%3E")`,
               backgroundSize: "160px 160px",
@@ -1769,7 +1784,7 @@ export default function HomePage() {
                 <input
                   type="email"
                   placeholder="Enter your email address"
-                  className="w-full h-16 px-8 bg-white/95 backdrop-blur-sm border-2 border-white/40 hover:border-accent-color/60 focus:border-accent-color rounded-2xl placeholder:text-foreground/60 font-paragraph focus:ring-4 focus:ring-accent-color/20 focus:outline-none text-foreground text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full h-14 px-8 bg-white/95 backdrop-blur-sm border border-white/40 hover:border-accent-color/60 focus:border-accent-color rounded-lg placeholder:text-foreground/60 font-paragraph focus:ring-2 focus:ring-accent-color/20 focus:outline-none text-foreground text-lg transition-all duration-300 shadow-md hover:shadow-lg"
                   style={{
                     boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.1)"
                   }}
@@ -1779,7 +1794,7 @@ export default function HomePage() {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="h-16 px-10 rounded-2xl font-paragraph bg-gradient-to-r from-accent-color to-amber-600 hover:from-amber-600 hover:to-accent-color text-primary font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl border-0"
+                className="h-14 px-10 rounded-lg font-paragraph bg-primary text-primary-foreground font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl border-0 hover:bg-primary/90"
                 style={{
                   boxShadow: "0 8px 32px rgba(184, 134, 11, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2)"
                 }}

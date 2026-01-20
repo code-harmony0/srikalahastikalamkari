@@ -28,21 +28,39 @@ export const createCategory = async (payload: {
   name: string
   description?: string
 }): Promise<{ data: any | null; error: any }> => {
+  const slug = payload.name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+
   const { data, error } = await supabase
     .from("categories")
-    .insert([payload])
+    .insert([{ ...payload, slug }])
     .select()
     .single()
   return { data, error }
 }
 
 export const updateCategory = async (
-  id: number,
+  id: string | number,
   payload: { name?: string; description?: string }
 ): Promise<{ data: any | null; error: any }> => {
+  const dbPayload: any = { ...payload }
+  
+  if (payload.name) {
+    dbPayload.slug = payload.name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+  }
+
   const { data, error } = await supabase
     .from("categories")
-    .update(payload)
+    .update(dbPayload)
     .eq("id", id)
     .select()
     .single()
@@ -50,7 +68,7 @@ export const updateCategory = async (
 }
 
 export const deleteCategory = async (
-  id: number
+  id: string | number
 ): Promise<{ data: any; error: any }> => {
   const { data, error } = await supabase
     .from("categories")
@@ -62,7 +80,7 @@ export const deleteCategory = async (
 export const createSubCategory = async (payload: {
   name: string
   description?: string
-  category_id: number
+  category_id: string // UUID string
   image_url?: string | null
 }): Promise<{ data: any | null; error: any }> => {
   const dbPayload = {
@@ -84,11 +102,11 @@ export const createSubCategory = async (payload: {
 }
 
 export const updateSubCategory = async (
-  id: number,
+  id: string | number,
   payload: {
     name?: string
     description?: string
-    category_id?: number
+    category_id?: string // UUID string
     image_url?: string | null
   }
 ): Promise<{ data: any | null; error: any }> => {
@@ -112,7 +130,7 @@ export const updateSubCategory = async (
 }
 
 export const deleteSubCategory = async (
-  id: number
+  id: string | number
 ): Promise<{ data: any; error: any }> => {
   const { data, error } = await supabase
     .from("sub_categories")
@@ -122,7 +140,7 @@ export const deleteSubCategory = async (
 }
 
 export const unlinkProductsFromCategory = async (
-  categoryId: number
+  categoryId: string | number
 ): Promise<{ error: any }> => {
   const { error } = await supabase
     .from("products")
@@ -132,11 +150,30 @@ export const unlinkProductsFromCategory = async (
 }
 
 export const unlinkProductsFromSubCategory = async (
-  subCategoryId: number
+  subCategoryId: string | number
 ): Promise<{ error: any }> => {
   const { error } = await supabase
     .from("products")
     .update({ sub_category_id: null })
     .eq("sub_category_id", subCategoryId)
   return { error }
+}
+export const seedCategories = async (categories: any[]): Promise<{ success: boolean; message: string }> => {
+  try {
+    const payloads = categories.map(cat => ({
+      name: cat.name,
+      slug: cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')
+    }));
+
+    const { error } = await supabase
+      .from("categories")
+      .insert(payloads);
+
+    if (error) throw error;
+
+    return { success: true, message: "Default categories seeded successfully" };
+  } catch (error: any) {
+    console.error("Seeding error:", error);
+    return { success: false, message: error.message || "Failed to seed categories" };
+  }
 }

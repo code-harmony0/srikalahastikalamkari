@@ -24,14 +24,15 @@ export const useCartStore = create<CartState>()(
 
       addItem: (product, quantity = 1) => {
         set((state) => {
+          const variantId = (product as any).selectedVariant?.id;
           const existingItem = state.items.find(
-            (item) => item.productId === product._id
+            (item) => item.productId === product.id && item.variant === variantId
           );
 
           if (existingItem) {
             return {
               items: state.items.map((item) =>
-                item.productId === product._id
+                (item.productId === product.id && item.variant === variantId)
                   ? { ...item, quantity: item.quantity + quantity }
                   : item
               ),
@@ -39,7 +40,7 @@ export const useCartStore = create<CartState>()(
           }
 
           return {
-            items: [...state.items, { productId: product._id, quantity }],
+            items: [...state.items, { productId: product.id, quantity, variant: variantId }],
           };
         });
       },
@@ -74,7 +75,7 @@ export const useCartStore = create<CartState>()(
       getTotalPrice: (products) => {
         const { items } = get();
         return items.reduce((total, item) => {
-          const product = products.find((p) => p._id === item.productId);
+          const product = products.find((p) => p.id === item.productId);
           return total + (product?.price || 0) * item.quantity;
         }, 0);
       },

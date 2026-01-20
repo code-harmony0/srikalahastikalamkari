@@ -1,5 +1,29 @@
 # Claude Code + Gemini CLI - Shri Kailash Kalamkari Project
 
+## MANDATORY: Use Gemini CLI Before Making Changes
+
+**IMPORTANT:** Before implementing ANY code changes, ALWAYS run Gemini CLI for analysis first.
+
+### Required Workflow
+1. **ANALYZE with Gemini** - Run analysis command BEFORE writing code
+2. **PLAN based on Gemini output** - Review recommendations
+3. **IMPLEMENT with Claude** - Make the actual code changes
+4. **VALIDATE with Gemini** - Verify changes are correct
+
+### Quick Gemini Commands
+```bash
+# Before ANY dashboard/UI changes:
+/opt/homebrew/bin/gemini -p "@src/app/dashboard/ Analyze this code and suggest improvements for: [describe task]"
+
+# Before ANY backend/API changes:
+/opt/homebrew/bin/gemini -p "@src/backend/ Review this code. What issues exist? How should I implement: [describe task]"
+
+# Before fixing bugs:
+/opt/homebrew/bin/gemini -p "@src/ Find the root cause of: [describe bug]. List all affected files."
+```
+
+---
+
 ## Project Overview
 Next.js 14 e-commerce site for authentic Kalamkari sarees and fabrics. **Zero Wix dependencies** - completely independent frontend with Supabase backend.
 
@@ -44,12 +68,38 @@ Next.js 14 e-commerce site for authentic Kalamkari sarees and fabrics. **Zero Wi
 5. **Add Sample Data:**
    - See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for sample product SQL
 
-## Gemini CLI Integration
+## Gemini CLI Integration (ALWAYS USE FIRST)
 
 ### Installation Check
 ```bash
 which gemini
 # Should return: /opt/homebrew/bin/gemini
+```
+
+### WORKFLOW: Gemini First, Claude Second
+
+| Step | Tool | Purpose |
+|------|------|---------|
+| 1 | Gemini CLI | Analyze code, identify issues, get recommendations |
+| 2 | Claude Code | Implement changes based on Gemini's analysis |
+| 3 | Gemini CLI | Validate changes, check for regressions |
+| 4 | Claude Code | Fix any issues found |
+
+### Task-Specific Gemini Commands
+
+#### Before UI/Dashboard Changes
+```bash
+/opt/homebrew/bin/gemini -p "@src/app/dashboard/ @src/shared/ui/ Analyze the dashboard components. Suggest improvements for: [your task]"
+```
+
+#### Before Backend/Database Changes
+```bash
+/opt/homebrew/bin/gemini -p "@src/backend/ @supabase/ Review backend code. Check for: type mismatches, missing error handling, UUID vs integer issues"
+```
+
+#### Before Bug Fixes
+```bash
+/opt/homebrew/bin/gemini -p "@src/ Debug this issue: [describe bug]. Find root cause and list all affected files."
 ```
 
 ### Common Gemini Commands for This Project
@@ -419,9 +469,11 @@ Edit `src/app/globals.css` → CSS variables and custom classes
 
 ## Project Contacts
 
-**AI Assistants:**
-- Claude Code (implementation)
-- Gemini CLI (analysis & validation)
+**AI Assistants (Use in this order!):**
+1. **Gemini CLI FIRST** - Analysis, bug detection, code review, architecture decisions
+2. **Claude Code SECOND** - Implementation based on Gemini's recommendations
+
+**Never skip Gemini analysis before making code changes!**
 
 **Package Manager:** npm
 **Node Version:** Latest LTS (18+)

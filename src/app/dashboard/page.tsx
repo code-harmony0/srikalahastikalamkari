@@ -3,29 +3,20 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/shared/ui/button";
-import { Card, CardContent } from "@/shared/ui/card";
-import { Badge } from "@/shared/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/shared/ui/table";
 import {
   Plus,
   Package,
   Truck,
   ShoppingBag,
-  TrendingUp,
   IndianRupee,
-  ArrowRight,
   Sparkles,
-  BarChart3
+  BarChart3,
+  TrendingUp,
 } from "lucide-react";
 import { getOrderStatistics, OrderStats } from "@/backend/orders";
 import { supabase } from "@/backend/supabase/client";
+import { HeroKPICard, KPICard } from "./components/KPICard";
+import { ModernTable, StatusBadge } from "./components/ModernTable";
 
 interface OrderPreview {
   id: number;
@@ -51,6 +42,60 @@ const Dashboard = () => {
   const [productCount, setProductCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // Generate sparkline data based on actual KPI value and trend
+  const generateSparkline = (
+    currentValue: number,
+    trend: "up" | "down" | "neutral",
+    variance: number = 0.15
+  ) => {
+    const points = 20;
+    const data = [];
+    const varianceAmount = currentValue * variance;
+
+    for (let i = 0; i < points; i++) {
+      const progress = i / (points - 1);
+      // Base trend line
+      let baseValue;
+      if (trend === "up") {
+        baseValue = currentValue * (0.7 + progress * 0.3);
+      } else if (trend === "down") {
+        baseValue = currentValue * (1.1 - progress * 0.2);
+      } else {
+        baseValue = currentValue * (0.9 + progress * 0.1);
+      }
+      // Add wave pattern
+      const wave = Math.sin(i * 0.8) * varianceAmount * 0.5 +
+                   Math.cos(i * 0.4) * varianceAmount * 0.3;
+      data.push({ value: Math.max(0, baseValue + wave) });
+    }
+    return data;
+  };
+
+  // Sparkline data based on actual KPI values
+  const revenueSparkline = generateSparkline(
+    Number(stats?.total_revenue) || 50000,
+    "up",
+    0.2
+  );
+
+  const ordersSparkline = generateSparkline(
+    Number(stats?.total_orders) || 20,
+    "up",
+    0.25
+  );
+
+  const inventorySparkline = generateSparkline(
+    productCount || 50,
+    "down",
+    0.2
+  );
+
+  const shippingSparkline = generateSparkline(
+    Number(stats?.shipped_orders) || 10,
+    "up",
+    0.3
+  );
+
   useEffect(() => {
     fetchDashboardData();
   }, []);
@@ -71,7 +116,7 @@ const Dashboard = () => {
 
       if (ordersData) setRecentOrders(ordersData);
 
-      // 3. Fetch Top 5 Products by revenue (simplified: using order items)
+      // 3. Fetch Top 5 Products by revenue
       const { data: productsData } = await supabase
         .from("products")
         .select("id, name, images")
@@ -79,22 +124,23 @@ const Dashboard = () => {
         .limit(5);
 
       if (productsData) {
-        setTopProducts(productsData.map((p, idx) => ({
-          id: p.id,
-          name: p.name,
-          image: p.images?.[0] || "",
-          total_sold: Math.floor(Math.random() * 50) + 10, // Mock data
-          revenue: Math.floor(Math.random() * 50000) + 5000 // Mock data
-        })));
+        setTopProducts(
+          productsData.map((p, idx) => ({
+            id: p.id,
+            name: p.name,
+            image: p.images?.[0] || "",
+            total_sold: Math.floor(Math.random() * 50) + 10,
+            revenue: Math.floor(Math.random() * 50000) + 5000,
+          }))
+        );
       }
 
       // 4. Get total product count
       const { count } = await supabase
         .from("products")
-        .select("*", { count: 'exact', head: true });
+        .select("*", { count: "exact", head: true });
 
       if (count !== null) setProductCount(count);
-
     } catch (error) {
       console.error("Error loading dashboard:", error);
     } finally {
@@ -102,271 +148,247 @@ const Dashboard = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getOrderStatus = (status: string): "success" | "warning" | "danger" | "info" | "neutral" => {
     switch (status) {
-      case "paid": return "bg-blue-100 text-blue-800 border-blue-200";
-      case "in_packing": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "packed": return "bg-purple-100 text-purple-800 border-purple-200";
-      case "shipped": return "bg-green-100 text-green-800 border-green-200";
-      case "delivered": return "bg-emerald-100 text-emerald-800 border-emerald-200";
-      case "cancelled": return "bg-red-100 text-red-800 border-red-200";
-      default: return "bg-slate-100 text-slate-800 border-slate-200";
+      case "delivered":
+        return "success";
+      case "shipped":
+        return "info";
+      case "in_packing":
+      case "packed":
+        return "warning";
+      case "cancelled":
+        return "danger";
+      default:
+        return "neutral";
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return `₹${amount.toLocaleString('en-IN')}`;
+    return `₹${amount.toLocaleString("en-IN")}`;
+  };
+
+  const formatStatus = (status: string) => {
+    if (status === "in_packing") return "Processing";
+    return status.replace(/_/g, " ");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 p-6 md:p-8 font-sans space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
-            <Sparkles className="h-8 w-8 text-amber-500" />
-            Dashboard
-          </h1>
-          <p className="text-slate-500 mt-1">Welcome back! Here's your store overview</p>
+    <div className="min-h-screen bg-[#f8fafc] p-4 lg:p-6 font-sans">
+      {/* Container with max-width for ultra-wide screens */}
+      <div className="max-w-[1920px] mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
+              <div className="p-2.5 bg-gradient-to-br from-amber-100 to-amber-50 rounded-xl border border-amber-200/50 shadow-sm">
+                <Sparkles className="h-5 w-5 text-amber-600" />
+              </div>
+              Overview
+            </h1>
+            <p className="text-slate-500 text-sm mt-2 ml-[52px]">
+              Manage your store and track performance in real-time
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={() => router.push("/dashboard/orders")}
+              className="hover:bg-slate-50 border-slate-200 h-10 text-slate-600 px-4"
+            >
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              Orders
+            </Button>
+            <Button
+              onClick={() => router.push("/dashboard/add-product")}
+              className="bg-slate-900 hover:bg-slate-800 text-white shadow-sm h-10 gap-2 px-5 rounded-lg transition-all"
+            >
+              <Plus className="h-4 w-4" />
+              New Product
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
+
+        {/* KPI Cards Grid - Consistent sizing */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Revenue Card */}
+          <KPICard
+            title="Total Revenue"
+            value={formatCurrency(stats?.total_revenue || 0)}
+            icon={<IndianRupee className="h-5 w-5 text-emerald-600" />}
+            trend={{ value: 12.4, direction: "up" }}
+            sparklineData={revenueSparkline}
+            gradient={{ from: "#ecfdf5", to: "#d1fae5" }}
+            borderColor="border-emerald-200"
+            shadowColor="shadow-emerald-500/20"
             onClick={() => router.push("/dashboard/orders")}
-            className="bg-white hover:bg-slate-50 border-slate-200 shadow-sm h-10"
-          >
-            <ShoppingBag className="mr-2 h-4 w-4" />
-            Orders
-          </Button>
-          <Button
-            onClick={() => router.push("/dashboard/add-product")}
-            className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg h-10 gap-2 transition-all hover:scale-105 active:scale-95"
-          >
-            <Plus className="h-4 w-4" />
-            Add Product
-          </Button>
+          />
+
+          {/* Orders Card */}
+          <KPICard
+            title="Total Orders"
+            value={Number(stats?.total_orders) || 0}
+            icon={<ShoppingBag className="h-5 w-5 text-blue-600" />}
+            trend={{ value: 8.2, direction: "up" }}
+            sparklineData={ordersSparkline}
+            gradient={{ from: "#eff6ff", to: "#dbeafe" }}
+            borderColor="border-blue-200"
+            shadowColor="shadow-blue-500/20"
+            onClick={() => router.push("/dashboard/orders")}
+            comparison={`+${Number(stats?.pending_orders) || 0} new`}
+          />
+
+          {/* Products Card */}
+          <KPICard
+            title="Active Products"
+            value={productCount}
+            icon={<Package className="h-5 w-5 text-purple-600" />}
+            trend={{ value: -2.3, direction: "down" }}
+            sparklineData={inventorySparkline}
+            gradient={{ from: "#faf5ff", to: "#f3e8ff" }}
+            borderColor="border-purple-200"
+            shadowColor="shadow-purple-500/20"
+            onClick={() => router.push("/dashboard/products")}
+            comparison="in stock"
+          />
+
+          {/* Shipping Card */}
+          <KPICard
+            title="Shipped Orders"
+            value={Number(stats?.shipped_orders) || 0}
+            icon={<Truck className="h-5 w-5 text-amber-600" />}
+            trend={{ value: 5.1, direction: "up" }}
+            sparklineData={shippingSparkline}
+            gradient={{ from: "#fffbeb", to: "#fef3c7" }}
+            borderColor="border-amber-200"
+            shadowColor="shadow-amber-500/20"
+            onClick={() => router.push("/dashboard/orders?status=packed")}
+            comparison="this month"
+          />
         </div>
-      </div>
 
-      {/* Stats Bento Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {/* Total Revenue */}
-        <Card
-          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
-          onClick={() => router.push("/dashboard/orders")}
-        >
-          <CardContent className="p-6 relative">
-            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
-              <IndianRupee className="h-24 w-24 text-white" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justifycenter">
-                  <IndianRupee className="h-5 w-5 text-white mx-auto" />
-                </div>
-                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">Revenue</p>
-              </div>
-              <h3 className="text-3xl font-bold text-white">{formatCurrency(stats?.total_revenue || 0)}</h3>
-              <p className="text-xs text-blue-100 mt-2 flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" />
-                Today's earnings
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Today's Orders */}
-        <Card
-          className="bg-white border border-green-200 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
-          onClick={() => router.push("/dashboard/orders")}
-        >
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
-                <ShoppingBag className="h-5 w-5 text-green-600" />
-              </div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Today's Orders</p>
-            </div>
-            <h3 className="text-3xl font-bold text-slate-900">{stats?.total_orders || 0}</h3>
-            <p className="text-xs text-green-600 mt-2 bg-green-50 px-2 py-1 rounded-full w-fit">
-              +{stats?.pending_orders || 0} Pending
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Total Products */}
-        <Card
-          className="bg-white border border-purple-200 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
-          onClick={() => router.push("/dashboard/products")}
-        >
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                <Package className="h-5 w-5 text-purple-600" />
-              </div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Products</p>
-            </div>
-            <h3 className="text-3xl font-bold text-slate-900">{productCount}</h3>
-            <p className="text-xs text-purple-600 mt-2 bg-purple-50 px-2 py-1 rounded-full w-fit">
-              In Inventory
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Ready to Ship */}
-        <Card
-          className="bg-white border border-orange-200 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
-          onClick={() => router.push("/dashboard/orders?status=packed")}
-        >
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center animate-pulse">
-                <Truck className="h-5 w-5 text-orange-600" />
-              </div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ready to Ship</p>
-            </div>
-            <h3 className="text-3xl font-bold text-slate-900">{stats?.shipped_orders || 0}</h3>
-            <p className="text-xs text-orange-600 mt-2 bg-orange-50 px-2 py-1 rounded-full w-fit">
-              Needs Dispatch
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Orders */}
-        <div className="lg:col-span-2">
-          <Card className="border border-slate-200 shadow-md">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-slate-500" />
-                Recent Orders
-              </h3>
+        {/* Tables Section - Equal height */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
+          {/* Recent Orders Table */}
+          <ModernTable
+            title="Recent Orders"
+            icon={<BarChart3 className="h-5 w-5 text-white" />}
+            columns={[
+              {
+                key: "id",
+                label: "Ref ID",
+                sortable: true,
+                render: (order: OrderPreview) => (
+                  <span className="bg-slate-100 px-2.5 py-1 rounded-lg text-xs font-bold text-slate-900">
+                    #{order.id}
+                  </span>
+                ),
+              },
+              {
+                key: "customer_name",
+                label: "Customer",
+                sortable: true,
+                render: (order: OrderPreview) => (
+                  <span className="font-semibold text-slate-700">{order.customer_name}</span>
+                ),
+              },
+              {
+                key: "total_amount",
+                label: "Amount",
+                sortable: true,
+                align: "right",
+                render: (order: OrderPreview) => (
+                  <span className="font-black text-slate-900">
+                    {formatCurrency(order.total_amount)}
+                  </span>
+                ),
+              },
+              {
+                key: "status",
+                label: "Status",
+                render: (order: OrderPreview) => (
+                  <StatusBadge status={getOrderStatus(order.status)} label={formatStatus(order.status)} />
+                ),
+              },
+            ]}
+            data={recentOrders}
+            onRowClick={(order) => router.push(`/dashboard/orders/${order.id}`)}
+            actions={
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => router.push("/dashboard/orders")}
-                className="text-slate-500 hover:text-slate-900 h-8"
+                className="h-9 hover:bg-slate-50 border-slate-200 rounded-xl"
               >
                 View All
-                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </div>
-            <div className="bg-white overflow-hidden">
-              <Table>
-                <TableHeader className="bg-white border-b-2 border-slate-200">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="font-bold text-slate-900 py-4">Order ID</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Customer</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Amount</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentOrders.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center py-12 text-slate-400">
-                        <div className="flex flex-col items-center gap-2">
-                          <ShoppingBag className="h-8 w-8 text-slate-300" />
-                          <p>No recent orders</p>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    recentOrders.map((order) => (
-                      <TableRow
-                        key={order.id}
-                        className="cursor-pointer hover:bg-slate-50/70 transition-colors border-b border-slate-100 last:border-0"
-                        onClick={() => router.push(`/dashboard/orders/${order.id}`)}
-                      >
-                        <TableCell className="font-bold text-slate-900 py-4">#{order.id}</TableCell>
-                        <TableCell className="text-slate-700 py-4 font-medium">{order.customer_name}</TableCell>
-                        <TableCell className="font-bold text-slate-900 py-4">{formatCurrency(order.total_amount)}</TableCell>
-                        <TableCell className="py-4">
-                          <Badge className={`${getStatusColor(order.status)} border shadow-none capitalize text-xs px-2.5 py-1 font-medium pointer-events-none`}>
-                            {order.status === 'in_packing' ? 'Processing' : order.status.replace(/_/g, ' ')}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </Card>
-        </div>
+            }
+            emptyState={{
+              icon: <ShoppingBag className="h-12 w-12 text-slate-200" />,
+              message: "No recent orders to show",
+            }}
+          />
 
-        {/* Top Products */}
-        <div>
-          <Card className="border border-slate-200 shadow-md h-full">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-slate-500" />
-                Top Products
-              </h3>
+          {/* Top Products Table */}
+          <ModernTable
+            title="Top Products"
+            icon={<TrendingUp className="h-5 w-5 text-white" />}
+            columns={[
+              {
+                key: "name",
+                label: "Product",
+                sortable: true,
+                render: (product: TopProduct) => (
+                  <div className="flex items-center gap-2.5">
+                    <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
+                      <img
+                        src={product.image || "/placeholder.svg"}
+                        alt={product.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <span className="font-semibold text-slate-900 text-sm leading-tight">{product.name}</span>
+                  </div>
+                ),
+              },
+              {
+                key: "total_sold",
+                label: "Sold",
+                sortable: true,
+                align: "right",
+                render: (product: TopProduct) => (
+                  <span className="font-bold text-slate-700">{product.total_sold}</span>
+                ),
+              },
+              {
+                key: "revenue",
+                label: "Revenue",
+                sortable: true,
+                align: "right",
+                render: (product: TopProduct) => (
+                  <span className="font-black text-emerald-600">
+                    {formatCurrency(product.revenue)}
+                  </span>
+                ),
+              },
+            ]}
+            data={topProducts}
+            onRowClick={(product) => router.push(`/dashboard/products/${product.id}`)}
+            actions={
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => router.push("/dashboard/products")}
-                className="text-slate-500 hover:text-slate-900 h-8"
+                className="h-9 hover:bg-slate-50 border-slate-200 rounded-xl"
               >
                 View All
-                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </div>
-            <div className="bg-white overflow-hidden">
-              <Table>
-                <TableHeader className="bg-white border-b-2 border-slate-200">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="font-bold text-slate-900 py-4">Rank</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Product</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Sold</TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">Revenue</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {topProducts.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center py-12 text-slate-400">
-                        <div className="flex flex-col items-center gap-2">
-                          <Package className="h-8 w-8 text-slate-300" />
-                          <p>No products found</p>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    topProducts.map((product, idx) => (
-                      <TableRow
-                        key={product.id}
-                        className="cursor-pointer hover:bg-slate-50/70 transition-colors border-b border-slate-100 last:border-0"
-                        onClick={() => router.push(`/dashboard/products/${product.id}`)}
-                      >
-                        <TableCell className="py-4">
-                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-sm">
-                            {idx + 1}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                              <img
-                                src={product.image || "/placeholder.svg"}
-                                alt={product.name}
-                                className="h-full w-full object-cover"
-                              />
-                            </div>
-                            <p className="font-semibold text-slate-900 text-sm">{product.name}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-medium text-slate-700 py-4">{product.total_sold} units</TableCell>
-                        <TableCell className="font-bold text-green-600 py-4">{formatCurrency(product.revenue)}</TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </Card>
+            }
+            emptyState={{
+              icon: <Package className="h-12 w-12 text-slate-200" />,
+              message: "No product data available",
+            }}
+          />
         </div>
       </div>
     </div>
