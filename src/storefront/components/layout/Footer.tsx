@@ -14,179 +14,150 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden mt-24">
-      {/* Static Brown Gradient Background */}
-      <div className="absolute inset-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(135deg, #2D1810 0%, #3D2317 25%, #4A2C1A 50%, #3D2317 75%, #2D1810 100%)"
-          }}
-        />
-      </div>
-
-      {/* Subtle Gold Kalamkari Motif - Static */}
+    <footer className="relative overflow-hidden mt-20 shadow-[0_-8px_24px_rgba(0,0,0,0.08)]">
+      {/* Heritage Harmony Gradient Background */}
+      <div className="absolute inset-0" style={{
+        background: "linear-gradient(to bottom, #4A2916 0%, #8C4A29 100%)"
+      }}/>
+      
+      {/* Subtle Gold Kalamkari Motif - 8% Opacity */}
       <div
-        className="absolute inset-0 opacity-6"
+        className="absolute inset-0 opacity-[0.08]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.3'%3E%3Cpath d='M35 25c12 0 22 10 22 22 0 16-12 28-22 28s-22-12-22-28c0-12 10-22 22-22z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M105 85c10 0 18 8 18 18 0 14-10 24-18 24s-18-10-18-24c0-10 8-18 18-18z' fill='%23B8860B' fill-opacity='0.05'/%3E%3Cpath d='M70 35c8 0 14 6 14 14 0 10-8 18-14 18s-14-8-14-18c0-8 6-14 14-14z' fill='%23B8860B' fill-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23E2B77A' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.3'%3E%3Cpath d='M35 25c12 0 22 10 22 22 0 16-12 28-22 28s-22-12-22-28c0-12 10-22 22-22z' fill='%23E2B77A' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E")`,
           backgroundSize: "140px 140px",
           backgroundPosition: "0 0",
           backgroundRepeat: "repeat"
         }}
       />
 
+      {/* Fabric Grain Texture Overlay */}
+      <div 
+         className="absolute inset-0 opacity-[0.12] pointer-events-none mix-blend-soft-light"
+         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
+      />
+
       {/* Gold Divider at Top */}
       <motion.div
-        className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-color to-transparent"
+        className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#E6C28C]/40 to-transparent"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
         viewport={{ once: true }}
       />
 
-      <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 py-10 relative z-10">
-        {/* 4-Column Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+      <div className="max-w-[120rem] mx-auto px-6 md:px-12 pt-16 pb-10 relative z-10">
+        {/* 3-column Footer Grid (Unified Grouping) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 items-baseline">
           {/* Brand Section */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="lg:col-span-1"
           >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-accent-color via-amber-600 to-primary rounded-3xl flex items-center justify-center shadow-xl">
-                <span className="text-white font-heading font-bold text-2xl">K</span>
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#E6C28C] to-[#B36A2E] rounded-xl flex items-center justify-center shadow-lg border border-white/10">
+                <span className="text-white font-serif font-bold text-xl">S</span>
               </div>
-              <div>
-                <span className="text-3xl font-heading font-bold text-white block leading-tight tracking-tight">
-                  Kalamkari
+              <div className="flex flex-col">
+                <span className="text-xl font-serif font-bold text-[#FFF8F0] leading-tight">
+                  Srikalahasti
                 </span>
-                <span className="text-sm font-paragraph text-accent-color tracking-[0.2em] font-semibold">
-                  HERITAGE
+                <span className="text-[10px] font-sans text-[#E6C28C] tracking-[0.25em] font-bold">
+                  KALAMKARI
                 </span>
               </div>
             </div>
 
-            <p className="text-white/85 font-paragraph text-base leading-relaxed mb-6">
-              Handcrafted Kalamkari sarees celebrating the rich heritage of Indian textile traditions. Each piece tells a story of artistry, culture, and timeless elegance.
+            <p className="text-white/70 font-sans text-[14px] leading-relaxed mb-8 max-w-[280px]">
+              Celebrating five centuries of hand-painted heritage. Each piece is a masterpiece of artisan mastery and natural elegance.
             </p>
 
             {/* Social Media */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {[Instagram, Facebook, Twitter].map((Icon, index) => (
                 <a
                   key={index}
                   href="#"
-                  className="w-9 h-9 bg-white/15 hover:bg-accent-color/30 rounded-xl flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-accent-color/40"
+                  className="w-9 h-9 bg-white/5 hover:bg-[#E6C28C]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-white/10 hover:border-[#E6C28C]/30 group"
                 >
-                  <Icon className="w-4 h-4 text-white hover:text-accent-color transition-colors" />
+                  <Icon className="w-4 h-4 text-white/50 group-hover:text-[#E6C28C] transition-colors" />
                 </a>
               ))}
             </div>
           </motion.div>
 
-          {/* Quick Links */}
+          {/* Links Section (Unified Care & Explore) */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
             viewport={{ once: true }}
+            className="flex flex-col md:flex-row gap-12 md:gap-24"
           >
-            <h3 className="text-xl font-heading font-extrabold text-white mb-5 relative">
-              Quick Links
-              <div className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
-            </h3>
-            <ul className="space-y-2">
-              {navLinks.map((link, index) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-white/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center py-1.5 px-2 rounded-lg hover:bg-white/10"
-                  >
-                    <span className="w-1.5 h-1.5 bg-accent-color/60 rounded-full mr-3" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div>
+              <h3 className="font-serif text-[16px] font-bold text-[#E6C28C] mb-[16px] tracking-wide">
+                Explore
+              </h3>
+              <ul className="flex flex-col gap-[10px]">
+                {navLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-[15px] text-white/80 hover:text-[#E6C28C] transition-all duration-300 font-sans"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-serif text-[16px] font-bold text-[#E6C28C] mb-[16px] tracking-wide">
+                Care
+              </h3>
+              <ul className="flex flex-col gap-[10px]">
+                {['Shipping', 'Returns', 'Care Guide'].map((item) => (
+                  <li key={item}>
+                    <a
+                      href="#"
+                      className="text-[15px] text-white/80 hover:text-[#E6C28C] transition-all duration-300 font-sans"
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </motion.div>
 
-          {/* Customer Service */}
+          {/* Newsletter Section - Glassmorphic Style */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             viewport={{ once: true }}
           >
-            <h3 className="text-xl font-heading font-extrabold text-white mb-5 relative">
-              Customer Care
-              <div className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
-            </h3>
-            <ul className="space-y-2">
-              {[
-                'Contact Us',
-                'Shipping & Returns',
-                'Size Guide',
-                'Care Instructions'
-              ].map((item, index) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="text-white/80 hover:text-accent-color transition-all duration-300 font-paragraph text-base flex items-center py-1.5 px-2 rounded-lg hover:bg-white/10"
-                  >
-                    <span className="w-1.5 h-1.5 bg-accent-color/60 rounded-full mr-3" />
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-xl font-heading font-extrabold text-white mb-5 relative">
-              Get in Touch
-              <div className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full" />
-            </h3>
-
-            <div className="space-y-4 mb-6">
-              {[
-                { icon: Mail, text: 'hello@kalamkari.com' },
-                { icon: Phone, text: '+91 98765 43210' },
-                { icon: MapPin, text: 'Heritage Craft Center\nSrikalahasti, Andhra Pradesh\nIndia - 517644' }
-              ].map(({ icon: Icon, text }, index) => (
-                <div key={index} className="flex items-start gap-3 text-white/80">
-                  <Icon className="w-5 h-5 text-accent-color flex-shrink-0 mt-0.5" />
-                  <span className="font-paragraph text-base leading-snug whitespace-pre-line">
-                    {text}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Newsletter Signup */}
-            <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-5 border border-accent-color/30">
-              <h4 className="text-lg font-heading font-semibold text-white mb-3">
-                Stay Updated
-              </h4>
-              <p className="text-white/80 font-paragraph text-sm mb-4">
-                Subscribe for exclusive offers and heritage stories.
+            <div className="bg-white/5 backdrop-blur-[6px] rounded-[10px] p-6 border border-white/10 shadow-xl">
+              <div className="flex items-center gap-3 mb-4">
+                <Sparkles className="w-4 h-4 text-[#E6C28C]" />
+                <h4 className="text-[16px] font-serif font-bold text-[#FFF8F0]">
+                  Stay Connected
+                </h4>
+              </div>
+              
+              <p className="text-white/60 font-sans text-[14px] mb-6 leading-relaxed">
+                Join our collective for first access to new collections and artisan stories.
               </p>
+
               <div className="flex gap-2">
                 <input
                   type="email"
-                  placeholder="Your email"
-                  className="flex-1 px-3 py-2.5 border border-accent-color/40 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent-color/60 bg-white/25 text-white placeholder:text-white/60 backdrop-blur-sm transition-all duration-300"
+                  placeholder="Your Email"
+                  className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[14px] text-white placeholder:text-white/40 focus:outline-none focus:border-[#E6C28C]/40 transition-all h-10 shadow-inner"
                 />
-                <Button className="bg-gradient-to-r from-accent-color to-amber-500 hover:from-amber-500 hover:to-accent-color text-wix-dark px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 border-0 text-sm">
+                <Button className="bg-[#E6C28C] hover:bg-[#B35D2E] text-[#3A2413] hover:text-white px-5 rounded-[6px] font-bold text-[13px] uppercase tracking-wider transition-all h-10 border-0 flex-shrink-0">
                   Join
                 </Button>
               </div>
@@ -194,44 +165,17 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        {/* Bottom Bar with Gold Divider */}
+        {/* Bottom Centered Copyright */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
           viewport={{ once: true }}
-          className="relative"
+          className="relative pt-5 border-t border-white/15"
         >
-          {/* Gold divider above bottom bar */}
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-accent-color to-transparent mb-5" />
-
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <p className="text-white/80 font-paragraph text-sm">
-                © 2024 Kalamkari Heritage. All rights reserved.
-              </p>
-              <div className="flex items-center gap-2 text-white/70 text-sm">
-                <Sparkles className="w-4 h-4 text-accent-color" />
-                <span>Handcrafted with love in India</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-4">
-              {[
-                'Privacy Policy',
-                'Terms of Service',
-                'Artisan Partners'
-              ].map((item, index) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="text-white/80 hover:text-accent-color transition-all duration-300 font-paragraph text-sm"
-                >
-                  {item}
-                </a>
-              ))}
-            </div>
-          </div>
+          <p className="text-white/65 font-serif italic text-[13px] tracking-wider text-center">
+            &copy; 2026 Srikalahasti Kalamkari &bull; Preserving Tradition, Painting the Future
+          </p>
         </motion.div>
       </div>
     </footer>

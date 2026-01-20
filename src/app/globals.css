@@ -8,56 +8,47 @@
 @layer base {
   /* WEBSITE THEME (Kalamkari Heritage) - Default */
   :root {
-    /* Beige Background (#F5F5DC -> 60 56% 91%) */
-    --background: 60 56% 91%;
-    /* Dark Gray Foreground (#333333 -> 0 0% 20%) */
-    --foreground: 0 0% 20%;
+    /* SRIKALAHASTI THEME */
+    
+    /* Base: Warm Ivory (#FFF8F0 -> 36 67% 97%) */
+    --background: 36 67% 97%;
+    /* Text: Deep Espresso (#3B2C23 -> 22 25% 19%) */
+    --foreground: 22 25% 19%;
 
-    /* Card: White or slightly off-white for contrast */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 20%;
+    /* Card: Slightly lighter Warm Ivory (#FFFDF9 -> 40 50% 99%) */
+    --card: 40 50% 99%;
+    --card-foreground: 22 25% 19%;
 
-    --popover: 60 56% 91%;
-    --popover-foreground: 0 0% 20%;
+    --popover: 36 67% 97%;
+    --popover-foreground: 22 25% 19%;
 
-    /* Primary: SaddleBrown (#8B4513 -> 25 76% 31%) - Darkened for AA contrast */
-    --primary: 25 76% 31%;
-    --primary-foreground: 60 56% 91%;
+    /* Primary: Terracotta (#A65329 -> 18 60% 41%) */
+    --primary: 18 60% 41%;
+    --primary-foreground: 36 67% 97%;
 
-    /* Secondary: Tan (#D2B48C -> 34 44% 69%) */
-    --secondary: 34 44% 69%;
-    --secondary-foreground: 0 0% 20%;
+    /* Secondary: Muted Espresso/Brown (#4A3528 -> 22 30% 22%) */
+    --secondary: 22 30% 22%;
+    --secondary-foreground: 36 67% 97%;
 
     /* Muted: Lighter Beige for subtle backgrounds */
-    --muted: 60 30% 94%;
-    --muted-foreground: 25 10% 40%;
+    --muted: 36 30% 94%;
+    --muted-foreground: 22 10% 40%;
 
-    /* Accent: Gold (#B8860B -> 45 85% 60%) - Adjusted darker for 3:1 contrast if needed, but #B8860B is 45 38% 37% in HSL?? No, #B8860B is 43 89% 38% (approx). 
-       Original var was 45 85% 60% which is #F4D051 (Too light). 
-       Correcting to #B8860B (Dark Goldenrod) -> 43 74% 49% 
-       Checking contrast: #B8860B on #F5F5DC (Beige). Ratio: 1.94:1 (Fail 3:1).
-       Need darker gold/brown for 3:1. Target #9B7000? 
-       Let's stick to the requested "Muted Gold" for secondary accent and ensuring focus ring is visible.
-       Primary is used for focus rings often. 
-       
-       Let's define the requested tokens:
-    */
-    --accent: 43 74% 49%; /* #B8860B - Dark Goldenrod (Base Accent) */
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Gold (#D4A05A -> 35 58% 59%) */
+    --accent: 35 58% 59%;
+    --accent-foreground: 22 25% 19%;
     
-    /* Secondary Accent: Deep Terracotta (#A0522D -> SaddleBrown is 25 76% 31%) or requested custom.
-       Using Deep Terracotta: 18 65% 45% (#BD5E2E)
-    */
-    --accent-secondary: 18 65% 45%; 
+    /* Secondary Accent: Deep Terracotta (#A65329) - keeping broadly synonymous with primary for consistency */
+    --accent-secondary: 18 60% 41%;
 
     /* Text Tokens */
-    --text-heading: 25 76% 31%; /* Primary Brown (#8B4513) */
-    --text-body: 0 0% 20%; /* Dark Gray (#333333) */
-    --text-muted: 25 10% 45%; /* Muted Brown/Gray */
+    --text-heading: 22 25% 19%; /* Espresso */
+    --text-body: 22 25% 19%; /* Espresso */
+    --text-muted: 22 15% 45%; 
 
-    /* Surface Variants for Depth */
-    --surface-1: 35 25% 94%; /* Slightly darker beige than background (98%->94%) */
-    --surface-2: 35 25% 90%; /* Even deeper beige */
+    /* Surface Variants */
+    --surface-1: 36 67% 94%; 
+    --surface-2: 36 67% 90%;
 
     /* Destructive: Crimson (#DC143C) */
     --destructive: 348 83% 47%;
@@ -236,7 +227,7 @@
 /* Enhanced GSAP-style Animation System with Improved Accessibility */
 .animate-reveal {
   opacity: 0;
-  transform: translateY(15px);
+  transform: translateY(30px);
   transition:
     opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);

@@ -15,25 +15,22 @@ const config: Config = {
     },
     extend: {
       fontSize: {
-        xs: ["0.75rem", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "400" }],
-        sm: ["0.875rem", { lineHeight: "1.25", letterSpacing: "0.025em", fontWeight: "400" }],
-        base: ["1rem", { lineHeight: "1.5", letterSpacing: "0em", fontWeight: "400" }],
-        lg: ["1.125rem", { lineHeight: "1.75", letterSpacing: "0em", fontWeight: "400" }],
-        xl: ["1.25rem", { lineHeight: "1.75", letterSpacing: "0em", fontWeight: "500" }],
-        "2xl": ["1.5rem", { lineHeight: "2", letterSpacing: "-0.01em", fontWeight: "500" }],
-        "3xl": ["1.75rem", { lineHeight: "2.25", letterSpacing: "-0.015em", fontWeight: "600" }], // ~28px as requested
-        "4xl": ["2.25rem", { lineHeight: "2.5", letterSpacing: "-0.02em", fontWeight: "600" }], // 36px-40px range
-        "5xl": ["3rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
-        "6xl": ["3.75rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
-        "7xl": ["4.5rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
-        "8xl": ["6rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
-        "9xl": ["8rem", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
+        xs: ["0.8125rem", { lineHeight: "1.5", fontWeight: "400" }], // 13px
+        sm: ["0.875rem", { lineHeight: "1.5", fontWeight: "400" }], // 14px
+        base: ["1rem", { lineHeight: "1.6", fontWeight: "400" }],   // 16px - Inter Body
+        lg: ["1.125rem", { lineHeight: "1.6", fontWeight: "500" }],  // 18px
+        xl: ["1.25rem", { lineHeight: "1.4", fontWeight: "600" }],   // 20px - H3
+        "2xl": ["1.5rem", { lineHeight: "1.3", fontWeight: "600" }], // 24px
+        "3xl": ["1.75rem", { lineHeight: "1.3", fontWeight: "600" }], // 28px - H2
+        "4xl": ["2.5rem", { lineHeight: "1.2", fontWeight: "600" }],  // 40px - H1
+        "5xl": ["3rem", { lineHeight: "1.2", fontWeight: "700" }],     // 48px
+        "6xl": ["3.75rem", { lineHeight: "1.1", fontWeight: "700" }], // 60px
       },
       fontFamily: {
-        heading: ["Cormorant Garamond", "serif"],
-        paragraph: ["Open Sans", "sans-serif"],
-        sans: ["Open Sans", "sans-serif"],
-        serif: ["Cormorant Garamond", "serif"],
+        heading: ["Playfair Display", "serif"],
+        paragraph: ["Inter", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+        serif: ["Playfair Display", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

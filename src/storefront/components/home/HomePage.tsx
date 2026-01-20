@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useAnimation, useInView } from 'framer-motion';
 import { productsService } from '@/backend/products';
@@ -270,33 +270,39 @@ export default function HomePage() {
   const galleryImages = [
     {
       src: "/images/gallery/gallery-1.png",
-      alt: "Elegant woman in vibrant Kalamkari saree with intricate floral patterns",
-      category: "Traditional Elegance"
+      alt: "Elegant woman in vibrant Kalamkari saree",
+      category: "Human Connection",
+      tone: "Warm"
     },
     {
       src: "/images/gallery/gallery-2.png",
-      alt: "Close-up detail of hand-painted Kalamkari motifs on silk fabric",
-      category: "Artisan Detail"
+      alt: "Close-up of hand-painted floral motifs",
+      category: "Hero Textile",
+      tone: "Neutral"
     },
     {
       src: "/images/gallery/gallery-3.png",
-      alt: "Contemporary styling of traditional Kalamkari saree for modern occasions",
-      category: "Modern Heritage"
+      alt: "Master artisan at work in Srikalahasti",
+      category: "Human Connection",
+      tone: "Artisan"
     },
     {
       src: "/images/gallery/gallery-4.png",
-      alt: "Master artisan carefully painting traditional designs with natural dyes",
-      category: "Craft Process"
+      alt: "Natural dye extraction from temple flowers",
+      category: "Cultural Detail",
+      tone: "Bright"
     },
     {
       src: "/images/gallery/gallery-5.png",
-      alt: "Luxurious collection of Kalamkari sarees in rich earth tones",
-      category: "Premium Collection"
+      alt: "Intricate texture of handwoven silk",
+      category: "Hero Textile",
+      tone: "Textural"
     },
     {
       src: "/images/gallery/gallery-6.png",
-      alt: "Graceful model showcasing the timeless beauty of Kalamkari heritage",
-      category: "Timeless Beauty"
+      alt: "Heritage display of 500-year old patterns",
+      category: "Cultural Detail",
+      tone: "Warm"
     },
   ];
 
@@ -306,531 +312,355 @@ export default function HomePage() {
         {/* Cinematic Hero Section - Calm, High-End Look */}
         <section 
           ref={heroRef}
-          className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden pt-16 md:pt-0" // Tightened vertical space
+          className="relative w-full min-h-[95vh] grid lg:grid-cols-2 overflow-hidden bg-[#FFF8F0]"
           role="banner"
-          aria-label="Kalamkari Heritage - Cinematic Collection"
+          aria-label="Srikalahasti Kalamkari - Cinematic Collection"
         >
-          {/* Multiple Kalamkari Fabric Background Images */}
-          <div className="absolute inset-0 z-0">
-            {/* Background Image Slideshow - Soft Fade Only */}
-            <div className="absolute inset-0">
-              {heroBackgroundImages.map((image, index) => (
+        {/* LEFT COLUMN: Narrative & Actions */}
+        <div className="relative z-20 flex flex-col justify-center px-6 md:px-12 lg:px-24 py-20 lg:py-0 order-2 lg:order-1 border-r border-[#D4A05A]/10">
+           {/* Subtle Background Pattern for Texture */}
+           <div 
+             className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply"
+             style={{
+               backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A65329' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+             }}
+           />
+
+           <div className="relative max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
+                  <div className="w-16 h-px bg-[#A65329]"></div>
+                  <span className="text-xs font-bold text-[#A65329] uppercase tracking-[0.3em]">Est. 2026</span>
+                </div>
+
+                <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.1] text-[#3B2C23] mb-6 tracking-tight">
+                  <span className="block text-[#A65329] text-2xl md:text-3xl lg:text-4xl mb-2 font-medium italic">Srikalahasti</span>
+                  KALAMKARI
+                </h1>
+
+                <p className="font-sans text-lg md:text-xl text-[#3B2C23]/80 mb-10 leading-relaxed font-light">
+                  Where every thread tells the story of timeless craftsmanship. Hand-painted masterpieces using natural dyes and ancient techniques.
+                </p>
+
+                {/* Unified Button Group */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full">
+                  <Link href="/products" className="w-full sm:w-auto">
+                    <Button 
+                      className="w-full sm:w-[200px] h-14 rounded-xl text-base font-medium bg-[#A65329] text-[#FFF8F0] hover:bg-[#8B4513] hover:-translate-y-1 shadow-[0_4px_14px_rgba(166,83,41,0.3)] hover:shadow-[0_8px_24px_rgba(166,83,41,0.5)] transition-all duration-300 border border-transparent"
+                    >
+                      Shop Collection
+                    </Button>
+                  </Link>
+                  
+                  <Link href="/about" className="w-full sm:w-auto">
+                    <Button 
+                      variant="outline" 
+                      className="w-full sm:w-[200px] h-14 rounded-xl text-base font-medium bg-transparent border border-[#A65329]/30 text-[#A65329] hover:bg-[#A65329]/5 hover:border-[#A65329] hover:-translate-y-1 hover:shadow-lg transition-all duration-300 md:bg-transparent"
+                    >
+                      Discover Our Story
+                    </Button>
+                  </Link>
+                </div>
+              </motion.div>
+           </div>
+           
+           {/* Scroll Cue (Left Aligned on Desktop) */}
+           <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
+              className="absolute bottom-10 left-12 hidden lg:flex items-center gap-4"
+           >
+             <span className="text-[10px] uppercase tracking-[0.2em] text-[#3B2C23]/60 transform -rotate-90 origin-left translate-y-8">Scroll</span>
+             <div className="h-24 w-px bg-gradient-to-b from-[#A65329] to-transparent opacity-40"></div>
+           </motion.div>
+        </div>
+        
+        {/* RIGHT COLUMN: Visual & Parallax */}
+        <div className="relative order-1 lg:order-2 h-[60vh] lg:h-auto overflow-hidden">
+          <motion.div 
+            style={{ y: heroY, scale: heroScale }}
+            className="absolute inset-0 w-full h-[120%]"
+          >
+             {heroBackgroundImages.map((image, index) => (
                 <Image
                   key={index}
                   src={image.src}
                   alt={image.alt}
-                  width={1920}
-                  height={1080}
+                  fill
+                  className={`object-cover transition-opacity duration-[2000ms] ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
                   priority={index === 0}
-                  className={`hero-background-image ${
-                    index === currentImageIndex ? 'active' : 'inactive'
-                  }`}
                 />
               ))}
-            </div>
-            
-            {/* Soft Warm Gradient Overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-12%) */}
-            <div className="absolute inset-0 bg-black/40 z-[1]" />
-            <div className="cinematic-overlay" />
-            
-            {/* Premium Textile Texture for Authentic Saree Feel */}
-            <div className="textile-texture" />
-            
-
-          </div>
-          
-          {/* Hero Content - Premium Centered Design */}
-          <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 lg:px-12 max-w-6xl mx-auto w-full">
-            {/* Premium Centered Serif Title with Subtle Gradient */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
-              className="relative"
-            >
-              {/* Subtle background gradient behind title for depth */}
-              <div className="absolute inset-0 bg-gradient-to-r from-background/0 via-background/10 to-background/0 blur-2xl -z-10 rounded-full transform scale-150 opacity-0 animate-in fade-in duration-1000 delay-1000 fill-mode-forwards"></div>
               
-              <h1 className="cinematic-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-8 relative z-20">
-                <span className="block drop-shadow-xl">Kalamkari</span>
-                <span className="block font-light drop-shadow-lg">Heritage</span>
-              </h1>
-            </motion.div>
-
-            {/* Elegant Italic Tagline */}
-            <motion.p
-              className="cinematic-tagline text-xl md:text-2xl lg:text-3xl mb-12 max-w-4xl leading-relaxed"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
-            >
-              "Where ancient artistry meets modern luxury, each thread tells a story of timeless elegance"
-            </motion.p>
-
-            {/* Gold-Brown Buttons */}
-            <motion.div
-              className="flex flex-col sm:flex-row gap-6 max-w-2xl mx-auto w-full"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 1.1, ease: "easeOut" }}
-            >
-              <Link href="/products" className="flex-1">
-                <Button 
-                  size="lg" 
-                  className="w-full h-14 rounded-lg text-lg font-medium"
-                  aria-label="Explore our handcrafted Kalamkari collection"
-                >
-                  <span className="flex items-center justify-center gap-3 font-serif">
-                    Explore Collection
-                    <ArrowRight className="w-5 h-5" />
-                  </span>
-                </Button>
-              </Link>
+              {/* Image Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-l from-black/20 via-transparent to-transparent opacity-30"></div>
               
-              <Link href="/about" className="flex-1">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="w-full h-14 rounded-lg text-lg font-medium bg-white/10 hover:bg-white/20 border-white/30 text-white hover:text-white hover:border-white/50 backdrop-blur-sm"
-                  aria-label="Learn about our heritage and artisan story"
-                >
-                  <span className="flex items-center justify-center gap-3 font-serif">
-                    Our Heritage
-                    <Sparkles className="w-5 h-5" />
-                  </span>
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
+              {/* Fabric Grain Texture */}
+              <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay" 
+                   style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
+              </div>
+          </motion.div>
+        </div>
+
         </section>
 
-        {/* Featured Products Section - Premium Showcase */}
-        <section className="w-full py-16 md:py-20 relative overflow-hidden">
-          <div className="max-w-[120rem] mx-auto px-4 md:px-6 lg:px-8 relative z-10">
-            <AnimatedElement>
-              <div className="text-center mb-12">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="flex items-center justify-center gap-3 mb-4"
-                >
-                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                  <span className="font-paragraph text-xs font-semibold text-accent-color uppercase tracking-[0.15em]">
-                    Curated Collection
-                  </span>
-                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"></div>
-                </motion.div>
-                
-                <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl text-foreground mb-4 leading-tight">
-                  Masterpieces of Heritage
-                </h2>
-                
-                <p className="font-paragraph text-base md:text-lg text-foreground/70 max-w-2xl mx-auto leading-relaxed">
-                  A carefully curated selection of our finest handcrafted sarees, each piece telling a unique story of tradition, artistry, and timeless elegance.
-                </p>
-              </div>
-            </AnimatedElement>
+        {/* SECTION 2: Masterpieces of Heritage (2026 Redesign - Polished) */}
+        <section className="w-full py-16 md:py-24 relative overflow-hidden">
+           {/* Section Background Gradient: Ivory -> Pale Beige */}
+           <div className="absolute inset-0 bg-gradient-to-b from-[#FFF8F0] to-[#FFF4E8] z-0" />
 
-            {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="bg-white/85 rounded-xl overflow-hidden animate-pulse shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
-                    <div className="w-full aspect-[5/6] bg-secondary/30" />
-                    <div className="p-6 space-y-2.5">
-                      <div className="h-4 bg-secondary/30 rounded w-3/4" />
-                      <div className="h-3 bg-secondary/30 rounded w-1/2" />
-                      <div className="h-4 bg-secondary/30 rounded w-1/3" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-                {featuredProducts.map((product, index) => (
-                  <AnimatedElement key={product.id} delay={index * 80}>
-                    <Link
-                      href={`/products/${product.slug || product.id}`}
-                      className="group block h-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 rounded-xl"
-                      aria-label={`View ${product.title || 'Handcrafted Kalamkari Saree'} - ₹${product.price?.toLocaleString('en-IN') || 'Price on request'}`}
-                    >
-                      <motion.article
-                        whileHover={{ 
-                          y: -8, 
-                          scale: 1.02,
-                          transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }
-                        }}
-                        whileTap={{ scale: 0.98 }}
-                        className="relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] transition-all duration-500 group h-full flex flex-col"
-                      >
-                        {/* Product Image - Reduced Height */}
-                        <div className="relative overflow-hidden flex-shrink-0">
-                          <Image
-                            src={product.mainImage || "/images/products/product-placeholder.png"}
-                            alt={`${product.title || 'Handcrafted Kalamkari Saree'} - Premium handwoven saree with traditional motifs`}
-                            className="w-full aspect-[5/6] object-cover object-[center_20%] transition-all duration-700 ease-out group-hover:scale-108 group-hover:brightness-105"
-                            width={300}
-                            height={360}
-                            loading={index < 2 ? "eager" : "lazy"}
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          />
-                          
-                          {/* Enhanced Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                          
-                          {/* Featured Badge */}
-                          {product.isFeatured && (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.8, y: -10 }}
-                              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                              transition={{ duration: 0.5, delay: 0.2 }}
-                              viewport={{ once: true }}
-                              className="absolute top-2.5 right-2.5 bg-gradient-to-r from-accent-color to-accent-color/90 text-white px-2 py-1 rounded-lg text-xs font-bold shadow-lg backdrop-blur-sm"
-                            >
-                              ✨ Featured
-                            </motion.div>
-                          )}
-                          
-                          {/* Enhanced Hover Actions */}
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileHover={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, ease: "easeOut" }}
-                            className="absolute bottom-2.5 left-2.5 right-2.5 flex justify-between items-center opacity-0 group-hover:opacity-100"
-                          >
-                            <Button 
-                              size="sm" 
-                              className="h-7 px-2.5 text-xs rounded-lg bg-white/95 hover:bg-white text-primary font-semibold shadow-lg backdrop-blur-sm border-0 transition-all duration-200 hover:scale-105"
-                              onClick={(e) => e.preventDefault()}
-                              tabIndex={-1}
-                            >
-                              <ShoppingBag className="h-3 w-3 mr-1" />
-                              View
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-7 w-7 p-0 rounded-lg bg-white/90 hover:bg-white border-white/60 hover:border-white shadow-lg transition-all duration-200 hover:scale-105"
-                              onClick={(e) => e.preventDefault()}
-                              tabIndex={-1}
-                            >
-                              <Heart className="w-3 h-3 text-primary" />
-                            </Button>
-                          </motion.div>
-                        </div>
+           {/* Top Wave Divider - Subtle Shadow & Texture */}
+           <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10 opacity-90 drop-shadow-sm">
+             <svg className="relative block w-[calc(100%+1.3px)] h-[60px] text-[#FFF8F0]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                 <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-[#FFF8F0]"></path>
+             </svg>
+           </div>
+           
+           {/* Background Pattern - 8% Opacity (Less Repetitive) */}
+           <div 
+             className="absolute inset-0 opacity-[0.08] pointer-events-none mix-blend-multiply"
+             style={{
+               backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30l5 5m-5-5l5-5m-5 5l-5 5m5-5l-5-5' stroke='%233B2C23' stroke-width='1' fill='none' opacity='0.3'/%3E%3C/svg%3E")`,
+               backgroundSize: "60px 60px"
+             }}
+           />
 
-                        {/* Product Info - Standardized Padding */}
-                        <div className="p-6 flex-grow flex flex-col">
-                          <motion.h3
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.1 }}
-                            viewport={{ once: true }}
-                            className="font-heading text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mb-1.5 line-clamp-2 leading-tight"
-                          >
-                            {product.title}
-                          </motion.h3>
-                          
-                          <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.15 }}
-                            viewport={{ once: true }}
-                            className="text-foreground/65 font-paragraph text-xs mb-2.5 line-clamp-2 leading-relaxed flex-grow"
-                          >
-                            {product.description}
-                          </motion.p>
+           <div className="max-w-[120rem] mx-auto px-4 md:px-6 lg:px-8 relative z-20">
+             <AnimatedElement>
+               {/* Intro Block - Reduced Spacing & Connected Flow */}
+               <div className="text-center mb-12 md:mb-16">
+                 <motion.div
+                   initial={{ opacity: 0, y: 10 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   className="mb-3"
+                 >
+                   <span className="font-sans text-[12px] font-bold text-[#C19A5B] uppercase tracking-[0.2em]">
+                     Curated Collection
+                   </span>
+                 </motion.div>
+                 
+                 <h2 className="font-serif text-4xl md:text-5xl lg:text-[42px] font-bold text-[#3B2C23] mb-5 leading-tight tracking-[0.5px]">
+                   Masterpieces of Heritage
+                 </h2>
+                 
+                 <p className="font-sans text-[17px] text-[#3B2C23]/80 max-w-2xl mx-auto leading-relaxed font-light">
+                   Hand-painted masterpieces telling ancient stories through natural dyes and intricate craftsmanship.
+                 </p>
+               </div>
+             </AnimatedElement>
 
-                          {/* Aligned Price and Rating */}
-                          <div className="flex items-end justify-between mt-auto pt-1">
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.4, delay: 0.2 }}
-                              viewport={{ once: true }}
-                              className="flex flex-col"
-                            >
-                              <span className="font-heading font-bold text-primary text-xl leading-tight tracking-wide">
-                                ₹{product.price?.toLocaleString('en-IN')}
-                              </span>
-                              <span className="text-xs text-foreground/60 font-paragraph mt-1 font-medium">
-                                Free Shipping
-                              </span>
-                            </motion.div>
+             {/* Teaser Cards Row (Replacing Grid for Editorial Feel) */}
+             <div className="mb-12">
+               {loading ? (
+                 <div className="flex flex-col md:flex-row justify-center gap-6">
+                   {[...Array(3)].map((_, i) => (
+                     <div key={i} className="h-32 w-full md:w-1/3 bg-[#3B2C23]/5 rounded-xl animate-pulse" />
+                   ))}
+                 </div>
+               ) : (
+                 <div className="flex flex-col md:flex-row justify-center gap-5 lg:gap-8 max-w-5xl mx-auto">
+                   {featuredProducts.slice(0, 3).map((product, index) => (
+                     <AnimatedElement key={product.id} delay={index * 100} className="flex-1">
+                       <Link
+                         href={`/products/${product.slug || product.id}`}
+                         className="group block h-full focus:outline-none"
+                       >
+                         <motion.article
+                           className="flex items-center gap-4 bg-white/60 backdrop-blur-sm p-4 rounded-xl border border-[#3B2C23]/5 shadow-sm hover:shadow-[0_8px_24px_rgba(166,83,41,0.12)] transition-all duration-300 h-full"
+                           whileHover={{ y: -4 }}
+                         >
+                           {/* Small Image */}
+                           <div className="relative w-20 h-24 rounded-lg overflow-hidden flex-shrink-0 shadow-inner">
+                             <Image
+                               src={product.mainImage || "/images/products/product-placeholder.png"}
+                               alt={product.title || "Srikalahasti Kalamkari Saree"}
+                               fill
+                               className="object-cover group-hover:scale-110 transition-transform duration-500"
+                               sizes="80px"
+                             />
+                           </div>
+                           
+                           {/* Content */}
+                           <div className="flex-grow min-w-0">
+                             <h3 className="font-serif text-[18px] text-[#3B2C23] mb-1 truncate group-hover:text-[#A65329] transition-colors">
+                               {product.title}
+                             </h3>
+                             <p className="text-xs font-sans text-[#3B2C23]/60 uppercase tracking-widest mb-2">
+                               Hand-painted Elegance
+                             </p>
+                             <span className="text-sm font-medium text-[#A65329]">View Details →</span>
+                           </div>
+                         </motion.article>
+                       </Link>
+                     </AnimatedElement>
+                   ))}
+                 </div>
+               )}
+             </div>
 
-                            {/* Aligned Rating */}
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.4, delay: 0.25 }}
-                              viewport={{ once: true }}
-                              className="flex flex-col items-end"
-                            >
-                              <div className="flex items-center gap-1 mb-1">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star 
-                                    key={i} 
-                                    className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-sm" 
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-xs text-foreground/70 font-semibold leading-tight tracking-wide">
-                                4.9 (127)
-                              </span>
-                            </motion.div>
-                          </div>
-                        </div>
-                      </motion.article>
-                    </Link>
-                  </AnimatedElement>
-                ))}
-              </div>
-            )}
-
-            {/* Enhanced CTA */}
-            <AnimatedElement className="text-center mt-14">
-              <Link href="/products">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Button 
-                    variant="outline" 
-                    size="lg" 
-                    className="h-12 px-8 text-base font-semibold rounded-xl border-2 border-primary/40 hover:bg-primary/8 hover:border-primary group transition-all duration-400 shadow-[0_4px_20px_rgba(160,82,45,0.15)] hover:shadow-[0_8px_30px_rgba(160,82,45,0.25)]"
-                    aria-label="View complete collection of handcrafted Kalamkari sarees"
-                  >
-                    View Complete Collection 
-                    <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1"/>
-                  </Button>
-                </motion.div>
-              </Link>
-            </AnimatedElement>
-          </div>
+             {/* Centered CTA - Linked to Grid */}
+             <div className="text-center mt-8">
+               <Link href="/products">
+                 <Button 
+                   className="h-12 px-10 rounded-[10px] bg-transparent border border-[#C19A5B]/60 text-[#3B2C23] hover:bg-[#A65329] hover:text-white hover:border-[#A65329] transition-all duration-300 font-medium text-sm tracking-wide shadow-sm hover:shadow-lg"
+                 >
+                   View Complete Collection
+                 </Button>
+               </Link>
+             </div>
+           </div>
         </section>
 
-        {/* The Soul of the Artisan Section - Refined Split Layout */}
-        <section className="w-full py-20 md:py-28 relative overflow-hidden">
+        {/* The Soul of the Artisan Section - Refined Polish (Section 3) */}
+        <section className="w-full py-20 md:py-24 relative overflow-hidden">
+           {/* Section Divider with Faint Shadow */}
+           <div className="absolute top-0 left-0 w-full h-px bg-[#D4A05A]/20 shadow-[0_2px_4px_rgba(0,0,0,0.02)] z-10" />
 
-          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12">
-            <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+           {/* Background: Soft Beige -> Cream + Faint Fabric Texture */}
+           <div className="absolute inset-0 bg-gradient-to-br from-[#FFF4E8] to-[#FFF8F0] z-0" />
+           <div 
+             className="absolute inset-0 opacity-[0.06] pointer-events-none mix-blend-multiply"
+             style={{
+               backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='%233B2C23'/%3E%3C/svg%3E")`,
+               backgroundSize: "20px 20px"
+             }}
+           />
+
+          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-20">
+            <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
               
-              {/* Smaller Artisan Image with Rounded Corners */}
+              {/* Image Block - Aligned Flush Left */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, x: -30 }}
+                initial={{ opacity: 0, scale: 0.98, x: -20 }}
                 whileInView={{ opacity: 1, scale: 1, x: 0 }}
                 transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
                 viewport={{ once: true }}
-                className="lg:col-span-5 order-2 lg:order-1"
+                className="lg:col-span-6 order-2 lg:order-1"
               >
-                <div className="relative">
+                <div className="relative group">
                   {/* Main Image Container */}
-                  <div className="relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 group">
+                  <div className="relative overflow-hidden rounded-[16px] shadow-2xl transition-all duration-700">
                     <Image
                       src="/images/products/artisan.png"
-                      alt="Master artisan carefully painting traditional Kalamkari designs with natural dyes and bamboo pen"
-                      className="w-full aspect-[4/5] object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                      width={500}
-                      height={625}
+                      alt="Master artisan carefully painting traditional Kalamkari designs"
+                      className="w-full aspect-[4/5] object-cover object-center group-hover:scale-105 transition-transform duration-1000"
+                      width={600}
+                      height={750}
                     />
-                    {/* Subtle Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-60"></div>
+                    <div className="absolute inset-0 bg-black/10 transition-opacity duration-500 group-hover:opacity-0"></div>
                   </div>
 
-                  {/* Compact Heritage Badge */}
+                  {/* Stat Card: Heritage Years */}
                   <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                    viewport={{ once: true }}
-                    className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-accent-color/20"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    className="absolute -bottom-8 -right-8 bg-[#FFF8F0]/95 backdrop-blur-md rounded-[12px] p-6 shadow-[0_8px_32px_rgba(59,44,35,0.1)] border border-[#D4A05A]/20"
                   >
                     <CountUpNumber 
                       end={500} 
                       duration={2000}
-                      className="text-3xl font-heading font-bold text-primary mb-2 tracking-tight"
+                      className="text-3xl font-serif font-bold text-[#A65329] mb-1"
                       suffix="+"
                     />
-                    <div className="text-sm font-paragraph text-foreground/70 font-medium">Years Heritage</div>
-                    <div className="w-8 h-0.5 bg-accent-color rounded-full mt-2"></div>
+                    <div className="text-sm font-sans text-[#3B2C23]/80 font-medium tracking-wide">Years Heritage</div>
                   </motion.div>
-
-                  {/* Decorative Corner Element */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                    viewport={{ once: true }}
-                    className="absolute -top-4 -left-4 w-12 h-12 border-3 border-accent-color/30 rounded-full bg-accent-color/5 backdrop-blur-sm"
-                  />
                 </div>
               </motion.div>
 
-              {/* Compact Text Content */}
+              {/* Text Block - Narrower & Refined */}
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{ duration: 1, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="lg:col-span-7 order-1 lg:order-2"
+                className="lg:col-span-6 order-1 lg:order-2 lg:pl-8"
               >
-                {/* Section Tag */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="flex items-center gap-4 mb-8"
-                >
-                  <div className="w-12 h-px bg-gradient-to-r from-accent-color to-accent-color/40"></div>
-                  <span className="font-paragraph text-xs font-bold text-accent-color uppercase tracking-[0.3em]">
+                {/* Tag */}
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="w-8 h-px bg-[#A65329]"></span>
+                  <span className="font-sans text-[11px] font-bold text-[#A65329] uppercase tracking-[0.25em]">
                     Our Heritage
                   </span>
-                </motion.div>
+                </div>
                 
-                {/* Compact Heading */}
-                <motion.h2 
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.1 }}
-                  viewport={{ once: true }}
-                  className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-8 leading-[0.9] tracking-tight font-light"
-                >
-                  The Soul of the
-                  <span className="text-primary block mt-2 font-normal">Artisan</span>
-                </motion.h2>
+                {/* Heading */}
+                <h2 className="font-serif text-4xl md:text-5xl lg:text-[56px] text-[#3B2C23] mb-8 leading-[1.1] tracking-tight">
+                  The Soul of the <br/>
+                  <span className="text-[#A65329] italic">Artisan</span>
+                </h2>
                 
-                {/* Readable Content */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  viewport={{ once: true }}
-                  className="space-y-6 mb-10"
-                >
-                  <p className="font-paragraph text-lg text-foreground/85 leading-relaxed">
-                    Kalamkari is more than an art form; it is a living narrative whispered through generations. The term itself, derived from 'kalam' (pen) and 'kari' (craftsmanship), describes the meticulous process of hand-painting textiles with natural dyes.
+                {/* Content */}
+                <div className="space-y-6 mb-10 max-w-xl">
+                  <p className="font-sans text-[17px] text-[#3B2C23]/85 leading-relaxed font-light">
+                    Kalamkari is more than an art form; it is a living narrative whispered through generations. Derived from 'kalam' (pen) and 'kari' (craftsmanship), it describes the meticulous process of hand-painting textiles.
                   </p>
-                  <p className="font-paragraph text-base text-foreground/70 leading-relaxed">
-                    Our collection is a tribute to this ancient craft. We partner with master artisans who use traditional motifs inspired by folklore, mythology, and nature, ensuring each saree is a singular masterpiece.
-                  </p>
-                </motion.div>
+                  
+                  {/* Quote */}
+                  <blockquote className="border-l-2 border-[#D4A05A]/40 pl-6 my-6">
+                    <p className="font-serif text-lg text-[#3B2C23]/90 italic leading-relaxed">
+                      "Every thread tells a story. Every color carries history."
+                    </p>
+                  </blockquote>
+                </div>
 
-                {/* Refined Metrics Cards */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  viewport={{ once: true }}
-                  className="grid grid-cols-2 gap-4 md:gap-6 mb-10"
-                >
-                  <motion.div 
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-6 bg-white/40 backdrop-blur-md rounded-xl border border-white/30 shadow-md hover:shadow-lg transition-all duration-400 h-full"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/15 to-primary/5 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Users className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <div className="relative inline-block">
-                        <CountUpNumber 
-                          end={200} 
-                          duration={2000}
-                          className="text-3xl font-heading font-bold text-foreground tracking-tight"
-                          suffix="+"
-                        />
-                        <div className="absolute -bottom-1 left-0 w-full h-1 bg-accent/40 rounded-full"></div>
+                {/* Metrics */}
+                <div className="grid grid-cols-2 gap-4 mb-10 max-w-lg">
+                   {/* Card 1 */}
+                   <div className="p-4 bg-white/50 rounded-[10px] border border-[#3B2C23]/5 shadow-inner flex items-center gap-4 transition-all hover:bg-white/80 hover:shadow-md hover:scale-[1.02]">
+                      <div className="p-2 bg-[#A65329]/10 rounded-lg text-[#A65329]">
+                        <Users className="w-5 h-5" />
                       </div>
-                      <div className="text-sm font-paragraph text-foreground/70 font-semibold mt-1">Master Artisans</div>
-                    </div>
-                  </motion.div>
-                  
-                  <motion.div 
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-6 bg-white/40 backdrop-blur-md rounded-xl border border-white/30 shadow-md hover:shadow-lg transition-all duration-400 h-full"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-accent-color/15 to-accent-color/5 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Palette className="w-6 h-6 text-accent-color" />
-                    </div>
-                    <div>
-                      <div className="relative inline-block">
-                        <CountUpNumber 
-                          end={100} 
-                          duration={2000}
-                          className="text-3xl font-heading font-bold text-foreground tracking-tight"
-                          suffix="%"
-                        />
-                        <div className="absolute -bottom-1 left-0 w-full h-1 bg-accent/40 rounded-full"></div>
+                      <div>
+                        <div className="font-serif text-2xl font-bold text-[#3B2C23]">200+</div>
+                        <div className="text-[11px] uppercase tracking-wider text-[#3B2C23]/60">Master Artisans</div>
                       </div>
-                      <div className="text-sm font-paragraph text-foreground/70 font-semibold mt-1">Natural Dyes</div>
-                    </div>
-                  </motion.div>
-                </motion.div>
+                   </div>
+
+                   {/* Card 2 */}
+                   <div className="p-4 bg-white/50 rounded-[10px] border border-[#3B2C23]/5 shadow-inner flex items-center gap-4 transition-all hover:bg-white/80 hover:shadow-md hover:scale-[1.02]">
+                      <div className="p-2 bg-[#D4A05A]/10 rounded-lg text-[#D4A05A]">
+                        <Palette className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-serif text-2xl font-bold text-[#3B2C23]">100%</div>
+                        <div className="text-[11px] uppercase tracking-wider text-[#3B2C23]/60">Natural Dyes</div>
+                      </div>
+                   </div>
+                </div>
                 
-                {/* Elegant Quote */}
-                <motion.blockquote 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.7 }}
-                  viewport={{ once: true }}
-                  className="relative pl-8 mb-10 border-l-3 border-accent-color/30"
-                >
-                  <p className="font-paragraph text-lg text-foreground/80 italic leading-relaxed font-light mb-3">
-                    "Every thread tells a story. Every color carries history. Every pattern celebrates tradition."
-                  </p>
-                  <cite className="block text-sm font-paragraph text-accent-color font-semibold not-italic">
-                    — Master Artisan Philosophy
-                  </cite>
-                </motion.blockquote>
-                
-                {/* Modern Buttons */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.9 }}
-                  viewport={{ once: true }}
-                  className="flex flex-col sm:flex-row gap-4"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Link href="/products">
-                      <Button 
-                        size="lg"
-                        className="h-14 px-8 text-base rounded-2xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground font-semibold group transition-all duration-400 shadow-lg hover:shadow-xl border-0"
-                        aria-label="Discover our handcrafted Kalamkari collection"
-                      >
-                        Discover the Craft 
-                        <ArrowRight className="h-5 w-5 ml-3 transition-transform group-hover:translate-x-1"/>
-                      </Button>
-                    </Link>
-                  </motion.div>
-                  
-                  <motion.div
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                {/* Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
                     <Link href="/about">
                       <Button 
+                        className="h-[52px] px-8 rounded-[10px] bg-[#A65329] text-white hover:bg-[#8B4420] transition-all shadow-lg hover:shadow-xl text-[15px] font-medium tracking-wide focus:ring-2 focus:ring-[#C19A5B] focus:ring-offset-2"
+                      >
+                        Discover the Craft
+                      </Button>
+                    </Link>
+                    <Link href="/values">
+                      <Button 
                         variant="outline"
-                        size="lg"
-                        className="h-14 px-8 text-base rounded-2xl border-2 border-primary/30 hover:bg-primary/5 hover:border-primary/50 text-primary font-semibold transition-all duration-400 backdrop-blur-md bg-white/30 shadow-md hover:shadow-lg"
-                        aria-label="Learn about our heritage and story"
+                        className="h-[52px] px-8 rounded-[10px] border-[#3B2C23]/20 text-[#3B2C23] hover:bg-[#3B2C23]/5 hover:border-[#3B2C23]/40 transition-all text-[15px] font-medium tracking-wide focus:ring-2 focus:ring-[#C19A5B] focus:ring-offset-2 bg-transparent"
                       >
                         Our Story
                       </Button>
                     </Link>
-                  </motion.div>
-                </motion.div>
+                </div>
               </motion.div>
             </div>
+          </div>
+          
+          {/* Faint Watermark (Bottom Right) */}
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 opacity-[0.03] pointer-events-none rotate-12 text-[#3B2C23]">
+             <svg viewBox="0 0 200 200" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 0C100 0 130 50 180 80C130 90 100 130 100 200C100 130 70 90 20 80C70 50 100 0 100 0Z" />
+                <circle cx="100" cy="100" r="10" />
+             </svg>
           </div>
         </section>
 
@@ -1094,755 +924,343 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* Our Promise Section - Luxury Heritage Design */}
-        <section className="w-full py-20 md:py-24 relative overflow-hidden">
+        {/* Our Promise Section - Precision Polish 2026 */}
+        <section className="w-full py-10 md:py-12 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FBEED8]">
+          {/* Faint Kalamkari Motif Background */}
+          <div 
+            className="absolute inset-0 opacity-[0.05] pointer-events-none"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 20c11 0 20 9 20 20s-9 20-20 20-20-9-20-20 9-20 20-20z' stroke='%23A65329' stroke-width='0.5' fill='none' opacity='0.3'/%3E%3C/svg%3E")`,
+              backgroundSize: "80px 80px"
+            }}
+          />
           
-          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-            {/* Refined Editorial Header with Smooth Fade Animation */}
+          <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10">
+            {/* Compact Header */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true }}
-              className="text-center max-w-5xl mx-auto mb-16"
+              className="text-center mb-10"
             >
-              <div className="flex items-center justify-center gap-6 mb-8">
-                <motion.div 
-                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                  initial={{ scaleX: 0, opacity: 0 }}
-                  whileInView={{ scaleX: 1, opacity: 1 }}
-                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-                  viewport={{ once: true }}
-                />
-                <motion.span 
-                  className="font-paragraph text-xs font-bold text-accent-color uppercase tracking-[0.3em] relative"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  viewport={{ once: true }}
-                >
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="w-12 h-px bg-[#C19A5B]" />
+                <span className="font-sans text-[10px] font-bold text-[#C19A5B] uppercase tracking-[0.2em]">
                   Our Promise
-                  <motion.div
-                    className="absolute -bottom-1 left-0 right-0 h-px bg-accent-color/30"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 1, delay: 0.8 }}
-                    viewport={{ once: true }}
-                  />
-                </motion.span>
-                <motion.div 
-                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                  initial={{ scaleX: 0, opacity: 0 }}
-                  whileInView={{ scaleX: 1, opacity: 1 }}
-                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-                  viewport={{ once: true }}
-                />
+                </span>
+                <div className="w-12 h-px bg-[#C19A5B]" />
               </div>
               
-              <motion.h2 
-                className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-8 leading-[0.9] tracking-tight font-light"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-                viewport={{ once: true }}
-              >
-                The Kalamkari
-                <motion.span 
-                  className="block text-primary font-normal italic mt-1"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-                  viewport={{ once: true }}
-                >
-                  Promise
-                </motion.span>
-              </motion.h2>
-              
-              <motion.p 
-                className="font-paragraph text-lg md:text-xl text-foreground/75 leading-relaxed max-w-4xl mx-auto font-light"
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
-                viewport={{ once: true }}
-              >
-                We deliver authentic experiences steeped in tradition, quality, and respect for heritage. Every purchase supports artisan families and preserves cultural legacy.
-              </motion.p>
+              <h2 className="font-serif text-3xl md:text-4xl text-[#3B2A1C] mb-3 leading-tight">
+                The Srikalahasti <span className="text-[#A65329] italic">Promise</span>
+              </h2>
+            
+              <p className="font-sans text-base text-[#493A2F]/90 leading-relaxed max-w-2xl mx-auto">
+                Authentic experiences steeped in tradition, quality, and heritage.
+              </p>
             </motion.div>
 
-            {/* Refined Promise Cards with Gentle Hover Effects */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-16">
+            {/* Promise Cards - Precision Refined */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {whyChooseUsItems.map((item, index) => (
-                <motion.article
-                  key={index}
-                  initial={{ opacity: 0, y: 40, scale: 0.98 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ 
-                    duration: 1, 
-                    delay: index * 0.15, 
-                    ease: [0.25, 0.46, 0.45, 0.94] 
-                  }}
-                  viewport={{ once: true }}
-                  className="group relative"
-                >
-                  {/* Gentle Hover Glow */}
-                  <motion.div 
-                    className="absolute -inset-3 bg-gradient-to-r from-accent-color/5 via-primary/5 to-accent-color/5 rounded-[1.5rem] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-lg"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.4 }}
-                  />
-                  
-                  {/* Handcrafted Card Container */}
-                  <motion.div
-                    whileHover={{
-                      y: -6,
-                      scale: 1.01
-                    }}
-                    transition={{
-                      duration: 0.4,
-                      ease: "easeOut"
-                    }}
-                    className="relative bg-[#FFF4E5] rounded-xl p-8 lg:p-10 shadow-sm hover:shadow-md transition-all duration-500 border border-[#E5B97C]/30 group-hover:border-[#E5B97C] overflow-hidden"
+                <AnimatedElement key={index} delay={index * 100}>
+                  <motion.article
+                    whileHover={{ y: -4, rotate: -1 }}
+                    className="group relative h-full"
                   >
-                    {/* Subtle Handcrafted Texture on Card */}
-                    <div 
-                      className="absolute top-0 right-0 w-20 h-20 opacity-1 pointer-events-none"
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.02'%3E%3Cpath d='M20 10c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3Cpath d='M20 15c2.761 0 5 2.239 5 5s-2.239 5-5 5-5-2.239-5-5 2.239-5 5-5z'/%3E%3C/g%3E%3C/svg%3E")`,
-                        backgroundSize: "40px 40px"
-                      }}
-                    />
+                    {/* Terracotta Hover Glow */}
+                    <div className="absolute -inset-1 bg-[#C17C4E]/0 group-hover:bg-[#C17C4E]/25 rounded-[16px] blur-lg transition-all duration-500" />
                     
-                    {/* Refined Icon Container */}
-                    <motion.div 
-                      className="flex items-center justify-center w-20 h-20 mx-auto mb-8 relative"
-                      whileHover={{ 
-                        scale: 1.05,
-                        rotate: 2
-                      }}
-                      transition={{ 
-                        duration: 0.3, 
-                        ease: "easeOut"
-                      }}
-                    >
-                      {/* Layered Background */}
-                      <div className="absolute inset-0 bg-white/20 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-500"></div>
-                      <div className="absolute inset-1 bg-white/10 rounded-xl"></div>
-                      <div className="absolute inset-3 bg-white/5 rounded-lg"></div>
+                    {/* Card with Darker Gradient */}
+                    <div className="relative h-full bg-gradient-to-b from-[#FAF3E8] to-[#F5E8D4] rounded-xl py-8 px-6 shadow-[0_6px_18px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_28px_rgba(193,124,78,0.12)] transition-all duration-500 border border-[#E6C595]/30 group-hover:border-[#C49353]/60 overflow-hidden">
+                      
+                      {/* Icon - Smaller with Gold Gradient */}
+                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#E8C98C] to-[#C09A58] shadow-md">
+                        <item.icon className="w-5 h-5 text-white" />
+                      </div>
+                      
+                      {/* Title - Playfair Bold 20px */}
+                      <h3 className="font-serif text-[20px] font-bold text-[#3B2A1C] mb-2 text-center leading-tight">
+                        {item.title}
+                      </h3>
 
-                      {/* Icon */}
-                      <item.icon className="w-10 h-10 text-primary relative z-10" />
-                    </motion.div>
-                    
-                    {/* Content with Smooth Animations */}
-                    <motion.h3
-                      className="font-heading text-xl lg:text-2xl text-foreground mb-6 text-center leading-tight transition-colors duration-400 font-light tracking-tight"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.15 + 0.2 }}
-                      viewport={{ once: true }}
-                    >
-                      {item.title}
-                    </motion.h3>
-
-                    <motion.p
-                      className="font-paragraph text-base text-foreground/80 leading-relaxed text-center mb-8 font-light"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.15 + 0.3 }}
-                      viewport={{ once: true }}
-                    >
-                      {item.description}
-                    </motion.p>
-                    
-                    {/* Refined Highlight Badge */}
-                    <div className="text-center">
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: index * 0.15 + 0.4 }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.02 }}
-                        className="inline-flex items-center px-6 py-3 bg-white/60 rounded-xl border border-[#E5B97C]/20 shadow-sm group-hover:shadow-md transition-all duration-500 backdrop-blur-sm"
-                      >
-                        <Sparkles className="w-4 h-4 text-primary mr-2" />
-                        <span className="font-heading font-light text-sm tracking-wide text-primary">
-                          {index === 0 && (
-                            <>
-                              <CountUpNumber 
-                                end={500} 
-                                duration={2000}
-                                className="font-medium text-base"
-                                suffix="+ "
-                              />
-                              Years Heritage
-                            </>
-                          )}
-                          {index === 1 && (
-                            <>
-                              <CountUpNumber 
-                                end={100} 
-                                duration={2000}
-                                className="font-medium text-base"
-                                suffix="% "
-                              />
-                              Natural
-                            </>
-                          )}
-                          {index === 2 && (
-                            <>
-                              <CountUpNumber 
-                                end={200} 
-                                duration={2000}
-                                className="font-medium text-base"
-                                suffix="+ "
-                              />
-                              Artisans
-                            </>
-                          )}
+                      {/* Description - Inter 15px */}
+                      <p className="font-sans text-[15px] text-[#493A2F]/90 leading-[1.5] text-center mb-4">
+                        {item.description}
+                      </p>
+                      
+                      {/* Badge - Inter SemiBold 13px */}
+                      <div className="text-center">
+                        <span className="inline-flex items-center px-3 py-1.5 bg-[#C19A5B]/8 rounded-full border border-[#C19A5B]/25 text-[13px] font-semibold text-[#B47A2B] group-hover:border-[#C19A5B]/50 transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-offset-1 group-hover:ring-[#C19A5B]/40">
+                          <Sparkles className="w-3 h-3 mr-1.5 text-[#C19A5B]" />
+                          {item.highlight}
                         </span>
-                      </motion.div>
+                      </div>
                     </div>
-                  </motion.div>
-                </motion.article>
+                  </motion.article>
+                </AnimatedElement>
               ))}
             </div>
-
-            {/* Refined Stats Row with Smooth Slide Animations */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-20">
-                <motion.div 
-                  className="flex items-center gap-6 group"
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-400/15 via-amber-400/25 to-amber-400/15 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-400">
-                    <Star className="w-8 h-8 fill-amber-400 text-amber-400" />
-                  </div>
-                  <div className="text-left">
-                    <div className="font-heading font-light text-3xl text-primary tracking-tight">
-                      <CountUpNumber 
-                        end={4.9} 
-                        duration={2500}
-                        className="font-medium"
-                        suffix="/5"
-                      />
-                    </div>
-                    <span className="font-paragraph text-base font-medium text-foreground/70 tracking-wide">Customer Rating</span>
-                  </div>
-                </motion.div>
-                
-                <motion.div 
-                  className="flex items-center gap-6 group"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary/15 via-primary/25 to-primary/15 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-400">
-                    <Scissors className="w-8 h-8 text-primary" />
-                  </div>
-                  <div className="text-left">
-                    <div className="font-heading font-light text-3xl text-primary tracking-tight">
-                      <CountUpNumber 
-                        end={100} 
-                        duration={2500}
-                        className="font-medium"
-                        suffix="%"
-                      />
-                    </div>
-                    <span className="font-paragraph text-base font-medium text-foreground/70 tracking-wide">Handcrafted</span>
-                  </div>
-                </motion.div>
-                
-                <motion.div 
-                  className="flex items-center gap-6 group"
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 1.2 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-accent-color/15 via-accent-color/25 to-accent-color/15 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-400">
-                    <Users className="w-8 h-8 text-accent-color" />
-                  </div>
-                  <div className="text-left">
-                    <div className="font-heading font-light text-3xl text-primary tracking-tight">
-                      <CountUpNumber 
-                        end={10000} 
-                        duration={3000}
-                        className="font-medium"
-                        suffix="+"
-                      />
-                    </div>
-                    <span className="font-paragraph text-base font-medium text-foreground/70 tracking-wide">Happy Customers</span>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
           </div>
         </section>
 
-        {/* Woven in Elegance Gallery - Authentic Hand-drawn Motifs */}
-        <section className="w-full py-20 md:py-24 relative overflow-hidden">
+        {/* VISUAL GALLERY - Organic Editorial Mosaic (2026 Crafted) */}
+        <section className="w-full py-24 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#F9EBD8]">
+          {/* Parallax Background Pattern - 5% Gold Motif */}
+          <motion.div 
+            className="absolute inset-0 opacity-[0.05] pointer-events-none"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M70 10 L130 70 L70 130 L10 70 Z' fill='none' stroke='%23C8A874' stroke-width='0.5'/%3E%3C/svg%3E")`,
+              backgroundSize: "280px 280px",
+              y: useTransform(useScroll().scrollYProgress, [0, 1], [0, -150]) // Refined 0.4x-style drift
+            }}
+          />
 
-          <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
-            {/* Refined Editorial Header with Smooth Fade Animation */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+          {/* Advanced Luxury: Looping Gold Thread Animation */}
+          <div className="absolute inset-0 pointer-events-none opacity-[0.05]">
+            <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="none">
+              <motion.path
+                d="M-50,200 C200,150 400,250 600,200 C800,150 1000,250 1250,200"
+                fill="none"
+                stroke="#C19A5B"
+                strokeWidth="1.5"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ 
+                  pathLength: [0, 1], 
+                  opacity: [0, 1, 1, 0],
+                  x: [0, 50, 0]
+                }}
+                transition={{ 
+                  duration: 8, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              />
+              <motion.path
+                d="M-50,600 C200,550 400,650 600,600 C800,550 1000,650 1250,600"
+                fill="none"
+                stroke="#C19A5B"
+                strokeWidth="1.5"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ 
+                  pathLength: [0, 1], 
+                  opacity: [0, 1, 1, 0],
+                  x: [0, -40, 0]
+                }}
+                transition={{ 
+                  duration: 12, 
+                  delay: 2,
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              />
+            </svg>
+          </div>
+
+          <div className="max-w-[120rem] mx-auto px-6 md:px-12 relative z-10">
+            {/* Aligned Global Header Style */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} // Refined rise 20px
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }} // Global easing
               viewport={{ once: true }}
-              className="text-center relative"
+              className="text-center mb-16"
             >
-              {/* Refined Header Elements */}
-              <div className="flex items-center justify-center gap-6 mb-8 relative">
-                <motion.div 
-                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent relative"
-                  initial={{ scaleX: 0, opacity: 0 }}
-                  whileInView={{ scaleX: 1, opacity: 1 }}
-                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-                  viewport={{ once: true }}
-                />
-                
-                <motion.span 
-                  className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] relative px-4 py-2 bg-gradient-to-r from-accent-color/8 via-accent-color/15 to-accent-color/8 rounded-xl border border-accent-color/20 backdrop-blur-sm"
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  viewport={{ once: true }}
-                >
-                  Visual Gallery
-                  <motion.div
-                    className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-px bg-accent-color"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                    viewport={{ once: true }}
-                  />
-                </motion.span>
-                
-                <motion.div 
-                  className="w-20 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent relative"
-                  initial={{ scaleX: 0, opacity: 0 }}
-                  whileInView={{ scaleX: 1, opacity: 1 }}
-                  transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-                  viewport={{ once: true }}
-                />
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="w-10 h-px bg-[#C19A5B]/40" />
+                <span className="font-sans text-[12px] font-bold text-[#C19A5B] uppercase tracking-[0.2em]">
+                  VISUAL GALLERY
+                </span>
+                <div className="w-10 h-px bg-[#C19A5B]/40" />
               </div>
               
-              {/* Refined Title */}
-              <motion.h2 
-                className="font-heading text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[0.85] tracking-tight font-light relative"
-                initial={{ opacity: 0, y: 20, scale: 0.98 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-                viewport={{ once: true }}
-              >
-                <motion.span
-                  className="block"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  viewport={{ once: true }}
-                >
-                  Woven in
-                </motion.span>
-                <motion.span 
-                  className="block text-primary font-normal italic mt-2 relative"
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  viewport={{ once: true }}
-                >
-                  Elegance
-                </motion.span>
-              </motion.h2>
-              
-              {/* Refined Description */}
-              <motion.p 
-                className="font-paragraph text-xl md:text-2xl text-foreground/75 max-w-4xl mx-auto leading-relaxed font-light relative"
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
-                viewport={{ once: true }}
-              >
-                Explore the vibrant world of Kalamkari through our visual journal of artistry, tradition, and contemporary elegance.
-                <motion.span
-                  className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-accent-color/50 to-transparent"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 1, delay: 1.2 }}
+              <h2 className="font-serif text-4xl md:text-5xl text-[#3A2A1C] mb-5 leading-tight relative inline-block">
+                Woven in <span className="text-[#A65329] italic">Elegance</span>
+                {/* Gold Underline Animation */}
+                <motion.div 
+                  className="absolute -bottom-2 left-0 h-px bg-[#C19A5B]/60"
+                  initial={{ width: 0 }}
+                  whileInView={{ width: "100%" }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
                   viewport={{ once: true }}
                 />
-              </motion.p>
+              </h2>
+              
+              <p className="font-sans text-base text-[#493A2F]/85 max-w-[680px] mx-auto leading-relaxed font-light">
+                Explore the artistry and tradition of Srikalahasti Kalamkari through our curated visual journal.
+              </p>
             </motion.div>
-          </div>
-          
-          {/* Refined Gallery Container with Smooth Animations */}
-          <div className="relative">
-            {/* Gallery Scroll Container */}
-            <div 
-              ref={galleryScrollRef} 
-              className="premium-scroll overflow-x-auto pb-8 px-6 md:px-8 lg:px-12 scrollbar-hide relative"
-              style={{
-                scrollBehavior: 'smooth',
-                scrollSnapType: 'x mandatory',
-                WebkitOverflowScrolling: 'touch',
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none'
-              }}
-            >
-              <div className="flex gap-8 md:gap-10 w-max relative">
-                {galleryImages.map((image, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ 
-                      duration: 0.8, 
-                      delay: index * 0.1, 
-                      ease: [0.25, 0.46, 0.45, 0.94] 
-                    }}
-                    viewport={{ once: true, margin: "0px 100px" }}
-                    whileHover={{ 
-                      y: -8, 
-                      scale: 1.02
-                    }}
-                    className="gallery-item w-[34vh] md:w-[38vh] lg:w-[42vh] aspect-[3/4] flex-shrink-0 overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 group relative"
-                    style={{
-                      scrollSnapAlign: 'center',
-                      scrollSnapStop: 'always'
-                    }}
+
+            {/* Organic Mosaic Grid - Fine-tuned Gaps: 20px H / 24px V */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-x-5 md:gap-y-6 auto-rows-[250px] md:auto-rows-[280px]">
+              {galleryImages.map((image, index) => {
+                let gridClasses = "md:col-span-1 md:row-span-1";
+                if (index === 0) gridClasses = "md:col-span-2 md:row-span-1"; 
+                if (index === 2) gridClasses = "md:col-span-1 md:row-span-2"; 
+                if (index === 5) gridClasses = "md:col-span-2 md:row-span-1";
+
+                return (
+                  <AnimatedElement 
+                    key={index} 
+                    delay={index * 100} // Refined stagger 100ms
+                    className={`${gridClasses} group relative`}
                   >
-                    {/* Subtle Handcrafted Motif Overlay */}
-                    <div 
-                      className="absolute inset-0 opacity-1 pointer-events-none z-10"
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.04'%3E%3Cpath d='M30 15c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3Cpath d='M30 22c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z'/%3E%3C/g%3E%3C/svg%3E")`,
-                        backgroundSize: "60px 60px"
-                      }}
-                    />
-                    
-                    {/* Main Image with Gentle Hover Effect */}
                     <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
-                      className="w-full h-full relative overflow-hidden rounded-3xl"
+                      whileHover={{ scale: 1.03 }} // Refined 1.03 scale
+                      className="relative h-full w-full overflow-hidden rounded-[14px] shadow-[0_4px_20px_rgba(0,0,0,0.04)] bg-white/50 backdrop-blur-sm transition-shadow duration-300 group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]"
                     >
                       <Image
                         src={image.src}
                         alt={image.alt}
-                        width={420}
-                        height={560}
-                        className="w-full h-full object-cover transition-all duration-500 group-hover:brightness-105"
-                        loading={index < 3 ? "eager" : "lazy"}
-                        sizes="(max-width: 768px) 34vh, (max-width: 1024px) 38vh, 42vh"
+                        fill
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
-                    </motion.div>
-                    
-                    {/* Gentle Interactive Overlay */}
-                    <motion.div 
-                      className="absolute inset-0 rounded-3xl"
-                      style={{
-                        background: "linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 30%, rgba(184, 134, 11, 0.05) 70%, rgba(255, 215, 0, 0.1) 100%)"
-                      }}
-                      initial={{ opacity: 0.2 }}
-                      whileHover={{ opacity: 0.5 }}
-                      transition={{ duration: 0.4 }}
-                    />
-                    
-                    {/* Refined Border with Gentle Glow */}
-                    <motion.div
-                      className="absolute inset-0 border-2 border-transparent group-hover:border-[#E5B97C] rounded-3xl transition-all duration-400"
-                      whileHover={{ 
-                        borderColor: "rgba(184, 134, 11, 0.6)",
-                        boxShadow: "0 0 20px rgba(184, 134, 11, 0.2)"
-                      }}
-                    />
-                    
-                    {/* Refined Category Label */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                      whileHover={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                      className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100"
-                    >
-                      <motion.div 
-                        className="bg-gradient-to-r from-white/95 via-white/98 to-white/95 backdrop-blur-md text-primary px-6 py-3 rounded-2xl shadow-lg border border-accent-color/20 relative overflow-hidden"
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <div className="flex items-center gap-3 relative z-10">
-                          <motion.div 
-                            className="w-3 h-3 bg-gradient-to-r from-accent-color to-amber-400 rounded-full shadow-sm"
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                          />
-                          <span className="font-heading tracking-wide font-semibold text-base">
-                            {image.category}
+                      
+                      {/* Inner Shadow Simulation */}
+                      <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.1)] pointer-events-none" />
+                      
+                      {/* Refined Soft Linear Gradient Overlay for Legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[rgba(35,22,10,0.55)] via-transparent to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-75" />
+                      
+                      {/* Refined Hover Overlay Tint */}
+                      <div className="absolute inset-0 bg-[#C19A5B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ring-1 ring-inset ring-[#C19A5B]/20 rounded-[14px] pointer-events-none" />
+
+                      <div className="absolute bottom-6 left-6 overflow-hidden">
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ delay: (index * 0.1) + 0.25, duration: 0.4 }} // Staggered label reveal
+                        >
+                          <span className="font-serif italic text-[18px] text-[#F9E8CF] block drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] group-hover:text-[#FFD58C] transition-colors duration-300">
+                             {image.category}
                           </span>
-                        </div>
-                      </motion.div>
+                        </motion.div>
+                      </div>
                     </motion.div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Enhanced Auto-scroll Indicator with Gold Glow */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              viewport={{ once: true }}
-              className="absolute bottom-4 right-8 md:right-16 flex items-center gap-4 text-foreground/60 text-sm font-paragraph uppercase tracking-[0.2em] bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl border border-accent-color/20 shadow-lg"
-              style={{
-                boxShadow: "0 4px 20px rgba(184, 134, 11, 0.1)"
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.3, 1], 
-                    opacity: [0.5, 1, 0.5],
-                    boxShadow: [
-                      "0 0 5px rgba(184, 134, 11, 0.3)",
-                      "0 0 15px rgba(184, 134, 11, 0.6)",
-                      "0 0 5px rgba(184, 134, 11, 0.3)"
-                    ]
-                  }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-2.5 h-2.5 bg-gradient-to-r from-accent-color to-amber-400 rounded-full"
-                />
-                <span className="font-medium text-primary">Auto-scrolling Gallery</span>
-              </div>
-              <motion.div
-                animate={{ x: [0, 8, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                className="flex items-center"
-              >
-                <ArrowRight className="w-4 h-4 text-accent-color" />
-              </motion.div>
-            </motion.div>
-            
-            {/* Enhanced Accessibility Controls with Gold Styling */}
-            <div className="absolute top-6 right-8 md:right-16 flex gap-3 opacity-80 hover:opacity-100 transition-opacity duration-300">
-              <motion.button
-                whileHover={{ scale: 1.15, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  const container = galleryScrollRef.current;
-                  if (container) {
-                    container.scrollBy({ left: -400, behavior: 'smooth' });
-                  }
-                }}
-                className="w-10 h-10 bg-gradient-to-br from-white/95 via-white/98 to-white/95 backdrop-blur-xl rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 border border-accent-color/30 group"
-                aria-label="Scroll gallery left"
-                style={{
-                  boxShadow: "0 4px 20px rgba(184, 134, 11, 0.15)"
-                }}
-              >
-                <ArrowRight className="w-5 h-5 text-primary rotate-180 group-hover:text-accent-color transition-colors" />
-                <motion.div
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                  style={{
-                    background: "linear-gradient(45deg, rgba(184, 134, 11, 0.1), rgba(255, 215, 0, 0.1))"
-                  }}
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                />
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.15, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  const container = galleryScrollRef.current;
-                  if (container) {
-                    container.scrollBy({ left: 400, behavior: 'smooth' });
-                  }
-                }}
-                className="w-10 h-10 bg-gradient-to-br from-white/95 via-white/98 to-white/95 backdrop-blur-xl rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 border border-accent-color/30 group"
-                aria-label="Scroll gallery right"
-                style={{
-                  boxShadow: "0 4px 20px rgba(184, 134, 11, 0.15)"
-                }}
-              >
-                <ArrowRight className="w-5 h-5 text-primary group-hover:text-accent-color transition-colors" />
-                <motion.div
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                  style={{
-                    background: "linear-gradient(45deg, rgba(184, 134, 11, 0.1), rgba(255, 215, 0, 0.1))"
-                  }}
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                />
-              </motion.button>
+                  </AnimatedElement>
+                );
+              })}
             </div>
           </div>
         </section>
-
-        {/* Refined Newsletter Section - Static Brown Gradient with Subtle Gold Kalamkari */}
-        <section className="w-full py-24 md:py-32 relative overflow-hidden">
-          {/* Static Brown Gradient Background */}
-          <div className="absolute inset-0">
-            <div 
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(135deg, #2D1810 0%, #3D2317 25%, #4A2C1A 50%, #3D2317 75%, #2D1810 100%)"
-              }}
-            />
-          </div>
-          
-          {/* Subtle Gold Kalamkari Motif - Static */}
-          <div 
-            className="absolute inset-0 opacity-5"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.4'%3E%3Cpath d='M40 30c15 0 27 12 27 27 0 20-15 35-27 35s-27-15-27-35c0-15 12-27 27-27z' fill='%23B8860B' fill-opacity='0.08'/%3E%3Cpath d='M120 100c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23B8860B' fill-opacity='0.06'/%3E%3Cpath d='M80 40c8 0 15 7 15 15 0 12-8 22-15 22s-15-10-15-22c0-8 7-15 15-15z' fill='%23B8860B' fill-opacity='0.05'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "160px 160px",
-              backgroundPosition: "0 0",
-              backgroundRepeat: "repeat"
-            }}
-          />
-          
-          <div className="max-w-5xl mx-auto text-center px-6 md:px-8 lg:px-12 relative z-10">
-            {/* Premium Typography Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              viewport={{ once: true }}
-              className="mb-10"
-            >
-              {/* Gold Divider */}
-              <motion.div 
-                className="w-24 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent mx-auto mb-8"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                transition={{ duration: 1.2, delay: 0.2 }}
-                viewport={{ once: true }}
-              />
-              
-              <motion.span 
-                className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] block mb-6"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                Stay Connected
-              </motion.span>
-            </motion.div>
-            
-            {/* Premium Title */}
-            <motion.h2 
-              className="font-heading text-5xl md:text-6xl lg:text-7xl text-primary-foreground mb-8 leading-tight font-light"
-              style={{
-                textShadow: "0 2px 12px rgba(0, 0, 0, 0.4)"
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              Join the Heritage Collective
-            </motion.h2>
-            
-            {/* Refined Description */}
-            <motion.p 
-              className="font-paragraph text-xl md:text-2xl text-primary-foreground/90 mb-14 leading-relaxed max-w-4xl mx-auto font-light"
-              style={{
-                textShadow: "0 1px 6px rgba(0, 0, 0, 0.3)"
-              }}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              viewport={{ once: true }}
-            >
-              Become a part of our story. Receive exclusive access to new collections, artisan stories, cultural insights, and special member-only offers.
-            </motion.p>
-            
-            {/* Tactile Newsletter Form */}
-            <motion.form 
-              className="flex flex-col sm:flex-row gap-5 max-w-3xl mx-auto mb-12"
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex-grow relative">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="w-full h-14 px-8 bg-white/95 backdrop-blur-sm border border-white/40 hover:border-accent-color/60 focus:border-accent-color rounded-lg placeholder:text-foreground/60 font-paragraph focus:ring-2 focus:ring-accent-color/20 focus:outline-none text-foreground text-lg transition-all duration-300 shadow-md hover:shadow-lg"
-                  style={{
-                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.1)"
-                  }}
-                />
-              </div>
-              
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="h-14 px-10 rounded-lg font-paragraph bg-primary text-primary-foreground font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl border-0 hover:bg-primary/90"
-                style={{
-                  boxShadow: "0 8px 32px rgba(184, 134, 11, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.2)"
-                }}
-              >
-                <span className="flex items-center gap-3">
-                  Subscribe Now
-                  <ArrowRight className="w-6 h-6" />
+        {/* STORIES FROM OUR COMMUNITY — Social Proof Layer (KDLS 2026) */}
+        <section className="w-full pt-24 pb-20 px-6 md:px-12 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FAEEDC]">
+          <div className="max-w-[1240px] mx-auto relative z-10">
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <div className="flex flex-col items-center gap-2 mb-4">
+                <span className="font-sans text-[13px] font-semibold text-[#C19A5B] uppercase tracking-[0.08em]">
+                  AUTHENTIC VOICES
                 </span>
-              </Button>
-            </motion.form>
-            
-            {/* Trust Indicators - Calm & Static */}
-            <motion.div 
-              className="flex flex-wrap justify-center items-center gap-8 text-primary-foreground/85 text-base font-paragraph mb-8 font-medium"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                <Heart className="w-5 h-5 text-red-400" />
-                <span className="font-semibold">5,000+ Subscribers</span>
+                <div className="w-12 h-px bg-[#C19A5B]/30" />
+              </div>
+              <h2 className="font-serif text-[38px] md:text-[44px] text-[#3A2413] mb-4 font-bold">
+                Stories from our <span className="text-[#B35D2E] italic font-medium">Community</span>
+              </h2>
+            </div>
+
+            {/* Testimonial Layout: Featured (Full Width) + 3-Column Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10">
+              {/* Featured Story - Full Width */}
+              <AnimatedElement className="md:col-span-12" delay={100}>
+                <motion.div 
+                  whileHover={{ y: -5, rotateZ: 0.5 }}
+                  className="group relative p-10 md:p-12 bg-white/85 backdrop-blur-[8px] rounded-[14px] shadow-[0_8px_16px_rgba(0,0,0,0.05)] border border-[#C19A5B]/15 overflow-hidden"
+                >
+                  <div className="absolute -right-8 -bottom-8 w-40 h-40 opacity-[0.04] pointer-events-none">
+                    <svg viewBox="0 0 100 100" fill="none" stroke="#C19A5B">
+                      <path d="M50 10 C30 30, 70 30, 50 50 C30 70, 70 70, 50 90" strokeWidth="1" />
+                    </svg>
+                  </div>
+                  <div className="relative z-10">
+                    <div className="text-[60px] font-serif text-[#C19A5B] opacity-[0.08] leading-none mb-2">❝</div>
+                    <p className="font-sans text-[18px] md:text-[20px] leading-[1.8] text-[#3A2413]/85 mb-8 italic">
+                      "The intricate details and vibrant colors are breathtaking. Each piece tells a story that transcends time. Truly a masterpiece of Srikalahasti art, hand-painted with a soul that connects me to the divine heritage of India."
+                    </p>
+                    <div className="flex items-center gap-5 border-t border-[#C19A5B]/10 pt-8">
+                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white to-[#FAEEDC] flex items-center justify-center border border-[#C19A5B]/20 shadow-sm">
+                          <span className="text-[#B35D2E] font-serif italic text-xl font-bold">P</span>
+                       </div>
+                       <div>
+                          <p className="font-serif text-[18px] font-semibold text-[#B35D2E]">Priya Sharma</p>
+                          <p className="font-sans text-[13px] text-[#3A2413]/60">Mumbai, Maharashtra</p>
+                       </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatedElement>
+
+              {/* Grid Stories - 3 Column Layout */}
+              {[
+                { quote: "I've never owned anything quite like this. The craftsmanship is impeccable, it feels like wearing liquid gold and centuries of tradition.", name: "Ananya Reddy", city: "Hyderabad" },
+                { quote: "Absolutely stunning work. The natural dyes and hand-painted motifs make every saree unique. Worth every rupee for the authenticity.", name: "Lakshmi Iyer", city: "Chennai" },
+                { quote: "Gifted this to my mother and she was moved to tears. The quality and authenticity are unmatched in today's machine-made world.", name: "Rajesh Kumar", city: "Bangalore" }
+              ].map((item, idx) => (
+                <AnimatedElement key={idx} className="md:col-span-4" delay={200 + idx * 100}>
+                  <motion.div 
+                    whileHover={{ y: -3, rotateZ: idx % 2 === 0 ? 0.5 : -0.5 }}
+                    className="group relative p-8 bg-white/85 backdrop-blur-[6px] rounded-[14px] shadow-[0_8px_16px_rgba(0,0,0,0.05)] border border-[#C19A5B]/15 h-full flex flex-col justify-between"
+                  >
+                    <p className="font-sans text-[17px] leading-[1.8] text-[#3A2413]/85 mb-8">
+                      {item.quote}
+                    </p>
+                    <div className="flex items-center gap-4 border-t border-[#C19A5B]/10 pt-6">
+                       <div className="w-9 h-9 rounded-full bg-ivory flex items-center justify-center border border-[#C19A5B]/20">
+                          <span className="text-[#B35D2E] font-serif italic text-base font-bold">{item.name[0]}</span>
+                       </div>
+                       <div>
+                          <p className="font-serif text-[16px] font-semibold text-[#B35D2E] leading-none mb-1">{item.name}</p>
+                          <p className="font-sans text-[12px] text-[#3A2413]/60">{item.city}</p>
+                       </div>
+                    </div>
+                  </motion.div>
+                </AnimatedElement>
+              ))}
+            </div>
+
+            {/* TRUST ANCHORS — Quantitative Validation Layer (KDLS 2026) */}
+            <div className="relative mt-24">
+              {/* Woven Gold Line Divider */}
+              <div className="w-[60%] h-px bg-[#C19A5B]/15 mx-auto mb-16 relative">
+                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-[#FFF8F0]">
+                    <div className="w-2 h-2 rounded-full border border-[#C19A5B]/30" />
+                 </div>
               </div>
               
-              <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                <Star className="w-5 h-5 text-amber-400" />
-                <span className="font-semibold">Exclusive Content</span>
+              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-10">
+                {[
+                  { icon: Star, value: "4.9/5", label: "Customer Rating", order: "Experience" },
+                  { icon: Scissors, value: "100%", label: "Handcrafted", order: "Quality" },
+                  { icon: Users, value: "10K+", label: "Happy Customers", order: "Trust" }
+                ].map((metric, idx) => (
+                  <AnimatedElement key={idx} delay={400 + idx * 100}>
+                    <motion.div 
+                      whileHover={{ y: -4 }}
+                      className="flex items-center gap-6 bg-gradient-to-b from-[#FFF8F0] to-[#FAEEDC] px-8 py-4 rounded-[48px] shadow-[0_6px_18px_rgba(0,0,0,0.04)] border border-[#C19A5B]/20 hover:shadow-[0_0_12px_rgba(193,154,91,0.25)] transition-all duration-300 min-w-[270px] group"
+                    >
+                      <div className="w-11 h-11 rounded-full border border-[#C19A5B]/40 bg-[#FFF8F0]/6 flex items-center justify-center flex-shrink-0 relative">
+                         <motion.div 
+                           animate={{ scale: [1, 1.05, 1] }} 
+                           transition={{ duration: 0.18, repeat: Infinity, repeatType: "reverse", ease: "easeOut", repeatDelay: 5 }}
+                         >
+                           <metric.icon className="w-5 h-5 text-[#C19A5B]" />
+                         </motion.div>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-serif text-[20px] font-bold text-[#3A2413] leading-none mb-1">
+                          {metric.value}
+                        </span>
+                        <span className="font-sans text-[13px] font-semibold text-[#B35D2E] tracking-[0.06em] uppercase">
+                          {metric.label}
+                        </span>
+                      </div>
+                    </motion.div>
+                  </AnimatedElement>
+                ))}
               </div>
-              
-              <div className="flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                <Award className="w-5 h-5 text-accent-color" />
-                <span className="font-semibold">Member Benefits</span>
-              </div>
-            </motion.div>
-            
-            {/* Privacy Notice */}
-            <motion.p 
-              className="text-base text-primary-foreground/75 font-paragraph leading-relaxed"
-              style={{
-                textShadow: "0 1px 3px rgba(0, 0, 0, 0.3)"
-              }}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.1 }}
-              viewport={{ once: true }}
-            >
-              We respect your privacy. Unsubscribe at any time. No spam, just beautiful heritage content.
-            </motion.p>
+            </div>
           </div>
         </section>
 
