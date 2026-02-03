@@ -4,7 +4,7 @@
  */
 
 // Re-export from supabase types
-export type { Category, SubCategory } from './supabase';
+export type { Category, SubCategory } from "./supabase";
 
 export interface Product {
   id: string;
@@ -13,11 +13,11 @@ export interface Product {
   sku?: string;
   stock_quantity?: number;
   quantity?: number; // fallback/compatibility
-  name?: string;
+  name: string;
   title?: string; // compatibility
-  description?: string;
-  price?: number;
-  original_price?: number;
+  description: string | null;
+  price: number;
+  original_price: number | null;
   originalPrice?: number; // compatibility
   onSale?: boolean;
   image?: string;
@@ -29,6 +29,7 @@ export interface Product {
   isFeatured?: boolean; // compatibility
   is_visible?: boolean;
   isVisible?: boolean; // compatibility
+  in_stock?: boolean;
   slug?: string;
   category_id?: string;
   categoryName?: string;

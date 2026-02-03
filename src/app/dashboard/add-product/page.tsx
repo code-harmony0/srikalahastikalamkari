@@ -11,8 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/shared/ui/checkbox";
 import { useToast } from "@/shared/ui/use-toast";
 import { Loader2, Upload, X, ArrowLeft, AlertTriangle, Package, Plus, ChevronDown, ChevronUp, FileText, DollarSign, FolderTree, Palette, Image, Boxes } from "lucide-react";
-import { getCategories, getSubCategories } from "@/backend/categories";
-import { uploadImage, checkDuplicateProduct, updateProductStock } from "@/backend/products";
+import { getCategories, getSubCategories } from "@/services/categories";
+import { uploadImage, checkDuplicateProduct, updateProductStock } from "@/services/products";
 import { categories as seedCategories } from "@/lib/seedData";
 import { useInventory } from "@/shared/contexts/InventoryContext";
 
@@ -29,6 +29,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/ui/alert-dialog";
+
+// Indian number formatting helper
+const formatIndianNumber = (num: string | number): string => {
+  if (!num) return "";
+  const numStr = num.toString().replace(/,/g, "");
+  const parts = numStr.split(".");
+  const intPart = parts[0];
+  const decPart = parts[1] ? `.${parts[1]}` : "";
+  
+  // Indian formatting: last 3 digits, then groups of 2
+  const lastThree = intPart.substring(intPart.length - 3);
+  const otherNumbers = intPart.substring(0, intPart.length - 3);
+  const formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + (otherNumbers ? "," : "") + lastThree;
+  
+  return formatted + decPart;
+};
 
 // Collapsible Section Component
 const FormSection = ({
@@ -101,7 +117,7 @@ const AddProduct = () => {
     category: "",
     subCategory: "",
     colors: "",
-    quantity: "1",
+    quantity: "",
     inStock: true,
     isVisible: true,
   });
@@ -459,6 +475,29 @@ const AddProduct = () => {
   // Handle input changes
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Real-time validation for original price
+    if (field === "originalPrice" && value) {
+      const originalPrice = parseFloat(value);
+      const sellingPrice = parseFloat(formData.price);
+      if (originalPrice > 0 && sellingPrice > 0 && originalPrice <= sellingPrice) {
+        setErrors(prev => ({ ...prev, originalPrice: "Original price must be greater than selling price" }));
+      } else {
+        setErrors(prev => ({ ...prev, originalPrice: "" }));
+      }
+    }
+    
+    // Also validate when price changes if original price exists
+    if (field === "price" && formData.originalPrice) {
+      const sellingPrice = parseFloat(value);
+      const originalPrice = parseFloat(formData.originalPrice);
+      if (originalPrice > 0 && sellingPrice > 0 && originalPrice <= sellingPrice) {
+        setErrors(prev => ({ ...prev, originalPrice: "Original price must be greater than selling price" }));
+      } else {
+        setErrors(prev => ({ ...prev, originalPrice: "" }));
+      }
+    }
+    
     // Clear error for this field
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
@@ -493,6 +532,14 @@ const validateForm = () => {
   if (!formData.name.trim()) newErrors.name = "Product name is required";
   if (!formData.description.trim()) newErrors.description = "Description is required";
   if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = "Valid price is required";
+  
+  // Validate original price must be greater than selling price
+  if (formData.originalPrice && parseFloat(formData.originalPrice) > 0) {
+    if (parseFloat(formData.originalPrice) <= parseFloat(formData.price)) {
+      newErrors.originalPrice = "Original price must be greater than selling price";
+    }
+  }
+  
   if (!formData.category) newErrors.category = "Category is required";
   if (!formData.quantity || parseInt(formData.quantity) < 0) newErrors.quantity = "Valid quantity is required";
 
@@ -593,38 +640,49 @@ const validateForm = () => {
       description: formData.description.trim(),
       price: parseFloat(formData.price),
       originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-      category: parseInt(formData.category),
-      subCategory: formData.subCategory ? parseInt(formData.subCategory) : null,
+      category: formData.category, // Keep as UUID string
+      subCategory: formData.subCategory || null, // Keep as UUID string
       colors: selectedColors, // Use the selectedColors array
       specifications: specsObject, // Add specifications
       quantity: parseInt(formData.quantity),
       inStock: formData.inStock,
       isVisible: formData.isVisible,
-      image: imageUrls[0] || null, // Main image (first one)
-      images: imageUrls, // All images
+      images: imageUrls, // All images (array)
       barcode: barcode, // Add barcode to product data
       material: materialValue, // Add material from specifications
       variants: showVariants ? variants : [], // Add variants if enabled
     };
 
       if (isEditMode && editingProduct) {
-        await updateProduct(editingProduct.id, productData);
+        const result = await updateProduct(editingProduct.id, productData);
+        if (result.error) {
+          throw new Error(result.error.message || "Failed to update product");
+        }
         toast({
           title: "Success!",
           description: "Product updated successfully",
         });
+        
+        // Clear the session storage for this product
+        sessionStorage.removeItem(`product_${editingProduct.id}`);
+        
+        // Navigate back immediately - the context has already refreshed
+        router.push("/dashboard/products");
       } else {
-        await addProduct(productData);
+        const result = await addProduct(productData);
+        if (result.error) {
+          throw new Error(result.error.message || "Failed to create product");
+        }
         toast({
           title: "Success!",
           description: "Product created successfully",
         });
+        
+        // Navigate back after a short delay for new products
+        setTimeout(() => {
+          router.push("/dashboard/products");
+        }, 500);
       }
-
-      // Navigate back
-      setTimeout(() => {
-        router.push("/dashboard/products");
-      }, 1000);
 
     } catch (error: any) {
       console.error("Error saving product:", error);
@@ -774,7 +832,7 @@ const validateForm = () => {
                       placeholder="0.00"
                       value={formData.price}
                       onChange={(e) => handleChange("price", e.target.value)}
-                      className={`h-11 rounded-xl border-slate-200 ${errors.price ? "border-red-500" : ""}`}
+                      className={`h-11 rounded-xl border-slate-200 focus:border-slate-400 ${errors.price ? "border-red-500" : ""}`}
                     />
                     {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
                   </div>
@@ -789,7 +847,7 @@ const validateForm = () => {
                       placeholder="0.00 (optional - for showing discount)"
                       value={formData.originalPrice}
                       onChange={(e) => handleChange("originalPrice", e.target.value)}
-                      className="h-11 rounded-xl border-slate-200"
+                      className={`h-11 rounded-xl border-slate-200 focus:border-slate-400 ${errors.originalPrice ? "border-red-500" : ""}`}
                     />
                   </div>
                 </div>
@@ -806,7 +864,7 @@ const validateForm = () => {
                       placeholder="Enter quantity"
                       value={formData.quantity}
                       onChange={(e) => handleChange("quantity", e.target.value)}
-                      className={`h-11 rounded-xl border-slate-200 ${errors.quantity ? "border-red-500" : ""}`}
+                      className={`h-11 rounded-xl border-slate-200 focus:border-slate-400 ${errors.quantity ? "border-red-500" : ""}`}
                     />
                     {errors.quantity && <p className="text-sm text-red-500">{errors.quantity}</p>}
                   </div>
@@ -846,7 +904,7 @@ const validateForm = () => {
                     <SelectTrigger className={`h-11 rounded-xl border-slate-200 ${errors.category ? "border-red-500" : ""}`}>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border-slate-200">
                       {categories.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id.toString()}>
                           {cat.name}
@@ -867,7 +925,7 @@ const validateForm = () => {
                     <SelectTrigger className="h-11 rounded-xl border-slate-200">
                       <SelectValue placeholder={!formData.category ? "Select category first" : "Select sub category"} />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border-slate-200">
                       {filteredSubCategories.map((sub) => (
                         <SelectItem key={sub.id} value={sub.id.toString()}>
                           {sub.name}

@@ -8,16 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card"
-import { Button } from "@/shared/ui/button"
+import { Button } from "@/app/dashboard/ui/button"
 import { Badge } from "@/shared/ui/badge"
-import { Input } from "@/shared/ui/input"
+import { Input } from "@/app/dashboard/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select"
+} from "@/app/dashboard/ui/select"
 import {
   Table,
   TableBody,
@@ -28,12 +28,12 @@ import {
 } from "@/shared/ui/table"
 import { Search, Edit, Trash2, Eye, Package } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { getProducts } from "@/backend/products"
-import { useToast } from "@/shared/ui/use-toast"
+import { getProducts } from "@/services/products"
+import { toast } from "sonner"
 
 const ProductList = () => {
   const router = useRouter()
-  const { toast } = useToast()
+  
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
@@ -50,11 +50,7 @@ const ProductList = () => {
       if (error) throw error
       setProducts(data || [])
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch products",
-        variant: "destructive",
-      })
+      toast.success("Error", { description: "Failed to fetch products" })
     } finally {
       setLoading(false)
     }
@@ -73,18 +69,10 @@ const ProductList = () => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         // Add delete functionality when implemented
-        toast({
-          title: "Success",
-          description: "Product deleted successfully",
-          variant: "success",
-        })
+        toast.success("Success", { description: "Product deleted successfully" })
         fetchProducts()
       } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to delete product",
-          variant: "destructive",
-        })
+        toast.success("Error", { description: "Failed to delete product" })
       }
     }
   }
@@ -117,11 +105,11 @@ const ProductList = () => {
             placeholder="Search products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-slate-400"
+            className="pl-10 bg-white border-slate-300 focus-visible:ring-1 "
           />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-[200px] bg-white border-slate-200">
+          <SelectTrigger className="w-full sm:w-[200px] bg-white border-slate-300">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
@@ -130,7 +118,7 @@ const ProductList = () => {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-[150px] bg-white border-slate-200">
+          <SelectTrigger className="w-full sm:w-[150px] bg-white border-slate-300">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
           <SelectContent>
@@ -148,8 +136,8 @@ const ProductList = () => {
         </Button>
       </div>
 
-      <Card className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <CardHeader className="border-b border-slate-200 bg-white">
+      <Card className="bg-white rounded-2xl shadow-sm border border-slate-300 overflow-hidden">
+        <CardHeader className="border-b border-slate-300 bg-white">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl font-bold text-slate-900">
@@ -163,7 +151,7 @@ const ProductList = () => {
         </CardHeader>
         <CardContent className="p-0">
           <Table>
-            <TableHeader className="bg-slate-50 border-b border-slate-200">
+            <TableHeader className="bg-slate-50 border-b border-slate-300">
               <TableRow className="hover:bg-transparent">
                 <TableHead className="font-semibold text-slate-700 pl-6 py-4">
                   Product
@@ -279,7 +267,7 @@ const ProductList = () => {
               </p>
               <Button
                 variant="outline"
-                className="mt-4 border-slate-200 text-slate-700 hover:bg-slate-50"
+                className="mt-4 border-slate-300 text-slate-700 hover:bg-slate-50"
                 onClick={() => router.push("/dashboard/add-product")}
               >
                 <Package className="h-4 w-4 mr-2" />

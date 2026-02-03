@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import CheckoutPage from "@/storefront/components/checkout/CheckoutPage";
+import CheckoutPage from "@/features/checkout/CheckoutPage";
 
 export const metadata: Metadata = {
-  title: "Checkout | Shri Kailash Kalamkari",
-  description: "Complete your purchase of authentic Kalamkari products",
+  title: "Checkout | Srikalahasti Kalamkari",
+  description: "Complete your purchase of authentic Srikalahasti Kalamkari products",
 };
 
 export default function Checkout() {

@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 import { Card } from "@/shared/ui/card";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/app/dashboard/ui/button";
 import { Badge } from "@/shared/ui/badge";
 import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -98,10 +98,10 @@ export function ModernTable<T extends Record<string, any>>({
   };
 
   return (
-    <Card className="border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white overflow-hidden rounded-xl h-full flex flex-col">
+    <Card className="border border-slate-300 shadow-sm hover:shadow-md transition-all duration-300 bg-white overflow-hidden rounded-xl h-full flex flex-col">
       {/* Header - Aligned baseline */}
       {(title || actions) && (
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="px-3 py-3 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {icon && (
               <div className="h-9 w-9 rounded-lg bg-slate-900 flex items-center justify-center shrink-0 [&_svg]:text-white [&_svg]:h-4 [&_svg]:w-4">
@@ -119,31 +119,49 @@ export function ModernTable<T extends Record<string, any>>({
 
       {/* Table */}
       <div className="overflow-x-auto flex-1">
-        <Table>
+        <Table className="w-full">
           <TableHeader className="bg-slate-50/80">
-            <TableRow className="hover:bg-transparent border-b border-slate-200">
-              {columns.map((column) => (
-                <TableHead
-                  key={column.key}
-                  className={`font-semibold text-xs uppercase tracking-wider text-slate-500 py-3 px-6 ${
-                    column.align === "right" ? "text-right" : ""
-                  } ${column.sortable ? "cursor-pointer select-none hover:text-slate-700 transition-colors" : ""}`}
-                  onClick={() => column.sortable && handleSort(column.key)}
-                >
-                  <div
-                    className={`flex items-center gap-2 ${
-                      column.align === "right" ? "justify-end" : ""
-                    }`}
+            <TableRow className="hover:bg-transparent border-b border-slate-300">
+              {columns.map((column, colIndex) => {
+                // Content-based width allocation - let content determine size
+                let widthClass = "";
+                if (column.key.includes("name") || column.key.includes("customer") || column.key.includes("product")) {
+                  widthClass = "max-w-none"; // Let name/product content expand as needed
+                } else if (column.key.includes("status")) {
+                  widthClass = "w-1"; // Minimal width, let badge content determine size
+                } else if (column.key.includes("date") || column.key.includes("created")) {
+                  widthClass = "w-1"; // Minimal width for compact dates
+                } else if (column.key.includes("amount") || column.key.includes("revenue") || column.key.includes("price")) {
+                  widthClass = "w-1"; // Let currency values determine width
+                } else if (column.key.includes("sold") || column.key.includes("quantity") || column.key.includes("count")) {
+                  widthClass = "w-8"; // Very small fixed width for sold numbers
+                } else {
+                  widthClass = "w-1"; // Minimal default - content determines actual width
+                }
+
+                return (
+                  <TableHead
+                    key={column.key}
+                    className={`font-semibold text-xs uppercase tracking-wider text-slate-500 py-2 px-1 ${widthClass} ${
+                      column.align === "right" ? "text-right" : column.align === "center" ? "text-center" : "text-left"
+                    } ${column.sortable ? "cursor-pointer select-none hover:text-slate-700 transition-colors" : ""}`}
+                    onClick={() => column.sortable && handleSort(column.key)}
                   >
-                    {column.label}
-                    {column.sortable && (
-                      <div className={sortConfig.key === column.key ? "text-slate-700" : "opacity-50"}>
-                        {getSortIcon(column.key)}
-                      </div>
-                    )}
-                  </div>
-                </TableHead>
-              ))}
+                    <div
+                      className={`flex items-center gap-1 ${
+                        column.align === "right" ? "justify-end" : column.align === "center" ? "justify-center" : ""
+                      }`}
+                    >
+                      <span className="whitespace-nowrap">{column.label}</span>
+                      {column.sortable && (
+                        <div className={`flex-shrink-0 ${sortConfig.key === column.key ? "text-slate-700" : "opacity-50"}`}>
+                          {getSortIcon(column.key)}
+                        </div>
+                      )}
+                    </div>
+                  </TableHead>
+                );
+              })}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -177,21 +195,16 @@ export function ModernTable<T extends Record<string, any>>({
                   }`}
                   onClick={() => onRowClick?.(item)}
                 >
-                  {columns.map((column) => (
+                  {columns.map((column, colIndex) => (
                     <TableCell
                       key={column.key}
-                      className={`py-4 px-6 ${
-                        column.align === "right" ? "text-right" : ""
+                      className={`py-2 px-1 ${
+                        column.align === "right" ? "text-right" : column.align === "center" ? "text-center" : "text-left"
                       } text-sm text-slate-700`}
                     >
                       {column.render ? column.render(item) : item[column.key]}
                     </TableCell>
                   ))}
-                  {onRowClick && (
-                    <TableCell className="py-4 px-6 text-right w-10">
-                      <ArrowRight className="h-4 w-4 text-slate-300 opacity-0 group-hover:opacity-100 group-hover:text-slate-500 transition-all inline-block" />
-                    </TableCell>
-                  )}
                 </TableRow>
               ))
             )}
@@ -202,20 +215,22 @@ export function ModernTable<T extends Record<string, any>>({
   );
 }
 
-// Status Badge Component - Clean and minimal
+// Enhanced Status Badge Component with distinct colors for each status
 export function StatusBadge({
   status,
   label,
 }: {
-  status: "success" | "warning" | "danger" | "info" | "neutral";
+  status: "success" | "warning" | "danger" | "info" | "neutral" | "processing" | "pending";
   label: string;
 }) {
   const statusStyles = {
-    success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    warning: "bg-amber-50 text-amber-700 border-amber-200",
-    danger: "bg-red-50 text-red-700 border-red-200",
-    info: "bg-blue-50 text-blue-700 border-blue-200",
-    neutral: "bg-slate-50 text-slate-600 border-slate-200",
+    success: "bg-emerald-50 text-emerald-700 border-emerald-200 shadow-emerald-100",
+    warning: "bg-amber-50 text-amber-700 border-amber-200 shadow-amber-100",
+    danger: "bg-red-50 text-red-700 border-red-200 shadow-red-100",
+    info: "bg-blue-50 text-blue-700 border-blue-200 shadow-blue-100",
+    processing: "bg-purple-50 text-purple-700 border-purple-200 shadow-purple-100",
+    pending: "bg-orange-50 text-orange-700 border-orange-200 shadow-orange-100",
+    neutral: "bg-slate-50 text-slate-600 border-slate-200 shadow-slate-100",
   };
 
   const dotColors = {
@@ -223,15 +238,24 @@ export function StatusBadge({
     warning: "bg-amber-500",
     danger: "bg-red-500",
     info: "bg-blue-500",
+    processing: "bg-purple-500",
+    pending: "bg-orange-500",
     neutral: "bg-slate-400",
   };
 
+  const pulseAnimation = {
+    processing: "animate-pulse",
+    pending: "animate-pulse",
+  };
+
   return (
-    <Badge
-      className={`${statusStyles[status]} border capitalize text-xs px-2.5 py-1 font-medium rounded-md flex items-center gap-1.5 w-fit`}
+    <div
+      className={`${statusStyles[status]} border capitalize text-xs px-3 py-1.5 font-medium rounded-lg flex items-center gap-2 w-fit shadow-sm ${
+        pulseAnimation[status as keyof typeof pulseAnimation] || ""
+      }`}
     >
-      <span className={`h-1.5 w-1.5 rounded-full ${dotColors[status]}`} />
-      {label}
-    </Badge>
+      <span className={`h-2 w-2 rounded-full ${dotColors[status]} flex-shrink-0`} />
+      <span className="whitespace-nowrap">{label}</span>
+    </div>
   );
 }

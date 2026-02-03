@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
+import { Button } from "@/app/dashboard/ui/button";
+import { Input } from "@/app/dashboard/ui/input";
+import { Label } from "@/app/dashboard/ui/label";
 import { Card, CardContent } from "@/shared/ui/card";
 import { Checkbox } from "@/shared/ui/checkbox";
-import { AlertCircle, Lock, Mail, Shield, ArrowRight } from "lucide-react";
+import { AlertCircle, Lock, Mail, Shield, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 export default function AdminLoginPage() {
@@ -17,20 +17,27 @@ export default function AdminLoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
+    console.log("🔐 Login attempt started");
+    console.log("Email entered:", email);
+    console.log("Password length:", password.length);
+
     // Basic validation
     if (!email || !password) {
+      console.error("❌ Validation failed: Missing email or password");
       setError("Please enter both email and password");
       setLoading(false);
       return;
     }
 
     if (!email.includes("@")) {
+      console.error("❌ Validation failed: Invalid email format");
       setError("Please enter a valid email address");
       setLoading(false);
       return;
@@ -41,7 +48,14 @@ export default function AdminLoginPage() {
       const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "harmonycode@gmail.com";
       const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "Test@123";
 
+      console.log("Expected email:", adminEmail);
+      console.log("Expected password:", adminPassword);
+      console.log("Email match:", email === adminEmail);
+      console.log("Password match:", password === adminPassword);
+
       if (email === adminEmail && password === adminPassword) {
+        console.log("✅ Credentials match! Logging in...");
+        
         // Store admin auth state in both localStorage and cookies
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("userRole", "admin");
@@ -50,20 +64,25 @@ export default function AdminLoginPage() {
         }
 
         // Set cookie for middleware
-        document.cookie = `isLoggedIn=true; path=/; max-age=${
-          rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60
-        }`;
+        const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60;
+        document.cookie = `isLoggedIn=true; path=/; max-age=${maxAge}; SameSite=Lax`;
 
-        // Redirect to dashboard
-        router.push("/dashboard");
+        console.log("✅ Auth state saved, redirecting to dashboard...");
+        
+        // Small delay to ensure cookie is set, then redirect
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 100);
       } else {
+        console.error("❌ Credentials don't match");
         setError("Invalid email or password. Please try again.");
       }
     } catch (err: any) {
-      console.error("Login error:", err);
+      console.error("❌ Login error:", err);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
+      console.log("🔐 Login attempt finished");
     }
   };
 
@@ -73,7 +92,7 @@ export default function AdminLoginPage() {
       <div className="hidden lg:flex lg:w-[55%] bg-[#0f172a] relative overflow-hidden">
         {/* Subtle background glow effects */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-amber-500/5 rounded-full blur-[80px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-slate-500/5 rounded-full blur-[80px]" />
 
         <div className="relative z-10 flex flex-col items-center justify-center w-full px-16 text-center">
           {/* Logo */}
@@ -86,7 +105,7 @@ export default function AdminLoginPage() {
 
           {/* Brand Title */}
           <h1 className="text-5xl font-bold text-white mb-4 tracking-tight" style={{ letterSpacing: '-0.5px' }}>
-            Kailash Kalamkari
+            Srikalahasti Kalamkari
           </h1>
           <p className="text-xl text-slate-300 mb-12 max-w-md">
             Enterprise Admin Dashboard
@@ -138,6 +157,29 @@ export default function AdminLoginPage() {
                 </p>
               </div>
 
+              {/* Development Credentials Helper */}
+              <div className="mb-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl">
+                <p className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">Development Credentials</p>
+                <div className="space-y-1 text-sm">
+                  <p className="text-blue-800">
+                    <span className="font-semibold">Email:</span> harmonycode@gmail.com
+                  </p>
+                  <p className="text-blue-800">
+                    <span className="font-semibold">Password:</span> Test@123
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail("harmonycode@gmail.com");
+                    setPassword("Test@123");
+                  }}
+                  className="mt-3 text-xs font-semibold text-blue-700 hover:text-blue-900 underline"
+                >
+                  Click to auto-fill credentials
+                </button>
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Error Alert */}
                 {error && (
@@ -186,13 +228,26 @@ export default function AdminLoginPage() {
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#94a3b8] pointer-events-none" />
                     <Input
                       id="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-12 h-12 bg-white border-[#e2e8f0] text-[#334155] text-base placeholder:text-[#cbd5e1] focus:border-[#0f172a] focus:ring-2 focus:ring-[#0f172a]/10 rounded-xl transition-all"
+                      className="pl-12 pr-12 h-12 bg-white border-[#e2e8f0] text-[#334155] text-base placeholder:text-[#cbd5e1] focus:border-[#0f172a] focus:ring-2 focus:ring-[#0f172a]/10 rounded-xl transition-all"
                       disabled={loading}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94a3b8] hover:text-[#64748b] transition-colors"
+                      disabled={loading}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
                   </div>
                 </div>
 
@@ -276,7 +331,7 @@ export default function AdminLoginPage() {
 
           {/* Footer */}
           <p className="mt-8 text-center text-xs text-[#94a3b8] font-medium uppercase tracking-wider">
-            Kailash Kalamkari © 2026
+            Srikalahasti Kalamkari © 2026
           </p>
         </div>
       </div>

@@ -3,7 +3,7 @@
  */
 
 import { useQuery } from "@tanstack/react-query";
-import { promotionsService } from "@/backend/promotions";
+import { promotionsService } from "@/services/promotions";
 
 export function useActivePromotions() {
   return useQuery({

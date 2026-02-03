@@ -93,7 +93,7 @@ const BarcodeGenerator = () => {
               onClick={handlePrint}
               sx={{ mt: 2 }}
               disabled={!productName || !price || !category}
-              style={{ background: "#D49217", color: "white" }}
+              style={{ background: "rgb(15, 23, 42)", color: "white" }}
             >
               Print Barcode
             </Button>

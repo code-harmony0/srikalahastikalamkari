@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/shared/ui/button"
+import { Button } from "@/app/dashboard/ui/button"
 import { Card, CardContent } from "@/shared/ui/card"
 import { Badge } from "@/shared/ui/badge"
 import {
@@ -21,22 +21,20 @@ import {
   TrendingUp,
   IndianRupee,
   ArrowRight,
-  Sparkles,
-  BarChart3,
 } from "lucide-react"
-import { getOrderStatistics, OrderStats } from "@/backend/orders"
-import { supabase } from "@/backend/supabase/client"
+import { getOrderStatistics, OrderStats } from "@/services/orders"
+import { supabase, supabaseAdmin } from "@/lib/supabase/client"
 
 interface OrderPreview {
-  id: number
-  customer_name: string
+  id: string
+  customer_name: string | null
   total_amount: number
   status: string
   created_at: string
 }
 
 interface TopProduct {
-  id: number
+  id: string
   name: string
   image: string
   total_sold: number
@@ -49,21 +47,19 @@ const Dashboard = () => {
   const [recentOrders, setRecentOrders] = useState<OrderPreview[]>([])
   const [topProducts, setTopProducts] = useState<TopProduct[]>([])
   const [productCount, setProductCount] = useState(0)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchDashboardData()
   }, [])
 
   const fetchDashboardData = async () => {
-    setLoading(true)
     try {
       // 1. Fetch Order Stats
       const statsData = await getOrderStatistics()
       if (statsData) setStats(statsData)
 
       // 2. Fetch Recent Orders (last 5)
-      const { data: ordersData } = await supabase
+      const { data: ordersData } = await supabaseAdmin
         .from("orders")
         .select("id, customer_name, total_amount, status, created_at")
         .order("created_at", { ascending: false })
@@ -80,7 +76,7 @@ const Dashboard = () => {
 
       if (productsData) {
         setTopProducts(
-          productsData.map((p, idx) => ({
+          productsData.map((p) => ({
             id: p.id,
             name: p.name,
             image: p.images?.[0] || "",
@@ -98,17 +94,15 @@ const Dashboard = () => {
       if (count !== null) setProductCount(count)
     } catch (error) {
       console.error("Error loading dashboard:", error)
-    } finally {
-      setLoading(false)
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "paid":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+        return "bg-slate-100 text-slate-800 border-slate-300"
       case "in_packing":
-        return "bg-orange-100 text-orange-800 border-orange-200"
+        return "bg-slate-100 text-slate-800 border-slate-300"
       case "packed":
         return "bg-purple-100 text-purple-800 border-purple-200"
       case "shipped":
@@ -118,7 +112,7 @@ const Dashboard = () => {
       case "cancelled":
         return "bg-red-100 text-red-800 border-red-200"
       default:
-        return "bg-slate-100 text-slate-800 border-slate-200"
+        return "bg-slate-100 text-slate-800 border-slate-300"
     }
   }
 
@@ -127,91 +121,89 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 p-6 md:p-8 font-sans space-y-8">
+    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
-            <Sparkles className="h-8 w-8 text-amber-500" />
-            Dashboard
-          </h1>
-          <p className="text-slate-500 mt-1">
-            Welcome back! Here's your store overview
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            onClick={() => router.push("/dashboard/orders")}
-            className="bg-white hover:bg-slate-50 border-slate-200 shadow-sm h-10"
-          >
-            <ShoppingBag className="mr-2 h-4 w-4" />
-            Orders
-          </Button>
-          <Button
-            onClick={() => router.push("/dashboard/add-product")}
-            className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg h-10 gap-2 transition-all hover:scale-105 active:scale-95"
-          >
-            <Plus className="h-4 w-4" />
-            Add Product
-          </Button>
+      <div className="mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+              Dashboard
+            </h1>
+            <p className="text-slate-600 mt-2 text-sm">
+              Welcome back! Here's your store overview
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={() => router.push("/dashboard/orders")}
+              className="bg-white hover:bg-slate-50 border-slate-300 h-10 font-medium"
+            >
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              View Orders
+            </Button>
+            <Button
+              onClick={() => router.push("/dashboard/add-product")}
+              className="bg-slate-900 hover:bg-slate-800 text-white h-10 font-medium"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Product
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Stats Bento Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {/* Total Revenue */}
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Total Revenue - Black Classy Card */}
         <Card
-          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
+          className="bg-gradient-to-br from-slate-900 to-slate-800 border-0 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer group"
           onClick={() => router.push("/dashboard/orders")}
         >
-          <CardContent className="p-6 relative">
-            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
-              <IndianRupee className="h-24 w-24 text-white" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justifycenter">
-                  <IndianRupee className="h-5 w-5 text-white mx-auto" />
-                </div>
-                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
-                  Revenue
-                </p>
+          <CardContent className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors backdrop-blur-sm">
+                <IndianRupee className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-white">
-                {formatCurrency(stats?.total_revenue || 0)}
-              </h3>
-              <p className="text-xs text-blue-100 mt-2 flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" />
+              <Badge className="bg-green-500/20 text-green-300 border-green-500/30 font-medium hover:bg-green-500/20">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                Active
+              </Badge>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-300 mb-1">
                 Total Revenue
               </p>
+              <h3 className="text-2xl font-bold text-white">
+                {formatCurrency(stats?.total_revenue || 0)}
+              </h3>
             </div>
           </CardContent>
         </Card>
 
         {/* Today's Orders */}
         <Card
-          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
+          className="bg-white border border-slate-300 hover:border-slate-300 transition-all duration-200 cursor-pointer group"
           onClick={() => router.push("/dashboard/orders")}
         >
-          <CardContent className="p-6 relative">
-            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
-              <ShoppingBag className="h-24 w-24 text-white" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <ShoppingBag className="h-5 w-5 text-white" />
-                </div>
-                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
-                  Today's Orders
-                </p>
+          <CardContent className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-slate-900 transition-colors">
+                <ShoppingBag className="h-6 w-6 text-slate-700 group-hover:text-white transition-colors" />
               </div>
-              <h3 className="text-3xl font-bold text-white">
+              <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-300 font-medium">
+                Today
+              </Badge>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">
+                Total Orders
+              </p>
+              <h3 className="text-2xl font-bold text-slate-900">
                 {stats?.total_orders || 0}
               </h3>
-              <p className="text-xs text-blue-100 mt-2 bg-white/20 px-2 py-1 rounded-full w-fit">
-                +{stats?.pending_orders || 0} Pending
+              <p className="text-xs text-slate-500 mt-2">
+                {stats?.pending_orders || 0} pending
               </p>
             </div>
           </CardContent>
@@ -219,27 +211,27 @@ const Dashboard = () => {
 
         {/* Total Products */}
         <Card
-          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
+          className="bg-white border border-slate-300 hover:border-slate-300 transition-all duration-200 cursor-pointer group"
           onClick={() => router.push("/dashboard/products")}
         >
-          <CardContent className="p-6 relative">
-            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Package className="h-24 w-24 text-white" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <Package className="h-5 w-5 text-white" />
-                </div>
-                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
-                  Products
-                </p>
+          <CardContent className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-slate-900 transition-colors">
+                <Package className="h-6 w-6 text-slate-700 group-hover:text-white transition-colors" />
               </div>
-              <h3 className="text-3xl font-bold text-white">
+              <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 font-medium">
+                Stock
+              </Badge>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">
+                Total Products
+              </p>
+              <h3 className="text-2xl font-bold text-slate-900">
                 {productCount}
               </h3>
-              <p className="text-xs text-blue-100 mt-2 bg-white/20 px-2 py-1 rounded-full w-fit">
-                In Inventory
+              <p className="text-xs text-slate-500 mt-2">
+                In inventory
               </p>
             </div>
           </CardContent>
@@ -247,67 +239,72 @@ const Dashboard = () => {
 
         {/* Ready to Ship */}
         <Card
-          className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg shadow-blue-200/50 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 group overflow-hidden"
+          className="bg-white border border-slate-300 hover:border-slate-300 transition-all duration-200 cursor-pointer group"
           onClick={() => router.push("/dashboard/orders?status=packed")}
         >
-          <CardContent className="p-6 relative">
-            <div className="absolute top-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Truck className="h-24 w-24 text-white" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <Truck className="h-5 w-5 text-white" />
-                </div>
-                <p className="text-xs font-semibold text-blue-100 uppercase tracking-wider">
-                  Ready to Ship
-                </p>
+          <CardContent className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-slate-900 transition-colors">
+                <Truck className="h-6 w-6 text-slate-700 group-hover:text-white transition-colors" />
               </div>
-              <h3 className="text-3xl font-bold text-white">
+              <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-300 font-medium">
+                Shipped
+              </Badge>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">
+                Ready to Ship
+              </p>
+              <h3 className="text-2xl font-bold text-slate-900">
                 {stats?.shipped_orders || 0}
               </h3>
-              <p className="text-xs text-blue-100 mt-2 bg-white/20 px-2 py-1 rounded-full w-fit">
-                Shipped
+              <p className="text-xs text-slate-500 mt-2">
+                Orders shipped
               </p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Orders */}
-        <div className="lg:col-span-2">
-          <Card className="border border-slate-200 shadow-md">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between ">
-              <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-slate-500" />
-                Recent Orders
-              </h3>
+      {/* Tables Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Recent Orders - Takes 3 columns */}
+        <div className="lg:col-span-3">
+          <Card className="border border-slate-300 bg-white">
+            <div className="p-6 border-b border-slate-300 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Recent Orders
+                </h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Latest customer orders
+                </p>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push("/dashboard/orders")}
-                className="text-slate-500 hover:text-slate-900 h-8"
+                className="text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               >
                 View All
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
-            <div className="bg-white overflow-hidden">
+            <div className="overflow-hidden">
               <Table>
-                <TableHeader className="bg-white border-b-2 border-slate-200">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="font-bold text-slate-900 py-4">
-                      Order ID
-                    </TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">
+                <TableHeader className="bg-slate-50">
+                  <TableRow className="hover:bg-slate-50">
+                    <TableHead className="font-semibold text-slate-700">
                       Customer
                     </TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">
+                    <TableHead className="font-semibold text-slate-700 text-right w-[140px]">
                       Amount
                     </TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">
+                    <TableHead className="font-semibold text-slate-700 w-[140px]">
                       Status
+                    </TableHead>
+                    <TableHead className="font-semibold text-slate-700 w-[120px]">
+                      Date
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -318,9 +315,11 @@ const Dashboard = () => {
                         colSpan={4}
                         className="text-center py-12 text-slate-400"
                       >
-                        <div className="flex flex-col items-center gap-2">
-                          <ShoppingBag className="h-8 w-8 text-slate-300" />
-                          <p>No recent orders</p>
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
+                            <ShoppingBag className="h-6 w-6 text-slate-400" />
+                          </div>
+                          <p className="font-medium">No recent orders</p>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -328,28 +327,31 @@ const Dashboard = () => {
                     recentOrders.map((order) => (
                       <TableRow
                         key={order.id}
-                        className="cursor-pointer hover:bg-slate-50/70 transition-colors border-b border-slate-100 last:border-0"
+                        className="cursor-pointer hover:bg-slate-50 transition-colors"
                         onClick={() =>
                           router.push(`/dashboard/orders/${order.id}`)
                         }
                       >
-                        <TableCell className="font-bold text-slate-900 py-4">
-                          #{order.id}
-                        </TableCell>
-                        <TableCell className="text-slate-700 py-4 font-medium">
+                        <TableCell className="font-medium text-slate-900">
                           {order.customer_name}
                         </TableCell>
-                        <TableCell className="font-bold text-slate-900 py-4">
+                        <TableCell className="font-bold text-slate-900 text-right w-[140px]">
                           {formatCurrency(order.total_amount)}
                         </TableCell>
-                        <TableCell className="py-4">
+                        <TableCell className="w-[140px]">
                           <Badge
-                            className={`${getStatusColor(order.status)} border shadow-none capitalize text-xs px-2.5 py-1 font-medium pointer-events-none`}
+                            className={`${getStatusColor(order.status)} border capitalize text-xs font-medium`}
                           >
                             {order.status === "in_packing"
                               ? "Processing"
                               : order.status.replace(/_/g, " ")}
                           </Badge>
+                        </TableCell>
+                        <TableCell className="text-slate-600 text-sm w-[120px]">
+                          {new Date(order.created_at).toLocaleDateString('en-IN', { 
+                            day: 'numeric',
+                            month: 'short'
+                          })}
                         </TableCell>
                       </TableRow>
                     ))
@@ -360,94 +362,73 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Top Products */}
-        <div>
-          <Card className="border border-slate-200 shadow-md h-full">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-slate-500" />
-                Top Products
-              </h3>
+        {/* Top Products - Takes 2 columns */}
+        <div className="lg:col-span-2">
+          <Card className="border border-slate-300 bg-white h-full">
+            <div className="p-6 border-b border-slate-300 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Top Products
+                </h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Best sellers
+                </p>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push("/dashboard/products")}
-                className="text-slate-500 hover:text-slate-900 h-8"
+                className="text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               >
                 View All
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
-            <div className="bg-white overflow-hidden">
-              <Table>
-                <TableHeader className="bg-white border-b-2 border-slate-200">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="font-bold text-slate-900 py-4">
-                      Rank
-                    </TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">
-                      Product
-                    </TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">
-                      Sold
-                    </TableHead>
-                    <TableHead className="font-bold text-slate-900 py-4">
-                      Revenue
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {topProducts.length === 0 ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={4}
-                        className="text-center py-12 text-slate-400"
-                      >
-                        <div className="flex flex-col items-center gap-2">
-                          <Package className="h-8 w-8 text-slate-300" />
-                          <p>No products found</p>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    topProducts.map((product, idx) => (
-                      <TableRow
-                        key={product.id}
-                        className="cursor-pointer hover:bg-slate-50/70 transition-colors border-b border-slate-100 last:border-0"
-                        onClick={() =>
-                          router.push(`/dashboard/products/${product.id}`)
-                        }
-                      >
-                        <TableCell className="py-4">
-                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-sm">
-                            {idx + 1}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                              <img
-                                src={product.image || "/placeholder.svg"}
-                                alt={product.name}
-                                className="h-full w-full object-cover"
-                              />
-                            </div>
-                            <p className="font-semibold text-slate-900 text-sm">
-                              {product.name}
-                            </p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-medium text-slate-700 py-4">
-                          {product.total_sold} units
-                        </TableCell>
-                        <TableCell className="font-bold text-green-600 py-4">
+            <div className="p-4">
+              {topProducts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                  <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+                    <Package className="h-6 w-6 text-slate-400" />
+                  </div>
+                  <p className="font-medium">No products found</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {topProducts.map((product, idx) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center gap-2.5 p-2.5 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
+                      onClick={() =>
+                        router.push(`/dashboard/products/${product.id}`)
+                      }
+                    >
+                      <div className="h-6 w-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                        {idx + 1}
+                      </div>
+                      <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-300">
+                        <img
+                          src={product.image || "/placeholder.svg"}
+                          alt={product.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0 pr-2">
+                        <p className="font-semibold text-slate-900 text-xs truncate leading-tight">
+                          {product.name}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {product.total_sold} sold
+                        </p>
+                      </div>
+                      <div className="text-right flex-shrink-0 ml-auto">
+                        <p className="font-bold text-slate-900 text-xs whitespace-nowrap">
                           {formatCurrency(product.revenue)}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </Card>
         </div>

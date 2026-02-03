@@ -22,9 +22,9 @@
     --popover: 36 67% 97%;
     --popover-foreground: 22 25% 19%;
 
-    /* Primary: Terracotta (#A65329 -> 18 60% 41%) */
-    --primary: 18 60% 41%;
-    --primary-foreground: 36 67% 97%;
+    /* Primary: Golden (#D49217 -> 42 85% 46%) */
+    --primary: 42 85% 46%;
+    --primary-foreground: 0 0% 100%;
 
     /* Secondary: Muted Espresso/Brown (#4A3528 -> 22 30% 22%) */
     --secondary: 22 30% 22%;
@@ -34,12 +34,12 @@
     --muted: 36 30% 94%;
     --muted-foreground: 22 10% 40%;
 
-    /* Accent: Gold (#D4A05A -> 35 58% 59%) */
-    --accent: 35 58% 59%;
-    --accent-foreground: 22 25% 19%;
+    /* Accent: Slate Gray (#64748B -> 215 20% 65%) */
+    --accent: 215 20% 65%;
+    --accent-foreground: 0 0% 100%;
     
-    /* Secondary Accent: Deep Terracotta (#A65329) - keeping broadly synonymous with primary for consistency */
-    --accent-secondary: 18 60% 41%;
+    /* Secondary Accent: Dark Slate (#475569 -> 215 25% 35%) */
+    --accent-secondary: 215 25% 35%;
 
     /* Text Tokens */
     --text-heading: 22 25% 19%; /* Espresso */
@@ -54,23 +54,23 @@
     --destructive: 348 83% 47%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Border: Tan, matching secondary or slightly lighter */
-    --border: 34 44% 69%;
-    --input: 34 44% 69%;
-    /* Ring: Focus ring color (Gold/Accent) */
-    --ring: 43 74% 49%; /* Using the Accent Color Value directly */
+    /* Border: Light Slate */
+    --border: 215 20% 85%;
+    --input: 215 20% 85%;
+    /* Ring: Focus ring color (Slate) */
+    --ring: 215 20% 65%; /* Using Slate Color */
 
     --radius: 0.5rem; /* 8px unified radius */
 
-    /* Chart/Sidebar placeholders (mapped to theme or specific values) */
-    --sidebar-background: 60 56% 91%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 25 76% 31%;
-    --sidebar-primary-foreground: 60 56% 91%;
-    --sidebar-accent: 45 85% 60%;
-    --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 34 44% 69%;
-    --sidebar-ring: 45 85% 60%;
+    /* Chart/Sidebar placeholders (mapped to slate theme) */
+    --sidebar-background: 215 20% 95%;
+    --sidebar-foreground: 215 25% 15%;
+    --sidebar-primary: 215 25% 25%;
+    --sidebar-primary-foreground: 215 20% 95%;
+    --sidebar-accent: 215 20% 65%;
+    --sidebar-accent-foreground: 215 25% 15%;
+    --sidebar-border: 215 20% 85%;
+    --sidebar-ring: 215 20% 65%;
   }
 
   /* DASHBOARD THEME (Clean White/Blue) - Scoped Isolation */
@@ -296,16 +296,13 @@
 
 /* Enhanced Button Styles with Better Accessibility */
 .luxury-primary-button {
-  background: linear-gradient(135deg, #a0522d 0%, #8b4513 50%, #654321 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
+  @apply bg-primary text-white border-white/10 shadow-lg;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.luxury-primary-button::before {
+.luxury-primary-button::after {
   content: "";
   position: absolute;
   top: 0;
@@ -315,20 +312,24 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.3) 50%,
+    rgba(212, 160, 90, 0.2) 50%,
     transparent 100%
   );
-  transition: left 0.6s ease;
+  transition: none;
 }
 
-.luxury-primary-button:hover::before {
-  left: 100%;
+.luxury-primary-button:hover::after {
+  animation: shimmer 1.5s infinite;
 }
 
 .luxury-primary-button:hover {
-  background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #d2691e 100%);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  @apply bg-primary/90 -translate-y-1;
+  box-shadow: 0 0 20px rgba(212, 160, 90, 0.4);
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .luxury-primary-button:focus {
@@ -337,18 +338,15 @@
 }
 
 .luxury-secondary-button {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(30px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  @apply border border-accent/40 text-accent;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .luxury-secondary-button:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  @apply bg-white/10 border-accent -translate-y-1;
+  box-shadow: 0 4px 15px rgba(212, 160, 90, 0.2);
 }
 
 .luxury-secondary-button:focus {

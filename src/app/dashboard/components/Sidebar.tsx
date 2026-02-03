@@ -18,7 +18,7 @@ import {
 import "./Sidebar.css"
 import { useAuth } from "@/shared/contexts/AuthContext"
 import { useSidebar } from "@/shared/contexts/SidebarContext"
-import { useToast } from "@/shared/ui/use-toast"
+import { toast } from "sonner"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/ui/tooltip"
 
 const Sidebar = () => {
@@ -28,7 +28,7 @@ const Sidebar = () => {
   const { isCollapsed, toggleSidebar } = useSidebar()
   const role = (user as any)?.metadata?.role
 
-  const { toast } = useToast()
+  
 
   const handleLogout = async () => {
     await logout()
@@ -98,7 +98,7 @@ const Sidebar = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
               >
-                <h2 className="brand-name">Kailash Kalamkari</h2>
+                <h2 className="brand-name">Srikalahasti Kalamkari</h2>
                 <p className="brand-subtitle">Admin Panel</p>
                 {role && (
                   <span className="text-xs text-gray-400 capitalize">

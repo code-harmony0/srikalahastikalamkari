@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getOrderById, deliverOrder, shipOrder } from "@/backend/orders";
+import { getOrderById, deliverOrder, shipOrder, updateOrderStatus } from "@/services/orders";
 import OrderDetailsAdmin from "../components/OrderDetailsAdmin";
-import { useToast } from "@/shared/ui/use-toast";
-import { Loader2, Truck, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
+import { Loader2, Truck, CheckCircle2, RefreshCw, Bike } from "lucide-react";
 import PackingMode from "../components/PackingMode";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/app/dashboard/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,14 +13,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/ui/dialog";
-import { Label } from "@/shared/ui/label";
-import { Input } from "@/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+} from "@/app/dashboard/ui/dialog";
+import { Label } from "@/app/dashboard/ui/label";
+import { Input } from "@/app/dashboard/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/dashboard/ui/select";
 
 const OrderDetailsPage = ({ id }: { id?: string }) => {
   const router = useRouter();
-  const { toast } = useToast();
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
@@ -38,91 +37,99 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
     return <div>Error: No Order ID provided</div>;
   }
 
-  useEffect(() => {
-    const fetchOrder = async () => {
-      if (!id) return;
-      setLoading(true);
-      const data = await getOrderById(id);
-      if (!data) {
-        toast({
-          title: "Error",
-          description: "Failed to load order details",
-          variant: "destructive",
-        });
-        router.push("/dashboard/orders");
-      } else {
-        setOrder(data);
-      }
-      setLoading(false);
-    };
+  const fetchOrder = async () => {
+    if (!id) return;
+    setLoading(true);
+    const data = await getOrderById(id);
+    if (!data) {
+      toast.error("Failed to load order details");
+      router.push("/dashboard/orders");
+    } else {
+      setOrder(data);
+    }
+    setLoading(false);
+  };
 
+  useEffect(() => {
     fetchOrder();
-  }, [id, router, toast]);
+  }, [id]);
 
   const handleClose = () => {
     router.push("/dashboard/orders");
   };
 
   const handlePack = async () => {
-    setShowPackingMode(true);
+    // Update status to in_packing before opening PackingMode
+    const success = await updateOrderStatus(order.id, 'in_packing');
+    if (success) {
+      // Update the local order state with the new status
+      const updatedOrder = { ...order, status: 'in_packing' };
+      setOrder(updatedOrder);
+      setShowPackingMode(true);
+      
+      toast.success("Packing Started", {
+        description: "Order status updated to processing"
+      });
+    } else {
+      toast.error("Failed to update order status");
+    }
   };
 
   const handleShip = async () => {
     setShowShippingDialog(true);
   };
 
-  const confirmShipment = async () => {
+  const handleShipOrder = async () => {
+    if (!order) return;
+
+    // Validation for non-manual shipping
     if (shippingCompany !== "Manual" && shippingCompany !== "InStore" && !trackingId) {
-      toast({
-        title: "Tracking ID Required",
-        description: "Please enter a tracking ID",
-        variant: "destructive",
+      toast.error("Tracking ID Required", {
+        description: "Please enter a tracking ID for courier shipments."
       });
       return;
     }
 
     setIsShipping(true);
-    const { error } = await shipOrder(order.id, {
+
+    // For manual/instore, we might not have a tracking ID, so we use a placeholder or empty
+    const finalTrackingId = (shippingCompany === "Manual" || shippingCompany === "InStore")
+      ? (trackingId || "MANUAL_DELIVERY")
+      : trackingId;
+
+    const { data, error } = await shipOrder(order.id, {
       shipping_company: shippingCompany,
-      tracking_id: trackingId || "MANUAL"
+      tracking_id: finalTrackingId
     });
+
     setIsShipping(false);
 
-    if (!error) {
-      setOrder({ 
-        ...order, 
-        status: 'shipped',
-        shipping_company: shippingCompany,
-        tracking_id: trackingId
+    if (error) {
+      toast.error("Failed to update shipping status");
+    } else {
+      toast.success("Order Shipped!", {
+        description: `Order #${order.id.slice(-8)} marked as shipped via ${shippingCompany}`
       });
       setShowShippingDialog(false);
-      toast({
-        title: "Order Shipped",
-        description: `Order #${order.id} marked as shipped`,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Failed to update shipping status",
-        variant: "destructive",
-      });
+      setTrackingId("");
+      setShippingCompany("DTDC");
+      // Refresh order data
+      await fetchOrder();
     }
   };
 
   const handleDeliver = async () => {
-    if (window.confirm(`Mark Order #${order.id} as Delivered?`)) {
+    if (window.confirm(`Mark Order #${order.id.slice(-8)} as Delivered?`)) {
       const { error } = await deliverOrder(order.id);
       if (!error) {
-        setOrder({ ...order, status: 'delivered' });
-        toast({
-          title: "Order Delivered",
-          description: `Order #${order.id} marked as delivered`,
+        toast.success("Order Delivered", {
+          description: `Order #${order.id.slice(-8)} marked as delivered`
         });
+        // Refresh order data
+        await fetchOrder();
       } else {
-        toast({
-          title: "Error",
+        toast.error("Failed to mark order as delivered", {
           description: "Failed to update status",
-          variant: "destructive",
         });
       }
     }
@@ -130,8 +137,8 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-slate-50">
-        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-700" />
       </div>
     );
   }
@@ -141,7 +148,7 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
   }
 
   return (
-    <div className="h-screen bg-slate-50 relative">
+    <div className="h-screen bg-gray-50 relative">
       <OrderDetailsAdmin
         order={order}
         onClose={handleClose}
@@ -156,11 +163,11 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
           order={order}
           onComplete={() => {
             setShowPackingMode(false);
-            const refreshOrder = async () => {
-              const data = await getOrderById(id);
-              if (data) setOrder(data);
-            };
-            refreshOrder();
+            toast.success("Packing Complete!", {
+              description: `Order #${order.id.slice(-8)} is ready for shipping`
+            });
+            // Refresh order data to show updated status
+            fetchOrder();
           }}
           onCancel={() => setShowPackingMode(false)}
         />
@@ -170,19 +177,19 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
       <Dialog open={showShippingDialog} onOpenChange={setShowShippingDialog}>
         <DialogContent className="sm:max-w-md rounded-2xl !bg-white">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              <Truck className="h-5 w-5 text-blue-600" />
-              Ship Order #{order.id}
+            <DialogTitle className="flex items-center gap-2 text-xl text-slate-900">
+              <Truck className="h-5 w-5 text-gray-700" />
+              Ship Order #{order.id.slice(-8)}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-gray-600">
               Select a shipping provider and enter tracking details.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-5 py-4">
             <div className="space-y-2">
-              <Label>Shipping Provider</Label>
+              <Label className="text-slate-900 font-medium">Shipping Provider</Label>
               <Select value={shippingCompany} onValueChange={setShippingCompany}>
-                <SelectTrigger className="rounded-xl h-11">
+                <SelectTrigger className="rounded-xl h-11 border-slate-300 focus:border-slate-900 focus:ring-0/10">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -190,33 +197,66 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
                   <SelectItem value="BlueDart">BlueDart</SelectItem>
                   <SelectItem value="Delhivery">Delhivery</SelectItem>
                   <SelectItem value="IndiaPost">India Post</SelectItem>
-                  <SelectItem value="Manual">Manual Delivery</SelectItem>
+                  <SelectItem value="Manual">Manual Delivery (Local)</SelectItem>
                   <SelectItem value="InStore">In-Store Pickup</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {shippingCompany !== "Manual" && shippingCompany !== "InStore" && (
+            {shippingCompany !== "Manual" && shippingCompany !== "InStore" ? (
               <div className="space-y-2">
-                <Label>Tracking ID / AWB</Label>
+                <Label className="text-slate-900 font-medium">Tracking ID / AWB</Label>
                 <Input
                   value={trackingId}
                   onChange={(e) => setTrackingId(e.target.value)}
                   placeholder="e.g. D123456789"
-                  className="font-mono uppercase rounded-xl h-11"
+                  className="font-mono uppercase rounded-xl h-11 border-slate-300 focus:border-slate-900 focus:ring-0/10"
                 />
+                {trackingId && (
+                  <div className="text-xs text-blue-700 bg-blue-50 p-3 rounded-lg flex items-center gap-2 border border-blue-200">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Preview: https://www.dtdc.in/tracking.asp?id={trackingId}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex gap-3">
+                <Bike className="h-5 w-5 text-gray-700 flex-shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-slate-900 text-sm">
+                    {shippingCompany === "Manual" ? "Local Delivery Mode" : "Store Pickup Mode"}
+                  </h4>
+                  <p className="text-xs text-gray-600 mt-1">
+                    No tracking ID required. The customer will be notified that their order is {shippingCompany === "Manual" ? "out for delivery" : "ready for pickup"}.
+                  </p>
+                </div>
               </div>
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowShippingDialog(false)}>Cancel</Button>
-            <Button
-              onClick={confirmShipment}
-              disabled={isShipping}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+            <Button 
+              variant="outline" 
+              onClick={() => setShowShippingDialog(false)} 
+              className="rounded-lg h-11 border-slate-300 text-gray-700 hover:bg-gray-50"
             >
-              {isShipping ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
-              Confirm Shipment
+              Cancel
+            </Button>
+            <Button
+              onClick={handleShipOrder}
+              disabled={isShipping || (shippingCompany !== "Manual" && shippingCompany !== "InStore" && !trackingId)}
+              className="bg-gray-900 hover:bg-gray-800 text-white rounded-lg shadow-md h-11 px-6"
+            >
+              {isShipping ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  Confirm Shipment
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

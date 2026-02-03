@@ -1,146 +1,113 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/shared/ui/button";
 import {
-  Plus,
-  Package,
-  Truck,
-  ShoppingBag,
   IndianRupee,
-  Sparkles,
-  BarChart3,
+  ShoppingBag,
+  Package,
+  CheckCircle,
   TrendingUp,
+  BarChart3,
 } from "lucide-react";
-import { getOrderStatistics, OrderStats } from "@/backend/orders";
-import { supabase } from "@/backend/supabase/client";
-import { HeroKPICard, KPICard } from "./components/KPICard";
-import { ModernTable, StatusBadge } from "./components/ModernTable";
+import {
+  getDashboardKPIs,
+  getDailyActivity,
+  getTopCategoriesBySales,
+  getTopProducts,
+  getRecentOrders,
+  getKPISparklines,
+  type DashboardKPIs,
+  type DailyActivity,
+  type CategorySales,
+  type TopProduct,
+  type OrderPreview,
+  type SparklinePoint,
+} from "@/services/dashboard";
+import { KPICard } from "@/features/dashboard/KPICard";
+import { ChartCard } from "@/features/dashboard/ChartCard";
+import { DataTable, type TableColumn } from "@/features/dashboard/DataTable";
+import { StatusBadge, type StatusType } from "@/features/dashboard/StatusBadge";
+import dynamic from "next/dynamic";
 
-interface OrderPreview {
-  id: number;
-  customer_name: string;
-  total_amount: number;
-  status: string;
-  created_at: string;
-}
+const DemandFlowChart = dynamic(
+  () =>
+    import("@/features/dashboard/charts/DemandFlowChart").then(
+      (mod) => mod.DemandFlowChart
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full animate-pulse bg-slate-100 dark:bg-slate-800 rounded-xl" />
+    ),
+  }
+);
 
-interface TopProduct {
-  id: number;
-  name: string;
-  image: string;
-  total_sold: number;
-  revenue: number;
-}
+const CategoryBarChart = dynamic(
+  () =>
+    import("@/features/dashboard/charts/CategoryBarChart").then(
+      (mod) => mod.CategoryBarChart
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full animate-pulse bg-slate-100 dark:bg-slate-800 rounded-xl" />
+    ),
+  }
+);
 
-const Dashboard = () => {
+/**
+ * Modern Dashboard Page
+ *
+ * All data is fetched from Supabase - no hardcoded/mock data.
+ *
+ * Layout:
+ * - KPI cards: 4 columns (desktop), 2 (tablet), 1 (mobile)
+ * - Analytics row: Demand Flow (2/3) + Category Sales (1/3)
+ * - Tables row: Recent Orders + Top Products
+ */
+
+export default function DashboardPage() {
   const router = useRouter();
-  const [stats, setStats] = useState<OrderStats | null>(null);
-  const [recentOrders, setRecentOrders] = useState<OrderPreview[]>([]);
-  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
-  const [productCount, setProductCount] = useState(0);
-  const [loading, setLoading] = useState(true);
 
-  // Generate sparkline data based on actual KPI value and trend
-  const generateSparkline = (
-    currentValue: number,
-    trend: "up" | "down" | "neutral",
-    variance: number = 0.15
-  ) => {
-    const points = 20;
-    const data = [];
-    const varianceAmount = currentValue * variance;
+  // All state from real Supabase data
+  const [kpis, setKpis] = React.useState<DashboardKPIs | null>(null);
+  const [dailyActivity, setDailyActivity] = React.useState<DailyActivity[]>([]);
+  const [categories, setCategories] = React.useState<CategorySales[]>([]);
+  const [topProducts, setTopProducts] = React.useState<TopProduct[]>([]);
+  const [recentOrders, setRecentOrders] = React.useState<OrderPreview[]>([]);
+  const [sparklines, setSparklines] = React.useState<{
+    revenue: SparklinePoint[];
+    orders: SparklinePoint[];
+    items_sold: SparklinePoint[];
+    completion: SparklinePoint[];
+  } | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
-    for (let i = 0; i < points; i++) {
-      const progress = i / (points - 1);
-      // Base trend line
-      let baseValue;
-      if (trend === "up") {
-        baseValue = currentValue * (0.7 + progress * 0.3);
-      } else if (trend === "down") {
-        baseValue = currentValue * (1.1 - progress * 0.2);
-      } else {
-        baseValue = currentValue * (0.9 + progress * 0.1);
-      }
-      // Add wave pattern
-      const wave = Math.sin(i * 0.8) * varianceAmount * 0.5 +
-                   Math.cos(i * 0.4) * varianceAmount * 0.3;
-      data.push({ value: Math.max(0, baseValue + wave) });
-    }
-    return data;
-  };
-
-  // Sparkline data based on actual KPI values
-  const revenueSparkline = generateSparkline(
-    Number(stats?.total_revenue) || 50000,
-    "up",
-    0.2
-  );
-
-  const ordersSparkline = generateSparkline(
-    Number(stats?.total_orders) || 20,
-    "up",
-    0.25
-  );
-
-  const inventorySparkline = generateSparkline(
-    productCount || 50,
-    "down",
-    0.2
-  );
-
-  const shippingSparkline = generateSparkline(
-    Number(stats?.shipped_orders) || 10,
-    "up",
-    0.3
-  );
-
-  useEffect(() => {
-    fetchDashboardData();
+  React.useEffect(() => {
+    fetchAllDashboardData();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchAllDashboardData = async () => {
     setLoading(true);
     try {
-      // 1. Fetch Order Stats
-      const statsData = await getOrderStatistics();
-      if (statsData) setStats(statsData);
+      // Fetch all dashboard data in parallel
+      const [kpiData, activityData, categoryData, productData, orderData, sparklineData] =
+        await Promise.all([
+          getDashboardKPIs(),
+          getDailyActivity(7),
+          getTopCategoriesBySales(6),
+          getTopProducts(5),
+          getRecentOrders(8),
+          getKPISparklines(),
+        ]);
 
-      // 2. Fetch Recent Orders (last 5)
-      const { data: ordersData } = await supabase
-        .from("orders")
-        .select("id, customer_name, total_amount, status, created_at")
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      if (ordersData) setRecentOrders(ordersData);
-
-      // 3. Fetch Top 5 Products by revenue
-      const { data: productsData } = await supabase
-        .from("products")
-        .select("id, name, images")
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      if (productsData) {
-        setTopProducts(
-          productsData.map((p, idx) => ({
-            id: p.id,
-            name: p.name,
-            image: p.images?.[0] || "",
-            total_sold: Math.floor(Math.random() * 50) + 10,
-            revenue: Math.floor(Math.random() * 50000) + 5000,
-          }))
-        );
-      }
-
-      // 4. Get total product count
-      const { count } = await supabase
-        .from("products")
-        .select("*", { count: "exact", head: true });
-
-      if (count !== null) setProductCount(count);
+      setKpis(kpiData);
+      setDailyActivity(activityData);
+      setCategories(categoryData);
+      setTopProducts(productData);
+      setRecentOrders(orderData);
+      setSparklines(sparklineData);
     } catch (error) {
       console.error("Error loading dashboard:", error);
     } finally {
@@ -148,15 +115,21 @@ const Dashboard = () => {
     }
   };
 
-  const getOrderStatus = (status: string): "success" | "warning" | "danger" | "info" | "neutral" => {
+  // ─── Helpers ──────────────────────────────────────────────────────────────
+
+  const getOrderStatus = (status: string): StatusType => {
     switch (status) {
       case "delivered":
         return "success";
       case "shipped":
         return "info";
-      case "in_packing":
       case "packed":
         return "warning";
+      case "in_packing":
+        return "processing";
+      case "paid":
+      case "pending":
+        return "pending";
       case "cancelled":
         return "danger";
       default:
@@ -164,235 +137,231 @@ const Dashboard = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return `₹${amount.toLocaleString("en-IN")}`;
-  };
+  const formatCurrency = (amount: number) =>
+    `₹${amount.toLocaleString("en-IN")}`;
 
   const formatStatus = (status: string) => {
     if (status === "in_packing") return "Processing";
     return status.replace(/_/g, " ");
   };
 
-  return (
-    <div className="min-h-screen bg-[#f8fafc] p-4 lg:p-6 font-sans">
-      {/* Container with max-width for ultra-wide screens */}
-      <div className="max-w-[1920px] mx-auto space-y-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
-              <div className="p-2.5 bg-gradient-to-br from-amber-100 to-amber-50 rounded-xl border border-amber-200/50 shadow-sm">
-                <Sparkles className="h-5 w-5 text-amber-600" />
-              </div>
-              Overview
-            </h1>
-            <p className="text-slate-500 text-sm mt-2 ml-[52px]">
-              Manage your store and track performance in real-time
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={() => router.push("/dashboard/orders")}
-              className="hover:bg-slate-50 border-slate-200 h-10 text-slate-600 px-4"
-            >
-              <ShoppingBag className="mr-2 h-4 w-4" />
-              Orders
-            </Button>
-            <Button
-              onClick={() => router.push("/dashboard/add-product")}
-              className="bg-slate-900 hover:bg-slate-800 text-white shadow-sm h-10 gap-2 px-5 rounded-lg transition-all"
-            >
-              <Plus className="h-4 w-4" />
-              New Product
-            </Button>
-          </div>
-        </div>
+  // ─── Table Columns ─────────────────────────────────────────────────────────
 
-        {/* KPI Cards Grid - Consistent sizing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Revenue Card */}
+  const orderColumns: TableColumn<OrderPreview>[] = [
+    {
+      key: "customer_name",
+      label: "Customer",
+      render: (order) => (
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400 font-semibold text-sm">
+            {order.customer_name?.charAt(0).toUpperCase() || "?"}
+          </div>
+          <span className="font-medium">
+            {order.customer_name || "Unknown"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "total_amount",
+      label: "Amount",
+      align: "right",
+      render: (order) => (
+        <span className="font-semibold">
+          {formatCurrency(order.total_amount)}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (order) => (
+        <StatusBadge
+          status={getOrderStatus(order.status)}
+          label={formatStatus(order.status)}
+        />
+      ),
+    },
+    {
+      key: "created_at",
+      label: "Date",
+      align: "right",
+      render: (order) => (
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {new Date(order.created_at).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short",
+          })}
+        </span>
+      ),
+    },
+  ];
+
+  const productColumns: TableColumn<TopProduct>[] = [
+    {
+      key: "name",
+      label: "Product",
+      render: (product) => (
+        <div className="flex items-center gap-2">
+          <div className="h-10 w-10 rounded bg-gray-100 dark:bg-gray-700 overflow-hidden">
+            <img
+              src={product.image || "/placeholder.svg"}
+              alt={product.name}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <span className="font-medium line-clamp-1">{product.name}</span>
+        </div>
+      ),
+    },
+    {
+      key: "total_sold",
+      label: "Sold",
+      align: "center",
+      render: (product) => <span>{product.total_sold}</span>,
+    },
+    {
+      key: "revenue",
+      label: "Revenue",
+      align: "right",
+      render: (product) => (
+        <span className="font-semibold text-green-600 dark:text-green-400">
+          {formatCurrency(product.revenue)}
+        </span>
+      ),
+    },
+  ];
+
+  // ─── Render ────────────────────────────────────────────────────────────────
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+      <div className="max-w-[1440px] mx-auto space-y-8">
+        {/* KPI Cards - Real data with real month-over-month growth */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <KPICard
             title="Total Revenue"
-            value={formatCurrency(stats?.total_revenue || 0)}
-            icon={<IndianRupee className="h-5 w-5 text-emerald-600" />}
-            trend={{ value: 12.4, direction: "up" }}
-            sparklineData={revenueSparkline}
-            gradient={{ from: "#ecfdf5", to: "#d1fae5" }}
-            borderColor="border-emerald-200"
-            shadowColor="shadow-emerald-500/20"
+            value={formatCurrency(kpis?.total_revenue || 0)}
+            icon={<IndianRupee className="h-5 w-5" />}
+            trend={{
+              value: Number((kpis?.revenue_growth || 0).toFixed(1)),
+              direction: (kpis?.revenue_growth || 0) >= 0 ? "up" : "down",
+            }}
+            sparklineData={sparklines?.revenue}
+            sparklineColor="#FFFFFF"
+            comparison="vs last month"
+            variant="primary"
             onClick={() => router.push("/dashboard/orders")}
           />
 
-          {/* Orders Card */}
           <KPICard
-            title="Total Orders"
-            value={Number(stats?.total_orders) || 0}
-            icon={<ShoppingBag className="h-5 w-5 text-blue-600" />}
-            trend={{ value: 8.2, direction: "up" }}
-            sparklineData={ordersSparkline}
-            gradient={{ from: "#eff6ff", to: "#dbeafe" }}
-            borderColor="border-blue-200"
-            shadowColor="shadow-blue-500/20"
+            title="Orders Placed"
+            value={kpis?.total_orders || 0}
+            icon={<ShoppingBag className="h-5 w-5" />}
+            trend={{
+              value: Number((kpis?.orders_growth || 0).toFixed(1)),
+              direction: (kpis?.orders_growth || 0) >= 0 ? "up" : "down",
+            }}
+            sparklineData={sparklines?.orders}
+            sparklineColor="#16A34A"
+            comparison="vs last month"
+            variant="default"
             onClick={() => router.push("/dashboard/orders")}
-            comparison={`+${Number(stats?.pending_orders) || 0} new`}
           />
 
-          {/* Products Card */}
           <KPICard
-            title="Active Products"
-            value={productCount}
-            icon={<Package className="h-5 w-5 text-purple-600" />}
-            trend={{ value: -2.3, direction: "down" }}
-            sparklineData={inventorySparkline}
-            gradient={{ from: "#faf5ff", to: "#f3e8ff" }}
-            borderColor="border-purple-200"
-            shadowColor="shadow-purple-500/20"
+            title="Products in Stock"
+            value={kpis?.product_count || 0}
+            icon={<Package className="h-5 w-5" />}
+            trend={{
+              value: Number((kpis?.avg_order_value || 0).toFixed(0)),
+              direction: "neutral",
+            }}
+            sparklineData={sparklines?.items_sold}
+            sparklineColor="#F59E0B"
+            comparison={`Avg order: ${formatCurrency(kpis?.avg_order_value || 0)}`}
+            variant="default"
             onClick={() => router.push("/dashboard/products")}
-            comparison="in stock"
           />
 
-          {/* Shipping Card */}
           <KPICard
-            title="Shipped Orders"
-            value={Number(stats?.shipped_orders) || 0}
-            icon={<Truck className="h-5 w-5 text-amber-600" />}
-            trend={{ value: 5.1, direction: "up" }}
-            sparklineData={shippingSparkline}
-            gradient={{ from: "#fffbeb", to: "#fef3c7" }}
-            borderColor="border-amber-200"
-            shadowColor="shadow-amber-500/20"
-            onClick={() => router.push("/dashboard/orders?status=packed")}
-            comparison="this month"
+            title="Completion Rate"
+            value={`${Math.round(kpis?.completion_rate || 0)}%`}
+            icon={<CheckCircle className="h-5 w-5" />}
+            trend={{
+              value: Number((kpis?.completion_rate || 0).toFixed(1)),
+              direction:
+                (kpis?.completion_rate || 0) >= 50
+                  ? "up"
+                  : (kpis?.completion_rate || 0) > 0
+                  ? "down"
+                  : "neutral",
+            }}
+            sparklineData={sparklines?.completion}
+            sparklineColor="#2563EB"
+            comparison={`${kpis?.delivered_orders || 0} of ${kpis?.total_orders || 0} delivered`}
+            variant="default"
+            onClick={() => router.push("/dashboard/orders?status=delivered")}
           />
         </div>
 
-        {/* Tables Section - Equal height */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
-          {/* Recent Orders Table */}
-          <ModernTable
+        {/* Analytics Row - Real data from Supabase */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Daily Order Activity (Last 7 Days) */}
+          <ChartCard
+            title="Daily Order Activity"
+            icon={<TrendingUp className="h-5 w-5" />}
+            className="lg:col-span-2"
+          >
+            <DemandFlowChart data={dailyActivity} />
+          </ChartCard>
+
+          {/* Top Kalamkari Categories - From real sales data */}
+          <ChartCard
+            title="Top Kalamkari Categories"
+            icon={<BarChart3 className="h-5 w-5" />}
+          >
+            {categories.length > 0 ? (
+              <CategoryBarChart data={categories} />
+            ) : (
+              <div className="flex items-center justify-center h-full text-sm text-gray-400">
+                No category sales data yet
+              </div>
+            )}
+          </ChartCard>
+        </div>
+
+        {/* Tables Section - Already using real data */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 pb-8">
+          <DataTable
             title="Recent Orders"
-            icon={<BarChart3 className="h-5 w-5 text-white" />}
-            columns={[
-              {
-                key: "id",
-                label: "Ref ID",
-                sortable: true,
-                render: (order: OrderPreview) => (
-                  <span className="bg-slate-100 px-2.5 py-1 rounded-lg text-xs font-bold text-slate-900">
-                    #{order.id}
-                  </span>
-                ),
-              },
-              {
-                key: "customer_name",
-                label: "Customer",
-                sortable: true,
-                render: (order: OrderPreview) => (
-                  <span className="font-semibold text-slate-700">{order.customer_name}</span>
-                ),
-              },
-              {
-                key: "total_amount",
-                label: "Amount",
-                sortable: true,
-                align: "right",
-                render: (order: OrderPreview) => (
-                  <span className="font-black text-slate-900">
-                    {formatCurrency(order.total_amount)}
-                  </span>
-                ),
-              },
-              {
-                key: "status",
-                label: "Status",
-                render: (order: OrderPreview) => (
-                  <StatusBadge status={getOrderStatus(order.status)} label={formatStatus(order.status)} />
-                ),
-              },
-            ]}
+            icon={<ShoppingBag className="h-5 w-5" />}
+            columns={orderColumns}
             data={recentOrders}
-            onRowClick={(order) => router.push(`/dashboard/orders/${order.id}`)}
-            actions={
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push("/dashboard/orders")}
-                className="h-9 hover:bg-slate-50 border-slate-200 rounded-xl"
-              >
-                View All
-              </Button>
+            onRowClick={(order) =>
+              router.push(`/dashboard/orders/${order.id}`)
             }
             emptyState={{
-              icon: <ShoppingBag className="h-12 w-12 text-slate-200" />,
-              message: "No recent orders to show",
+              icon: <ShoppingBag className="h-12 w-12" />,
+              message: "No recent orders",
             }}
           />
 
-          {/* Top Products Table */}
-          <ModernTable
+          <DataTable
             title="Top Products"
-            icon={<TrendingUp className="h-5 w-5 text-white" />}
-            columns={[
-              {
-                key: "name",
-                label: "Product",
-                sortable: true,
-                render: (product: TopProduct) => (
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                      <img
-                        src={product.image || "/placeholder.svg"}
-                        alt={product.name}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <span className="font-semibold text-slate-900 text-sm leading-tight">{product.name}</span>
-                  </div>
-                ),
-              },
-              {
-                key: "total_sold",
-                label: "Sold",
-                sortable: true,
-                align: "right",
-                render: (product: TopProduct) => (
-                  <span className="font-bold text-slate-700">{product.total_sold}</span>
-                ),
-              },
-              {
-                key: "revenue",
-                label: "Revenue",
-                sortable: true,
-                align: "right",
-                render: (product: TopProduct) => (
-                  <span className="font-black text-emerald-600">
-                    {formatCurrency(product.revenue)}
-                  </span>
-                ),
-              },
-            ]}
+            icon={<Package className="h-5 w-5" />}
+            columns={productColumns}
             data={topProducts}
-            onRowClick={(product) => router.push(`/dashboard/products/${product.id}`)}
-            actions={
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push("/dashboard/products")}
-                className="h-9 hover:bg-slate-50 border-slate-200 rounded-xl"
-              >
-                View All
-              </Button>
+            onRowClick={(product) =>
+              router.push(`/dashboard/products/${product.id}`)
             }
             emptyState={{
-              icon: <Package className="h-12 w-12 text-slate-200" />,
-              message: "No product data available",
+              icon: <Package className="h-12 w-12" />,
+              message: "No product data",
             }}
           />
         </div>
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}

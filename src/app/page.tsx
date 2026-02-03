@@ -1,12 +1,12 @@
 import { Metadata } from "next";
-import HomePage from "@/storefront/components/home/HomePage";
+import HomePage from "@/features/home/HomePage";
 
 export const metadata: Metadata = {
-  title: "Shri Kailash Kalamkari - Authentic Handcrafted Kalamkari Sarees",
-  description: "Discover authentic Kalamkari sarees and fabrics, handcrafted with traditional techniques. Premium quality traditional Indian textiles.",
-  keywords: ["kalamkari sarees", "handcrafted sarees", "traditional indian fabric", "kalamkari art"],
+  title: "Srikalahasti Kalamkari - Authentic Handcrafted Kalamkari Sarees",
+  description: "Discover authentic Srikalahasti Kalamkari sarees and fabrics, handcrafted with traditional techniques. Premium quality traditional Indian textiles.",
+  keywords: ["srikalahasti kalamkari sarees", "handcrafted sarees", "traditional indian fabric", "kalamkari art"],
   openGraph: {
-    title: "Shri Kailash Kalamkari",
+    title: "Srikalahasti Kalamkari",
     description: "Authentic Handcrafted Kalamkari Sarees",
     type: "website",
   },

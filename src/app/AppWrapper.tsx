@@ -1,9 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Header from "@/storefront/components/layout/Header";
-import Footer from "@/storefront/components/layout/Footer";
-import FloatingAdminButton from "@/storefront/components/layout/FloatingAdminButton"; // Re-importing the button
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import FloatingAdminButton from "@/components/layout/FloatingAdminButton"; // Re-importing the button
 
 export default function AppWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

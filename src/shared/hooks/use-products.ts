@@ -4,12 +4,15 @@
  */
 
 import { useQuery } from "@tanstack/react-query";
-import { productsService } from "@/backend/products";
+import { productsService } from "@/services/products";
 
-export function useProducts() {
+import { ProductFilters } from "@/services/products";
+
+export function useProducts(filters?: ProductFilters) {
   return useQuery({
-    queryKey: ["products"],
-    queryFn: () => productsService.getAll(),
+    queryKey: ["products", filters],
+    queryFn: () => productsService.getPaginated(filters || {}),
+    placeholderData: (previousData) => previousData, // Keep previous data while fetching new page
   });
 }
 

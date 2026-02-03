@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/backend/supabase/client";
+import { supabase, supabaseAdmin } from "@/lib/supabase/client";
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 import { Badge } from "@/shared/ui/badge";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/app/dashboard/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
   Dialog,
@@ -21,7 +21,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/ui/dialog";
+} from "@/app/dashboard/ui/dialog";
 import {
   RefreshCw,
   MapPin,
@@ -42,32 +42,23 @@ import {
   Eye,
   X
 } from "lucide-react";
-import { useToast } from "@/shared/ui/use-toast";
+import { toast } from "sonner";
 import { Separator } from "@/shared/ui/separator";
 import PackingMode from "@/app/dashboard/components/PackingMode";
 
-import { shipOrder, getOrderStatistics, deliverOrder, updateOrderStatus, cancelOrder } from "@/backend/orders";
-import { Label } from "@/shared/ui/label";
-import { Input } from "@/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { shipOrder, getOrderStatistics, deliverOrder, updateOrderStatus, cancelOrder } from "@/services/orders";
+import { Label } from "@/app/dashboard/ui/label";
+import { Input } from "@/app/dashboard/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/dashboard/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
-import { Textarea } from "@/shared/ui/textarea";
-
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image?: string;
-  category?: string;
-}
+import { Textarea } from "@/app/dashboard/ui/textarea";
 
 interface Order {
-  id: number;
+  id: string;
   created_at: string;
-  customer_name: string;
-  customer_phone: string;
-  customer_email?: string;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_email: string | null;
   address_line1?: string;
   address_line2?: string;
   city?: string;
@@ -76,9 +67,19 @@ interface Order {
   landmark?: string;
   customer_address?: string;
   total_amount: number;
-  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "delivered" | "cancelled";
-  items: OrderItem[];
-  razorpay_payment_id: string;
+  status: string;
+  shipping_address?: any;
+  order_items?: {
+    id: string;
+    quantity: number;
+    price_at_purchase: number;
+    products: {
+      id: string;
+      name: string;
+      images: string[] | null;
+    } | null;
+  }[];
+  razorpay_payment_id?: string;
   shipping_company?: string;
   tracking_id?: string;
   packed_at?: string;
@@ -90,7 +91,6 @@ const Orders = () => {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
 
   // Filter and search state
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -118,10 +118,8 @@ const Orders = () => {
 
     // Validation for non-manual shipping
     if (shippingCompany !== "Manual" && shippingCompany !== "InStore" && !trackingId) {
-      toast({
-        title: "Tracking ID Required",
-        description: "Please enter a tracking ID for courier shipments.",
-        variant: "destructive",
+      toast.error("Tracking ID Required", {
+        description: "Please enter a tracking ID for courier shipments."
       });
       return;
     }
@@ -141,15 +139,10 @@ const Orders = () => {
     setIsShipping(false);
 
     if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update shipping status",
-        variant: "destructive",
-      });
+      toast.error("Failed to update shipping status");
     } else {
-      toast({
-        title: "Order Shipped!",
-        description: `Order #${shippingOrder.id} marked as shipped via ${shippingCompany}`,
+      toast.success("Order Shipped!", {
+        description: `Order #${shippingOrder.id.slice(-8)} marked as shipped via ${shippingCompany}`
       });
       setShippingOrder(null);
       setTrackingId("");
@@ -160,10 +153,8 @@ const Orders = () => {
 
   const handleCancelOrder = async () => {
     if (!cancelOrderData || !cancelReason.trim()) {
-      toast({
-        title: "Reason Required",
-        description: "Please enter a reason for cancellation.",
-        variant: "destructive",
+      toast.error("Reason Required", {
+        description: "Please enter a reason for cancellation."
       });
       return;
     }
@@ -173,15 +164,10 @@ const Orders = () => {
     setIsCancelling(false);
 
     if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to cancel order",
-        variant: "destructive",
-      });
+      toast.error("Failed to cancel order");
     } else {
-      toast({
-        title: "Order Cancelled",
-        description: `Order #${cancelOrderData.id} has been cancelled.`,
+      toast.success("Order Cancelled", {
+        description: `Order #${cancelOrderData.id.slice(-8)} has been cancelled.`
       });
       setCancelOrderData(null);
       setCancelReason("");
@@ -189,18 +175,13 @@ const Orders = () => {
     }
   };
 
-  const handleStatusUpdate = async (orderId: number, newStatus: string) => {
-    const success = await updateOrderStatus(orderId.toString(), newStatus as any);
+  const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+    const success = await updateOrderStatus(orderId, newStatus as any);
     if (!success) {
-      toast({
-        title: "Error",
-        description: "Failed to update status",
-        variant: "destructive",
-      });
+      toast.error("Failed to update status");
     } else {
-      toast({
-        title: "Status Updated",
-        description: `Order #${orderId} moved to ${newStatus.replace('_', ' ')}`,
+      toast.success("Status Updated", {
+        description: `Order #${orderId.slice(-8)} moved to ${newStatus.replace('_', ' ')}`
       });
       fetchOrders();
     }
@@ -209,20 +190,30 @@ const Orders = () => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from("orders")
-        .select("*")
+        .select(`
+          *,
+          order_items (
+            id,
+            quantity,
+            price_at_purchase,
+            products (
+              id,
+              name,
+              images
+            )
+          )
+        `)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      setOrders(data || []);
+      setOrders((data as any) || []);
     } catch (error: any) {
       console.error("Error fetching orders:", error);
-      toast({
-        title: "Error fetching orders",
-        description: error.message,
-        variant: "destructive",
+      toast.error("Error fetching orders", {
+        description: error.message
       });
     } finally {
       setLoading(false);
@@ -243,14 +234,14 @@ const Orders = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending": return "bg-slate-100 text-slate-700 border-slate-200";
-      case "paid": return "bg-blue-100 text-blue-800 border-blue-200";
-      case "in_packing": return "bg-orange-100 text-orange-800 border-orange-200";
+      case "pending": return "bg-slate-100 text-slate-700 border-slate-300";
+      case "paid": return "bg-slate-100 text-slate-800 border-slate-300";
+      case "in_packing": return "bg-slate-100 text-slate-800 border-slate-300";
       case "packed": return "bg-purple-100 text-purple-800 border-purple-200";
       case "shipped": return "bg-green-100 text-green-800 border-green-200";
       case "delivered": return "bg-emerald-100 text-emerald-800 border-emerald-200";
       case "cancelled": return "bg-red-100 text-red-800 border-red-200";
-      default: return "bg-slate-100 text-slate-700 border-slate-200";
+      default: return "bg-slate-100 text-slate-700 border-slate-300";
     }
   };
 
@@ -278,11 +269,18 @@ const Orders = () => {
   // Filter and search logic
   const filteredOrders = orders.filter((order) => {
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+    
+    // Extract customer info from shipping_address or fallback fields
+    const customerName = order.shipping_address?.firstName 
+      ? `${order.shipping_address.firstName} ${order.shipping_address.lastName || ''}`.trim()
+      : order.customer_name || order.customer_email || '';
+    const customerPhone = order.shipping_address?.phone || order.customer_phone || '';
+    
     const matchesSearch =
       searchQuery === "" ||
       order.id.toString().includes(searchQuery) ||
-      order.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.customer_phone.includes(searchQuery) ||
+      customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customerPhone.includes(searchQuery) ||
       order.tracking_id?.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesStatus && matchesSearch;
@@ -326,7 +324,7 @@ const Orders = () => {
       {/* Statistics Dashboard - Bento Style */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/20 flex items-center gap-4">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
               <Package className="h-6 w-6" />
             </div>
@@ -336,7 +334,7 @@ const Orders = () => {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/20 flex items-center gap-4">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center text-green-600">
               <Clock className="h-6 w-6" />
             </div>
@@ -346,17 +344,17 @@ const Orders = () => {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/30 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+            <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
               <PackageCheck className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-amber-800">Pending Action</p>
+              <p className="text-sm font-medium text-slate-800">Pending Action</p>
               <p className="text-2xl font-bold text-blue-600">{(Number(stats.paid) || 0) + (Number(stats.inPacking) || 0)}</p>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#B8860B]/20 flex items-center gap-4">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
               <CheckCircle2 className="h-6 w-6" />
             </div>
@@ -391,7 +389,7 @@ const Orders = () => {
             placeholder="Search by ID, Name, Phone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-300 focus:bg-white text-sm transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 /10 focus:border-slate-300 focus:bg-white text-sm transition-all"
           />
         </div>
       </div>
@@ -401,9 +399,9 @@ const Orders = () => {
         <Table>
           <TableHeader className="bg-slate-50/50 border-b border-slate-100">
             <TableRow className="hover:bg-transparent border-slate-100">
-              <TableHead className="w-[100px] font-semibold text-slate-700 pl-4 py-3">ID</TableHead>
+              <TableHead className="w-[100px] font-semibold text-slate-700 pl-4 py-3">Customer</TableHead>
               <TableHead className="font-semibold text-slate-700 py-3">Date</TableHead>
-              <TableHead className="font-semibold text-slate-700 py-3">Customer</TableHead>
+              <TableHead className="font-semibold text-slate-700 py-3">Contact</TableHead>
               <TableHead className="font-semibold text-slate-700 py-3">Items</TableHead>
               <TableHead className="font-semibold text-slate-700 py-3 text-right">Amount</TableHead>
               <TableHead className="font-semibold text-slate-700 py-3">Status</TableHead>
@@ -430,27 +428,43 @@ const Orders = () => {
                   className="cursor-pointer hover:bg-slate-50/80 transition-colors group border-slate-50"
                   onClick={() => router.push(`/dashboard/orders/${order.id}`)}
                 >
-                  <TableCell className="font-medium text-slate-900 pl-4 py-3">#{order.id}</TableCell>
-                  <TableCell className="text-sm text-slate-500 py-3">{formatDate(order.created_at)}</TableCell>
+                  <TableCell className="font-medium text-slate-900 pl-4 py-3">
+                    <div className="font-semibold text-sm">
+                      {order.shipping_address?.firstName 
+                        ? `${order.shipping_address.firstName} ${order.shipping_address.lastName || ''}`.trim()
+                        : order.customer_email || 'Guest'}
+                    </div>
+                    <div className="text-xs text-slate-500 font-mono">#{order.id.slice(-8)}</div>
+                  </TableCell>
+                  <TableCell className="text-sm text-slate-500 py-3">
+                    {new Date(order.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </TableCell>
                   <TableCell className="py-3">
-                    <div className="font-medium text-slate-900">{order.customer_name}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">{order.customer_phone}</div>
+                    <div className="font-medium text-slate-900">
+                      {order.shipping_address?.phone || order.customer_phone || '-'}
+                    </div>
+                    <div className="text-xs text-slate-500 mt-0.5">
+                      {order.shipping_address?.city || '-'}
+                    </div>
                   </TableCell>
                   <TableCell className="py-3">
                     <div className="flex items-center gap-2">
                       <div className="flex -space-x-2 overflow-hidden">
-                        {order.items.slice(0, 3).map((item, i) => (
-                          <div key={i} className="h-7 w-7 rounded-full ring-2 ring-white bg-slate-100 overflow-hidden border border-slate-200">
+                      {order.order_items && order.order_items.slice(0, 3).map((item, i) => (
+                          <div key={i} className="h-7 w-7 rounded-full ring-2 ring-white bg-slate-100 overflow-hidden border border-slate-300">
                             <img
                               className="h-full w-full object-cover"
-                              src={item.image || "/placeholder.svg"}
-                              alt={item.name}
+                              src={item.products?.images?.[0] || "/images/products/product-placeholder.png"}
+                              alt={item.products?.name || "Product"}
                             />
                           </div>
                         ))}
                       </div>
-                      {order.items.length > 3 && (
-                        <span className="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">+{order.items.length - 3}</span>
+                      {order.order_items && order.order_items.length > 3 && (
+                        <span className="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">+{order.order_items.length - 3}</span>
                       )}
                     </div>
                   </TableCell>
@@ -474,10 +488,10 @@ const Orders = () => {
                         <>
                           <Button
                             size="sm"
-                            className="h-8 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-                            onClick={() => handleStatusUpdate(order.id, 'in_packing')}
+                            className="h-8 bg-green-600 hover:bg-green-700 text-white shadow-sm"
+                            onClick={() => setPackingOrder(order)}
                           >
-                            Mark Processing
+                            Start Packing
                           </Button>
                           <Button
                             size="sm"
@@ -495,11 +509,11 @@ const Orders = () => {
                         <>
                           <Button
                             size="sm"
-                            className="h-8 bg-amber-600 hover:bg-amber-700 text-white shadow-sm"
+                            className="h-8 bg-slate-900 hover:bg-slate-800 text-white shadow-sm"
                             onClick={() => setPackingOrder(order)}
                           >
                             <Package className="mr-1.5 h-3.5 w-3.5" />
-                            Mark Packed
+                            Resume Packing
                           </Button>
                           <Button
                             size="sm"
@@ -540,7 +554,7 @@ const Orders = () => {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="h-8 border-slate-200 text-slate-600 hover:bg-slate-50"
+                            className="h-8 border-slate-300 text-slate-600 hover:bg-slate-50"
                             onClick={() => setShippingOrder(order)}
                           >
                             Edit Tracking
@@ -561,7 +575,7 @@ const Orders = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 border-slate-200 text-slate-600 hover:bg-slate-50"
+                          className="h-8 border-slate-300 text-slate-600 hover:bg-slate-50"
                           onClick={() => router.push(`/dashboard/orders/${order.id}`)}
                         >
                           <Eye className="mr-1.5 h-3.5 w-3.5" />
@@ -624,13 +638,13 @@ const Orders = () => {
                 )}
               </div>
             ) : (
-              <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 flex gap-3">
-                <Bike className="h-5 w-5 text-amber-600 flex-shrink-0" />
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 flex gap-3">
+                <Bike className="h-5 w-5 text-slate-600 flex-shrink-0" />
                 <div>
-                  <h4 className="font-semibold text-amber-900 text-sm">
+                  <h4 className="font-semibold text-slate-900 text-sm">
                     {shippingCompany === "Manual" ? "Local Delivery Mode" : "Store Pickup Mode"}
                   </h4>
-                  <p className="text-xs text-amber-700 mt-1">
+                  <p className="text-xs text-slate-700 mt-1">
                     No tracking ID required. The customer will be notified that their order is {shippingCompany === "Manual" ? "out for delivery" : "ready for pickup"}.
                   </p>
                 </div>
@@ -713,9 +727,8 @@ const Orders = () => {
           onComplete={() => {
             setPackingOrder(null);
             fetchOrders();
-            toast({
-              title: "Packing Complete!",
-              description: `Order #${packingOrder.id} is ready for shipping`,
+            toast.success("Packing Complete!", {
+              description: `Order #${packingOrder.id.slice(-8)} is ready for shipping`
             });
           }}
           onCancel={() => setPackingOrder(null)}

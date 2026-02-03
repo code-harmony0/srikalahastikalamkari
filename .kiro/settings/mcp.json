@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "supabase-hosted": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=vovbnbmfzehlgtkvhzzj",
+      "transport": "sse",
+      "disabled": false,
+      "autoApprove": [
+        "get_schemas",
+        "get_tables",
+        "get_table_schema",
+        "execute_postgresql",
+        "retrieve_migrations",
+        "execute_sql",
+        "list_tables",
+        "apply_migration"
+      ]
+    }
+  }
+}

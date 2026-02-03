@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import ProfilePage from "@/storefront/pages/ProfilePage";
+import ProfilePage from "@/features/pages/ProfilePage";
 
 export const metadata: Metadata = {
-  title: "My Profile | Shri Kailash Kalamkari",
+  title: "My Profile | Srikalahasti Kalamkari",
   description: "Manage your account and orders",
 };
 

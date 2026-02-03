@@ -2,7 +2,6 @@
 
 import React from "react";
 import Sidebar from "./Sidebar";
-import { Toaster } from "@/shared/ui/toaster";
 import { SidebarProvider, useSidebar } from "@/shared/contexts/SidebarContext";
 import "../styles/dashboard.css";
 import "../styles/tables.css";
@@ -27,7 +26,6 @@ function DashboardLayoutContent({ children }: DashboardLayoutProps) {
       <MainContent>
         {children}
       </MainContent>
-      <Toaster />
     </div>
   );
 }

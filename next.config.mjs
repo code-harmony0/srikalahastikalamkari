@@ -3,21 +3,37 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'static.wixstatic.com',
+        protocol: "https",
+        hostname: "static.wixstatic.com",
       },
       {
-        protocol: 'https',
-        hostname: '**.wixstatic.com',
+        protocol: "https",
+        hostname: "**.wixstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "vovbnbmfzehlgtkvhzzj.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
       },
     ],
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
   },
   reactStrictMode: true,
   swcMinify: true,
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === "production",
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

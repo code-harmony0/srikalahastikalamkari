@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react"
-import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/input"
-import { Label } from "@/shared/ui/label"
-import { Textarea } from "@/shared/ui/textarea"
+import { Button } from "@/app/dashboard/ui/button"
+import { Input } from "@/app/dashboard/ui/input"
+import { Label } from "@/app/dashboard/ui/label"
+import { Textarea } from "@/app/dashboard/ui/textarea"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/ui/dialog"
+} from "@/app/dashboard/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/dashboard/ui/select"
 import {
   Table,
   TableBody,
@@ -31,7 +38,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/ui/alert-dialog"
-import { useToast } from "@/shared/ui/use-toast"
+import { toast } from "sonner"
 import { Plus, Pencil, Trash2, Loader2, Upload, X } from "lucide-react"
 import { categories as seedCategoriesData } from "@/lib/seedData"
 import {
@@ -46,12 +53,11 @@ import {
   unlinkProductsFromCategory,
   unlinkProductsFromSubCategory,
   seedCategories,
-} from "@/backend/categories"
-import { uploadImage } from "@/backend/products"
+} from "@/services/categories"
+import { uploadImage } from "@/services/products"
 import imageCompression from "browser-image-compression"
 
 const Categories = () => {
-  const { toast } = useToast()
   const [categories, setCategories] = useState<any[]>([])
   const [subCategories, setSubCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
@@ -79,7 +85,7 @@ const Categories = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [itemToDelete, setItemToDelete] = useState<{
     type: "category" | "subcategory"
-    id: string | number
+    id: string
   } | null>(null)
 
   // Fetch data on mount
@@ -99,15 +105,10 @@ const Categories = () => {
     const result = await seedCategories(seedCategoriesData)
     setLoading(false)
     if (result.success) {
-      toast({ title: "Success", description: result.message, duration: 5000 })
+      toast.success("Success", { description: result.message })
       fetchData()
     } else {
-      toast({
-        title: "Error",
-        description: result.message,
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.error("Error", { description: result.message })
     }
   }
 
@@ -125,12 +126,7 @@ const Categories = () => {
 
   const handleSaveCategory = async () => {
     if (!categoryForm.name.trim()) {
-      toast({
-        title: "Validation Error",
-        description: "Category name is required",
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.success("Validation Error", { description: "Category name is required" })
       return
     }
 
@@ -146,31 +142,24 @@ const Categories = () => {
     setLoading(false)
 
     if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.error("Error", { description: error.message })
     } else {
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: `Category ${
           editingCategory ? "updated" : "created"
-        } successfully`,
-        duration: 5000,
+        } successfully`
       })
       setCategoryDialog(false)
       fetchData()
     }
   }
 
-  const confirmDeleteCategory = (id: string | number) => {
+  const confirmDeleteCategory = (id: string) => {
     setItemToDelete({ type: "category", id })
     setDeleteDialogOpen(true)
   }
 
-  const confirmDeleteSubCategory = (id: string | number) => {
+  const confirmDeleteSubCategory = (id: string) => {
     setItemToDelete({ type: "subcategory", id })
     setDeleteDialogOpen(true)
   }
@@ -187,7 +176,7 @@ const Categories = () => {
     setItemToDelete(null)
   }
 
-  const handleDeleteCategory = async (id: string | number) => {
+  const handleDeleteCategory = async (id: string) => {
     console.log("Deleting category:", id)
     setLoading(true)
 
@@ -197,12 +186,7 @@ const Categories = () => {
     if (unlinkError) {
       console.error("Unlink failed:", unlinkError)
       setLoading(false)
-      toast({
-        title: "Error",
-        description: "Failed to unlink products: " + unlinkError.message,
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.success("Error", { description: "Failed to unlink products: " + unlinkError.message })
       return
     }
 
@@ -222,13 +206,7 @@ const Categories = () => {
       if (subCatError) {
         console.error("Subcategory delete failed:", subCatError)
         setLoading(false)
-        toast({
-          title: "Error",
-          description:
-            "Failed to delete subcategories: " + subCatError.error.message,
-          variant: "destructive",
-          duration: 5000,
-        })
+        toast.success("Error", { description: "Failed to delete subcategories: " + subCatError.error.message })
         return
       }
     }
@@ -240,19 +218,10 @@ const Categories = () => {
 
     if (error) {
       console.error("Category delete failed:", error)
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.success("Error", { description: error.message })
     } else {
       console.log("Category deleted successfully")
-      toast({
-        title: "Success",
-        description: "Category and subcategories deleted successfully",
-        duration: 5000,
-      })
+      toast.success("Success", { description: "Category and subcategories deleted successfully" })
       fetchData()
     }
   }
@@ -317,11 +286,7 @@ const Categories = () => {
       reader.readAsDataURL(compressed)
     } catch (error) {
       console.error("Failed to process subcategory image:", error)
-      toast({
-        title: "Image error",
-        description: "Unable to process the selected image.",
-        variant: "destructive",
-      })
+      toast.success("Image error", { description: "Unable to process the selected image." })
     } finally {
       setSubCategoryImageCompressing(false)
     }
@@ -339,12 +304,7 @@ const Categories = () => {
 
   const handleSaveSubCategory = async () => {
     if (!subCategoryForm.name.trim() || !subCategoryForm.category_id) {
-      toast({
-        title: "Validation Error",
-        description: "Name and category are required",
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.success("Validation Error", { description: "Name and category are required" })
       return
     }
 
@@ -355,12 +315,7 @@ const Categories = () => {
       const { url, error } = await uploadImage(subCategoryImageFile)
       if (error || !url) {
         setLoading(false)
-        toast({
-          title: "Upload failed",
-          description: error?.message || "Unable to upload image",
-          variant: "destructive",
-          duration: 5000,
-        })
+        toast.success("Upload failed", { description: error?.message || "Unable to upload image" })
         return
       }
       imageUrl = url
@@ -379,26 +334,19 @@ const Categories = () => {
     setLoading(false)
 
     if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.error("Error", { description: error.message })
     } else {
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: `Subcategory ${
           editingSubCategory ? "updated" : "created"
-        } successfully`,
-        duration: 5000,
+        } successfully`
       })
       resetSubCategoryDialogState()
       fetchData()
     }
   }
 
-  const handleDeleteSubCategory = async (id: string | number) => {
+  const handleDeleteSubCategory = async (id: string) => {
     console.log("Deleting subcategory:", id)
     setLoading(true)
 
@@ -408,12 +356,7 @@ const Categories = () => {
     if (unlinkError) {
       console.error("Unlink failed:", unlinkError)
       setLoading(false)
-      toast({
-        title: "Error",
-        description: "Failed to unlink products: " + unlinkError.message,
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.success("Error", { description: "Failed to unlink products: " + unlinkError.message })
       return
     }
 
@@ -424,24 +367,15 @@ const Categories = () => {
 
     if (error) {
       console.error("Subcategory delete failed:", error)
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-        duration: 5000,
-      })
+      toast.success("Error", { description: error.message })
     } else {
       console.log("Subcategory deleted successfully")
-      toast({
-        title: "Success",
-        description: "Subcategory deleted successfully",
-        duration: 5000,
-      })
+      toast.success("Success", { description: "Subcategory deleted successfully" })
       fetchData()
     }
   }
 
-  const getCategoryName = (categoryId: string | number) => {
+  const getCategoryName = (categoryId: string) => {
     return categories.find((c) => String(c.id) === String(categoryId))?.name || "Unknown"
   }
 
@@ -671,7 +605,7 @@ const Categories = () => {
                   setCategoryForm({ ...categoryForm, name: e.target.value })
                 }
                 placeholder="e.g., Sarees"
-                className="mt-2 h-11 rounded-xl border-slate-200"
+                className="mt-2 h-11 rounded-xl border-slate-300 focus-visible:border-slate-900 focus-visible:ring-0 text-slate-900"
               />
             </div>
           </div>
@@ -679,14 +613,14 @@ const Categories = () => {
             <Button
               variant="outline"
               onClick={() => setCategoryDialog(false)}
-              className="rounded-xl border-slate-200"
+              className="rounded-xl border-slate-300 text-slate-900 hover:bg-slate-100"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSaveCategory}
               disabled={loading}
-              className="bg-slate-900 hover:bg-slate-800 rounded-xl"
+              className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl"
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editingCategory ? "Update" : "Create"}
@@ -729,7 +663,7 @@ const Categories = () => {
                   })
                 }
                 placeholder="e.g., Silk Sarees"
-                className="mt-2 h-11 rounded-xl border-slate-200"
+                className="mt-2 h-11 rounded-xl border-slate-300 focus-visible:border-slate-900 focus-visible:ring-0 text-slate-900"
               />
             </div>
             <div>
@@ -739,24 +673,26 @@ const Categories = () => {
               >
                 Category *
               </Label>
-              <select
-                id="subcat-category"
-                className="mt-2 flex h-11 w-full rounded-xl border border-slate-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              <Select
                 value={subCategoryForm.category_id}
-                onChange={(e) =>
+                onValueChange={(value) =>
                   setSubCategoryForm({
                     ...subCategoryForm,
-                    category_id: e.target.value,
+                    category_id: value,
                   })
                 }
               >
-                <option value="">Select a category</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="mt-2 h-11 rounded-xl border-slate-300 focus:border-slate-900 focus:ring-0 text-slate-900">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-slate-300">
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id} className="text-slate-900">
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label className="text-slate-700 font-medium">
@@ -767,7 +703,7 @@ const Categories = () => {
                 600x600px.
               </p>
               <div
-                className="mt-3 border-2 border-dashed border-slate-200 rounded-2xl p-4 text-center bg-slate-50/40 hover:border-slate-300 transition cursor-pointer relative"
+                className="mt-3 border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50/40 hover:border-slate-400 transition cursor-pointer relative"
                 onClick={handleSubCategoryImageBoxClick}
               >
                 {subCategoryImagePreview ? (
@@ -778,7 +714,7 @@ const Categories = () => {
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-slate-500 space-y-2">
-                    <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white border border-slate-300 flex items-center justify-center">
                       <Upload className="h-5 w-5" />
                     </div>
                     <div>
@@ -822,14 +758,14 @@ const Categories = () => {
             <Button
               variant="outline"
               onClick={resetSubCategoryDialogState}
-              className="rounded-xl border-slate-200"
+              className="rounded-xl border-slate-300 text-slate-900 hover:bg-slate-100"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSaveSubCategory}
               disabled={loading}
-              className="bg-slate-900 hover:bg-slate-800 rounded-xl"
+              className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl"
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editingSubCategory ? "Update" : "Create"}
@@ -852,7 +788,7 @@ const Categories = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-xl border-slate-200">
+            <AlertDialogCancel className="rounded-xl border-slate-300 text-slate-900 hover:bg-slate-100">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction

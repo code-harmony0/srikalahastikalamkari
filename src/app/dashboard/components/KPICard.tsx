@@ -22,6 +22,7 @@ interface KPICardProps {
   comparison?: string;
   borderColor?: string;
   shadowColor?: string;
+  theme?: "light" | "dark"; // Add theme prop
 }
 
 export function KPICard({
@@ -33,9 +34,13 @@ export function KPICard({
   gradient,
   onClick,
   comparison,
-  borderColor = "border-slate-200",
+  borderColor = "border-slate-300",
   shadowColor = "shadow-slate-500/30",
+  theme = "light", // Default to light theme
 }: KPICardProps) {
+  // Generate stable unique ID for this card instance
+  const cardId = React.useMemo(() => `${title.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}`, [title]);
+  
   const getTrendIcon = () => {
     if (!trend) return null;
 
@@ -64,90 +69,120 @@ export function KPICard({
 
   const cardGradient = gradient
     ? `linear-gradient(135deg, ${gradient.from} 0%, ${gradient.to} 100%)`
-    : "white";
+    : theme === "dark" 
+      ? "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)"
+      : "white";
 
-  // Get stroke color based on trend
+  // Theme-based text colors - Fixed to use black text instead of blue
+  const titleColor = theme === "dark" ? "text-slate-400" : "text-slate-600";
+  const valueColor = theme === "dark" ? "text-white" : "text-black";
+  const iconBgColor = theme === "dark" ? "bg-white/10" : "bg-white/90";
+  const iconBorderColor = theme === "dark" ? "border-white/20" : "border-slate-300/60";
+
+  // Override border and shadow for dark theme
+  const finalBorderColor = theme === "dark" ? "border-0" : borderColor;
+  const finalShadowColor = theme === "dark" ? "shadow-slate-900/50" : shadowColor;
+
+  // Get stroke color based on trend with enhanced colors
   const getStrokeColor = () => {
     if (!trend) return "#3b82f6"; // default blue
-    return trend.direction === "up" ? "#10b981" : trend.direction === "down" ? "#ef4444" : "#3b82f6";
+    switch (trend.direction) {
+      case "up":
+        return "#10b981"; // emerald-500
+      case "down":
+        return "#ef4444"; // red-500
+      default:
+        return "#6366f1"; // indigo-500
+    }
   };
+
+  // Get gradient colors for area fill
+  const getGradientColors = () => {
+    if (!trend) return { start: "#3b82f6", end: "#3b82f6" };
+    switch (trend.direction) {
+      case "up":
+        return { start: "#10b981", end: "#059669" }; // emerald gradient
+      case "down":
+        return { start: "#ef4444", end: "#dc2626" }; // red gradient
+      default:
+        return { start: "#6366f1", end: "#4f46e5" }; // indigo gradient
+    }
+  };
+
+  const gradientColors = getGradientColors();
 
   return (
     <Card
-      className={`${borderColor} border shadow-sm hover:shadow-lg ${shadowColor} hover:scale-[1.01] transition-all duration-300 cursor-pointer group relative overflow-hidden min-h-[120px] ${
+      className={`${finalBorderColor} border shadow-sm hover:shadow-lg ${finalShadowColor} hover:scale-[1.01] transition-all duration-300 cursor-pointer group relative overflow-hidden ${
         onClick ? "cursor-pointer" : ""
       }`}
       onClick={onClick}
-      style={{
-        background: gradient ? cardGradient : "white",
+      style={theme === "dark" ? {
+        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+        backgroundColor: "#0f172a",
+      } : {
+        background: cardGradient,
       }}
     >
-      <CardContent className="p-6 h-full flex flex-row items-center justify-between gap-4">
-        {/* Left Section - Content */}
-        <div className="flex flex-col min-w-0 flex-1">
-          {/* Title - Small, uppercase, subtle */}
-          <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">
-            {title}
-          </p>
-
-          {/* Value - Large, bold */}
-          <h3 className="text-2xl font-bold text-slate-900 tracking-tight leading-none mb-2">
-            {value}
-          </h3>
-
-          {/* Trend - Below value */}
+      <CardContent className="p-5">
+        {/* Top Section - Icon and Title */}
+        <div className="flex items-start justify-between mb-4">
+          <div className={`h-11 w-11 rounded-xl ${iconBgColor} backdrop-blur-sm flex items-center justify-center border ${iconBorderColor} shadow-sm group-hover:scale-105 transition-transform`}>
+            {icon}
+          </div>
           {trend && (
-            <div className={`flex items-center gap-1.5 ${getTrendColor()}`}>
+            <div className={`flex items-center gap-1 ${getTrendColor()} bg-white/50 dark:bg-black/20 px-2 py-1 rounded-lg`}>
               {getTrendIcon()}
-              <span className="text-sm font-semibold">
+              <span className="text-xs font-bold">
                 {trend.value > 0 ? "+" : ""}
                 {trend.value}%
               </span>
-              {comparison && (
-                <span className="text-xs text-slate-400 ml-1">{comparison}</span>
-              )}
             </div>
-          )}
-
-          {/* Comparison without trend */}
-          {!trend && comparison && (
-            <span className="text-xs text-slate-500 font-medium">{comparison}</span>
           )}
         </div>
 
-        {/* Right Section - Icon */}
-        <div className="flex flex-col items-center gap-3 shrink-0">
-          <div className="h-12 w-12 rounded-xl bg-white/90 backdrop-blur-sm flex items-center justify-center border border-slate-200/60 shadow-sm group-hover:scale-105 transition-transform">
-            <div className="scale-110">{icon}</div>
+        {/* Middle Section - Value and Title */}
+        <div className="mb-3">
+          <p className={`text-xs font-semibold ${titleColor} uppercase tracking-wide mb-1.5`}>
+            {title}
+          </p>
+          <h3 className={`text-3xl font-bold ${valueColor} tracking-tight leading-none`}>
+            {value}
+          </h3>
+          {comparison && (
+            <p className={`text-xs font-medium ${theme === "dark" ? "text-slate-400" : "text-slate-500"} mt-1`}>
+              {comparison}
+            </p>
+          )}
+        </div>
+
+        {/* Bottom Section - Sparkline Graph - FIXED */}
+        {sparklineData && sparklineData.length > 0 && (
+          <div className="w-full mt-2" style={{ height: '48px' }}>
+            <ResponsiveContainer width="100%" height={48}>
+              <AreaChart data={sparklineData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+                <defs>
+                  <linearGradient id={`gradient-${cardId}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={gradientColors.start} stopOpacity={0.6} />
+                    <stop offset="50%" stopColor={gradientColors.start} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={gradientColors.end} stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke={getStrokeColor()}
+                  strokeWidth={2}
+                  fill={`url(#gradient-${cardId})`}
+                  dot={false}
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                  baseValue="dataMin"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
-
-          {/* Mini Sparkline */}
-          {sparklineData && sparklineData.length > 0 && (
-            <div className="w-16 h-8">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={sparklineData}>
-                  <defs>
-                    <linearGradient id={`gradient-${title.replace(/\s+/g, '-')}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={getStrokeColor()} stopOpacity={0.4} />
-                      <stop offset="100%" stopColor={getStrokeColor()} stopOpacity={0.05} />
-                    </linearGradient>
-                  </defs>
-                  <Area
-                    type="monotone"
-                    dataKey="value"
-                    stroke={getStrokeColor()}
-                    strokeWidth={2}
-                    fill={`url(#gradient-${title.replace(/\s+/g, '-')})`}
-                    dot={false}
-                    animationDuration={1200}
-                    isAnimationActive={true}
-                    baseValue="dataMin"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -165,6 +200,9 @@ export function HeroKPICard({
 }: KPICardProps & {
   metrics?: Array<{ label: string; value: string }>;
 }) {
+  // Generate stable unique ID for hero card
+  const heroCardId = React.useMemo(() => `hero-${title.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}`, [title]);
+  
   return (
     <Card
       className="bg-slate-900 border-0 shadow-xl hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 relative overflow-hidden group cursor-pointer h-full w-full"
@@ -172,7 +210,7 @@ export function HeroKPICard({
     >
       {/* Subtle background glow */}
       <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 group-hover:bg-emerald-500/20 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 transition-all duration-500" />
-      <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/5 group-hover:bg-amber-500/10 rounded-full blur-[30px] translate-y-1/2 -translate-x-1/2 transition-all duration-500" />
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-slate-500/5 group-hover:bg-slate-500/10 rounded-full blur-[30px] translate-y-1/2 -translate-x-1/2 transition-all duration-500" />
 
       <CardContent className="p-4 relative z-10 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start gap-3">
@@ -202,29 +240,37 @@ export function HeroKPICard({
           </div>
         </div>
 
-        {/* Sparkline */}
+        {/* Enhanced Sparkline for Hero Card - FIXED */}
         {sparklineData && sparklineData.length > 0 && (
-          <div className="h-9 -mx-2 mt-2 relative group/hero-chart overflow-hidden rounded-lg">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={sparklineData}>
+          <div className="w-full mt-3" style={{ height: '48px' }}>
+            <ResponsiveContainer width="100%" height={48}>
+              <AreaChart data={sparklineData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
                 <defs>
-                  <linearGradient id="hero-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.5} />
-                    <stop offset="60%" stopColor="#10b981" stopOpacity={0.2} />
+                  <linearGradient id={`gradient-${heroCardId}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
+                    <stop offset="30%" stopColor="#10b981" stopOpacity={0.4} />
+                    <stop offset="70%" stopColor="#059669" stopOpacity={0.2} />
                     <stop offset="100%" stopColor="transparent" stopOpacity={0} />
                   </linearGradient>
+                  <filter id={`hero-glow-${heroCardId}`}>
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge> 
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
                 </defs>
                 <Area
                   type="natural"
                   dataKey="value"
                   stroke="#10b981"
-                  strokeWidth={2.5}
-                  fill="url(#hero-gradient)"
+                  strokeWidth={3}
+                  fill={`url(#gradient-${heroCardId})`}
                   dot={false}
-                  animationDuration={2500}
-                  animationEasing="ease-out"
                   isAnimationActive={true}
+                  animationDuration={2000}
                   baseValue="dataMin"
+                  filter={`url(#hero-glow-${heroCardId})`}
                 />
               </AreaChart>
             </ResponsiveContainer>

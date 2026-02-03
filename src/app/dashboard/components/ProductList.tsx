@@ -4,26 +4,32 @@
 import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useInventory } from "@/shared/contexts/InventoryContext";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
+import { Button } from "@/app/dashboard/ui/button";
+import { Input } from "@/app/dashboard/ui/input";
 import { Badge } from "@/shared/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/dashboard/ui/select";
 import { Switch } from "@/shared/ui/switch";
-import { 
-  Edit, 
-  Trash2, 
-  Plus, 
-  Search, 
-  Package, 
+import {
+  Edit,
+  Trash2,
+  Plus,
+  Search,
+  Package,
   ArrowUpDown,
   Filter,
   AlertTriangle,
   CheckCircle2,
   Eye,
   EyeOff,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
-import { useToast } from "@/shared/ui/use-toast";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -42,7 +48,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/ui/alert-dialog";
-import { supabase } from "@/backend/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
 interface FilterState {
   categories: string[];
@@ -54,25 +60,38 @@ interface FilterState {
 
 const ProductList = () => {
   const router = useRouter();
-  const { toast } = useToast();
-  const { products: contextProducts, deleteProduct, updateProduct, fetchData } = useInventory();
-  
+  ;
+  const {
+    products: contextProducts,
+    deleteProduct,
+    updateProduct,
+    fetchData,
+  } = useInventory();
+
   // Log when products update
   React.useEffect(() => {
-    console.log("🛒 ProductList received products update:", contextProducts?.length || 0);
+    console.log(
+      "🛒 ProductList received products update:",
+      contextProducts?.length || 0,
+      "products"
+    );
+    if (contextProducts && contextProducts.length > 0) {
+      console.log("📋 First product:", contextProducts[0]?.name, "ID:", contextProducts[0]?.id);
+    }
   }, [contextProducts]);
 
-  
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [productToDelete, setProductToDelete] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [togglingVisibility, setTogglingVisibility] = useState<number | null>(null);
+  const [togglingVisibility, setTogglingVisibility] = useState<number | null>(
+    null,
+  );
 
   const availableCategories = useMemo(() => {
     const cats = new Set<string>();
     if (contextProducts && Array.isArray(contextProducts)) {
-      contextProducts.forEach(p => {
+      contextProducts.forEach((p) => {
         if ((p as any).categoryName) cats.add((p as any).categoryName);
       });
     }
@@ -82,7 +101,7 @@ const ProductList = () => {
   const availableColors = useMemo(() => {
     const cols = new Set<string>();
     if (contextProducts && Array.isArray(contextProducts)) {
-      contextProducts.forEach(p => {
+      contextProducts.forEach((p) => {
         if (Array.isArray((p as any).colors)) {
           (p as any).colors.forEach((c: string) => cols.add(c));
         }
@@ -92,7 +111,8 @@ const ProductList = () => {
   }, [contextProducts]);
   const [showFilters, setShowFilters] = useState(false); // New state
 
-  const [filters, setFilters] = useState<FilterState>({ // New state
+  const [filters, setFilters] = useState<FilterState>({
+    // New state
     categories: [],
     priceRange: [0, 1000000],
     colors: [],
@@ -108,7 +128,7 @@ const ProductList = () => {
     let filtered = contextProducts.filter((product) => {
       const searchLower = searchQuery.toLowerCase();
       // Search filter
-      const matchesSearch = 
+      const matchesSearch =
         product.name?.toLowerCase().includes(searchLower) ||
         product.description?.toLowerCase().includes(searchLower) ||
         product.categoryName?.toLowerCase().includes(searchLower);
@@ -117,7 +137,8 @@ const ProductList = () => {
 
       // Category filter
       if (filters.categories.length > 0) {
-        if (!filters.categories.includes(product.categoryName || '')) return false;
+        if (!filters.categories.includes(product.categoryName || ""))
+          return false;
       }
 
       // Price filter
@@ -128,8 +149,10 @@ const ProductList = () => {
 
       // Color filter
       if (filters.colors.length > 0) {
-        if (!Array.isArray(product.colors) || 
-            !filters.colors.some(color => product.colors?.includes(color))) {
+        if (
+          !Array.isArray(product.colors) ||
+          !filters.colors.some((color) => product.colors?.includes(color))
+        ) {
           return false;
         }
       }
@@ -151,9 +174,15 @@ const ProductList = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+          return (
+            new Date(b.created_at || 0).getTime() -
+            new Date(a.created_at || 0).getTime()
+          );
         case "oldest":
-          return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
+          return (
+            new Date(a.created_at || 0).getTime() -
+            new Date(b.created_at || 0).getTime()
+          );
         case "name-asc":
           return (a.name || "").localeCompare(b.name || "");
         case "name-desc":
@@ -183,10 +212,8 @@ const ProductList = () => {
   const confirmDelete = async () => {
     if (productToDelete) {
       await deleteProduct(productToDelete.id);
-      toast({
-        title: "Product Deleted",
-        description: `${productToDelete.name} has been removed`,
-        className: "bg-red-50 border-red-200",
+      toast.success("Product Deleted", {
+        description: `${productToDelete.name} has been removed`
       });
       setIsDeleteDialogOpen(false);
       setProductToDelete(null);
@@ -194,20 +221,20 @@ const ProductList = () => {
   };
 
   const toggleCategory = (category: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       categories: prev.categories.includes(category)
-        ? prev.categories.filter(c => c !== category)
-        : [...prev.categories, category]
+        ? prev.categories.filter((c) => c !== category)
+        : [...prev.categories, category],
     }));
   };
 
   const toggleColor = (color: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       colors: prev.colors.includes(color)
-        ? prev.colors.filter(c => c !== color)
-        : [...prev.colors, color]
+        ? prev.colors.filter((c) => c !== color)
+        : [...prev.colors, color],
     }));
   };
 
@@ -227,31 +254,31 @@ const ProductList = () => {
     try {
       await updateProduct(product.id, { isVisible: isVisible }); // Use isVisible here
 
-      toast({
-        title: isVisible ? "Product Visible" : "Product Hidden",
-        description: `${product.name} is now ${isVisible ? 'visible' : 'hidden'} on the store`,
-        className: isVisible ? "bg-green-50 border-green-200" : "bg-slate-50 border-slate-200",
+      toast.success(isVisible ? "Product Visible" : "Product Hidden", {
+        description: `${product.name} is now ${isVisible ? "visible" : "hidden"} on the store`
       });
     } catch (error) {
       console.error("Error toggling visibility:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update product visibility",
-        variant: "destructive",
-      });
+      toast.error("Error", { description: "Failed to update product visibility" });
     } finally {
       setTogglingVisibility(null);
     }
   };
 
-  const lowStockCount = (contextProducts || []).filter(p => (p.quantity || 0) < 5).length;
-  const totalValue = (contextProducts || []).reduce((acc, p) => acc + ((p.price || 0) * (p.quantity || 0)), 0);
+  const lowStockCount = (contextProducts || []).filter(
+    (p) => (p.quantity || 0) < 5,
+  ).length;
+  const totalValue = (contextProducts || []).reduce(
+    (acc, p) => acc + (p.price || 0) * (p.quantity || 0),
+    0,
+  );
 
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (filters.categories.length > 0) count++;
     if (filters.colors.length > 0) count++;
-    if (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000000) count++;
+    if (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000000)
+      count++;
     if (filters.inStock) count++;
     if (filters.isVisible !== null) count++;
     return count;
@@ -262,8 +289,12 @@ const ProductList = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Products</h1>
-          <p className="text-slate-500 text-sm mt-1">Manage your inventory and variants</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+            Products
+          </h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Manage your inventory and variants
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -274,7 +305,7 @@ const ProductList = () => {
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
-          <Button 
+          <Button
             onClick={() => router.push("/dashboard/add-product")}
             className="bg-slate-900 hover:bg-slate-800 text-white shadow-md h-9 gap-2 px-4 rounded-lg transition-all"
           >
@@ -291,16 +322,22 @@ const ProductList = () => {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500">Total Products</p>
-            <h3 className="text-2xl font-bold text-slate-900">{(contextProducts || []).length}</h3>
+            <h3 className="text-2xl font-bold text-slate-900">
+              {(contextProducts || []).length}
+            </h3>
           </div>
         </div>
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+          <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
             <AlertTriangle className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Low Stock Items</p>
-            <h3 className="text-2xl font-bold text-slate-900">{lowStockCount}</h3>
+            <p className="text-sm font-medium text-slate-500">
+              Low Stock Items
+            </p>
+            <h3 className="text-2xl font-bold text-slate-900">
+              {lowStockCount}
+            </h3>
           </div>
         </div>
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
@@ -308,8 +345,12 @@ const ProductList = () => {
             <CheckCircle2 className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Inventory Value</p>
-            <h3 className="text-2xl font-bold text-slate-900">₹{totalValue.toLocaleString()}</h3>
+            <p className="text-sm font-medium text-slate-500">
+              Inventory Value
+            </p>
+            <h3 className="text-2xl font-bold text-slate-900">
+              ₹{totalValue.toLocaleString()}
+            </h3>
           </div>
         </div>
       </div>
@@ -322,12 +363,12 @@ const ProductList = () => {
             placeholder="Search products by name, category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-11 border-slate-200 focus-visible:ring-slate-900 rounded-xl"
+            className="pl-10 h-11 border-slate-300  rounded-xl"
           />
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-full sm:w-[200px] h-11 border-slate-200 rounded-xl">
+            <SelectTrigger className="w-full sm:w-[200px] h-11 border-slate-300 rounded-xl">
               <div className="flex items-center gap-2 text-slate-600">
                 <ArrowUpDown className="h-4 w-4" />
                 <SelectValue placeholder="Sort by" />
@@ -342,9 +383,9 @@ const ProductList = () => {
               <SelectItem value="price-high">Price (High to Low)</SelectItem>
             </SelectContent>
           </Select>
-          <Button 
-            variant="outline" 
-            className="relative h-11 px-4 text-base border-slate-200 rounded-xl"
+          <Button
+            variant="outline"
+            className="relative h-11 px-4 text-base border-slate-300 rounded-xl"
             onClick={() => setShowFilters(!showFilters)}
           >
             <Filter className="h-4 w-4 mr-2" />
@@ -362,7 +403,9 @@ const ProductList = () => {
       {showFilters && (
         <div className="mb-8 p-6 border border-slate-100 rounded-2xl bg-white shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-slate-900">Advanced Filters</h3>
+            <h3 className="text-xl font-bold text-slate-900">
+              Advanced Filters
+            </h3>
             <Button variant="ghost" size="sm" onClick={clearFilters}>
               Clear All
             </Button>
@@ -372,13 +415,16 @@ const ProductList = () => {
             <div>
               <h4 className="font-semibold text-slate-700 mb-3">Category</h4>
               <div className="space-y-2">
-                {availableCategories.map(category => (
-                  <label key={category} className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
+                {availableCategories.map((category) => (
+                  <label
+                    key={category}
+                    className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors"
+                  >
                     <input
                       type="checkbox"
                       checked={filters.categories.includes(category)}
                       onChange={() => toggleCategory(category)}
-                      className="rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+                      className="rounded border-slate-300 text-slate-900 "
                     />
                     <span className="text-sm">{category}</span>
                   </label>
@@ -390,13 +436,16 @@ const ProductList = () => {
             <div>
               <h4 className="font-semibold text-slate-700 mb-3">Colors</h4>
               <div className="space-y-2">
-                {availableColors.map(color => (
-                  <label key={color} className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
+                {availableColors.map((color) => (
+                  <label
+                    key={color}
+                    className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors"
+                  >
                     <input
                       type="checkbox"
                       checked={filters.colors.includes(color)}
                       onChange={() => toggleColor(color)}
-                      className="rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+                      className="rounded border-slate-300 text-slate-900 "
                     />
                     <span className="text-sm">{color}</span>
                   </label>
@@ -406,31 +455,47 @@ const ProductList = () => {
 
             {/* Price Range */}
             <div>
-              <h4 className="font-semibold text-slate-700 mb-3">Price Range (₹)</h4>
+              <h4 className="font-semibold text-slate-700 mb-3">
+                Price Range (₹)
+              </h4>
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-medium text-slate-500 mb-1 block">Min Price</label>
+                  <label className="text-xs font-medium text-slate-500 mb-1 block">
+                    Min Price
+                  </label>
                   <Input
                     type="number"
                     value={filters.priceRange[0]}
-                    onChange={(e) => setFilters(prev => ({
-                      ...prev,
-                      priceRange: [Number(e.target.value), prev.priceRange[1]]
-                    }))}
-                    className="w-full px-3 py-2 border-slate-200 rounded-xl bg-slate-50 focus-visible:ring-slate-900"
+                    onChange={(e) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        priceRange: [
+                          Number(e.target.value),
+                          prev.priceRange[1],
+                        ],
+                      }))
+                    }
+                    className="w-full px-3 py-2 border-slate-300 rounded-xl bg-slate-50 "
                     min="0"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-slate-500 mb-1 block">Max Price</label>
+                  <label className="text-xs font-medium text-slate-500 mb-1 block">
+                    Max Price
+                  </label>
                   <Input
                     type="number"
                     value={filters.priceRange[1]}
-                    onChange={(e) => setFilters(prev => ({
-                      ...prev,
-                      priceRange: [prev.priceRange[0], Number(e.target.value)]
-                    }))}
-                    className="w-full px-3 py-2 border-slate-200 rounded-xl bg-slate-50 focus-visible:ring-slate-900"
+                    onChange={(e) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        priceRange: [
+                          prev.priceRange[0],
+                          Number(e.target.value),
+                        ],
+                      }))
+                    }
+                    className="w-full px-3 py-2 border-slate-300 rounded-xl bg-slate-50 "
                     min="0"
                   />
                 </div>
@@ -440,30 +505,38 @@ const ProductList = () => {
             {/* Availability and Visibility */}
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-slate-700 mb-3">Availability</h4>
+                <h4 className="font-semibold text-slate-700 mb-3">
+                  Availability
+                </h4>
                 <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
                   <input
                     type="checkbox"
                     checked={filters.inStock}
-                    onChange={(e) => setFilters(prev => ({ 
-                      ...prev, 
-                      inStock: e.target.checked 
-                    }))}
-                    className="rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+                    onChange={(e) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        inStock: e.target.checked,
+                      }))
+                    }
+                    className="rounded border-slate-300 text-slate-900 "
                   />
                   <span className="text-sm">In Stock Only</span>
                 </label>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-700 mb-3">Visibility</h4>
+                <h4 className="font-semibold text-slate-700 mb-3">
+                  Visibility
+                </h4>
                 <div className="flex flex-col space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
                     <input
                       type="radio"
                       name="visibility"
                       checked={filters.isVisible === null}
-                      onChange={() => setFilters(prev => ({ ...prev, isVisible: null }))}
-                      className="rounded-full border-slate-300 text-slate-900 focus:ring-slate-900"
+                      onChange={() =>
+                        setFilters((prev) => ({ ...prev, isVisible: null }))
+                      }
+                      className="rounded-full border-slate-300 text-slate-900 "
                     />
                     <span className="text-sm">Show All</span>
                   </label>
@@ -472,8 +545,10 @@ const ProductList = () => {
                       type="radio"
                       name="visibility"
                       checked={filters.isVisible === true}
-                      onChange={() => setFilters(prev => ({ ...prev, isVisible: true }))}
-                      className="rounded-full border-slate-300 text-slate-900 focus:ring-slate-900"
+                      onChange={() =>
+                        setFilters((prev) => ({ ...prev, isVisible: true }))
+                      }
+                      className="rounded-full border-slate-300 text-slate-900 "
                     />
                     <span className="text-sm">Visible</span>
                   </label>
@@ -482,8 +557,10 @@ const ProductList = () => {
                       type="radio"
                       name="visibility"
                       checked={filters.isVisible === false}
-                      onChange={() => setFilters(prev => ({ ...prev, isVisible: false }))}
-                      className="rounded-full border-slate-300 text-slate-900 focus:ring-slate-900"
+                      onChange={() =>
+                        setFilters((prev) => ({ ...prev, isVisible: false }))
+                      }
+                      className="rounded-full border-slate-300 text-slate-900 "
                     />
                     <span className="text-sm">Hidden</span>
                   </label>
@@ -498,14 +575,28 @@ const ProductList = () => {
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <Table>
           <TableHeader className="bg-slate-50/80">
-            <TableRow className="hover:bg-transparent border-b border-slate-200">
-              <TableHead className="w-[80px] font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 pl-6">Image</TableHead>
-              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">Product</TableHead>
-              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">Category</TableHead>
-              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-right">Price</TableHead>
-              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-right">Stock</TableHead>
-              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">Status</TableHead>
-              <TableHead className="text-right font-semibold text-xs uppercase tracking-wider text-slate-500 pr-6 py-4">Actions</TableHead>
+            <TableRow className="hover:bg-transparent border-b border-slate-300">
+              <TableHead className="w-[80px] font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 pl-6">
+                Image
+              </TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">
+                Product
+              </TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">
+                Category
+              </TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-right">
+                Price
+              </TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-right">
+                Stock
+              </TableHead>
+              <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">
+                Status
+              </TableHead>
+              <TableHead className="text-right font-semibold text-xs uppercase tracking-wider text-slate-500 pr-6 py-4">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -514,8 +605,12 @@ const ProductList = () => {
                 <TableCell colSpan={6} className="h-64 text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400">
                     <Package className="h-12 w-12 mb-4 text-slate-200" />
-                    <p className="text-lg font-medium text-slate-900">No products found</p>
-                    <p className="text-sm">Try adjusting your search or filters</p>
+                    <p className="text-lg font-medium text-slate-900">
+                      No products found
+                    </p>
+                    <p className="text-sm">
+                      Try adjusting your search or filters
+                    </p>
                   </div>
                 </TableCell>
               </TableRow>
@@ -523,102 +618,159 @@ const ProductList = () => {
               filteredAndSortedProducts.map((product) => {
                 const isVisible = product.isVisible !== false; // Default to true if undefined
                 return (
-                <TableRow 
-                  key={product.id} 
-                  className={`group hover:bg-slate-50/50 border-slate-50 transition-colors ${!isVisible ? 'opacity-50' : ''}`}
-                >
-                  <TableCell className="pl-6 py-4" onClick={() => router.push(`/dashboard/products/${product.id}`)}>
-                    <div className="h-16 w-16 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden">
-                      <img
-                        src={product.image || product.images?.[0] || "https://placehold.co/400x400?text=No+Image"}
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)}>
-                    <div>
+                  <TableRow
+                    key={product.id}
+                    className={`group hover:bg-slate-50/50 border-slate-50 transition-colors ${!isVisible ? "opacity-50" : ""}`}
+                  >
+                    <TableCell
+                      className="pl-6 py-4"
+                      onClick={() => {
+                        console.log(
+                          "🖱️ Clicking product:",
+                          product.name,
+                          "ID:",
+                          product.id,
+                        );
+                        router.push(`/dashboard/products/${product.id}`);
+                      }}
+                    >
+                      <div className="h-16 w-16 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden">
+                        <img
+                          src={
+                            product.image ||
+                            product.images?.[0] ||
+                            "https://placehold.co/400x400?text=No+Image"
+                          }
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        router.push(`/dashboard/products/${product.id}`)
+                      }
+                    >
                       <div>
-                        <p className="font-bold text-slate-900 text-base">{product.name}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <p className="text-xs text-slate-500 line-clamp-1 max-w-[200px]">{product.description}</p>
-                          {!isVisible && (
-                            <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-300 text-[10px] px-1.5 py-0">
-                              <EyeOff className="h-3 w-3 mr-1" />
-                              Hidden
-                            </Badge>
-                          )}
+                        <div>
+                          <p className="font-bold text-slate-900 text-base">
+                            {product.name}
+                          </p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <p className="text-xs text-slate-500 line-clamp-1 max-w-[200px]">
+                              {product.description}
+                            </p>
+                            {!isVisible && (
+                              <Badge
+                                variant="outline"
+                                className="bg-slate-100 text-slate-600 border-slate-300 text-[10px] px-1.5 py-0"
+                              >
+                                <EyeOff className="h-3 w-3 mr-1" />
+                                Hidden
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)}>
-                    <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 font-medium">
-                      {product.categoryName || "Uncategorized"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)} className="text-right tabular-nums">
-                    <div className="font-bold text-slate-900">₹{product.price?.toLocaleString()}</div>
-                    {product.originalPrice && product.originalPrice > product.price && (
-                      <div className="text-xs text-slate-400 line-through">₹{product.originalPrice?.toLocaleString()}</div>
-                    )}
-                  </TableCell>
-                  <TableCell onClick={() => router.push(`/dashboard/products/${product.id}`)} className="text-right tabular-nums">
-                    <div className="flex items-center justify-end gap-2">
-                      <div className="flex flex-col items-end">
-                        <span className={`font-medium ${(product.quantity || 0) > 5 ? 'text-slate-700' : 'text-amber-700'}`}>
-                          {product.quantity || 0}
-                        </span>
-                        {product.variants && product.variants.length > 0 && (
-                          <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-tight">
-                            {product.variants.length} Var
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        router.push(`/dashboard/products/${product.id}`)
+                      }
+                    >
+                      <Badge
+                        variant="outline"
+                        className="bg-slate-50 text-slate-600 border-slate-300 font-medium"
+                      >
+                        {product.categoryName || "Uncategorized"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        router.push(`/dashboard/products/${product.id}`)
+                      }
+                      className="text-right tabular-nums"
+                    >
+                      <div className="font-bold text-slate-900">
+                        ₹{product.price?.toLocaleString()}
+                      </div>
+                      {product.originalPrice &&
+                        product.originalPrice > product.price && (
+                          <div className="text-xs text-slate-400 line-through">
+                            ₹{product.originalPrice?.toLocaleString()}
+                          </div>
+                        )}
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        router.push(`/dashboard/products/${product.id}`)
+                      }
+                      className="text-right tabular-nums"
+                    >
+                      <div className="flex items-center justify-end gap-2">
+                        <div className="flex flex-col items-end">
+                          <span
+                            className={`font-medium ${(product.quantity || 0) > 5 ? "text-slate-700" : "text-slate-700"}`}
+                          >
+                            {product.quantity || 0}
                           </span>
+                          {product.variants && product.variants.length > 0 && (
+                            <span className="text-[10px] font-semibold text-slate-900 uppercase tracking-tight">
+                              {product.variants.length} Var
+                            </span>
+                          )}
+                        </div>
+                        <div
+                          className={`h-2 w-2 rounded-full shrink-0 ${(product.quantity || 0) > 5 ? "bg-emerald-500" : "bg-slate-500"}`}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div
+                        className="flex items-center gap-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Switch
+                          checked={isVisible}
+                          onCheckedChange={(checked) =>
+                            handleVisibilityToggle(product, checked)
+                          }
+                          disabled={togglingVisibility === product.id}
+                          className="data-[state=checked]:bg-green-600"
+                        />
+                        {isVisible ? (
+                          <Eye className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <EyeOff className="h-4 w-4 text-slate-400" />
                         )}
                       </div>
-                      <div className={`h-2 w-2 rounded-full shrink-0 ${(product.quantity || 0) > 5 ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                      <Switch
-                        checked={isVisible}
-                        onCheckedChange={(checked) => handleVisibilityToggle(product, checked)}
-                        disabled={togglingVisibility === product.id}
-                        className="data-[state=checked]:bg-green-600"
-                      />
-                      {isVisible ? (
-                        <Eye className="h-4 w-4 text-green-600" />
-                      ) : (
-                        <EyeOff className="h-4 w-4 text-slate-400" />
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right pr-6">
-                    <div
-                      className="flex items-center justify-end gap-1"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
-                        onClick={() => handleEdit(product)}
-                        title="Edit product"
+                    </TableCell>
+                    <TableCell className="text-right pr-6">
+                      <div
+                        className="flex items-center justify-end gap-1"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                        onClick={() => handleDeleteClick(product)}
-                        title="Delete product"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+                          onClick={() => handleEdit(product)}
+                          title="Edit product"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                          onClick={() => handleDeleteClick(product)}
+                          title="Delete product"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 );
               })
             )}
@@ -627,16 +779,24 @@ const ProductList = () => {
       </div>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
         <AlertDialogContent className="rounded-2xl shadow-2xl border-0">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-slate-900">Delete Product?</AlertDialogTitle>
+            <AlertDialogTitle className="text-xl font-bold text-slate-900">
+              Delete Product?
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500">
-              Are you sure you want to delete "{productToDelete?.name}"? This action cannot be undone.
+              Are you sure you want to delete "{productToDelete?.name}"? This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-xl border-slate-200">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl border-slate-300">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md shadow-red-200"

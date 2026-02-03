@@ -78,7 +78,7 @@ export default function SignUpPage() {
     } else {
       toast({
         title: "Account Created!",
-        description: "Welcome to Kailash Kalamkari.",
+        description: "Welcome to Srikalahasti Kalamkari.",
       });
       router.push("/profile");
     }
@@ -119,7 +119,7 @@ export default function SignUpPage() {
             </h1>
             <p className="text-[#FDF8F2]/90 text-sm">
               {step === 'details'
-                ? 'Join the Kailash Kalamkari family'
+                ? 'Join the Srikalahasti Kalamkari family'
                 : 'Enter the code sent to your email'}
             </p>
           </div>

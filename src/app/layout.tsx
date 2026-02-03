@@ -4,6 +4,7 @@ import "./globals.css"
 import { Providers } from "@/shared/providers"
 import AppWrapper from "./AppWrapper"
 import { InventoryProvider } from "@/shared/contexts/InventoryContext"
+import { ThemeProvider } from "@/components/providers/ThemeProvider"
 
 // Srikalahasti Fonts
 const playfair = Playfair_Display({
@@ -20,11 +21,11 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Shri Kailash Kalamkari - Traditional Handcrafted Art",
+  title: "Srikalahasti Kalamkari - Traditional Handcrafted Art",
   description:
-    "Authentic Kalamkari sarees and fabrics, handcrafted with traditional techniques",
+    "Authentic Srikalahasti Kalamkari sarees and fabrics, handcrafted with traditional techniques",
   keywords: [
-    "kalamkari",
+    "srikalahasti kalamkari",
     "sarees",
     "traditional",
     "handcrafted",
@@ -48,12 +49,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
       <body>
-        <Providers>
-          <InventoryProvider>
-            <AppWrapper>{children}</AppWrapper>
-          </InventoryProvider>
-        </Providers>
+        <ThemeProvider>
+          <Providers>
+            <InventoryProvider>
+              <AppWrapper>{children}</AppWrapper>
+            </InventoryProvider>
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   )
 }
+
