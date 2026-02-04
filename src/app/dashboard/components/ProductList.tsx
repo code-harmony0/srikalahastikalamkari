@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useInventory } from "@/shared/contexts/InventoryContext";
 import { Button } from "@/app/dashboard/ui/button";
@@ -29,6 +29,7 @@ import {
   EyeOff,
   RefreshCw,
 } from "lucide-react";
+import { getCategories } from "@/services/categories";
 import { toast } from "sonner";
 import {
   Table,
@@ -69,7 +70,13 @@ const ProductList = () => {
   } = useInventory();
 
   // Log when products update
-  React.useEffect(() => {
+  useEffect(() => {
+    const loadCategories = async () => {
+      const { data } = await getCategories();
+      if (data) setAllCategories(data);
+    };
+    loadCategories();
+
     console.log(
       "🛒 ProductList received products update:",
       contextProducts?.length || 0,
@@ -109,6 +116,8 @@ const ProductList = () => {
     }
     return Array.from(cols);
   }, [contextProducts]);
+  const [allCategories, setAllCategories] = useState<any[]>([]); // New state for fetched categories
+  const [subCategoryFilter, setSubCategoryFilter] = useState("all"); // State for sub-category filter
   const [showFilters, setShowFilters] = useState(false); // New state
 
   const [filters, setFilters] = useState<FilterState>({
@@ -137,8 +146,17 @@ const ProductList = () => {
 
       // Category filter
       if (filters.categories.length > 0) {
-        if (!filters.categories.includes(product.categoryName || ""))
-          return false;
+        // Check if product's category_id matches one of the selected category IDs
+        // Note: filters.categories stores IDs now
+        if (!filters.categories.includes(product.category_id || "")) {
+           // Fallback for name matching if IDs not fully populated yet
+           if (!filters.categories.includes(product.categoryName || "")) return false;
+        }
+      }
+
+      // SubCategory filter (Independent of main categories array for now, usually managed via separate state or combined)
+      if (subCategoryFilter !== "all") {
+        if (product.sub_category_id !== subCategoryFilter) return false;
       }
 
       // Price filter
@@ -246,6 +264,7 @@ const ProductList = () => {
       inStock: false,
       isVisible: null,
     });
+    setSubCategoryFilter("all");
     setSearchQuery("");
   };
 
@@ -276,6 +295,7 @@ const ProductList = () => {
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (filters.categories.length > 0) count++;
+    if (subCategoryFilter !== "all") count++;
     if (filters.colors.length > 0) count++;
     if (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000000)
       count++;
@@ -410,25 +430,52 @@ const ProductList = () => {
               Clear All
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Categories */}
-            <div>
-              <h4 className="font-semibold text-slate-700 mb-3">Category</h4>
-              <div className="space-y-2">
-                {availableCategories.map((category) => (
-                  <label
-                    key={category}
-                    className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={filters.categories.includes(category)}
-                      onChange={() => toggleCategory(category)}
-                      className="rounded border-slate-300 text-slate-900 "
-                    />
-                    <span className="text-sm">{category}</span>
-                  </label>
-                ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Categories & Subcategories */}
+            <div className="md:col-span-2 space-y-4">
+              <h4 className="font-semibold text-slate-700 mb-3">Categories</h4>
+              <div className="grid grid-cols-2 gap-4">
+                 <div>
+                    <label className="text-xs font-medium text-slate-500 mb-1 block">Category</label>
+                    <Select
+                      value={filters.categories[0] || "all"}
+                      onValueChange={(val) => {
+                         const newCats = val === "all" ? [] : [val];
+                         setFilters(prev => ({...prev, categories: newCats}));
+                         setSubCategoryFilter("all");
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="All Categories" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        {allCategories.filter(c => !c.parent_id).map(c => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                 </div>
+                 <div>
+                    <label className="text-xs font-medium text-slate-500 mb-1 block">Sub Category</label>
+                    <Select
+                      value={subCategoryFilter}
+                      onValueChange={setSubCategoryFilter}
+                      disabled={filters.categories.length === 0}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="All Sub Categories" />
+                      </SelectTrigger>
+                       <SelectContent>
+                        <SelectItem value="all">All Sub Categories</SelectItem>
+                        {allCategories
+                          .filter(c => c.parent_id === filters.categories[0])
+                          .map(c => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                 </div>
               </div>
             </div>
 

@@ -119,10 +119,9 @@ export default function DashboardPage() {
 
   const getOrderStatus = (status: string): StatusType => {
     switch (status) {
-      case "delivered":
-        return "success";
+
       case "shipped":
-        return "info";
+        return "success";
       case "packed":
         return "warning";
       case "in_packing":
@@ -299,9 +298,9 @@ export default function DashboardPage() {
             }}
             sparklineData={sparklines?.completion}
             sparklineColor="#2563EB"
-            comparison={`${kpis?.delivered_orders || 0} of ${kpis?.total_orders || 0} delivered`}
+            comparison={`${kpis?.shipped_orders || 0} of ${kpis?.total_orders || 0} shipped`}
             variant="default"
-            onClick={() => router.push("/dashboard/orders?status=delivered")}
+            onClick={() => router.push("/dashboard/orders?status=shipped")}
           />
         </div>
 

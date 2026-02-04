@@ -43,7 +43,7 @@ export interface StageBreakdown {
   paid_to_packing?: number
   packing_to_packed?: number
   packed_to_shipped?: number
-  shipped_to_delivered?: number
+
 }
 
 export interface EngagementData {
@@ -63,7 +63,10 @@ export interface DateRange {
   end: string
 }
 
-export interface Database {
+export type Database = {
+  __InternalSupabase: {
+    PostgrestVersion: "14.1"
+  }
   public: {
     Tables: {
       // Existing tables (enhanced)
@@ -262,7 +265,7 @@ export interface Database {
         Row: {
           id: string
           user_id: string | null
-          status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'delivered' | 'cancelled'
+          status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'cancelled'
           total_amount: number
           shipping_address: Json | null
           customer_email: string | null
@@ -297,7 +300,7 @@ export interface Database {
         Insert: {
           id?: string
           user_id?: string | null
-          status?: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'delivered' | 'cancelled'
+          status?: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'cancelled'
           total_amount: number
           shipping_address?: Json | null
           customer_email?: string | null
@@ -328,7 +331,7 @@ export interface Database {
         Update: {
           id?: string
           user_id?: string | null
-          status?: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'delivered' | 'cancelled'
+          status?: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'cancelled'
           total_amount?: number
           shipping_address?: Json | null
           customer_email?: string | null
@@ -633,6 +636,41 @@ export interface Database {
           updated_at?: string
         }
       }
+      contact_inquiries: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          phone: string | null
+          subject: string | null
+          message: string
+          status: 'new' | 'solved' | 'ignored'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          phone?: string | null
+          subject?: string | null
+          message: string
+          status?: 'new' | 'solved' | 'ignored'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          phone?: string | null
+          subject?: string | null
+          message?: string
+          status?: 'new' | 'solved' | 'ignored'
+          created_at?: string
+          updated_at?: string
+        }
+      }
       courier_configurations: {
         Row: {
           id: string
@@ -670,7 +708,7 @@ export interface Database {
       order_processing_analytics: {
         Row: {
           date: string | null
-          status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'delivered' | 'cancelled' | null
+          status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'cancelled' | null
           order_count: number | null
           avg_processing_time: number | null
           avg_order_value: number | null
@@ -701,7 +739,7 @@ export interface Database {
       }
     }
     Enums: {
-      order_status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'delivered' | 'cancelled'
+      order_status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'cancelled'
     }
   }
 }
@@ -710,7 +748,7 @@ export interface Database {
 export interface EnhancedOrder {
   id: string
   user_id: string | null
-  status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'delivered' | 'cancelled'
+  status: 'pending' | 'paid' | 'in_packing' | 'packed' | 'shipped' | 'cancelled'
   total_amount: number
   shipping_address: Json | null
   customer_email: string | null
@@ -748,6 +786,20 @@ export interface EnhancedOrder {
   notification_logs?: NotificationLog[]
   self_service_requests?: SelfServiceRequest[]
   order_metrics?: OrderMetric[]
+}
+
+export type InquiryStatus = 'new' | 'solved' | 'ignored';
+
+export type ContactInquiry = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  subject?: string | null;
+  message: string;
+  status: 'new' | 'solved' | 'ignored';
+  created_at: string;
+  updated_at: string;
 }
 
 export interface OrderItem {

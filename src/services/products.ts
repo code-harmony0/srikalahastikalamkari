@@ -351,6 +351,16 @@ export const createProduct = async (
     await supabase.from("products").insert([obj]).select().single();
 
   const { variants, ...productPayload } = sanitized as any;
+
+  // Generate slug if missing
+  if (!productPayload.slug && productPayload.name) {
+    productPayload.slug = productPayload.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "") + 
+      "-" + Math.random().toString(36).substring(2, 7); // Add random suffix to ensure uniqueness
+  }
+
   const { data: product, error, status } = await attemptInsert(productPayload);
   if (error) {
     // Handle missing columns fallback logic

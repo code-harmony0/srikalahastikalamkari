@@ -57,17 +57,7 @@ describe('CourierInfoDisplay', () => {
       expect(screen.getByText('Shipped')).toBeInTheDocument()
     })
 
-    it('should display correct status badge for delivered orders', () => {
-      render(<CourierInfoDisplay {...defaultProps} status="delivered" />)
-      
-      expect(screen.getByText('Delivered')).toBeInTheDocument()
-    })
 
-    it('should display correct status badge for in-transit orders', () => {
-      render(<CourierInfoDisplay {...defaultProps} status="in_transit" />)
-      
-      expect(screen.getByText('In Transit')).toBeInTheDocument()
-    })
   })
 
   describe('Compact Display Mode', () => {

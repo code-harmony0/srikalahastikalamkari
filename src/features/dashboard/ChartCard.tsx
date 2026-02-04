@@ -51,7 +51,7 @@ export function ChartCard({
       </CardHeader>
 
       {/* Chart Content - flex-1 to take remaining space, min-h-0 to allow shrinking */}
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-hidden w-full h-full">
         {children}
       </div>
     </Card>

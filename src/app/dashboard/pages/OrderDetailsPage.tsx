@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getOrderById, deliverOrder, shipOrder, updateOrderStatus } from "@/services/orders";
+import { getOrderById, shipOrder, updateOrderStatus } from "@/services/orders";
 import OrderDetailsAdmin from "../components/OrderDetailsAdmin";
 import { toast } from "sonner";
 import { Loader2, Truck, CheckCircle2, RefreshCw, Bike } from "lucide-react";
@@ -118,22 +118,7 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
     }
   };
 
-  const handleDeliver = async () => {
-    if (window.confirm(`Mark Order #${order.id.slice(-8)} as Delivered?`)) {
-      const { error } = await deliverOrder(order.id);
-      if (!error) {
-        toast.success("Order Delivered", {
-          description: `Order #${order.id.slice(-8)} marked as delivered`
-        });
-        // Refresh order data
-        await fetchOrder();
-      } else {
-        toast.error("Failed to mark order as delivered", {
-          description: "Failed to update status",
-        });
-      }
-    }
-  };
+
 
   if (loading) {
     return (
@@ -154,7 +139,6 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
         onClose={handleClose}
         onPack={handlePack}
         onShip={handleShip}
-        onDeliver={handleDeliver}
       />
 
       {/* Packing Mode Overlay */}

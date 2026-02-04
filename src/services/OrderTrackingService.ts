@@ -31,8 +31,7 @@ export class OrderTrackingService {
     'paid': ['in_packing', 'cancelled'],
     'in_packing': ['packed', 'paid', 'cancelled'], // Can go back to paid if packing is cancelled
     'packed': ['shipped', 'in_packing'], // Can go back to in_packing if needed
-    'shipped': ['delivered'],
-    'delivered': [], // Terminal state
+    'shipped': [], // Terminal state
     'cancelled': [] // Terminal state
   }
 
@@ -76,11 +75,7 @@ export class OrderTrackingService {
       nextSteps: 'Track your package using the tracking number provided.',
       expectedTimeframe: 'Delivery within 3-7 business days'
     },
-    'delivered': {
-      display: 'Delivered',
-      description: 'Your order has been successfully delivered.',
-      nextSteps: 'Enjoy your purchase! We would love to hear your feedback.',
-    },
+
     'cancelled': {
       display: 'Cancelled',
       description: 'This order has been cancelled.',
@@ -193,10 +188,7 @@ export class OrderTrackingService {
             }
           }
           break
-        case 'delivered':
-          updateData.delivered_at = now
-          updateData.actual_delivery = now
-          break
+
         case 'cancelled':
           if (metadata?.cancellationReason) {
             updateData.cancellation_reason = metadata.cancellationReason
@@ -205,7 +197,7 @@ export class OrderTrackingService {
       }
 
       // Calculate processing time if order is completed or cancelled
-      if (newStatus === 'delivered' || newStatus === 'cancelled') {
+      if (newStatus === 'shipped' || newStatus === 'cancelled') {
         const createdAt = new Date(currentOrder.created_at)
         const completedAt = new Date(now)
         const processingTimeMinutes = Math.round(
@@ -288,8 +280,7 @@ export class OrderTrackingService {
         { status: 'paid', timestamp: order.created_at }, // Assuming paid immediately after creation for now
         { status: 'in_packing', timestamp: order.packing_started_at },
         { status: 'packed', timestamp: order.packed_at },
-        { status: 'shipped', timestamp: order.shipped_at },
-        { status: 'delivered', timestamp: order.delivered_at || order.actual_delivery }
+        { status: 'shipped', timestamp: order.shipped_at }
       ]
 
       // Handle cancelled orders - use updated_at as cancellation timestamp
@@ -370,7 +361,6 @@ export class OrderTrackingService {
         'in_packing': [],
         'packed': [],
         'shipped': [],
-        'delivered': [],
         'cancelled': []
       }
 
@@ -634,7 +624,6 @@ export class OrderTrackingService {
         'in_packing': { count: 0, avgTime: 0 },
         'packed': { count: 0, avgTime: 0 },
         'shipped': { count: 0, avgTime: 0 },
-        'delivered': { count: 0, avgTime: 0 },
         'cancelled': { count: 0, avgTime: 0 }
       }
 

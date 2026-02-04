@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useProducts } from "@/shared/hooks/use-products";
+import { useAllProducts } from "@/shared/hooks/use-products";
 import { useCartStore } from "@/shared/cart-store";
 import {
   Minus,
@@ -20,12 +20,12 @@ import { cn } from "@/shared/utils";
 import { ShippingWidget } from "./ShippingWidget";
 
 export default function CartPage() {
-  const { data: productsData } = useProducts();
-  const products = productsData?.data || [];
+  const { data: products = [] } = useAllProducts();
   const cart = useCartStore();
 
   // 🛍 Merge Cart Items with Product Data
   const cartItems = useMemo(() => {
+    if (!products.length) return [];
     return cart.items
       .map((item) => {
         const product = products.find((p: any) => p.id === item.productId);
@@ -39,6 +39,18 @@ export default function CartPage() {
         } => Boolean(item.product),
       );
   }, [cart.items, products]);
+
+  // 🧹 CLEANUP: Remove stale IDs from store that don't exist in DB
+  useEffect(() => {
+    if (products.length > 0 && cart.items.length > 0) {
+      const validIds = new Set(products.map((p: any) => p.id));
+      cart.items.forEach((item) => {
+        if (!validIds.has(item.productId)) {
+          cart.removeItem(item.productId);
+        }
+      });
+    }
+  }, [products, cart]);
 
   // 💰 Calculations
   const subtotal = useMemo(() => {

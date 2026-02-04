@@ -16,6 +16,13 @@ export function useProducts(filters?: ProductFilters) {
   });
 }
 
+export function useAllProducts() {
+  return useQuery({
+    queryKey: ["products", "all"],
+    queryFn: () => productsService.getAll(),
+  });
+}
+
 export function useFeaturedProducts() {
   return useQuery({
     queryKey: ["products", "featured"],

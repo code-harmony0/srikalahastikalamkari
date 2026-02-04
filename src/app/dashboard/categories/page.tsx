@@ -40,7 +40,6 @@ import {
 } from "@/shared/ui/alert-dialog"
 import { toast } from "sonner"
 import { Plus, Pencil, Trash2, Loader2, Upload, X } from "lucide-react"
-import { categories as seedCategoriesData } from "@/lib/seedData"
 import {
   getCategories,
   getSubCategories,
@@ -52,7 +51,6 @@ import {
   deleteSubCategory,
   unlinkProductsFromCategory,
   unlinkProductsFromSubCategory,
-  seedCategories,
 } from "@/services/categories"
 import { uploadImage } from "@/services/products"
 import imageCompression from "browser-image-compression"
@@ -60,6 +58,7 @@ import imageCompression from "browser-image-compression"
 const Categories = () => {
   const [categories, setCategories] = useState<any[]>([])
   const [subCategories, setSubCategories] = useState<any[]>([])
+  const [hoveredImage, setHoveredImage] = useState<{ url: string; name: string } | null>(null)
   const [loading, setLoading] = useState(false)
 
   // Category dialog state
@@ -100,17 +99,7 @@ const Categories = () => {
     if (subCats) setSubCategories(subCats)
   }
 
-  const handleSeedCategories = async () => {
-    setLoading(true)
-    const result = await seedCategories(seedCategoriesData)
-    setLoading(false)
-    if (result.success) {
-      toast.success("Success", { description: result.message })
-      fetchData()
-    } else {
-      toast.error("Error", { description: result.message })
-    }
-  }
+
 
   // Category CRUD
   const openCategoryDialog = (category?: any) => {
@@ -390,18 +379,9 @@ const Categories = () => {
             Manage your product categories and subcategories
           </p>
         </div>
-        <Button
-          onClick={handleSeedCategories}
-          variant="ghost"
-          disabled={loading}
-          className="h-9 hover:bg-slate-200/50 border-0 text-slate-600"
-        >
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Seed Data
-        </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 items-stretch">
+      <div className="grid gap-6 md:grid-cols-3 items-stretch">
         {/* Categories Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
           <div className="p-6 border-b border-slate-100">
@@ -487,8 +467,8 @@ const Categories = () => {
         </div>
 
         {/* SubCategories Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
-          <div className="p-6 border-b border-slate-100">
+        <div className="md:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
+          <div className="p-4 border-b border-slate-100">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">
@@ -508,10 +488,13 @@ const Categories = () => {
               </Button>
             </div>
           </div>
-          <div className="p-6 flex-1 overflow-auto">
+          <div className="p-4 flex-1 overflow-auto">
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow className="hover:bg-slate-50/50 border-slate-100">
+                  <TableHead className="w-[80px] text-slate-700 font-semibold text-xs uppercase tracking-wider">
+                    Image
+                  </TableHead>
                   <TableHead className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
                     Name
                   </TableHead>
@@ -526,18 +509,15 @@ const Categories = () => {
               <TableBody>
                 {subCategories.length === 0 ? (
                   <TableRow>
-                    <TableCell
-                      colSpan={3}
-                      className="text-center py-12 text-slate-400"
-                    >
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
-                          <Plus className="h-5 w-5 text-slate-400" />
-                        </div>
-                        <p className="text-sm">No subcategories found</p>
-                        <p className="text-xs text-slate-400">Add a subcategory to organize products</p>
-                      </div>
-                    </TableCell>
+                     <TableCell colSpan={4} className="text-center py-12 text-slate-400">
+                       <div className="flex flex-col items-center gap-3">
+                         <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
+                           <Plus className="h-5 w-5 text-slate-400" />
+                         </div>
+                         <p className="text-sm">No subcategories found</p>
+                         <p className="text-xs text-slate-400">Add a subcategory to organize products</p>
+                       </div>
+                     </TableCell>
                   </TableRow>
                 ) : (
                   subCategories.map((subCat) => (
@@ -545,6 +525,21 @@ const Categories = () => {
                       key={subCat.id}
                       className="hover:bg-slate-50/50 border-slate-100"
                     >
+                      <TableCell>
+                        <div 
+                          className="h-16 w-16 rounded-md bg-slate-100 overflow-hidden border border-slate-200 cursor-zoom-in"
+                          onMouseEnter={() => subCat.image_url && setHoveredImage({ url: subCat.image_url, name: subCat.name })}
+                          onMouseLeave={() => setHoveredImage(null)}
+                        >
+                           {subCat.image_url ? (
+                             <img src={subCat.image_url} alt={subCat.name} className="h-full w-full object-cover" />
+                           ) : (
+                             <div className="h-full w-full flex items-center justify-center bg-slate-50 text-slate-300">
+                               <Upload className="h-4 w-4" />
+                             </div>
+                           )}
+                        </div>
+                      </TableCell>
                       <TableCell className="font-medium text-slate-900">
                         {subCat.name}
                       </TableCell>
@@ -804,6 +799,26 @@ const Categories = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {/* Global Hover Overlay (Fixed Position to escape Table overflow) */}
+      {hoveredImage && (
+        <div 
+          className="fixed z-[9999] pointer-events-none animate-in fade-in zoom-in-95 duration-200"
+          style={{ 
+            left: '50%', 
+            top: '50%', 
+            transform: 'translate(-50%, -50%)' 
+          }}
+        >
+          <div className="bg-white p-2 rounded-2xl shadow-2xl border border-slate-200">
+            <div className="w-80 h-80 rounded-xl overflow-hidden relative bg-slate-100">
+              <img src={hoveredImage.url} alt={hoveredImage.name} className="w-full h-full object-cover" />
+              <div className="absolute bottom-0 inset-x-0 bg-black/60 p-3 text-white text-sm font-medium text-center backdrop-blur-md">
+                {hoveredImage.name}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

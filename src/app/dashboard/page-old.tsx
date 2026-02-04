@@ -140,7 +140,7 @@ const Dashboard = () => {
       revenue_growth: totalRevenue > 0 ? ((totalRevenue - lastMonthRevenue) / lastMonthRevenue) * 100 : 0,
       orders_growth: totalOrders > 0 ? ((totalOrders - lastMonthOrders) / lastMonthOrders) * 100 : 0,
       avg_order_value: totalOrders > 0 ? totalRevenue / totalOrders : 0,
-      completion_rate: totalOrders > 0 ? ((baseStats.delivered_orders || 0) / totalOrders) * 100 : 0,
+      completion_rate: totalOrders > 0 ? ((baseStats.shipped_orders || 0) / totalOrders) * 100 : 0,
       processing_time_avg: 2.5, // Mock average processing time in days
       monthly_revenue: totalRevenue,
       weekly_orders: Math.floor(totalOrders * 0.25), // Approximate weekly orders
@@ -261,10 +261,9 @@ const Dashboard = () => {
 
   const getOrderStatus = (status: string): "success" | "warning" | "danger" | "info" | "neutral" | "processing" | "pending" => {
     switch (status) {
-      case "delivered":
-        return "success";
+
       case "shipped":
-        return "info";
+        return "success";
       case "packed":
         return "warning";
       case "in_packing":
@@ -388,8 +387,8 @@ const Dashboard = () => {
             gradient={{ from: "#ecfdf5", to: "#d1fae5" }}
             borderColor="border-emerald-200"
             shadowColor="shadow-emerald-500/20"
-            onClick={() => router.push("/dashboard/orders?status=delivered")}
-            comparison={`${stats?.delivered_orders || 0} delivered`}
+            onClick={() => router.push("/dashboard/orders?status=shipped")}
+            comparison={`${stats?.shipped_orders || 0} shipped`}
           />
         </div>
 

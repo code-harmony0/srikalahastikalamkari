@@ -33,7 +33,7 @@ export interface OrderStats {
   pending_orders: number
   processing_orders: number
   shipped_orders: number
-  delivered_orders: number
+
   cancelled_orders: number
   recent_orders: Order[]
 }
@@ -79,7 +79,6 @@ export async function getOrderStatistics(): Promise<OrderStats> {
       pending_orders: ordersByStatus.filter((o) => o.status === "pending" || o.status === "paid").length,
       processing_orders: ordersByStatus.filter((o) => o.status === "in_packing").length,
       shipped_orders: ordersByStatus.filter((o) => o.status === "shipped").length,
-      delivered_orders: ordersByStatus.filter((o) => o.status === "delivered").length,
       cancelled_orders: ordersByStatus.filter((o) => o.status === "cancelled").length,
       recent_orders: [],
     }
@@ -114,7 +113,6 @@ export async function getOrderStatistics(): Promise<OrderStats> {
       pending_orders: 0,
       processing_orders: 0,
       shipped_orders: 0,
-      delivered_orders: 0,
       cancelled_orders: 0,
       recent_orders: [],
     }
@@ -265,21 +263,7 @@ export const shipOrder = async (
   }
 }
 
-export const deliverOrder = async (
-  orderId: string
-): Promise<{ data: any | null; error: any }> => {
-  try {
-    const updatedOrder = await OrderTrackingService.updateOrderStatus(orderId, 'delivered')
 
-    if (!updatedOrder) {
-      return { data: null, error: { message: 'Failed to update order status' } }
-    }
-
-    return { data: updatedOrder, error: null }
-  } catch (error) {
-    return { data: null, error }
-  }
-}
 
 export const createPackingSession = async (
   orderId: string,

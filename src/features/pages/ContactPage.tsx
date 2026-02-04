@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Mail, Phone, MapPin, Clock, Send, MessageSquare } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/shared/utils"
+import { supabase } from "@/lib/supabase/client"
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -12,12 +13,47 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSubmitting(false)
-    toast.success("Message Sent! 🕊️", {
-      description: "We'll get back to you within 24 hours.",
-    })
+    
+    // Get form data
+    const formData = new FormData(e.currentTarget as HTMLFormElement)
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    }
+
+    try {
+      const { error } = await (supabase as any)
+        .from("contact_inquiries")
+        .insert({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          subject: data.subject,
+          message: data.message,
+          status: 'new'
+        })
+
+      if (error) throw error
+
+      (toast as any).success("Message Sent! 🕊️", {
+        description: "We'll get back to you within 24 hours.",
+      });
+       console.log("Message Sent!");
+      
+      // Reset form
+      (e.target as HTMLFormElement).reset();
+    } catch (error: any) {
+      console.error("Error sending message:", error);
+      (toast as any).error("Failed to send message", {
+        description: error.message || "Please try again later.",
+      });
+      console.error("Failed to send message");
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const ContactCard = ({ icon: Icon, title, content, subContent }: any) => (
@@ -166,6 +202,7 @@ export default function ContactPage() {
                   <input
                     required
                     type="text"
+                    name="name"
                     className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
                     placeholder="Your Full Name"
                   />
@@ -177,6 +214,7 @@ export default function ContactPage() {
                   <input
                     required
                     type="email"
+                    name="email"
                     className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
                     placeholder="you@example.com"
                   />
@@ -191,6 +229,7 @@ export default function ContactPage() {
                   </label>
                   <input
                     type="tel"
+                    name="phone"
                     className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
                     placeholder="+91 98765 43210"
                   />
@@ -201,6 +240,7 @@ export default function ContactPage() {
                   </label>
                   <input
                     type="text"
+                    name="subject"
                     className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
                     placeholder="Order Inquiry / Custom Request"
                   />
@@ -213,6 +253,7 @@ export default function ContactPage() {
                   Message
                 </label>
                 <textarea
+                  name="message"
                   required
                   rows={5}
                   className="w-full p-3.5 rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px] resize-none min-h-[140px]"

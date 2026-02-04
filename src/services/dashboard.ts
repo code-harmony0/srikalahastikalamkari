@@ -15,7 +15,7 @@ export interface DashboardKPIs {
   pending_orders: number
   processing_orders: number
   shipped_orders: number
-  delivered_orders: number
+
   cancelled_orders: number
 }
 
@@ -77,7 +77,7 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
   const pending = orders.filter(o => o.status === "pending" || o.status === "paid").length
   const processing = orders.filter(o => o.status === "in_packing" || o.status === "packed").length
   const shipped = orders.filter(o => o.status === "shipped").length
-  const delivered = orders.filter(o => o.status === "delivered").length
+
   const cancelled = orders.filter(o => o.status === "cancelled").length
 
   // Month-over-month calculations (real data)
@@ -99,7 +99,7 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
     ? ((currentMonthOrders.length - lastMonthOrders.length) / lastMonthOrders.length) * 100
     : currentMonthOrders.length > 0 ? 100 : 0
 
-  const completionRate = totalOrders > 0 ? (delivered / totalOrders) * 100 : 0
+  const completionRate = totalOrders > 0 ? (shipped / totalOrders) * 100 : 0
 
   return {
     total_revenue: totalRevenue,
@@ -112,7 +112,6 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
     pending_orders: pending,
     processing_orders: processing,
     shipped_orders: shipped,
-    delivered_orders: delivered,
     cancelled_orders: cancelled,
   }
 }
@@ -322,8 +321,8 @@ export async function getKPISparklines(): Promise<{
 
     const dayRevenue = dayOrders.reduce((s, o) => s + (o.total_amount || 0), 0)
     const dayItems = dayOrders.reduce((s, o) => s + (itemsByOrder[o.id] || 0), 0)
-    const dayDelivered = dayOrders.filter(o => o.status === "delivered").length
-    const dayCompletion = dayOrders.length > 0 ? (dayDelivered / dayOrders.length) * 100 : 0
+    const dayShipped = dayOrders.filter(o => o.status === "shipped").length
+    const dayCompletion = dayOrders.length > 0 ? (dayShipped / dayOrders.length) * 100 : 0
 
     revenueData.push({ value: dayRevenue })
     ordersData.push({ value: dayOrders.length })

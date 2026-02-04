@@ -4,7 +4,11 @@ export const getCategories = async (): Promise<{
   data: any[] | null
   error: any
 }> => {
-  const { data, error } = await supabase.from("categories").select("*")
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .is("parent_id", null)
+    .order("name")
   return { data: data ?? null, error }
 }
 

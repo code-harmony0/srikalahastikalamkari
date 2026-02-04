@@ -1046,7 +1046,7 @@ export const Constants = {
         "in_packing",
         "packed",
         "shipped",
-        "delivered",
+
         "cancelled",
       ],
     },

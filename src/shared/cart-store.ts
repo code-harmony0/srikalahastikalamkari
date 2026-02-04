@@ -23,6 +23,10 @@ export const useCartStore = create<CartState>()(
       items: [],
 
       addItem: (product, quantity = 1) => {
+        if (!product?.id) {
+          console.error('Cannot add product to cart: Missing product.id');
+          return;
+        }
         set((state) => {
           const variantId = (product as any).selectedVariant?.id;
           const existingItem = state.items.find(

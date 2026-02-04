@@ -14,6 +14,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiShoppingBag,
+  FiMessageSquare,
 } from "react-icons/fi"
 import "./Sidebar.css"
 import { useAuth } from "@/shared/contexts/AuthContext"
@@ -69,6 +70,12 @@ const Sidebar = () => {
       to: "/dashboard/orders",
       icon: FiClipboard,
       label: "Orders",
+      roles: ["super_admin", "admin"],
+    },
+    {
+      to: "/dashboard/inquiries",
+      icon: FiMessageSquare,
+      label: "Inquiries",
       roles: ["super_admin", "admin"],
     },
   ]

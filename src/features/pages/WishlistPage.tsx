@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useProducts } from "@/shared/hooks/use-products";
+import { useAllProducts } from "@/shared/hooks/use-products";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
 import {
@@ -19,19 +19,32 @@ import { toast } from "sonner";
 import { cn, formatPrice } from "@/shared/utils";
 
 export default function WishlistPage() {
-  const { data: productsData, isLoading } = useProducts();
-  const products = productsData?.data || [];
+  const { data: products = [], isLoading } = useAllProducts();
   const wishlist = useWishlistStore();
   const cart = useCartStore();
 
   // 🛍 Merge Wishlist Items with Product Data
   const wishlistItems = useMemo(
-    () =>
-      wishlist.items
+    () => {
+      if (!products.length) return [];
+      return wishlist.items
         .map((item) => products.find((p: any) => p.id === item))
-        .filter((p): p is NonNullable<typeof p> => Boolean(p)),
+        .filter((p): p is NonNullable<typeof p> => Boolean(p));
+    },
     [wishlist.items, products],
   );
+
+  // 🧹 CLEANUP: Remove stale IDs from store that don't exist in DB
+  useEffect(() => {
+    if (!isLoading && products.length > 0 && wishlist.items.length > 0) {
+      const validIds = new Set(products.map((p: any) => p.id));
+      wishlist.items.forEach((id) => {
+        if (!validIds.has(id)) {
+          wishlist.removeItem(id);
+        }
+      });
+    }
+  }, [isLoading, products, wishlist]);
 
   // Handlers
   const handleRemove = (id: string, name: string) => {

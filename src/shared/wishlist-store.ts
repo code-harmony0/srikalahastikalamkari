@@ -21,6 +21,7 @@ export const useWishlistStore = create<WishlistState>()(
       items: [],
 
       addItem: (productId) => {
+        if (!productId) return;
         set((state) => {
           if (!state.items.includes(productId)) {
             return { items: [...state.items, productId] };
@@ -36,6 +37,7 @@ export const useWishlistStore = create<WishlistState>()(
       },
 
       toggleItem: (productId) => {
+        if (!productId) return;
         const { isInWishlist, addItem, removeItem } = get();
         if (isInWishlist(productId)) {
           removeItem(productId);

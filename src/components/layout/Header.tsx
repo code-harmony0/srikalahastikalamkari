@@ -190,8 +190,8 @@ export default function Header() {
               label="Wishlist"
               icon={Heart}
               variant="wishlist"
-              count={mounted ? wishlist.items.length : 0}
-              isActive={mounted && wishlist.items.length > 0}
+              count={mounted ? wishlist.items.filter(Boolean).length : 0}
+              isActive={mounted && wishlist.items.filter(Boolean).length > 0}
             />
 
             {/* Cart */}
@@ -200,7 +200,7 @@ export default function Header() {
               label="Cart"
               icon={ShoppingBag}
               variant="cart"
-              count={mounted ? cart.getTotalItems() : 0}
+              count={mounted ? cart.items.filter(i => !!i.productId).reduce((acc, i) => acc + i.quantity, 0) : 0}
             />
 
             {/* Profile / Login */}

@@ -45,14 +45,14 @@ export default function ProfilePage() {
       id: "ORD-2024-8901",
       date: "Oct 24, 2025",
       total: 12999,
-      status: "Delivered",
+      status: "Shipped",
       items: 2,
     },
     {
       id: "ORD-2024-8902",
       date: "Dec 12, 2025",
       total: 8499,
-      status: "In Transit",
+      status: "Shipped",
       items: 1,
     },
   ]
@@ -267,8 +267,9 @@ export default function ProfilePage() {
 
               <div className="space-y-4">
                 {recentOrders.map((order) => (
-                  <div
+                  <Link
                     key={order.id}
+                    href={`/orders/${order.id}`}
                     className="group bg-white rounded-[14px] border border-[#EAD6C3] p-5 hover:border-[#C19A5B]/60 hover:shadow-[0_4px_16px_rgba(164,85,42,0.08)] transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer"
                   >
                     <div className="flex items-center gap-4">
@@ -299,12 +300,12 @@ export default function ProfilePage() {
                       <div
                         className={cn(
                           "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 border transition-colors",
-                          order.status === "Delivered"
+                          order.status === "Shipped"
                             ? "bg-[#EBF7EF] text-[#2E7D4D] border-[#3FAF6C]/20"
                             : "bg-[#FFF4E8] text-[#B05A28] border-[#E8B35B]/30",
                         )}
                       >
-                        {order.status === "Delivered" ? (
+                        {order.status === "Shipped" ? (
                           <CheckCircle2 className="w-3 h-3" />
                         ) : (
                           <Clock className="w-3 h-3" />
@@ -314,7 +315,7 @@ export default function ProfilePage() {
 
                       <ChevronRight className="w-4 h-4 text-[#EAD6C3] group-hover:text-[#A4552A] group-hover:translate-x-1 transition-all" />
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </motion.div>

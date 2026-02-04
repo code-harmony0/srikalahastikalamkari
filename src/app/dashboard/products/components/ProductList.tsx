@@ -29,6 +29,7 @@ import {
 import { Search, Edit, Trash2, Eye, Package } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { getProducts } from "@/services/products"
+import { getCategories } from "@/services/categories"
 import { toast } from "sonner"
 
 const ProductList = () => {
@@ -38,23 +39,40 @@ const ProductList = () => {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
+  const [subCategoryFilter, setSubCategoryFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [allCategories, setAllCategories] = useState<any[]>([])
 
   useEffect(() => {
-    fetchProducts()
+    fetchData()
   }, [])
 
-  const fetchProducts = async () => {
+  const fetchData = async () => {
+    setLoading(true)
     try {
-      const { data, error } = await getProducts()
-      if (error) throw error
-      setProducts(data || [])
+      const [productsReq, categoriesReq] = await Promise.all([
+        getProducts(),
+        getCategories()
+      ])
+
+      if (productsReq.error) throw productsReq.error
+      if (categoriesReq.error) throw categoriesReq.error
+
+      setProducts(productsReq.data || [])
+      setAllCategories(categoriesReq.data || [])
     } catch (error) {
-      toast.success("Error", { description: "Failed to fetch products" })
+      toast.error("Error", { description: "Failed to load data" })
     } finally {
       setLoading(false)
     }
   }
+
+  // Derive categories for filters
+  const parentCategories = allCategories.filter(c => !c.parent_id)
+  const subCategories = allCategories.filter(c => {
+    if (categoryFilter === "all") return c.parent_id !== null // Show all subcats if no parent selected
+    return c.parent_id === categoryFilter
+  })
 
   const handleEdit = (productId: string) => {
     // Store the product in localStorage for edit mode
@@ -70,7 +88,7 @@ const ProductList = () => {
       try {
         // Add delete functionality when implemented
         toast.success("Success", { description: "Product deleted successfully" })
-        fetchProducts()
+        fetchData()
       } catch (error) {
         toast.success("Error", { description: "Failed to delete product" })
       }
@@ -81,11 +99,17 @@ const ProductList = () => {
     const matchesSearch =
       product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
+    
     const matchesCategory =
       categoryFilter === "all" || product.category_id === categoryFilter
+      
+    const matchesSubCategory =
+      subCategoryFilter === "all" || product.sub_category_id === subCategoryFilter
+
     const matchesStatus =
       statusFilter === "all" || product.status === statusFilter
-    return matchesSearch && matchesCategory && matchesStatus
+      
+    return matchesSearch && matchesCategory && matchesSubCategory && matchesStatus
   })
 
   if (loading) {
@@ -108,18 +132,46 @@ const ProductList = () => {
             className="pl-10 bg-white border-slate-300 focus-visible:ring-1 "
           />
         </div>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-[200px] bg-white border-slate-300">
-            <SelectValue placeholder="All Categories" />
+        
+        {/* Category Filter */}
+        <Select 
+          value={categoryFilter} 
+          onValueChange={(value) => {
+            setCategoryFilter(value)
+            setSubCategoryFilter("all") // Reset subcat when cat changes
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[180px] bg-white border-slate-300">
+            <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {/* Add categories dynamically when available */}
+            {parentCategories.map((cat) => (
+              <SelectItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
+
+        {/* Sub-Category Filter */}
+        <Select value={subCategoryFilter} onValueChange={setSubCategoryFilter}>
+          <SelectTrigger className="w-full sm:w-[180px] bg-white border-slate-300">
+            <SelectValue placeholder="Sub-Category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Sub-Categories</SelectItem>
+            {subCategories.map((sub) => (
+              <SelectItem key={sub.id} value={sub.id}>
+                {sub.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-[150px] bg-white border-slate-300">
-            <SelectValue placeholder="All Status" />
+            <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
@@ -203,7 +255,16 @@ const ProductList = () => {
                     {product.sku || "N/A"}
                   </TableCell>
                   <TableCell className="py-3 text-slate-600 border-r border-slate-100 last:border-r-0">
-                    {product.category_id || "Uncategorized"}
+                    <div className="flex flex-col">
+                      <span className="font-medium text-slate-900">
+                        {allCategories.find(c => c.id === product.category_id)?.name || "Uncategorized"}
+                      </span>
+                      {product.sub_category_id && (
+                        <span className="text-xs text-slate-500">
+                          {allCategories.find(c => c.id === product.sub_category_id)?.name}
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="py-3 font-medium text-slate-900 border-r border-slate-100 last:border-r-0">
                     ₹{product.price?.toFixed(2) || "0.00"}

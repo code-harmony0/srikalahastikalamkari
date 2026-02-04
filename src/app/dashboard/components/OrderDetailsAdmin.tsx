@@ -49,14 +49,14 @@ interface Order {
   landmark?: string;
   customer_address?: string;
   total_amount: number;
-  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "delivered" | "cancelled";
+  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "cancelled";
   order_items: OrderItem[];
   razorpay_payment_id?: string;
   shipping_company?: string;
   tracking_id?: string;
   packed_at?: string;
   shipped_at?: string;
-  delivered_at?: string;
+
   shipping_address?: any;
 }
 
@@ -65,15 +65,14 @@ interface OrderDetailsAdminProps {
   onClose: () => void;
   onPack: () => void;
   onShip: () => void;
-  onDeliver: () => void;
+
 }
 
 const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({ 
   order, 
   onClose, 
   onPack, 
-  onShip,
-  onDeliver
+  onShip
 }) => {
   
   const formatDate = (dateString?: string) => {
@@ -122,12 +121,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
           color: "bg-green-50 text-green-700 border-green-200",
           icon: Truck
         }
-      case "delivered":
-        return {
-          label: "Delivered",
-          color: "bg-emerald-50 text-emerald-700 border-emerald-200",
-          icon: CheckCircle2
-        }
+
       case "cancelled":
         return {
           label: "Cancelled",
@@ -211,28 +205,19 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
               )}
 
               {order.status === "shipped" && (
-                <>
-                  <Button 
-                    onClick={onDeliver}
-                    className="bg-green-600 hover:bg-green-700 text-white rounded-lg px-4 py-2 font-medium"
-                  >
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    Mark Delivered
-                  </Button>
-                  <Button 
-                    onClick={onShip}
-                    variant="outline"
-                    className="border-slate-300 text-gray-700 hover:bg-gray-50 rounded-lg px-4 py-2 font-medium"
-                  >
-                    <Truck className="h-4 w-4 mr-2" />
-                    Edit Tracking
-                  </Button>
-                </>
+                <Button 
+                  onClick={onShip}
+                  variant="outline"
+                  className="border-slate-300 text-gray-700 hover:bg-gray-50 rounded-lg px-4 py-2 font-medium"
+                >
+                  <Truck className="h-4 w-4 mr-2" />
+                  Edit Tracking
+                </Button>
               )}
 
-              {(order.status === "delivered" || order.status === "cancelled") && (
+              {(order.status === "cancelled") && (
                 <Badge className="bg-green-50 text-green-700 border-green-200 px-3 py-1.5 rounded-full font-medium">
-                  {order.status === "delivered" ? "✓ Completed" : "✗ Cancelled"}
+                  {order.status === "cancelled" ? "✗ Cancelled" : ""}
                 </Badge>
               )}
             </div>
@@ -330,7 +315,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
                   { 
                     status: 'in_packing', 
                     label: 'Packing Started', 
-                    date: order.status === 'in_packing' || order.status === 'packed' || order.status === 'shipped' || order.status === 'delivered' ? order.created_at : null, 
+                    date: order.status === 'in_packing' || order.status === 'packed' || order.status === 'shipped' ? order.created_at : null, 
                     icon: Package,
                     description: 'Order is being prepared and packed'
                   },
@@ -348,15 +333,9 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
                     icon: Truck,
                     description: order.shipping_company ? `Shipped via ${order.shipping_company}` : 'Order is on the way'
                   },
-                  { 
-                    status: 'delivered', 
-                    label: 'Delivered', 
-                    date: order.delivered_at, 
-                    icon: CheckCircle2,
-                    description: 'Order successfully delivered'
-                  }
+
                 ].map((step, index) => {
-                  const statusOrder = ['paid', 'in_packing', 'packed', 'shipped', 'delivered'];
+                  const statusOrder = ['paid', 'in_packing', 'packed', 'shipped'];
                   const currentStatusIndex = statusOrder.indexOf(order.status);
                   const stepIndex = statusOrder.indexOf(step.status);
                   
@@ -500,7 +479,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
             </div>
 
             {/* Shipping Information */}
-            {(order.status === "shipped" || order.status === "delivered") && order.shipping_company && (
+            {(order.status === "shipped") && order.shipping_company && (
               <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
                 <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                   <Truck className="h-5 w-5 text-gray-700" />

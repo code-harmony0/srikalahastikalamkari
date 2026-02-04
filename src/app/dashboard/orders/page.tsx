@@ -46,7 +46,7 @@ import { toast } from "sonner";
 import { Separator } from "@/shared/ui/separator";
 import PackingMode from "@/app/dashboard/components/PackingMode";
 
-import { shipOrder, getOrderStatistics, deliverOrder, updateOrderStatus, cancelOrder } from "@/services/orders";
+import { shipOrder, getOrderStatistics, updateOrderStatus, cancelOrder } from "@/services/orders";
 import { Label } from "@/app/dashboard/ui/label";
 import { Input } from "@/app/dashboard/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/dashboard/ui/select";
@@ -67,7 +67,7 @@ interface Order {
   landmark?: string;
   customer_address?: string;
   total_amount: number;
-  status: string;
+  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "cancelled";
   shipping_address?: any;
   order_items?: {
     id: string;
@@ -84,7 +84,7 @@ interface Order {
   tracking_id?: string;
   packed_at?: string;
   shipped_at?: string;
-  delivered_at?: string;
+
 }
 
 const Orders = () => {
@@ -239,7 +239,7 @@ const Orders = () => {
       case "in_packing": return "bg-slate-100 text-slate-800 border-slate-300";
       case "packed": return "bg-purple-100 text-purple-800 border-purple-200";
       case "shipped": return "bg-green-100 text-green-800 border-green-200";
-      case "delivered": return "bg-emerald-100 text-emerald-800 border-emerald-200";
+
       case "cancelled": return "bg-red-100 text-red-800 border-red-200";
       default: return "bg-slate-100 text-slate-700 border-slate-300";
     }
@@ -252,7 +252,7 @@ const Orders = () => {
       case "in_packing": return <Package className="h-3.5 w-3.5" />;
       case "packed": return <PackageCheck className="h-3.5 w-3.5" />;
       case "shipped": return <Truck className="h-3.5 w-3.5" />;
-      case "delivered": return <CheckCircle2 className="h-3.5 w-3.5" />;
+
       case "cancelled": return <XCircle className="h-3.5 w-3.5" />;
       default: return <Package className="h-3.5 w-3.5" />;
     }
@@ -330,7 +330,7 @@ const Orders = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Total Orders</p>
-              <p className="text-2xl font-bold text-blue-600">{Number(stats.total) || 0}</p>
+              <p className="text-2xl font-bold text-slate-900">{Number(stats.total) || 0}</p>
             </div>
           </div>
 
@@ -340,7 +340,7 @@ const Orders = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Today's Orders</p>
-              <p className="text-2xl font-bold text-blue-600">{Number(stats.todayCount) || 0}</p>
+              <p className="text-2xl font-bold text-slate-900">{Number(stats.todayCount) || 0}</p>
             </div>
           </div>
 
@@ -350,7 +350,7 @@ const Orders = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-800">Pending Action</p>
-              <p className="text-2xl font-bold text-blue-600">{(Number(stats.paid) || 0) + (Number(stats.inPacking) || 0)}</p>
+              <p className="text-2xl font-bold text-slate-900">{(Number(stats.paid) || 0) + (Number(stats.inPacking) || 0)}</p>
             </div>
           </div>
 
@@ -360,7 +360,7 @@ const Orders = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Today's Revenue</p>
-              <p className="text-2xl font-bold text-blue-600">₹{(Number(stats.todayRevenue) || 0).toLocaleString('en-IN')}</p>
+              <p className="text-2xl font-bold text-slate-900">₹{(Number(stats.todayRevenue) || 0).toLocaleString('en-IN')}</p>
             </div>
           </div>
         </div>
@@ -570,8 +570,8 @@ const Orders = () => {
                         </>
                       )}
 
-                      {/* DELIVERED / CANCELLED */}
-                      {(order.status === 'delivered' || order.status === 'cancelled') && (
+                      {/* CANCELLED */}
+                      {(order.status === 'cancelled') && (
                         <Button
                           size="sm"
                           variant="outline"

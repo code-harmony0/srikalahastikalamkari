@@ -192,7 +192,7 @@ const PackingMode: React.FC<PackingModeProps> = ({ order, onComplete, onCancel }
         console.log(`[PackingMode] Updating order #${order.id} status to in_packing...`);
         const { error: statusError } = await supabaseAdmin
           .from("orders")
-          .update({ status: "in_packing" })
+          .update({ status: "in_packing" } as any)
           .eq("id", order.id);
 
         if (statusError) {

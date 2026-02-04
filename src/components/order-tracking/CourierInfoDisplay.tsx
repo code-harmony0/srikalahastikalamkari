@@ -20,7 +20,7 @@ interface CourierInfoDisplayProps {
   trackingUrl?: string | null
   deliveryTimeframeDays?: number | null
   estimatedDeliveryDate?: Date | null
-  status?: 'shipped' | 'delivered' | 'in_transit'
+  status?: 'shipped'
   compact?: boolean
   className?: string
 }
@@ -50,16 +50,14 @@ export const CourierInfoDisplay: React.FC<CourierInfoDisplayProps> = ({
 
   const getStatusBadge = () => {
     const statusConfig = {
-      shipped: { label: 'Shipped', variant: 'default' as const, icon: Truck },
-      in_transit: { label: 'In Transit', variant: 'default' as const, icon: Truck },
-      delivered: { label: 'Delivered', variant: 'default' as const, icon: Package }
+      shipped: { label: 'Shipped', variant: 'outline' as const, className: 'bg-green-100 text-green-800 border-green-200 hover:bg-green-100', icon: Truck }
     }
 
-    const config = statusConfig[status] || statusConfig.shipped
+    const config = statusConfig.shipped
     const Icon = config.icon
 
     return (
-      <Badge variant={config.variant} className="flex items-center gap-1">
+      <Badge variant={config.variant} className={`flex items-center gap-1 ${config.className || ''}`}>
         <Icon className="h-3 w-3" />
         {config.label}
       </Badge>

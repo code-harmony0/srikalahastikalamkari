@@ -37,7 +37,7 @@ interface Order {
   id: string
   created_at: string
   total_amount: number
-  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "delivered" | "cancelled"
+  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "cancelled"
   shipping_address: any
   customer_email: string
   shipping_company?: string
@@ -121,9 +121,7 @@ export default function OrdersPage() {
       case "packed":
         return { label: "Ready", color: "text-orange-600", bgColor: "bg-orange-50", icon: PackageCheck }
       case "shipped":
-        return { label: "In Transit", color: "text-indigo-600", bgColor: "bg-indigo-50", icon: Truck }
-      case "delivered":
-        return { label: "Delivered", color: "text-green-600", bgColor: "bg-green-50", icon: CheckCircle2 }
+        return { label: "Shipped", color: "text-green-600", bgColor: "bg-green-50", icon: Truck }
       case "cancelled":
         return { label: "Cancelled", color: "text-red-600", bgColor: "bg-red-50", icon: XCircle }
       default:
@@ -137,7 +135,6 @@ export default function OrdersPage() {
       { key: "in_packing", label: "Packing", icon: Box },
       { key: "packed", label: "Ready", icon: PackageCheck },
       { key: "shipped", label: "Shipped", icon: Truck },
-      { key: "delivered", label: "Delivered", icon: CheckCircle2 },
     ]
 
     if (currentStatus === "cancelled") {
@@ -511,20 +508,7 @@ export default function OrdersPage() {
                                 })()
                               )}
                               
-                              {/* Delivered Date */}
-                              {order.status === 'delivered' && order.delivered_at && (
-                                <div className="flex items-center gap-2 text-xs font-inter pt-2 border-t border-[#EAD6C3]/30">
-                                  <CheckCircle2 className="w-3 h-3 text-green-600" />
-                                  <span className="text-[#7A6A5C]">Delivered on:</span>
-                                  <span className="font-medium text-green-600">
-                                    {new Date(order.delivered_at).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                      year: "numeric",
-                                    })}
-                                  </span>
-                                </div>
-                              )}
+
                             </div>
                           </div>
                         </div>

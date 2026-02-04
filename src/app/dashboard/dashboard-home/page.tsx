@@ -107,8 +107,7 @@ const Dashboard = () => {
         return "bg-purple-100 text-purple-800 border-purple-200"
       case "shipped":
         return "bg-green-100 text-green-800 border-green-200"
-      case "delivered":
-        return "bg-emerald-100 text-emerald-800 border-emerald-200"
+
       case "cancelled":
         return "bg-red-100 text-red-800 border-red-200"
       default:
