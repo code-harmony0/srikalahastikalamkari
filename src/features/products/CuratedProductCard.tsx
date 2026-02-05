@@ -9,6 +9,7 @@ import { useCartStore } from "@/shared/cart-store";
 import { toast } from "sonner";
 import { Product } from "@/shared/types";
 import { cn } from "@/shared/utils";
+import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes } from "@/lib/image-utils";
 
 interface CuratedProductCardProps {
   product: Product;
@@ -25,11 +26,11 @@ export const CuratedProductCard = memo(
         price: product.price || 0,
         originalPrice: product.original_price || product.originalPrice || null,
         slug: product.slug,
-        image:
-          product.image ||
-          product.mainImage ||
-          product.images?.[0] ||
-          "/images/placeholder.png",
+        // Optimized for hero/curated section (larger images)
+        image: getOptimizedImageUrl(
+          product.image || product.mainImage || product.images?.[0],
+          IMAGE_SIZES.productHero
+        ),
       }),
       [product]
     );
@@ -84,6 +85,7 @@ export const CuratedProductCard = memo(
               fill
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
+              loading="lazy"
             />
 
             {/* Badges - top-left */}

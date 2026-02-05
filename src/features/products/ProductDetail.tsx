@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -28,6 +28,9 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
+import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes } from "@/lib/image-utils"
+import { ProductReviews } from "./ProductReviews"
+import { StockAlert, SavingsBadge } from "@/shared/components/UrgencyTriggers"
 
 export default function ProductDetail() {
   const params = useParams()
@@ -86,14 +89,27 @@ export default function ProductDetail() {
     },
   ]
 
-  // Derived Data
-  const productImages = product?.images?.length 
-    ? product.images 
-    : product?.mainImage 
-      ? [product.mainImage] 
-      : ["/images/products/product-placeholder.png"]
+  // Derived Data - Optimize images for different contexts
+  const productImages = useMemo(() => {
+    const rawImages = product?.images?.length 
+      ? product.images 
+      : product?.mainImage 
+        ? [product.mainImage] 
+        : ["/images/products/product-placeholder.png"];
+    return rawImages;
+  }, [product?.images, product?.mainImage]);
   
-  const mainProductImage = productImages[selectedImageIndex]
+  // Optimized main image (high quality for detail view)
+  const mainProductImage = useMemo(() => 
+    getOptimizedImageUrl(productImages[selectedImageIndex], IMAGE_SIZES.productDetail),
+    [productImages, selectedImageIndex]
+  );
+  
+  // Optimized thumbnails (small)
+  const thumbnailImages = useMemo(() => 
+    productImages.map(img => getOptimizedImageUrl(img, IMAGE_SIZES.thumbnail)),
+    [productImages]
+  );
   
   const relatedProducts = allProducts
     .filter((p) => p.id !== product?.id && p.category_id === product?.category_id)
@@ -197,7 +213,7 @@ export default function ProductDetail() {
                         : "border-[#EAD6C3]/30 hover:border-[#C19A5B]"
                     )}
                   >
-                    <Image src={img} alt={`View ${idx + 1}`} fill className="object-cover" />
+                    <Image src={thumbnailImages[idx]} alt={`View ${idx + 1}`} fill className="object-cover" sizes="80px" />
                   </button>
                 ))}
               </div>
@@ -210,6 +226,7 @@ export default function ProductDetail() {
                 alt={product.name || product.title || "Product"}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
+                sizes={getResponsiveSizes('detail')}
                 priority
                 onClick={() => setIsImageModalOpen(true)}
               />
@@ -252,12 +269,18 @@ export default function ProductDetail() {
                 </div>
                 
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBF7EF] border border-[#3FAF6C]/20">
-                  <div className={`w-1.5 h-1.5 rounded-full ${inStock ? "bg-[#2E7D4D]" : "bg-red-500"}`} />
+                                  <div className={`w-1.5 h-1.5 rounded-full ${inStock ? "bg-[#2E7D4D]" : "bg-red-500"}`} />
                   <span className="text-[10px] font-bold uppercase tracking-wide text-[#2E7D4D]">
                     {inStock ? "In Stock" : "Out of Stock"}
                   </span>
                 </div>
+                {product.original_price && product.original_price > product.price && (
+                  <SavingsBadge originalPrice={product.original_price} salePrice={product.price} />
+                )}
               </div>
+
+              {/* Low Stock Alert */}
+              {product.stock_quantity !== undefined && <StockAlert stock={product.stock_quantity} />}
 
               {/* Trust Strip */}
               <div className="flex items-center gap-6 py-2">
@@ -452,10 +475,12 @@ export default function ProductDetail() {
                 >
                   <div className="relative aspect-[4/5] bg-white rounded-[8px] overflow-hidden border border-[#EAD6C3]/30 mb-3">
                     <Image
-                      src={relProduct.images?.[0] || relProduct.mainImage || "/images/products/product-placeholder.png"}
+                      src={getOptimizedImageUrl(relProduct.images?.[0] || relProduct.mainImage, IMAGE_SIZES.productCard)}
                       alt={relProduct.name || relProduct.title || "Product"}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes={getResponsiveSizes('grid')}
+                      loading="lazy"
                     />
                     {relProduct.isFeatured && (
                       <span className="absolute top-2 left-2 bg-white/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#A4552A] rounded-[2px] backdrop-blur-sm">
@@ -501,6 +526,11 @@ export default function ProductDetail() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Reviews Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ProductReviews productId={product.id} productName={product.title || product.name} />
+      </div>
 
     </div>
   )

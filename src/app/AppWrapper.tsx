@@ -3,7 +3,8 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import FloatingAdminButton from "@/components/layout/FloatingAdminButton"; // Re-importing the button
+import FloatingAdminButton from "@/components/layout/FloatingAdminButton";
+import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 
 export default function AppWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,7 +17,8 @@ export default function AppWrapper({ children }: { children: React.ReactNode }) 
       {!isDashboardRoute && (
         <>
           <Footer />
-          <FloatingAdminButton /> {/* Adding the button back inside the conditional block */}
+          <FloatingAdminButton />
+          <WhatsAppButton phoneNumber="919876543210" />
         </>
       )}
     </div>

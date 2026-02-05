@@ -30,52 +30,19 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
 
   return (
     <div className="w-full bg-white rounded-[14px] border border-[#EAD6C3] shadow-[0_2px_10px_rgba(0,0,0,0.03)] overflow-hidden mt-6">
-      {/* 1️⃣ Header & Free Shipping Logic */}
+      {/* 1️⃣ Header & Free Shipping Banner */}
       <div className="p-5 border-b border-[#EAD6C3]/60 bg-[#FFF8F0]/30">
         <h3 className="font-playfair font-bold text-[#3B2C23] text-lg mb-1 flex items-center gap-2">
           <Truck className="w-5 h-5 text-[#A4552A]" />
           Shipping & Delivery
         </h3>
 
-        {/* Progress Bar Container */}
-        <div className="mt-4">
-          <div className="flex justify-between items-end mb-2">
-            <p className="font-inter text-sm text-[#3B2C23]/80">
-              {isUnlocked ? (
-                <span className="font-bold text-[#2E7D4D] flex items-center gap-1">
-                  🎉 You've unlocked FREE Shipping!
-                </span>
-              ) : (
-                <>
-                  Add{" "}
-                  <span className="font-bold text-[#A4552A]">
-                    {formatPrice(remaining)}
-                  </span>{" "}
-                  for{" "}
-                  <span className="font-bold text-[#C19A5B]">
-                    Free Shipping
-                  </span>
-                </>
-              )}
-            </p>
-            <span className="font-inter text-xs font-bold text-[#C19A5B]">
-              {Math.round(progress)}%
-            </span>
-          </div>
-
-          <div className="h-2 w-full bg-[#EAD6C3]/30 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.8, ease: "circOut" }}
-              className={cn(
-                "h-full rounded-full transition-colors duration-300",
-                isUnlocked
-                  ? "bg-gradient-to-r from-[#3FAF6C] to-[#2E7D4D]"
-                  : "bg-gradient-to-r from-[#C19A5B] to-[#A4552A]",
-              )}
-            />
-          </div>
+        {/* Static Free Shipping Banner */}
+        <div className="mt-4 bg-[#EAD6C3]/20 p-3 rounded-lg border border-[#EAD6C3]/50">
+          <p className="font-inter text-sm text-[#3B2C23] flex items-center gap-2">
+            <Gift className="w-4 h-4 text-[#A4552A]" />
+            <span className="font-bold">Free Shipping</span> on all orders
+          </p>
         </div>
       </div>
 
@@ -112,8 +79,8 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
             </h4>
             <div className="mt-2 space-y-2">
               <div className="flex justify-between items-center text-xs font-inter text-[#3B2C23]/70">
-                <span>Standard (5–8 days)</span>
-                <span className="font-medium">₹199</span>
+                <span>Fast Delivery (5–7 days)</span>
+                <span className="font-medium text-green-600">Free</span>
               </div>
               <div className="flex justify-between items-center text-xs font-inter text-[#3B2C23]/70">
                 <span>Express (2–4 days)</span>

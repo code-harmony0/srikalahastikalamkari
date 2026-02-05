@@ -17,7 +17,7 @@ export default function FloatingAdminButton() {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
+        className="fixed bottom-20 right-4 md:bottom-24 md:right-6 z-50 flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
       >
         {/* Close button */}
         <motion.button

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useProducts } from "@/shared/hooks/use-products";
 import { useCartStore } from "@/shared/cart-store";
+import { useCoupon, incrementCouponUsage } from "@/shared/hooks/use-coupon";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -13,6 +14,9 @@ import {
   Lock,
   ShieldCheck,
   CreditCard,
+  Tag,
+  X,
+  Loader2,
 } from "lucide-react";
 import { formatPrice, cn } from "@/shared/utils";
 import { toast } from "sonner";
@@ -99,6 +103,10 @@ export default function CheckoutPage() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const { appliedCoupon, isLoading: couponLoading, error: couponError, applyCoupon, removeCoupon } = useCoupon();
+
   // --- Cart Calculations ---
   const cartItems = useMemo(
     () =>
@@ -115,9 +123,19 @@ export default function CheckoutPage() {
     () => cart.getTotalPrice(products),
     [cart, products],
   );
-  const shipping = subtotal > 5000 ? 0 : 200;
-  const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + shipping + tax;
+  const discount = appliedCoupon?.discountAmount || 0;
+  const shipping = 0;
+  const tax = Math.round((subtotal - discount) * 0.05);
+  const total = subtotal - discount + shipping + tax;
+
+  // Handle coupon apply
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    const success = await applyCoupon(couponCode, subtotal);
+    if (success) {
+      toast.success("Coupon applied!", { description: `You saved ₹${discount}` });
+    }
+  };
 
   // --- Handlers ---
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -492,6 +510,61 @@ const handleSubmit = async (e: React.FormEvent) => {
                   )}
                 </div>
 
+                {/* Coupon Section */}
+                <div className="pt-4 border-t border-[#EAD6C3]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Tag className="w-4 h-4 text-[#C19A5B]" />
+                    <span className="text-sm font-medium text-[#3B2C23]">Have a coupon?</span>
+                  </div>
+                  
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-700">
+                          {appliedCoupon.code}
+                        </span>
+                        <span className="text-xs text-green-600">
+                          (-{formatPrice(appliedCoupon.discountAmount)})
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeCoupon}
+                        className="p-1 hover:bg-green-100 rounded"
+                      >
+                        <X className="w-4 h-4 text-green-600" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        placeholder="Enter code"
+                        className="flex-1 px-3 py-2 text-sm border border-[#EAD6C3] rounded-lg bg-[#FFF8F0]/30 focus:outline-none focus:border-[#C19A5B] uppercase"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleApplyCoupon}
+                        disabled={couponLoading || !couponCode.trim()}
+                        className="px-4 py-2 bg-[#3B2C23] text-white text-sm font-medium rounded-lg hover:bg-[#3B2C23]/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      >
+                        {couponLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          "Apply"
+                        )}
+                      </button>
+                    </div>
+                  )}
+                  
+                  {couponError && (
+                    <p className="text-xs text-red-500 mt-2">{couponError}</p>
+                  )}
+                </div>
+
                 {/* Price Breakdown */}
                 <div className="space-y-3 pt-4 border-t border-[#EAD6C3]">
                   <div className="flex justify-between text-sm">
@@ -502,6 +575,20 @@ const handleSubmit = async (e: React.FormEvent) => {
                       {formatPrice(subtotal)}
                     </span>
                   </div>
+                  
+                  {/* Discount Row */}
+                  {discount > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-green-600 font-inter flex items-center gap-1">
+                        <Tag className="w-3 h-3" />
+                        Discount
+                      </span>
+                      <span className="font-medium text-green-600">
+                        -{formatPrice(discount)}
+                      </span>
+                    </div>
+                  )}
+                  
                   <div className="flex justify-between text-sm">
                     <span className="text-[#3B2C23]/70 font-inter">
                       Shipping

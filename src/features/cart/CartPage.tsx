@@ -18,6 +18,7 @@ import { formatPrice } from "@/shared/utils";
 import { toast } from "sonner";
 import { cn } from "@/shared/utils";
 import { ShippingWidget } from "./ShippingWidget";
+import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-utils";
 
 export default function CartPage() {
   const { data: products = [] } = useAllProducts();
@@ -60,7 +61,7 @@ export default function CartPage() {
   }, [cartItems]);
 
   // Free shipping logic for the summary
-  const shipping = subtotal > 5000 ? 0 : 200;
+  const shipping = 0;
   const tax = Math.round(subtotal * 0.05);
   const total = subtotal + shipping + tax;
 
@@ -159,9 +160,11 @@ export default function CartPage() {
           >
             <AnimatePresence mode="popLayout">
               {cartItems.map(({ productId, quantity, product }) => {
-                // API Field Mapping
-                const imageUrl =
-                  product.image || product.images?.[0] || "/placeholder.png";
+                // API Field Mapping - Optimized for cart thumbnails
+                const imageUrl = getOptimizedImageUrl(
+                  product.image || product.images?.[0],
+                  IMAGE_SIZES.cartItem
+                );
                 const productName = product.name || "Unknown Product";
                 const stock = product.stock_quantity || 0;
                 const productLink = `/products/${product.slug || product.id}`;
@@ -186,6 +189,7 @@ export default function CartPage() {
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                           sizes="96px"
+                          loading="lazy"
                         />
                       </div>
                     </Link>

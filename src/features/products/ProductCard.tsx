@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { cn } from "@/shared/utils";
 import { useCategories } from "@/shared/hooks/use-categories";
 import { Product } from "@/shared/types";
+import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes, BLUR_DATA_URL } from "@/lib/image-utils";
 
 interface ProductCardProps {
   product: Product;
@@ -75,20 +76,30 @@ export const ProductCard = memo(
 
     const isList = viewMode === "list";
 
-    // Safe Image Access
-    const [imgSrc, setImgSrc] = React.useState(productData.image || "/images/placeholder.png");
+    // Safe Image Access with Optimization
+    const optimizedImage = useMemo(() => 
+      getOptimizedImageUrl(productData.image, isList ? IMAGE_SIZES.productCardCompact : IMAGE_SIZES.productCard),
+      [productData.image, isList]
+    );
+    
+    const [imgSrc, setImgSrc] = React.useState(optimizedImage);
     
     // Update state if product changes
     React.useEffect(() => {
-        setImgSrc(productData.image || "/images/placeholder.png");
-    }, [productData.image]);
+        setImgSrc(optimizedImage);
+    }, [optimizedImage]);
 
     const mainImage = imgSrc;
-    const hoverImage =
+    const hoverImage = useMemo(() => 
       productData.images && productData.images.length > 1
-        ? productData.images[1]
-        : null;
+        ? getOptimizedImageUrl(productData.images[1], isList ? IMAGE_SIZES.productCardCompact : IMAGE_SIZES.productCard)
+        : null,
+      [productData.images, isList]
+    );
     const productUrl = `/products/${product.slug || product.id}`;
+    
+    // Responsive sizes for different layouts
+    const imageSizes = isList ? "180px" : getResponsiveSizes('grid');
 
     const cardVariants = {
       hidden: { opacity: 0, y: 15 },
@@ -129,7 +140,10 @@ export const ProductCard = memo(
                 alt={`${productData.name} alternate`}
                 fill
                 className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-                sizes={isList ? "180px" : "(max-width: 768px) 100vw, 33vw"}
+                sizes={imageSizes}
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
               />
             )}
 
@@ -142,7 +156,10 @@ export const ProductCard = memo(
                 "object-cover transition-all duration-700 ease-out group-hover:scale-105",
                 hoverImage ? "group-hover:opacity-0" : "",
               )}
-              sizes={isList ? "180px" : "(max-width: 768px) 100vw, 33vw"}
+              sizes={imageSizes}
+              loading="lazy"
+              placeholder="blur"
+              blurDataURL={BLUR_DATA_URL}
               onError={() => setImgSrc("/images/placeholder.png")}
             />
           </Link>
