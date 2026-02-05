@@ -18,6 +18,43 @@
   overflow: hidden;
 }
 
+/* Sidebar Transitions */
+.sidebar {
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Base styles for desktop are handled by standard classes,
+   Mobile specific overrides below */
+
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important; /* Always full width on mobile when open */
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02); /* Default shadow for mobile (hidden) */
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Overlay backdrop */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .sidebar-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .sidebar.collapsed {
   width: 80px;
 }

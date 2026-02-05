@@ -56,21 +56,30 @@ interface Order {
   }[]
 }
 
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
   const { toast } = useToast()
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const itemsPerPage = 10
+
   useEffect(() => {
     fetchOrders()
-  }, [])
+  }, [currentPage])
 
   const fetchOrders = async () => {
     try {
       setLoading(true)
       
-      const { data, error } = await supabase
+      const from = (currentPage - 1) * itemsPerPage
+      const to = from + itemsPerPage - 1
+
+      const { data, error, count } = await supabase
         .from("orders")
         .select(`
           id,
@@ -93,13 +102,14 @@ export default function OrdersPage() {
               images
             )
           )
-        `)
+        `, { count: 'exact' })
         .order("created_at", { ascending: false })
-        .limit(20)
+        .range(from, to)
 
       if (error) throw error
 
       setOrders(data as any || [])
+      setTotalCount(count || 0)
     } catch (error) {
       console.error("Error fetching orders:", error)
       toast({
@@ -111,6 +121,7 @@ export default function OrdersPage() {
       setLoading(false)
     }
   }
+
 
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -518,6 +529,62 @@ export default function OrdersPage() {
                 </motion.div>
               )
             })}
+          </div>
+        )}
+
+        {/* Pagination Footer */}
+        {orders.length > 0 && totalCount > 0 && (
+          <div className="mt-6 px-6 py-4 border-t border-[#EAD6C3]/20 bg-white/50 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-[#7A6A5C]">
+              Showing <span className="font-semibold text-[#A4552A]">{Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)}-{Math.min(currentPage * itemsPerPage, totalCount)}</span> of <span className="font-semibold text-[#3B2C23]">{totalCount}</span> orders
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1 || loading}
+                className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFF4E8] hover:border-[#C19A5B] transition-all"
+              >
+                Previous
+              </button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, Math.ceil(totalCount / itemsPerPage)) }, (_, i) => {
+                  const totalPages = Math.ceil(totalCount / itemsPerPage)
+                  let pNum = i + 1
+                  if (totalPages > 5) {
+                    if (currentPage <= 3) {
+                      pNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pNum = totalPages - 4 + i
+                    } else {
+                      pNum = currentPage - 2 + i
+                    }
+                  }
+                  if (pNum > totalPages) return null
+                  
+                  return (
+                    <button
+                      key={pNum}
+                      onClick={() => setCurrentPage(pNum)}
+                      disabled={loading}
+                      className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
+                        currentPage === pNum 
+                          ? 'bg-[#A4552A] text-white shadow-md shadow-[#A4552A]/20' 
+                          : 'text-[#3B2C23]/60 hover:bg-[#FFF4E8] hover:text-[#A4552A]'
+                      }`}
+                    >
+                      {pNum}
+                    </button>
+                  )
+                })}
+              </div>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / itemsPerPage), p + 1))}
+                disabled={currentPage >= Math.ceil(totalCount / itemsPerPage) || loading}
+                className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFF4E8] hover:border-[#C19A5B] transition-all"
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>

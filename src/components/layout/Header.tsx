@@ -126,7 +126,7 @@ export default function Header() {
         }}
         className="sticky top-0 z-50 w-full transition-all duration-300 border-b border-[#FFF8F0]/10 flex items-center"
       >
-        <div className="max-w-[1280px] w-full mx-auto px-6 flex items-center justify-between h-full">
+        <div className="max-w-[1280px] w-full mx-auto px-4 md:px-6 flex items-center justify-between h-full">
           {/* 1️⃣ LOGO BLOCK */}
           <Link
             href="/"
@@ -140,9 +140,9 @@ export default function Header() {
                 height={48}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-[#C19A5B] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-[#C19A5B] opacity-0 group-hover:opacity-1 transition-opacity duration-300" />
             </div>
-            <div className="flex flex-col">
+            <div className="hidden md:flex flex-col">
               <span className="font-serif font-bold text-[16px] md:text-[18px] text-[#FFF8F0] leading-none tracking-tight uppercase group-hover:text-white transition-colors">
                 SRIKALAHASTI
               </span>

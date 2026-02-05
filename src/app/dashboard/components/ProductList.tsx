@@ -28,6 +28,7 @@ import {
   Eye,
   EyeOff,
   RefreshCw,
+  Star,
 } from "lucide-react";
 import { getCategories } from "@/services/categories";
 import { toast } from "sonner";
@@ -51,6 +52,9 @@ import {
 } from "@/shared/ui/alert-dialog";
 import { supabase } from "@/lib/supabase/client";
 
+import { useProducts } from "@/shared/hooks/use-products";
+import { useQueryClient } from "@tanstack/react-query";
+
 interface FilterState {
   categories: string[];
   priceRange: [number, number];
@@ -61,12 +65,16 @@ interface FilterState {
 
 const ProductList = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   ;
   const {
     products: contextProducts,
     deleteProduct,
     updateProduct,
     fetchData,
+    loading,
   } = useInventory();
 
   // Log when products update
@@ -129,93 +137,32 @@ const ProductList = () => {
     isVisible: null, // Default to show all
   });
 
-  // Filter and sort products
-  const filteredAndSortedProducts = useMemo(() => {
-    if (!contextProducts || !Array.isArray(contextProducts)) {
-      return [];
-    }
-    let filtered = contextProducts.filter((product) => {
-      const searchLower = searchQuery.toLowerCase();
-      // Search filter
-      const matchesSearch =
-        product.name?.toLowerCase().includes(searchLower) ||
-        product.description?.toLowerCase().includes(searchLower) ||
-        product.categoryName?.toLowerCase().includes(searchLower);
+  // Server-side Pagination & Filtering
+  const queryFilters = useMemo(() => ({
+    page,
+    limit,
+    search: searchQuery || undefined,
+    category_id: filters.categories.length > 0 ? filters.categories : undefined,
+    sub_category_id: subCategoryFilter !== "all" ? subCategoryFilter : undefined,
+    price_min: filters.priceRange[0],
+    price_max: filters.priceRange[1],
+    include_out_of_stock: !filters.inStock, // Logic inversion: inStock=true means only available
+    in_stock: filters.inStock || undefined,
+    sort_by: sortBy === "newest" ? "latest" : sortBy // Map sort keys
+  }), [page, limit, searchQuery, filters, subCategoryFilter, sortBy]);
 
-      if (!matchesSearch) return false;
+  const { data: queryData, isLoading: isQueryLoading } = useProducts(queryFilters);
+  const products = queryData?.data || [];
+  const totalCount = queryData?.count || 0;
+  const totalPages = Math.ceil(totalCount / limit);
 
-      // Category filter
-      if (filters.categories.length > 0) {
-        // Check if product's category_id matches one of the selected category IDs
-        // Note: filters.categories stores IDs now
-        if (!filters.categories.includes(product.category_id || "")) {
-           // Fallback for name matching if IDs not fully populated yet
-           if (!filters.categories.includes(product.categoryName || "")) return false;
-        }
-      }
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [filters, searchQuery, sortBy, subCategoryFilter, limit]);
 
-      // SubCategory filter (Independent of main categories array for now, usually managed via separate state or combined)
-      if (subCategoryFilter !== "all") {
-        if (product.sub_category_id !== subCategoryFilter) return false;
-      }
-
-      // Price filter
-      const price = product.originalPrice ?? product.price;
-      if (price < filters.priceRange[0] || price > filters.priceRange[1]) {
-        return false;
-      }
-
-      // Color filter
-      if (filters.colors.length > 0) {
-        if (
-          !Array.isArray(product.colors) ||
-          !filters.colors.some((color) => product.colors?.includes(color))
-        ) {
-          return false;
-        }
-      }
-
-      // Stock filter
-      if (filters.inStock && !product.inStock) {
-        return false;
-      }
-
-      // Visibility filter
-      if (filters.isVisible !== null) {
-        if (product.isVisible !== filters.isVisible) return false;
-      }
-
-      return true;
-    });
-
-    // Sort
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "newest":
-          return (
-            new Date(b.created_at || 0).getTime() -
-            new Date(a.created_at || 0).getTime()
-          );
-        case "oldest":
-          return (
-            new Date(a.created_at || 0).getTime() -
-            new Date(b.created_at || 0).getTime()
-          );
-        case "name-asc":
-          return (a.name || "").localeCompare(b.name || "");
-        case "name-desc":
-          return (b.name || "").localeCompare(a.name || "");
-        case "price-low":
-          return (a.price || 0) - (b.price || 0);
-        case "price-high":
-          return (b.price || 0) - (a.price || 0);
-        default:
-          return 0; // No specific sort
-      }
-    });
-
-    return filtered;
-  }, [contextProducts, searchQuery, sortBy, filters]);
+  // OLD Client-side logic removed for performance
+  const filteredAndSortedProducts = products; // Alias for compatibility with render logic
 
   const handleEdit = (product: any) => {
     sessionStorage.setItem(`product_${product.id}`, JSON.stringify(product));
@@ -230,6 +177,7 @@ const ProductList = () => {
   const confirmDelete = async () => {
     if (productToDelete) {
       await deleteProduct(productToDelete.id);
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Product Deleted", {
         description: `${productToDelete.name} has been removed`
       });
@@ -272,6 +220,7 @@ const ProductList = () => {
     setTogglingVisibility(product.id);
     try {
       await updateProduct(product.id, { isVisible: isVisible }); // Use isVisible here
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
 
       toast.success(isVisible ? "Product Visible" : "Product Hidden", {
         description: `${product.name} is now ${isVisible ? "visible" : "hidden"} on the store`
@@ -281,6 +230,28 @@ const ProductList = () => {
       toast.error("Error", { description: "Failed to update product visibility" });
     } finally {
       setTogglingVisibility(null);
+    }
+  };
+
+  const handleFeaturedToggle = async (product: any, isFeatured: boolean) => {
+    // Check limit if turning on
+    if (isFeatured) {
+        const currentFeaturedCount = (contextProducts || []).filter(p => p.isFeatured).length;
+        if (currentFeaturedCount >= 6) {
+            toast.error("Limit Reached", { description: "You can only showcase 6 top products." });
+            return;
+        }
+    }
+
+    try {
+      await updateProduct(product.id, { isFeatured: isFeatured });
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(isFeatured ? "Added to Featured" : "Removed from Featured", {
+        description: `${product.name} is ${isFeatured ? "now" : "no longer"} featured.`
+      });
+    } catch (error) {
+      console.error("Error toggling featured:", error);
+      toast.error("Error", { description: "Failed to update product." });
     }
   };
 
@@ -641,15 +612,27 @@ const ProductList = () => {
               <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">
                 Status
               </TableHead>
+               <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-center">
+                Featured
+              </TableHead>
               <TableHead className="text-right font-semibold text-xs uppercase tracking-wider text-slate-500 pr-6 py-4">
                 Actions
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredAndSortedProducts.length === 0 ? (
+            {isQueryLoading ? (
+               <TableRow>
+                 <TableCell colSpan={8} className="h-48 text-center text-slate-500">
+                   <div className="flex flex-col items-center justify-center gap-2 h-full">
+                      <RefreshCw className="h-6 w-6 animate-spin text-slate-400" />
+                      <p>Loading products...</p>
+                   </div>
+                 </TableCell>
+               </TableRow>
+            ) : filteredAndSortedProducts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-64 text-center">
+                <TableCell colSpan={8} className="h-64 text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400">
                     <Package className="h-12 w-12 mb-4 text-slate-200" />
                     <p className="text-lg font-medium text-slate-900">
@@ -672,12 +655,6 @@ const ProductList = () => {
                     <TableCell
                       className="pl-6 py-4"
                       onClick={() => {
-                        console.log(
-                          "🖱️ Clicking product:",
-                          product.name,
-                          "ID:",
-                          product.id,
-                        );
                         router.push(`/dashboard/products/${product.id}`);
                       }}
                     >
@@ -792,6 +769,17 @@ const ProductList = () => {
                         )}
                       </div>
                     </TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()} className="text-center">
+                        <Button
+                            variant="ghost" 
+                            size="icon"
+                            // removed disabled={loading} logic for now as queries manage loading 
+                            onClick={() => handleFeaturedToggle(product, !product.isFeatured)}
+                            className={`h-8 w-8 rounded-full ${product.isFeatured ? 'text-amber-500 bg-amber-50 hover:bg-amber-100' : 'text-slate-300 hover:text-slate-500 hover:bg-slate-100'}`}
+                        >
+                            <Star className={`h-4 w-4 ${product.isFeatured ? 'fill-amber-500' : ''}`} />
+                        </Button>
+                    </TableCell>
                     <TableCell className="text-right pr-6">
                       <div
                         className="flex items-center justify-end gap-1"
@@ -823,6 +811,59 @@ const ProductList = () => {
             )}
           </TableBody>
         </Table>
+        
+        {/* Pagination Footer */}
+        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+           <div className="text-sm text-slate-500">
+               Showing <span className="font-medium text-slate-900">{filteredAndSortedProducts.length}</span> of <span className="font-medium text-slate-900">{totalCount}</span> products
+           </div>
+           <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1 || isQueryLoading}
+                className="h-8 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+              >
+                Previous
+              </Button>
+              <div className="flex items-center gap-1">
+                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                     // Simple pagination logic
+                     let pNum = i + 1;
+                     if (totalPages > 5) {
+                        if (page <= 3) {
+                            pNum = i + 1;
+                        } else if (page >= totalPages - 2) {
+                            pNum = totalPages - 4 + i;
+                        } else {
+                            pNum = page - 2 + i;
+                        }
+                     }
+                     if (pNum > totalPages) return null;
+                     
+                     return (
+                         <button
+                            key={pNum}
+                            onClick={() => setPage(pNum)}
+                            className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${page === pNum ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:bg-white hover:text-slate-900'}`}
+                         >
+                            {pNum}
+                         </button>
+                     );
+                 })}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages || isQueryLoading}
+                 className="h-8 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+              >
+                Next
+              </Button>
+           </div>
+        </div>
       </div>
 
       {/* Delete Confirmation Dialog */}

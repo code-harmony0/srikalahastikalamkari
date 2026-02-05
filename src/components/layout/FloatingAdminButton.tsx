@@ -17,7 +17,7 @@ export default function FloatingAdminButton() {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
       >
         {/* Close button */}
         <motion.button
@@ -36,7 +36,7 @@ export default function FloatingAdminButton() {
             <motion.a
               whileHover={{ scale: 1.05, rotate: 90 }}
               whileTap={{ scale: 0.95 }}
-              className="w-14 h-14 rounded-full bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-white flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-white flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
               aria-label="Admin Dashboard"
             >
               <motion.div

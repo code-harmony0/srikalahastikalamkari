@@ -13,15 +13,15 @@ import {
   TableRow,
 } from "@/shared/ui/table"
 import { Badge } from "@/shared/ui/badge"
-import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/input"
+import { Button } from "@/app/dashboard/ui/button"
+import { Input } from "@/app/dashboard/ui/input"
 import { 
   Select, 
   SelectContent, 
   SelectItem, 
   SelectTrigger, 
   SelectValue 
-} from "@/shared/ui/select"
+} from "@/app/dashboard/ui/select"
 import { toast } from "sonner"
 import { 
   Loader2, 
@@ -39,14 +39,7 @@ import {
   AlertCircle,
   Eye
 } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu"
+// Dropdown imports removed as requested to show direct actions
 
 export default function InquiriesPage() {
   const router = useRouter()
@@ -55,13 +48,22 @@ export default function InquiriesPage() {
   const [filter, setFilter] = useState("all")
   const [search, setSearch] = useState("")
 
+  // Pagination state
+  const [page, setPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const itemsPerPage = 15
+
   const fetchInquiries = async () => {
     setLoading(true)
     try {
+      const from = (page - 1) * itemsPerPage
+      const to = from + itemsPerPage - 1
+
       let query = (supabase as any)
         .from("contact_inquiries")
-        .select("*")
+        .select("*", { count: 'exact' })
         .order("created_at", { ascending: false })
+        .range(from, to)
 
       if (filter !== "all") {
         query = query.eq("status", filter)
@@ -71,10 +73,11 @@ export default function InquiriesPage() {
         query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,subject.ilike.%${search}%`)
       }
 
-      const { data, error } = await query
+      const { data, error, count } = await query
 
       if (error) throw error
       setInquiries(data as any || [])
+      setTotalCount(count || 0)
     } catch (error) {
       console.error("Error fetching inquiries:", error)
       toast.error("Failed to load inquiries")
@@ -85,7 +88,7 @@ export default function InquiriesPage() {
 
   useEffect(() => {
     fetchInquiries()
-  }, [filter, search])
+  }, [filter, search, page])
 
   const updateStatus = async (id: string, newStatus: 'solved' | 'ignored' | 'new') => {
     try {
@@ -108,28 +111,28 @@ export default function InquiriesPage() {
     switch (status) {
       case "new":
         return (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+          <Badge variant="outline" className="bg-white text-slate-700 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
              <AlertCircle className="h-3.5 w-3.5" />
              <span className="capitalize">New</span>
           </Badge>
         )
       case "solved":
         return (
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+          <Badge variant="outline" className="bg-slate-900 text-white border-slate-900 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
              <CheckCircle2 className="h-3.5 w-3.5" />
              <span className="capitalize">Solved</span>
           </Badge>
         )
       case "ignored":
         return (
-          <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+          <Badge variant="outline" className="bg-slate-50 text-slate-500 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
              <XCircle className="h-3.5 w-3.5" />
              <span className="capitalize">Ignored</span>
           </Badge>
         )
       default:
         return (
-          <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 px-2 py-0.5 text-xs font-medium uppercase tracking-wide">
+          <Badge variant="outline" className="bg-white text-slate-600 border-slate-200 px-2 py-0.5 text-xs font-medium uppercase tracking-wide">
             {status}
           </Badge>
         )
@@ -167,10 +170,10 @@ export default function InquiriesPage() {
           <div className="h-8 w-px bg-slate-200 hidden md:block" />
           <Filter className="h-4 w-4 text-slate-400 hidden md:block" />
           <Select value={filter} onValueChange={setFilter}>
-            <SelectTrigger className="w-full md:w-[200px] h-10 border-slate-200 bg-white">
+            <SelectTrigger className="w-full md:w-[200px] h-10 border-slate-200 bg-white rounded-xl focus:ring-slate-900">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border-slate-200">
               <SelectItem value="all">All Statuses</SelectItem>
               <SelectItem value="new">New</SelectItem>
               <SelectItem value="solved">Solved</SelectItem>
@@ -185,12 +188,12 @@ export default function InquiriesPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="w-[250px] py-4 pl-6 text-xs font-semibold uppercase tracking-wider text-slate-500">Sender Details</TableHead>
-              <TableHead className="w-[200px] py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Subject</TableHead>
-              <TableHead className="min-w-[350px] py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Message Preview</TableHead>
-              <TableHead className="w-[140px] py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Status</TableHead>
-              <TableHead className="w-[150px] py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Date</TableHead>
-              <TableHead className="w-[100px] py-4 pr-6 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Actions</TableHead>
+              <TableHead className="w-[200px] py-3 pl-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Sender Details</TableHead>
+              <TableHead className="w-[180px] py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 hidden md:table-cell">Subject</TableHead>
+              <TableHead className="min-w-[300px] py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 hidden lg:table-cell">Message Preview</TableHead>
+              <TableHead className="w-[120px] py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Status</TableHead>
+              <TableHead className="w-[140px] py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Date</TableHead>
+              <TableHead className="w-[220px] py-3 pr-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -224,87 +227,61 @@ export default function InquiriesPage() {
                   className="group hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0 cursor-pointer"
                   onClick={() => router.push(`/dashboard/inquiries/${inquiry.id}`)}
                 >
-                  <TableCell className="align-top py-5 pl-6">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-semibold text-slate-900 text-[15px]">{inquiry.name}</span>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                        <Mail className="h-3 w-3" />
-                        <span className="truncate max-w-[180px]" title={inquiry.email}>{inquiry.email}</span>
+                  <TableCell className="align-middle py-3 pl-4">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-bold text-slate-900 text-[15px] tracking-tight">{inquiry.name}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                        <span className="truncate max-w-[140px]" title={inquiry.email}>{inquiry.email}</span>
                       </div>
-                      {inquiry.phone && (
-                        <div className="flex items-center gap-2 text-xs text-slate-400">
-                          <Phone className="h-3 w-3" />
-                          <span>{inquiry.phone}</span>
-                        </div>
-                      )}
                     </div>
                   </TableCell>
-                  <TableCell className="align-top py-5">
-                    <span className="text-sm font-medium text-slate-700 block truncate max-w-[180px]" title={inquiry.subject || "No Subject"}>
+                  <TableCell className="align-middle py-3 hidden md:table-cell">
+                    <span className="text-sm font-medium text-slate-700 block truncate max-w-[140px]" title={inquiry.subject || "No Subject"}>
                       {inquiry.subject || "No Subject"}
                     </span>
                   </TableCell>
-                  <TableCell className="align-top py-5">
-                    <p className="text-sm text-slate-500 leading-relaxed font-normal line-clamp-2 max-w-xl">
+                  <TableCell className="align-middle py-3 hidden lg:table-cell">
+                    <p className="text-sm text-slate-500 leading-snug font-normal line-clamp-1 max-w-sm">
                       {inquiry.message}
                     </p>
                   </TableCell>
-                  <TableCell className="align-top py-5">
+                  <TableCell className="align-middle py-3">
                     {getStatusBadge(inquiry.status)}
                   </TableCell>
-                  <TableCell className="align-top py-5">
-                    <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                      <Calendar className="h-3 w-3 text-slate-400" />
+                  <TableCell className="align-middle py-3">
+                    <div className="text-sm text-slate-600 font-medium whitespace-nowrap">
                       {new Date(inquiry.created_at).toLocaleDateString('en-IN', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric'
                       })}
                     </div>
-                    <div className="text-[11px] text-slate-400 pl-5 mt-0.5">
-                      {new Date(inquiry.created_at).toLocaleTimeString('en-IN', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </div>
                   </TableCell>
-                  <TableCell className="align-top py-5 pr-6 text-right" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                           size="sm"
-                           variant="ghost"
-                           className="h-8 w-8 p-0 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors rounded-full"
-                           onClick={() => router.push(`/dashboard/inquiries/${inquiry.id}`)}
-                           title="View Details"
-                        >
-                           <Eye className="h-4.5 w-4.5" />
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-full">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-34">
-                           <DropdownMenuLabel className="text-xs text-slate-500">Change Status</DropdownMenuLabel>
-                           <DropdownMenuSeparator />
-                           {inquiry.status !== 'solved' && (
-                              <DropdownMenuItem onClick={() => updateStatus(inquiry.id, 'solved')} className="text-xs">
-                                <CheckCircle2 className="mr-2 h-3.5 w-3.5" /> Mark Solved
-                              </DropdownMenuItem>
-                           )}
-                           {(inquiry.status as string) !== 'new' && (
-                              <DropdownMenuItem onClick={() => updateStatus(inquiry.id, 'new')} className="text-xs">
-                                <AlertCircle className="mr-2 h-3.5 w-3.5" /> Mark New
-                              </DropdownMenuItem>
-                           )}
-                           {inquiry.status !== 'ignored' && (
-                              <DropdownMenuItem onClick={() => updateStatus(inquiry.id, 'ignored')} className="text-xs">
-                                <XCircle className="mr-2 h-3.5 w-3.5" /> Mark Ignored
-                              </DropdownMenuItem>
-                           )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                  <TableCell className="align-middle py-2 pr-4 text-right" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* View action handled by row click */}
+                        
+                        {inquiry.status !== 'solved' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-8 px-3 text-xs border-slate-200 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 hover:border-emerald-100 transition-all rounded-lg gap-1.5"
+                            onClick={() => updateStatus(inquiry.id, 'solved')}
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" /> Solve
+                          </Button>
+                        )}
+
+                        {inquiry.status !== 'ignored' && (
+                          <Button
+                            size="sm"
+                            variant="outline" 
+                            className="h-8 px-3 text-xs border-slate-200 text-slate-600 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all rounded-lg gap-1.5"
+                            onClick={() => updateStatus(inquiry.id, 'ignored')}
+                          >
+                            <XCircle className="h-3.5 w-3.5" /> Ignore
+                          </Button>
+                        )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -312,6 +289,59 @@ export default function InquiriesPage() {
             )}
           </TableBody>
         </Table>
+
+        {/* Pagination Footer */}
+        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-slate-500">
+            Showing <span className="font-medium text-slate-900">{Math.min((page - 1) * itemsPerPage + 1, totalCount)}-{Math.min(page * itemsPerPage, totalCount)}</span> of <span className="font-medium text-slate-900">{totalCount}</span> inquiries
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1 || loading}
+              className="h-8 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+            >
+              Previous
+            </Button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, Math.ceil(totalCount / itemsPerPage)) }, (_, i) => {
+                const totalPages = Math.ceil(totalCount / itemsPerPage);
+                let pNum = i + 1;
+                if (totalPages > 5) {
+                  if (page <= 3) {
+                    pNum = i + 1;
+                  } else if (page >= totalPages - 2) {
+                    pNum = totalPages - 4 + i;
+                  } else {
+                    pNum = page - 2 + i;
+                  }
+                }
+                if (pNum > totalPages) return null;
+                
+                return (
+                  <button
+                    key={pNum}
+                    onClick={() => setPage(pNum)}
+                    className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${page === pNum ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:bg-white hover:text-slate-900'}`}
+                  >
+                    {pNum}
+                  </button>
+                );
+              })}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.min(Math.ceil(totalCount / itemsPerPage), p + 1))}
+              disabled={page >= Math.ceil(totalCount / itemsPerPage) || loading}
+              className="h-8 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   )

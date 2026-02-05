@@ -15,6 +15,7 @@ import {
   FiChevronRight,
   FiShoppingBag,
   FiMessageSquare,
+  FiStar,
 } from "react-icons/fi"
 import "./Sidebar.css"
 import { useAuth } from "@/shared/contexts/AuthContext"
@@ -73,6 +74,12 @@ const Sidebar = () => {
       roles: ["super_admin", "admin"],
     },
     {
+      to: "/dashboard/featured",
+      icon: FiStar,
+      label: "Featured",
+      roles: ["super_admin", "admin"],
+    },
+    {
       to: "/dashboard/inquiries",
       icon: FiMessageSquare,
       label: "Inquiries",
@@ -93,6 +100,13 @@ const Sidebar = () => {
         mass: 0.8
       }}
     >
+      {/* Mobile Overlay */}
+      {!isCollapsed && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/50 z-[-1]"
+          onClick={() => toggleSidebar()}
+        />
+      )}
       <div className="sidebar-content">
         <div className="sidebar-header">
           <div className="logo-container">

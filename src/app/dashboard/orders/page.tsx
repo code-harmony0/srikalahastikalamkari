@@ -96,6 +96,11 @@ const Orders = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const itemsPerPage = 20;
+
   // Packing mode state
   const [packingOrder, setPackingOrder] = useState<Order | null>(null);
 
@@ -190,7 +195,10 @@ const Orders = () => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabaseAdmin
+      const from = (page - 1) * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+
+      const { data, error, count } = await supabaseAdmin
         .from("orders")
         .select(`
           *,
@@ -204,12 +212,14 @@ const Orders = () => {
               images
             )
           )
-        `)
-        .order("created_at", { ascending: false });
+        `, { count: 'exact' })
+        .order("created_at", { ascending: false })
+        .range(from, to);
 
       if (error) throw error;
 
       setOrders((data as any) || []);
+      setTotalCount(count || 0);
     } catch (error: any) {
       console.error("Error fetching orders:", error);
       toast.error("Error fetching orders", {
@@ -223,7 +233,7 @@ const Orders = () => {
   useEffect(() => {
     fetchOrders();
     fetchStats();
-  }, []);
+  }, [page]);
 
   const fetchStats = async () => {
     const data = await getOrderStatistics();
@@ -589,6 +599,59 @@ const Orders = () => {
             )}
           </TableBody>
         </Table>
+
+        {/* Pagination Footer */}
+        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-slate-500">
+            Showing <span className="font-medium text-slate-900">{Math.min((page - 1) * itemsPerPage + 1, totalCount)}-{Math.min(page * itemsPerPage, totalCount)}</span> of <span className="font-medium text-slate-900">{totalCount}</span> orders
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1 || loading}
+              className="h-8 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+            >
+              Previous
+            </Button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, Math.ceil(totalCount / itemsPerPage)) }, (_, i) => {
+                const totalPages = Math.ceil(totalCount / itemsPerPage);
+                let pNum = i + 1;
+                if (totalPages > 5) {
+                  if (page <= 3) {
+                    pNum = i + 1;
+                  } else if (page >= totalPages - 2) {
+                    pNum = totalPages - 4 + i;
+                  } else {
+                    pNum = page - 2 + i;
+                  }
+                }
+                if (pNum > totalPages) return null;
+                
+                return (
+                  <button
+                    key={pNum}
+                    onClick={() => setPage(pNum)}
+                    className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${page === pNum ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:bg-white hover:text-slate-900'}`}
+                  >
+                    {pNum}
+                  </button>
+                );
+              })}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.min(Math.ceil(totalCount / itemsPerPage), p + 1))}
+              disabled={page >= Math.ceil(totalCount / itemsPerPage) || loading}
+              className="h-8 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* Shipping Dialog */}

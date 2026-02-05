@@ -1,11 +1,11 @@
 // src/shared/hooks/use-filter-categories.ts
 import { useState, useEffect, useMemo } from "react";
-import { getCategories } from "@/services/categories";
+import { getCategories, getSubCategories } from "@/services/categories";
 
 interface Subcategory {
   id: string;
   name: string;
-  image?: string;
+  image_url?: string;
   parentCategoryId: string;
 }
 
@@ -23,7 +23,8 @@ interface UseFilterCategoriesResult {
 }
 
 export const useFilterCategories = (): UseFilterCategoriesResult => {
-  const [rawCategories, setRawCategories] = useState<any[]>([]);
+  const [parents, setParents] = useState<any[]>([]);
+  const [children, setChildren] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,17 +33,21 @@ export const useFilterCategories = (): UseFilterCategoriesResult => {
       setIsLoading(true);
       setError(null);
       try {
-        // Single fetch - getCategories() returns ALL categories (parents + subs)
-        const { data, error: fetchError } = await getCategories();
+        // Fetch parent categories (parent_id = null)
+        const { data: parentData, error: parentError } = await getCategories();
+        
+        // Fetch subcategories (parent_id != null)
+        const { data: subData, error: subError } = await getSubCategories();
 
-        if (fetchError) {
-          throw new Error(fetchError.message);
+        if (parentError) {
+          throw new Error(parentError.message);
         }
-        if (!data || data.length === 0) {
-          throw new Error("No categories found");
+        if (subError) {
+          throw new Error(subError.message);
         }
 
-        setRawCategories(data);
+        setParents(parentData || []);
+        setChildren(subData || []);
       } catch (err: any) {
         setError(err.message || "Failed to fetch categories.");
         console.error("Error fetching filter categories:", err);
@@ -54,29 +59,24 @@ export const useFilterCategories = (): UseFilterCategoriesResult => {
     fetchData();
   }, []);
 
-  // Split into parents and children, nest subcategories under parents
+  // Nest subcategories under parents
   const nestedCategories = useMemo(() => {
-    if (!rawCategories.length) return [];
-
-    // Parents = rows where parent_id is null/undefined
-    const parents = rawCategories.filter((c) => !c.parent_id);
-    // Children = rows where parent_id is set
-    const children = rawCategories.filter((c) => c.parent_id);
+    if (!parents.length) return [];
 
     return parents.map((parent) => ({
       id: parent.id,
       name: parent.name,
-      image_url: parent.image_url, // Add this
+      image_url: parent.image_url,
       subcategories: children
-        .filter((child) => child.parent_id === parent.id)
+        .filter((child) => child.category_id === parent.id || child.parent_id === parent.id)
         .map((child) => ({
           id: child.id,
           name: child.name,
-          image: child.image_url || undefined,
-          parentCategoryId: child.parent_id,
+          image_url: child.image_url || undefined,
+          parentCategoryId: child.category_id || child.parent_id,
         })),
     }));
-  }, [rawCategories]);
+  }, [parents, children]);
 
   return { categories: nestedCategories, isLoading, error };
 };

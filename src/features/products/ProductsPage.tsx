@@ -3,7 +3,9 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import { useProducts } from "@/shared/hooks/use-products";
+import { productsService } from "@/services/products";
 import { useCategories } from "@/shared/hooks/use-categories";
 import {
   SlidersHorizontal,
@@ -106,6 +108,19 @@ export default function ProductsPage() {
   const { data: queryData, isLoading, isFetching } = useProducts(filters);
   const products = queryData?.data || [];
   const totalCount = queryData?.count || 0;
+
+  // Optimize: Prefetch next page
+  const queryClient = useQueryClient();
+  
+  useEffect(() => {
+    if (currentPage < Math.ceil(totalCount / itemsPerPage)) {
+      const nextFilters = { ...filters, page: currentPage + 1 };
+      queryClient.prefetchQuery({
+        queryKey: ["products", nextFilters],
+        queryFn: () => productsService.getPaginated(nextFilters),
+      });
+    }
+  }, [filters, currentPage, totalCount, itemsPerPage, queryClient]);
   
   // Compute product counts for sidebar (client side approximation or separate API)
   // Since we are paginating, we can't count purely on client. 
@@ -343,19 +358,7 @@ export default function ProductsPage() {
                         </span>
                       )}
                     </button>
-                    <div className="font-sans text-[13px] text-[#3B2C23]/60 text-center sm:text-left">
-                      Showing{" "}
-                      <span className="text-[#A4552A] font-bold">
-                        {totalCount > 0
-                          ? `${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, totalCount)}`
-                          : "0"}
-                      </span>{" "}
-                      of{" "}
-                      <span className="font-semibold text-[#3B2C23]">
-                        {totalCount}
-                      </span>{" "}
-                      products
-                    </div>
+
                   </div>
 
                   {/* Right: Sort, View Toggle, Items per page */}
@@ -477,65 +480,58 @@ export default function ProductsPage() {
                     </AnimatePresence>
                   </motion.div>
 
-                  {/* Enhanced Pagination */}
-                  {totalPages > 1 && (
-                    <div className="mt-16 flex flex-col items-center gap-4">
-                      {/* Pagination Controls */}
-                      <div className="flex items-center gap-2">
-                        {/* Previous */}
-                        <button
-                          onClick={() => goToPage(Math.max(1, currentPage - 1))}
-                          disabled={currentPage === 1 || isFetching}
-                          className="h-10 w-10 flex items-center justify-center rounded-lg border border-[#C19A5B]/20 text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-[#A4552A] hover:text-[#A4552A] transition-all"
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </button>
-
-                        {/* Page Numbers with Ellipsis */}
-                        <div className="flex items-center gap-1">
-                          {pageNumbers.map((page, idx) =>
-                            page === "..." ? (
-                              <span
-                                key={`ellipsis-${idx}`}
-                                className="w-9 h-9 flex items-center justify-center text-[#3B2C23]/40 text-sm"
-                              >
-                                ...
-                              </span>
-                            ) : (
-                              <button
-                                key={page}
-                                onClick={() => goToPage(page as number)}
-                                disabled={isFetching}
-                                className={`w-9 h-9 rounded-lg text-[12px] font-bold transition-all ${
-                                  currentPage === page
-                                    ? "bg-[#A4552A] text-white shadow-md shadow-[#A4552A]/20"
-                                    : "text-[#3B2C23]/60 hover:text-[#A4552A] hover:bg-[#FFF4E8]"
-                                }`}
-                              >
-                                {page}
-                              </button>
-                            )
-                          )}
-                        </div>
-
-                        {/* Next */}
-                        <button
-                          onClick={() =>
-                            goToPage(Math.min(totalPages, currentPage + 1))
-                          }
-                          disabled={currentPage === totalPages || isFetching}
-                          className="h-10 w-10 flex items-center justify-center rounded-lg border border-[#C19A5B]/20 text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-[#A4552A] hover:text-[#A4552A] transition-all"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      {/* Page Info */}
-                      <p className="text-[12px] text-[#3B2C23]/50">
-                        Page {currentPage} of {totalPages}
-                      </p>
+                  {/* Pagination Footer - Dashboard Style */}
+                  <div className="mt-12 px-6 py-4 border-t border-[#C19A5B]/10 bg-[#FFF8F0]/30 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="text-sm text-[#3B2C23]/60">
+                      Showing <span className="font-semibold text-[#A4552A]">{Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)}-{Math.min(currentPage * itemsPerPage, totalCount)}</span> of <span className="font-semibold text-[#3B2C23]">{totalCount}</span> products
                     </div>
-                  )}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => goToPage(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1 || isFetching}
+                        className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFF4E8] hover:border-[#C19A5B] transition-all"
+                      >
+                        Previous
+                      </button>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let pNum = i + 1;
+                          if (totalPages > 5) {
+                            if (currentPage <= 3) {
+                              pNum = i + 1;
+                            } else if (currentPage >= totalPages - 2) {
+                              pNum = totalPages - 4 + i;
+                            } else {
+                              pNum = currentPage - 2 + i;
+                            }
+                          }
+                          if (pNum > totalPages) return null;
+                          
+                          return (
+                            <button
+                              key={pNum}
+                              onClick={() => goToPage(pNum)}
+                              disabled={isFetching}
+                              className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
+                                currentPage === pNum 
+                                  ? 'bg-[#A4552A] text-white shadow-md shadow-[#A4552A]/20' 
+                                  : 'text-[#3B2C23]/60 hover:bg-[#FFF4E8] hover:text-[#A4552A]'
+                              }`}
+                            >
+                              {pNum}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <button
+                        onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage >= totalPages || isFetching}
+                        className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFF4E8] hover:border-[#C19A5B] transition-all"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
                 </>
               ) : (
                 /* Empty State */

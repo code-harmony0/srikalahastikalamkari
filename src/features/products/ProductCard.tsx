@@ -76,7 +76,14 @@ export const ProductCard = memo(
     const isList = viewMode === "list";
 
     // Safe Image Access
-    const mainImage = productData.image || "/images/placeholder.png";
+    const [imgSrc, setImgSrc] = React.useState(productData.image || "/images/placeholder.png");
+    
+    // Update state if product changes
+    React.useEffect(() => {
+        setImgSrc(productData.image || "/images/placeholder.png");
+    }, [productData.image]);
+
+    const mainImage = imgSrc;
     const hoverImage =
       productData.images && productData.images.length > 1
         ? productData.images[1]
@@ -136,6 +143,7 @@ export const ProductCard = memo(
                 hoverImage ? "group-hover:opacity-0" : "",
               )}
               sizes={isList ? "180px" : "(max-width: 768px) 100vw, 33vw"}
+              onError={() => setImgSrc("/images/placeholder.png")}
             />
           </Link>
 

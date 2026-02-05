@@ -36,6 +36,12 @@ const sanitizePayload = (payload: Partial<Product>) => {
     delete p.isVisible;
   }
 
+  // Handle isFeatured field (now exists in database as is_featured)
+  if (p.isFeatured !== undefined) {
+    p.is_featured = Boolean(p.isFeatured);
+    delete p.isFeatured;
+  }
+
   // Handle category field (now exists as category_id in database)
   if (p.category !== undefined) {
     p.category_id = p.category || null;

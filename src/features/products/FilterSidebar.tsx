@@ -155,9 +155,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               <h2 className="text-[16px] font-serif font-bold text-[#3B2C23] leading-tight">
                 Filters
               </h2>
-              <p className="text-[11px] text-[#3B2C23]/50">
-                {totalProducts} products
-              </p>
+
             </div>
           </div>
           <div className="flex items-center gap-2">
