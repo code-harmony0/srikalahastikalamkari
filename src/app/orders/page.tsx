@@ -22,7 +22,9 @@ import {
   ExternalLink,
   Calendar,
   Info,
+  Star,
 } from "lucide-react"
+import { ReviewSubmissionDialog } from "@/features/orders/ReviewSubmissionDialog"
 import { cn, formatPrice } from "@/shared/utils"
 import { supabase } from "@/lib/supabase/client"
 import { useToast } from "@/shared/ui/use-toast"
@@ -62,6 +64,19 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true)
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
   const { toast } = useToast()
+  
+  // Review Dialog State
+  const [reviewDialog, setReviewDialog] = useState<{
+    isOpen: boolean;
+    productId: string;
+    productName: string;
+    productImage: string;
+  }>({
+    isOpen: false,
+    productId: "",
+    productName: "",
+    productImage: "",
+  });
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
@@ -402,6 +417,20 @@ export default function OrdersPage() {
                                     <p className="font-inter text-sm font-semibold text-[#A4552A]">
                                       {formatPrice(item.price_at_purchase * item.quantity * 100)}
                                     </p>
+                                    {(order.status === 'shipped' || order.status === 'paid') && (
+                                      <button
+                                        onClick={() => setReviewDialog({
+                                          isOpen: true,
+                                          productId: item.products?.id || "",
+                                          productName: item.products?.name || "",
+                                          productImage: item.products?.images?.[0] || "",
+                                        })}
+                                        className="mt-2 text-xs font-medium text-[#C19A5B] hover:text-[#A4552A] flex items-center justify-end gap-1 transition-colors"
+                                      >
+                                        <Star className="w-3 h-3" />
+                                        Write Review
+                                      </button>
+                                    )}
                                   </div>
                                 </div>
                               ))}
@@ -588,6 +617,15 @@ export default function OrdersPage() {
           </div>
         )}
       </div>
+
+      
+      <ReviewSubmissionDialog
+        isOpen={reviewDialog.isOpen}
+        onClose={() => setReviewDialog(prev => ({ ...prev, isOpen: false }))}
+        productId={reviewDialog.productId}
+        productName={reviewDialog.productName}
+        productImage={reviewDialog.productImage}
+      />
     </div>
   )
 }

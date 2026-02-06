@@ -15,8 +15,8 @@ import {
   getDailyActivity,
   getTopCategoriesBySales,
   getTopProducts,
-  getRecentOrders,
   getKPISparklines,
+  getRecentOrders,
   type DashboardKPIs,
   type DailyActivity,
   type CategorySales,
@@ -28,6 +28,7 @@ import { KPICard } from "@/features/dashboard/KPICard";
 import { ChartCard } from "@/features/dashboard/ChartCard";
 import { DataTable, type TableColumn } from "@/features/dashboard/DataTable";
 import { StatusBadge, type StatusType } from "@/features/dashboard/StatusBadge";
+import { DashboardAlerts } from "@/app/dashboard/components/DashboardAlerts";
 import dynamic from "next/dynamic";
 
 const DemandFlowChart = dynamic(
@@ -92,13 +93,13 @@ export default function DashboardPage() {
     setLoading(true);
     try {
       // Fetch all dashboard data in parallel
-      const [kpiData, activityData, categoryData, productData, orderData, sparklineData] =
+      const [kpiData, activityData, categoryData, productData, recentOrderData, sparklineData] =
         await Promise.all([
           getDashboardKPIs(),
           getDailyActivity(7),
           getTopCategoriesBySales(6),
           getTopProducts(5),
-          getRecentOrders(8),
+          getRecentOrders(6),
           getKPISparklines(),
         ]);
 
@@ -106,7 +107,7 @@ export default function DashboardPage() {
       setDailyActivity(activityData);
       setCategories(categoryData);
       setTopProducts(productData);
-      setRecentOrders(orderData);
+      setRecentOrders(recentOrderData);
       setSparklines(sparklineData);
     } catch (error) {
       console.error("Error loading dashboard:", error);
@@ -115,83 +116,45 @@ export default function DashboardPage() {
     }
   };
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
-
-  const getOrderStatus = (status: string): StatusType => {
-    switch (status) {
-
-      case "shipped":
-        return "success";
-      case "packed":
-        return "warning";
-      case "in_packing":
-        return "processing";
-      case "paid":
-      case "pending":
-        return "pending";
-      case "cancelled":
-        return "danger";
-      default:
-        return "neutral";
-    }
-  };
-
   const formatCurrency = (amount: number) =>
     `₹${amount.toLocaleString("en-IN")}`;
-
-  const formatStatus = (status: string) => {
-    if (status === "in_packing") return "Processing";
-    return status.replace(/_/g, " ");
-  };
-
-  // ─── Table Columns ─────────────────────────────────────────────────────────
+  // ─── Helpers ──────────────────────────────────────────────────────────────
 
   const orderColumns: TableColumn<OrderPreview>[] = [
     {
+      key: "id",
+      label: "Order ID",
+      render: (order) => <span className="font-mono text-xs text-gray-500">#{order.id.slice(0, 8)}</span>,
+    },
+    {
       key: "customer_name",
       label: "Customer",
+      render: (order) => <span className="font-medium">{order.customer_name || "Guest"}</span>,
+    },
+    {
+      key: "created_at",
+      label: "Date",
       render: (order) => (
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400 font-semibold text-sm">
-            {order.customer_name?.charAt(0).toUpperCase() || "?"}
-          </div>
-          <span className="font-medium">
-            {order.customer_name || "Unknown"}
-          </span>
-        </div>
+        <span className="text-sm text-gray-500">
+          {new Date(order.created_at).toLocaleDateString()}
+        </span>
       ),
     },
     {
       key: "total_amount",
       label: "Amount",
-      align: "right",
       render: (order) => (
-        <span className="font-semibold">
-          {formatCurrency(order.total_amount)}
-        </span>
+        <span className="font-medium">{formatCurrency(order.total_amount)}</span>
       ),
     },
     {
       key: "status",
       label: "Status",
       render: (order) => (
-        <StatusBadge
-          status={getOrderStatus(order.status)}
-          label={formatStatus(order.status)}
+        <StatusBadge 
+          status={order.status as StatusType} 
+          label={order.status.replace("_", " ")} 
         />
-      ),
-    },
-    {
-      key: "created_at",
-      label: "Date",
-      align: "right",
-      render: (order) => (
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          {new Date(order.created_at).toLocaleDateString("en-IN", {
-            day: "numeric",
-            month: "short",
-          })}
-        </span>
       ),
     },
   ];
@@ -330,16 +293,13 @@ export default function DashboardPage() {
           </ChartCard>
         </div>
 
-        {/* Tables Section - Already using real data */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
           <DataTable
             title="Recent Orders"
             icon={<ShoppingBag className="h-5 w-5" />}
             columns={orderColumns}
             data={recentOrders}
-            onRowClick={(order) =>
-              router.push(`/dashboard/orders/${order.id}`)
-            }
+            onRowClick={(order) => router.push(`/dashboard/orders/${order.id}`)}
             emptyState={{
               icon: <ShoppingBag className="h-12 w-12" />,
               message: "No recent orders",

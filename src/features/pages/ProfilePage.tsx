@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Clock,
   CheckCircle2,
+  ShoppingBag,
 } from "lucide-react"
 import { cn, formatPrice } from "@/shared/utils"
 
@@ -40,22 +41,7 @@ export default function ProfilePage() {
   }
 
   // Mock Orders Data
-  const recentOrders = [
-    {
-      id: "ORD-2024-8901",
-      date: "Oct 24, 2025",
-      total: 12999,
-      status: "Shipped",
-      items: 2,
-    },
-    {
-      id: "ORD-2024-8902",
-      date: "Dec 12, 2025",
-      total: 8499,
-      status: "Shipped",
-      items: 1,
-    },
-  ]
+  const recentOrders: any[] = []
 
   // --- Helper Components ---
 
@@ -266,57 +252,73 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-4">
-                {recentOrders.map((order) => (
-                  <Link
-                    key={order.id}
-                    href={`/orders/${order.id}`}
-                    className="group bg-white rounded-[14px] border border-[#EAD6C3] p-5 hover:border-[#C19A5B]/60 hover:shadow-[0_4px_16px_rgba(164,85,42,0.08)] transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      {/* Handcrafted Icon Box */}
-                      <div className="w-12 h-12 bg-[#FDFBF7] rounded-[10px] border border-[#EAD6C3] flex items-center justify-center group-hover:bg-[#FFF4E8] transition-colors">
-                        <Package
-                          className="w-6 h-6 text-[#C19A5B]"
-                          strokeWidth={1.5}
-                        />
-                      </div>
-                      <div>
-                        <p className="font-inter font-bold text-[#3B2C23] text-sm mb-0.5">
-                          {order.id}
-                        </p>
-                        <div className="font-inter text-xs text-[#7A6A5C] flex items-center gap-2">
-                          <span>{order.date}</span>
-                          <span className="w-1 h-1 rounded-full bg-[#EAD6C3]" />
-                          <span>{order.items} Items</span>
+                {recentOrders.length === 0 ? (
+                  <div className="bg-white rounded-[14px] border border-dashed border-[#EAD6C3] p-12 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#FFF8F0] flex items-center justify-center text-[#C19A5B]/50">
+                      <ShoppingBag className="w-8 h-8" />
+                    </div>
+                    <h4 className="font-playfair text-lg font-bold text-[#3B2C23]">No orders yet</h4>
+                    <p className="text-sm text-[#7A6A5C] mt-1 mb-6">Your recent purchases will appear here.</p>
+                    <Link 
+                      href="/shop"
+                      className="px-6 py-2 bg-[#A4552A] text-white rounded-full text-sm font-bold hover:bg-[#8B3F20] transition-colors inline-block"
+                    >
+                      Start Shopping
+                    </Link>
+                  </div>
+                ) : (
+                  recentOrders.map((order) => (
+                    <Link
+                      key={order.id}
+                      href={`/orders/${order.id}`}
+                      className="group bg-white rounded-[14px] border border-[#EAD6C3] p-5 hover:border-[#C19A5B]/60 hover:shadow-[0_4px_16px_rgba(164,85,42,0.08)] transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-4">
+                        {/* Handcrafted Icon Box */}
+                        <div className="w-12 h-12 bg-[#FDFBF7] rounded-[10px] border border-[#EAD6C3] flex items-center justify-center group-hover:bg-[#FFF4E8] transition-colors">
+                          <Package
+                            className="w-6 h-6 text-[#C19A5B]"
+                            strokeWidth={1.5}
+                          />
+                        </div>
+                        <div>
+                          <p className="font-inter font-bold text-[#3B2C23] text-sm mb-0.5">
+                            {order.id}
+                          </p>
+                          <div className="font-inter text-xs text-[#7A6A5C] flex items-center gap-2">
+                            <span>{order.date}</span>
+                            <span className="w-1 h-1 rounded-full bg-[#EAD6C3]" />
+                            <span>{order.items} Items</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-center justify-between w-full sm:w-auto gap-6 pl-16 sm:pl-0">
-                      <p className="font-inter font-bold text-[#A4552A] text-[15px]">
-                        {formatPrice(order.total)}
-                      </p>
+                      <div className="flex items-center justify-between w-full sm:w-auto gap-6 pl-16 sm:pl-0">
+                        <p className="font-inter font-bold text-[#A4552A] text-[15px]">
+                          {formatPrice(order.total)}
+                        </p>
 
-                      <div
-                        className={cn(
-                          "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 border transition-colors",
-                          order.status === "Shipped"
-                            ? "bg-[#EBF7EF] text-[#2E7D4D] border-[#3FAF6C]/20"
-                            : "bg-[#FFF4E8] text-[#B05A28] border-[#E8B35B]/30",
-                        )}
-                      >
-                        {order.status === "Shipped" ? (
-                          <CheckCircle2 className="w-3 h-3" />
-                        ) : (
-                          <Clock className="w-3 h-3" />
-                        )}
-                        {order.status}
+                        <div
+                          className={cn(
+                            "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 border transition-colors",
+                            order.status === "Shipped"
+                              ? "bg-[#EBF7EF] text-[#2E7D4D] border-[#3FAF6C]/20"
+                              : "bg-[#FFF4E8] text-[#B05A28] border-[#E8B35B]/30",
+                          )}
+                        >
+                          {order.status === "Shipped" ? (
+                            <CheckCircle2 className="w-3 h-3" />
+                          ) : (
+                            <Clock className="w-3 h-3" />
+                          )}
+                          {order.status}
+                        </div>
+
+                        <ChevronRight className="w-4 h-4 text-[#EAD6C3] group-hover:text-[#A4552A] group-hover:translate-x-1 transition-all" />
                       </div>
-
-                      <ChevronRight className="w-4 h-4 text-[#EAD6C3] group-hover:text-[#A4552A] group-hover:translate-x-1 transition-all" />
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  ))
+                )}
               </div>
             </motion.div>
           </div>

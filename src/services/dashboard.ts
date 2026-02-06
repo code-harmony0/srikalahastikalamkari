@@ -15,8 +15,8 @@ export interface DashboardKPIs {
   pending_orders: number
   processing_orders: number
   shipped_orders: number
-
   cancelled_orders: number
+  low_stock_count: number
 }
 
 export interface DailyActivity {
@@ -113,7 +113,17 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
     processing_orders: processing,
     shipped_orders: shipped,
     cancelled_orders: cancelled,
+    low_stock_count: await getLowStockCount()
   }
+}
+
+export async function getLowStockCount(threshold: number = 5): Promise<number> {
+  const { count } = await supabaseAdmin
+    .from("products")
+    .select("*", { count: "exact", head: true })
+    .lt("stock_quantity", threshold)
+  
+  return count || 0
 }
 
 // ─── Daily Activity (Last N Days) ──────────────────────────────────────────
@@ -259,11 +269,17 @@ export async function getTopProducts(limit: number = 5): Promise<TopProduct[]> {
 export async function getRecentOrders(limit: number = 8): Promise<OrderPreview[]> {
   const { data } = await supabaseAdmin
     .from("orders")
-    .select("id, customer_name, total_amount, status, created_at")
+    .select("id, customer_name, total_amount, status, created_at, shipping_address")
     .order("created_at", { ascending: false })
     .limit(limit)
 
-  return data || []
+  return (data || []).map((order: any) => ({
+    id: order.id,
+    customer_name: order.customer_name || order.shipping_address?.name || order.shipping_address?.fullName || "Guest",
+    total_amount: order.total_amount,
+    status: order.status,
+    created_at: order.created_at,
+  }))
 }
 
 // ─── KPI Sparkline Data (Last 30 Days Daily) ─────────────────────────────────

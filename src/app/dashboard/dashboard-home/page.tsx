@@ -80,8 +80,8 @@ const Dashboard = () => {
             id: p.id,
             name: p.name,
             image: p.images?.[0] || "",
-            total_sold: Math.floor(Math.random() * 50) + 10, // Mock data
-            revenue: Math.floor(Math.random() * 50000) + 5000, // Mock data
+            total_sold: 0, // Should be calculated from order_items if possible
+            revenue: 0, // Should be calculated from order_items if possible
           }))
         )
       }

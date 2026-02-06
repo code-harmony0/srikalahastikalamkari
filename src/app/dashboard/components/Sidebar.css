@@ -18,9 +18,16 @@
   overflow: hidden;
 }
 
-/* Sidebar Transitions */
+/* Sidebar Transitions - Ultra smooth with GPU acceleration */
 .sidebar {
-  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: width;
+}
+
+.sidebar * {
+  transition: opacity 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              margin 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              padding 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Base styles for desktop are handled by standard classes,
@@ -57,6 +64,14 @@
 
 .sidebar.collapsed {
   width: 80px;
+}
+
+/* GPU acceleration for smoother animations */
+.sidebar-content,
+.sidebar-header,
+.sidebar-footer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .sidebar-content {
@@ -186,11 +201,57 @@
   font-weight: 500;
   font-size: 14px;
   position: relative;
+  white-space: nowrap;
+  overflow: visible;
 }
 
 .sidebar.collapsed .sidebar-nav a {
   padding: 12px;
   justify-content: center;
+}
+
+.sidebar-nav a span {
+  opacity: 1;
+  visibility: visible;
+  display: inline-flex;
+}
+
+.sidebar.collapsed .sidebar-nav a > span:not(.absolute) {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+  display: none;
+}
+
+/* Badge should always be visible */
+.sidebar-nav a span.absolute {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  width: auto !important;
+}
+
+/* Header text hiding */
+.brand-name,
+.brand-subtitle {
+  transition: opacity 0.15s ease;
+}
+
+.sidebar.collapsed .brand-name,
+.sidebar.collapsed .brand-subtitle {
+  display: none;
+  visibility: hidden;
+}
+
+/* Logout text hiding */
+.logout-btn span {
+  transition: opacity 0.15s ease;
+}
+
+.sidebar.collapsed .logout-btn span {
+  display: none;
+  visibility: hidden;
 }
 
 .sidebar-nav a:hover {

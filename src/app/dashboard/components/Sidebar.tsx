@@ -44,6 +44,58 @@ const Sidebar = () => {
     router.push("/dashboard/login")
   }
 
+  const [pendingOrders, setPendingOrders] = useState(0)
+  const [lowStockCount, setLowStockCount] = useState(0)
+  const [pendingReviews, setPendingReviews] = useState(0)
+  const [newInquiries, setNewInquiries] = useState(0)
+  const [activeCoupons, setActiveCoupons] = useState(0)
+
+  useEffect(() => {
+    const fetchBadges = async () => {
+      const { supabase } = await import("@/lib/supabase/client")
+      
+      // Pending orders
+      const { count: pendingCount } = await supabase
+        .from("orders")
+        .select("*", { count: "exact", head: true })
+        .in("status", ["pending", "paid"])
+      
+      // Low stock products
+      const { count: stockCount } = await supabase
+        .from("products")
+        .select("*", { count: "exact", head: true })
+        .lt("stock_quantity", 5)
+
+      // Pending reviews (not approved)
+      // @ts-ignore - reviews table exists but not in generated types
+      const { count: reviewsCount } = await supabase
+        .from("reviews")
+        .select("*", { count: "exact", head: true })
+        .eq("is_approved", false)
+
+      // New inquiries (unread or pending)
+      // @ts-ignore - inquiries table exists but not in generated types
+      const { count: inquiriesCount } = await supabase
+        .from("inquiries")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "pending")
+
+      // Active coupons - count all active coupons (with no expiry or future expiry)
+      // @ts-ignore - coupons table exists but not in generated types
+      const { count: couponsCount } = await supabase
+        .from("coupons")
+        .select("*", { count: "exact", head: true })
+        .eq("is_active", true)
+
+      setPendingOrders(pendingCount || 0)
+      setLowStockCount(stockCount || 0)
+      setPendingReviews(reviewsCount || 0)
+      setNewInquiries(inquiriesCount || 0)
+      setActiveCoupons(couponsCount || 0)
+    }
+    fetchBadges()
+  }, [])
+
   const menuItems = [
     {
       to: "/dashboard",
@@ -52,16 +104,20 @@ const Sidebar = () => {
       roles: ["super_admin", "admin"],
     },
     {
+      to: "/dashboard/orders",
+      icon: FiClipboard,
+      label: "Orders",
+      roles: ["super_admin", "admin"],
+      badge: pendingOrders > 0 ? pendingOrders : null,
+      badgeColor: "bg-red-600",
+    },
+    {
       to: "/dashboard/products",
       icon: FiBox,
       label: "Products",
       roles: ["super_admin", "admin"],
-    },
-    {
-      to: "/dashboard/add-product",
-      icon: FiPlusSquare,
-      label: "Add Product",
-      roles: ["super_admin"],
+      badge: lowStockCount > 0 ? lowStockCount : null,
+      badgeColor: "bg-red-500",
     },
     {
       to: "/dashboard/categories",
@@ -70,11 +126,20 @@ const Sidebar = () => {
       roles: ["super_admin"],
     },
     {
-      to: "/dashboard/orders",
-      icon: FiClipboard,
-      label: "Orders",
-      roles: ["super_admin", "admin"],
+      to: "/dashboard/add-product",
+      icon: FiPlusSquare,
+      label: "Add Product",
+      roles: ["super_admin"],
     },
+    {
+      to: "/dashboard/inquiries",
+      icon: FiMessageSquare,
+      label: "Inquiries",
+      roles: ["super_admin", "admin"],
+      badge: newInquiries > 0 ? newInquiries : null,
+      badgeColor: "bg-blue-600",
+    },
+
     {
       to: "/dashboard/featured",
       icon: FiStar,
@@ -82,37 +147,29 @@ const Sidebar = () => {
       roles: ["super_admin", "admin"],
     },
     {
-      to: "/dashboard/inquiries",
-      icon: FiMessageSquare,
-      label: "Inquiries",
-      roles: ["super_admin", "admin"],
-    },
-    {
       to: "/dashboard/coupons",
       icon: FiPercent,
       label: "Coupons",
       roles: ["super_admin"],
+      badge: activeCoupons > 0 ? activeCoupons : null,
+      badgeColor: "bg-red-600",
     },
     {
       to: "/dashboard/reviews",
       icon: FiHeart,
       label: "Reviews",
       roles: ["super_admin", "admin"],
+      badge: pendingReviews > 0 ? pendingReviews : null,
+      badgeColor: "bg-amber-600",
     },
   ]
 
   const filteredItems = menuItems
 
   return (
-    <motion.div
+    <div
       className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
-      animate={{ width: isCollapsed ? 80 : 280 }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-        mass: 0.8
-      }}
+      style={{ width: isCollapsed ? 80 : 280 }}
     >
       {/* Mobile Overlay */}
       {!isCollapsed && (
@@ -128,11 +185,7 @@ const Sidebar = () => {
               <FiShoppingBag className="w-5 h-5" />
             </div>
             {!isCollapsed && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-              >
+              <div>
                 <h2 className="brand-name">Srikalahasti Kalamkari</h2>
                 <p className="brand-subtitle">Admin Panel</p>
                 {role && (
@@ -140,7 +193,7 @@ const Sidebar = () => {
                     {role.replace("_", " ")}
                   </span>
                 )}
-              </motion.div>
+              </div>
             )}
           </div>
           
@@ -162,23 +215,49 @@ const Sidebar = () => {
                     <TooltipTrigger asChild>
                       <Link
                         href={item.to}
-                        className={pathname === item.to ? "active" : ""}
+                        className={`${pathname === item.to ? "active" : ""} relative`}
                       >
                         <item.icon className="nav-icon" />
+                        {/* Badge for collapsed state - show count on icon */}
+                        {isCollapsed && item.badge != null && item.badge > 0 && (
+                          <span className={`absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-md ${
+                            item.badgeColor || "bg-[#A4552A]"
+                          }`}>
+                            {item.badge}
+                          </span>
+                        )}
                         {!isCollapsed && (
-                          <motion.span
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
+                          <span className="flex items-center w-full">
                             {item.label}
-                          </motion.span>
+                            {/* @ts-ignore */}
+                            {item.badge > 0 && (
+                              <span className={`ml-auto text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
+                                // @ts-ignore
+                                item.badgeColor || "bg-[#A4552A]"
+                              }`}>
+                                {/* @ts-ignore */}
+                                {item.badge}
+                              </span>
+                            )}
+                          </span>
                         )}
                       </Link>
                     </TooltipTrigger>
                     {isCollapsed && (
                       <TooltipContent side="right">
-                        {item.label}
+                        <div className="flex items-center gap-2">
+                          {item.label}
+                          {/* @ts-ignore */}
+                          {item.badge > 0 && (
+                            <span className={`text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
+                              // @ts-ignore
+                              item.badgeColor || "bg-[#A4552A]"
+                            }`}>
+                              {/* @ts-ignore */}
+                              {item.badge}
+                            </span>
+                          )}
+                        </div>
                       </TooltipContent>
                     )}
                   </Tooltip>
@@ -196,12 +275,9 @@ const Sidebar = () => {
               <button className="logout-btn" onClick={handleLogout}>
                 <FiLogOut className="logout-icon shrink-0" />
                 {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                  >
+                  <span>
                     Logout
-                  </motion.span>
+                  </span>
                 )}
               </button>
             </TooltipTrigger>
@@ -213,7 +289,7 @@ const Sidebar = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
-    </motion.div>
+    </div>
   )
 }
 

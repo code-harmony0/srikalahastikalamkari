@@ -13,9 +13,14 @@ import {
   Send,
   User,
   Loader2,
+  Star,
 } from "lucide-react";
 import { cn } from "@/shared/utils";
 import { toast } from "sonner";
+import { useAuth } from "@/shared/contexts/AuthContext";
+import { hasPurchasedProduct } from "@/services/orders";
+import { useEffect } from "react";
+
 
 interface ProductReviewsProps {
   productId: string;
@@ -33,53 +38,9 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
     markHelpful,
   } = useReviews(productId);
 
-  const [showForm, setShowForm] = useState(false);
+
   const [showAll, setShowAll] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    customer_name: "",
-    customer_email: "",
-    rating: 5,
-    title: "",
-    content: "",
-  });
-
   const displayedReviews = showAll ? reviews : reviews.slice(0, 3);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.customer_name || !formData.rating) {
-      toast.error("Please fill in required fields");
-      return;
-    }
-
-    setSubmitting(true);
-    const success = await submitReview({
-      product_id: productId,
-      customer_name: formData.customer_name,
-      customer_email: formData.customer_email || null,
-      rating: formData.rating,
-      title: formData.title || null,
-      content: formData.content || null,
-    });
-
-    if (success) {
-      toast.success("Review submitted!", {
-        description: "Your review will appear after moderation.",
-      });
-      setFormData({
-        customer_name: "",
-        customer_email: "",
-        rating: 5,
-        title: "",
-        content: "",
-      });
-      setShowForm(false);
-    } else {
-      toast.error("Failed to submit review");
-    }
-    setSubmitting(false);
-  };
 
   if (isLoading) {
     return (
@@ -92,167 +53,21 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
   return (
     <div className="py-12 border-t border-[#EAD6C3]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h2 className="font-playfair text-2xl font-bold text-[#3B2C23]">
-            Customer Reviews
-          </h2>
-          <p className="text-sm text-[#3B2C23]/60 mt-1">
-            {totalReviews} review{totalReviews !== 1 ? "s" : ""} for {productName}
-          </p>
-        </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-[#3B2C23] text-white text-sm font-medium rounded-lg hover:bg-[#3B2C23]/90 transition-colors flex items-center gap-2"
-        >
-          <MessageSquare className="w-4 h-4" />
-          Write a Review
-        </button>
-      </div>
-
-      {/* Summary Section */}
-      {totalReviews > 0 && (
-        <div className="grid md:grid-cols-2 gap-8 mb-10 p-6 bg-[#FFF8F0] rounded-2xl border border-[#EAD6C3]">
-          {/* Average Rating */}
-          <div className="text-center md:text-left">
-            <div className="text-5xl font-bold text-[#3B2C23] mb-2">
-              {averageRating.toFixed(1)}
-            </div>
-            <StarRating rating={averageRating} size="lg" />
-            <p className="text-sm text-[#3B2C23]/60 mt-2">
-              Based on {totalReviews} review{totalReviews !== 1 ? "s" : ""}
-            </p>
-          </div>
-
-          {/* Distribution */}
-          <RatingDistribution distribution={ratingDistribution} total={totalReviews} />
-        </div>
-      )}
-
-      {/* Review Form */}
-      <AnimatePresence>
-        {showForm && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mb-8"
-          >
-            <form
-              onSubmit={handleSubmit}
-              className="bg-white rounded-2xl border border-[#EAD6C3] p-6 space-y-4"
-            >
-              <h3 className="font-playfair text-lg font-bold text-[#3B2C23] mb-4">
-                Share Your Experience
-              </h3>
-
-              {/* Rating */}
-              <div>
-                <label className="block text-sm font-medium text-[#3B2C23]/80 mb-2">
-                  Your Rating *
-                </label>
-                <StarRating
-                  rating={formData.rating}
-                  size="lg"
-                  interactive
-                  onChange={(rating) => setFormData({ ...formData, rating })}
-                />
-              </div>
-
-              {/* Name & Email */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-[#3B2C23]/80 mb-1">
-                    Your Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.customer_name}
-                    onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
-                    required
-                    className="w-full px-4 py-2.5 border border-[#EAD6C3] rounded-lg focus:outline-none focus:border-[#C19A5B]"
-                    placeholder="John Doe"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3B2C23]/80 mb-1">
-                    Email (optional)
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.customer_email}
-                    onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-[#EAD6C3] rounded-lg focus:outline-none focus:border-[#C19A5B]"
-                    placeholder="email@example.com"
-                  />
-                </div>
-              </div>
-
-              {/* Title */}
-              <div>
-                <label className="block text-sm font-medium text-[#3B2C23]/80 mb-1">
-                  Review Title
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-[#EAD6C3] rounded-lg focus:outline-none focus:border-[#C19A5B]"
-                  placeholder="Summarize your experience"
-                />
-              </div>
-
-              {/* Content */}
-              <div>
-                <label className="block text-sm font-medium text-[#3B2C23]/80 mb-1">
-                  Your Review
-                </label>
-                <textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  rows={4}
-                  className="w-full px-4 py-2.5 border border-[#EAD6C3] rounded-lg focus:outline-none focus:border-[#C19A5B] resize-none"
-                  placeholder="Share your thoughts about this product..."
-                />
-              </div>
-
-              {/* Submit */}
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="px-4 py-2.5 border border-[#EAD6C3] text-[#3B2C23] rounded-lg hover:bg-[#FFF8F0]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-6 py-2.5 bg-[#A4552A] text-white rounded-lg hover:bg-[#8B3F20] disabled:opacity-50 flex items-center gap-2"
-                >
-                  {submitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                  Submit Review
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Reviews List */}
       {totalReviews === 0 ? (
-        <div className="text-center py-12 bg-[#FFF8F0] rounded-2xl border border-[#EAD6C3]">
-          <MessageSquare className="w-12 h-12 mx-auto text-[#C19A5B]/40 mb-4" />
-          <h3 className="font-playfair text-lg font-bold text-[#3B2C23]">
-            No reviews yet
+        <div className="text-center py-16 bg-[#FFF8F0] rounded-2xl border border-[#EAD6C3] px-6">
+          <div className="w-16 h-16 bg-[#EAD6C3]/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#EAD6C3]">
+            <Star className="w-8 h-8 text-[#A4552A]" fill="currentColor" />
+          </div>
+          <h3 className="font-playfair text-xl font-bold text-[#3B2C23] mb-2">
+            Be the First to Own a Masterpiece
           </h3>
-          <p className="text-sm text-[#3B2C23]/60 mt-1">
-            Be the first to review this product!
+          <p className="text-[#7A6A5C] max-w-md mx-auto mb-6 leading-relaxed">
+            This authentic Kalamkari piece is waiting for its home. Purchase now and perform the first review to share your experience with the world.
           </p>
+          <div className="inline-flex items-center justify-center px-4 py-1.5 bg-[#FFF4E8] rounded-full border border-[#EAD6C3]/50 text-xs font-medium text-[#A4552A]">
+            <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+            Verified Purchase Required for Review
+          </div>
         </div>
       ) : (
         <div className="space-y-4">

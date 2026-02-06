@@ -30,6 +30,7 @@ import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
 import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes } from "@/lib/image-utils"
 import { ProductReviews } from "./ProductReviews"
+import { useReviews } from "@/shared/hooks/use-reviews"
 import { StockAlert, SavingsBadge } from "@/shared/components/UrgencyTriggers"
 
 export default function ProductDetail() {
@@ -43,9 +44,11 @@ export default function ProductDetail() {
   
   const product = isUUID ? productById : productBySlug
   const isLoading = !slug ? true : (isUUID ? loadingById : loadingBySlug)
-  const { data: allProductsData } = useProducts()
-  const allProducts = allProductsData?.data || []
-
+  const { data: relatedProductsData } = useProducts({ 
+    category_id: product?.category_id,
+    limit: 5 
+  })
+  
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
@@ -53,41 +56,7 @@ export default function ProductDetail() {
   const cart = useCartStore()
   const wishlist = useWishlistStore()
 
-  // Mock Reviews
-  const reviews = [
-    {
-      id: "1",
-      customerName: "Priya Sharma",
-      rating: 5,
-      reviewText: "Absolutely stunning saree! The craftsmanship is exceptional.",
-      reviewDate: "Dec 15, 2025",
-      isVerifiedPurchase: true,
-    },
-    {
-      id: "2",
-      customerName: "Anjali Mehta",
-      rating: 5,
-      reviewText: "Beautiful traditional work. Fabric quality is excellent.",
-      reviewDate: "Dec 10, 2025",
-      isVerifiedPurchase: true,
-    },
-    {
-      id: "3",
-      customerName: "Sneha Patel",
-      rating: 4,
-      reviewText: "Lovely piece with intricate details.",
-      reviewDate: "Dec 5, 2025",
-      isVerifiedPurchase: true,
-    },
-    {
-      id: "4",
-      customerName: "Kavita Reddy",
-      rating: 5,
-      reviewText: "Third purchase and never disappoints.",
-      reviewDate: "Nov 28, 2025",
-      isVerifiedPurchase: true,
-    },
-  ]
+  const { averageRating, totalReviews } = useReviews(product?.id || "")
 
   // Derived Data - Optimize images for different contexts
   const productImages = useMemo(() => {
@@ -111,14 +80,11 @@ export default function ProductDetail() {
     [productImages]
   );
   
-  const relatedProducts = allProducts
-    .filter((p) => p.id !== product?.id && p.category_id === product?.category_id)
+  const relatedProducts = (relatedProductsData?.data || [])
+    .filter((p) => p.id !== product?.id)
     .slice(0, 4)
   
   const isInWishlist = product ? wishlist.isInWishlist(product.id) : false
-  const avgRating = reviews.length > 0
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-    : "4.8"
   const inStock = (product?.stock_quantity || 0) > 0
 
   // Handlers
@@ -246,11 +212,11 @@ export default function ProductDetail() {
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(Number(avgRating)) ? "fill-[#D4AF37] text-[#D4AF37]" : "text-[#C19A5B]/30"}`} />
+                      <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(averageRating) ? "fill-[#D4AF37] text-[#D4AF37]" : "text-[#C19A5B]/30"}`} />
                     ))}
                   </div>
                   <a href="#reviews" className="text-xs text-[#7A6A5C] hover:text-[#A4552A] underline underline-offset-2">
-                    {avgRating} ({reviews.length} reviews)
+                    {averageRating.toFixed(1)} ({totalReviews} reviews)
                   </a>
                 </div>
               </div>
@@ -417,45 +383,6 @@ export default function ProductDetail() {
         {/* ─────────────────────────────────────────────
             SECTION 3: REVIEWS (Unified Container)
         ────────────────────────────────────────────── */}
-        <div id="reviews" className="mt-16 pt-10 border-t border-[#EAD6C3]/30">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
-            <div>
-              <h2 className="font-playfair text-2xl font-bold text-[#3B2C23] mb-1">Customer Reviews</h2>
-              <p className="text-xs text-[#7A6A5C] font-inter">Verified purchases only</p>
-            </div>
-            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded border border-[#EAD6C3]/30">
-              <span className="text-lg font-bold text-[#3B2C23]">{avgRating}</span>
-              <div className="flex gap-0.5 text-[#E6B162]">
-                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {reviews.slice(0, 4).map((review) => (
-              <div key={review.id} className="p-6 rounded-[8px] bg-white border border-[#EAD6C3]/30 hover:border-[#EAD6C3] transition-colors">
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-inter font-semibold text-sm text-[#3B2C23]">{review.customerName}</h4>
-                  <span className="text-[10px] text-[#7A6A5C]">{review.reviewDate}</span>
-                </div>
-                <div className="flex gap-0.5 mb-3 text-[#E6B162]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`w-3 h-3 ${i < review.rating ? "fill-current" : "text-[#EAD6C3]"}`} />
-                  ))}
-                </div>
-                <p className="text-xs text-[#3B2C23]/70 leading-relaxed line-clamp-2">
-                  "{review.reviewText}"
-                </p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-8 text-center">
-            <button className="text-xs font-bold uppercase tracking-widest text-[#A4552A] border-b border-[#A4552A]/30 pb-0.5 hover:text-[#8B3F20] transition-colors">
-              Show All Reviews
-            </button>
-          </div>
-        </div>
 
         {/* ─────────────────────────────────────────────
             SECTION 4: RELATED PRODUCTS (Curated)

@@ -536,3 +536,27 @@ export const generateMissingBarcodes = async (): Promise<{ success: number; erro
     return { success: 0, errors: 1 };
   }
 };
+
+// Check if user has purchased a product
+export async function hasPurchasedProduct(productId: string, customerEmail: string): Promise<boolean> {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("orders")
+      .select(`
+        id,
+        order_items!inner (
+          product_id
+        )
+      `)
+      .eq("customer_email", customerEmail)
+      .eq("order_items.product_id", productId)
+      .in("status", ["paid", "shipped", "packed", "in_packing"])
+      .limit(1);
+
+    if (error) throw error;
+    return (data?.length || 0) > 0;
+  } catch (error) {
+    console.error("Error checking purchase history:", error);
+    return false;
+  }
+}

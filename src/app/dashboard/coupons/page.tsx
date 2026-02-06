@@ -4,17 +4,10 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { getCoupons, createCoupon, updateCoupon, deleteCoupon as deleteCouponAction, toggleCouponActive } from "./actions";
 import { toast } from "sonner";
+import CouponCard from "./CouponCard";
 import {
   Plus,
   Tag,
-  Trash2,
-  Edit,
-  CheckCircle2,
-  XCircle,
-  Percent,
-  DollarSign,
-  Calendar,
-  Users,
   Loader2,
 } from "lucide-react";
 
@@ -354,77 +347,15 @@ export default function CouponsPage() {
           <p className="text-slate-500 text-sm mt-1">Create your first discount code</p>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-5">
           {coupons.map((coupon) => (
-            <motion.div
+            <CouponCard
               key={coupon.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl border border-slate-100 p-5 flex items-center gap-4"
-            >
-              {/* Icon */}
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${coupon.is_active ? "bg-emerald-50" : "bg-slate-100"}`}>
-                {coupon.discount_type === "percentage" ? (
-                  <Percent className={`w-5 h-5 ${coupon.is_active ? "text-emerald-600" : "text-slate-400"}`} />
-                ) : (
-                  <DollarSign className={`w-5 h-5 ${coupon.is_active ? "text-emerald-600" : "text-slate-400"}`} />
-                )}
-              </div>
-
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-slate-900 font-mono">{coupon.code}</h3>
-                  {coupon.is_active ? (
-                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full">Active</span>
-                  ) : (
-                    <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs font-medium rounded-full">Inactive</span>
-                  )}
-                </div>
-                <p className="text-sm text-slate-500 mt-0.5 truncate">{coupon.description || "No description"}</p>
-                <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
-                  <span className="flex items-center gap-1">
-                    <Tag className="w-3 h-3" />
-                    {coupon.discount_type === "percentage" ? `${coupon.discount_value}% off` : `₹${coupon.discount_value} off`}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Users className="w-3 h-3" />
-                    {coupon.used_count}/{coupon.usage_limit || "∞"} used
-                  </span>
-                  {coupon.expires_at && (
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      Expires {new Date(coupon.expires_at).toLocaleDateString()}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => toggleActive(coupon)}
-                  className={`p-2 rounded-lg transition-colors ${coupon.is_active ? "hover:bg-amber-50 text-amber-600" : "hover:bg-emerald-50 text-emerald-600"}`}
-                  title={coupon.is_active ? "Deactivate" : "Activate"}
-                >
-                  {coupon.is_active ? <XCircle className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5" />}
-                </button>
-                <button
-                  onClick={() => handleEdit(coupon)}
-                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-600"
-                  title="Edit"
-                >
-                  <Edit className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(coupon.id)}
-                  className="p-2 rounded-lg hover:bg-red-50 text-red-500"
-                  title="Delete"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
-            </motion.div>
+              coupon={coupon}
+              onToggleActive={toggleActive}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       )}
