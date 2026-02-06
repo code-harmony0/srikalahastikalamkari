@@ -68,21 +68,21 @@ const Sidebar = () => {
 
       // Pending reviews (not approved)
       // @ts-ignore - reviews table exists but not in generated types
-      const { count: reviewsCount } = await supabase
+      const { count: reviewsCount } = await (supabase as any)
         .from("reviews")
         .select("*", { count: "exact", head: true })
         .eq("is_approved", false)
 
       // New inquiries (unread or pending)
       // @ts-ignore - inquiries table exists but not in generated types
-      const { count: inquiriesCount } = await supabase
+      const { count: inquiriesCount } = await (supabase as any)
         .from("inquiries")
         .select("*", { count: "exact", head: true })
         .eq("status", "pending")
 
       // Active coupons - count all active coupons (with no expiry or future expiry)
       // @ts-ignore - coupons table exists but not in generated types
-      const { count: couponsCount } = await supabase
+      const { count: couponsCount } = await (supabase as any)
         .from("coupons")
         .select("*", { count: "exact", head: true })
         .eq("is_active", true)
