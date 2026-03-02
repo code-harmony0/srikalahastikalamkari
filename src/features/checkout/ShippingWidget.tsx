@@ -93,7 +93,7 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
         {/* Divider */}
         <div className="h-px bg-[#EAD6C3]/40 w-full" />
 
-        {/* Returns & Support */}
+        {/* Support */}
         <div className="flex gap-3 group">
           <div className="w-8 h-8 rounded-full bg-[#FFF4E8] flex items-center justify-center shrink-0 border border-[#C19A5B]/20 group-hover:border-[#C19A5B] transition-colors">
             <ShieldCheck className="w-4 h-4 text-[#A4552A]" />
@@ -103,12 +103,9 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
               Peace of Mind
             </h4>
             <p className="font-inter text-[#3B2C23]/60 text-xs mt-0.5 mb-2">
-              Secure checkout & hassle-free returns.
+              Secure checkout.
             </p>
             <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1 text-[11px] font-bold uppercase text-[#C19A5B] cursor-pointer hover:text-[#A4552A] transition-colors">
-                Return Policy <ChevronRight className="w-3 h-3" />
-              </span>
               <span className="flex items-center gap-1 text-[11px] font-bold uppercase text-[#C19A5B] cursor-pointer hover:text-[#A4552A] transition-colors">
                 Support <Phone className="w-3 h-3" />
               </span>

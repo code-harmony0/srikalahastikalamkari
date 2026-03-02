@@ -1,11 +1,15 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { useProductBySlug, useProducts, useProduct } from "@/shared/hooks/use-products"
+import {
+  useProductBySlug,
+  useProducts,
+  useProduct,
+} from "@/shared/hooks/use-products"
 import { useCartStore } from "@/shared/cart-store"
 import { useWishlistStore } from "@/shared/wishlist-store"
 import {
@@ -24,11 +28,15 @@ import {
   Minus,
   Plus,
   Check,
-  X
+  X,
 } from "lucide-react"
 import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
-import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes } from "@/lib/image-utils"
+import {
+  getOptimizedImageUrl,
+  IMAGE_SIZES,
+  getResponsiveSizes,
+} from "@/lib/image-utils"
 import { ProductReviews } from "./ProductReviews"
 import { useReviews } from "@/shared/hooks/use-reviews"
 import { StockAlert, SavingsBadge } from "@/shared/components/UrgencyTriggers"
@@ -36,19 +44,24 @@ import { StockAlert, SavingsBadge } from "@/shared/components/UrgencyTriggers"
 export default function ProductDetail() {
   const params = useParams()
   const slug = params?.slug as string
-  
-  const isUUID = slug ? /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug) : false
-  
-  const { data: productBySlug, isLoading: loadingBySlug } = useProductBySlug(slug)
+
+  const isUUID = slug
+    ? /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        slug,
+      )
+    : false
+
+  const { data: productBySlug, isLoading: loadingBySlug } =
+    useProductBySlug(slug)
   const { data: productById, isLoading: loadingById } = useProduct(slug)
-  
+
   const product = isUUID ? productById : productBySlug
-  const isLoading = !slug ? true : (isUUID ? loadingById : loadingBySlug)
-  const { data: relatedProductsData } = useProducts({ 
+  const isLoading = !slug ? true : isUUID ? loadingById : loadingBySlug
+  const { data: relatedProductsData } = useProducts({
     category_id: product?.category_id,
-    limit: 5 
+    limit: 5,
   })
-  
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
@@ -58,32 +71,58 @@ export default function ProductDetail() {
 
   const { averageRating, totalReviews } = useReviews(product?.id || "")
 
+  // Set product data globally for WhatsApp button
+  useEffect(() => {
+    if (product && typeof window !== "undefined") {
+      ;(window as any).__PRODUCT_DATA = {
+        id: product.id,
+        name: product.name || product.title,
+        price: product.price,
+        slug: product.slug,
+      }
+    }
+
+    // Cleanup when component unmounts
+    return () => {
+      if (typeof window !== "undefined") {
+        delete (window as any).__PRODUCT_DATA
+      }
+    }
+  }, [product])
+
   // Derived Data - Optimize images for different contexts
   const productImages = useMemo(() => {
-    const rawImages = product?.images?.length 
-      ? product.images 
-      : product?.mainImage 
-        ? [product.mainImage] 
-        : ["/images/products/product-placeholder.png"];
-    return rawImages;
-  }, [product?.images, product?.mainImage]);
-  
+    const rawImages = product?.images?.length
+      ? product.images
+      : product?.mainImage
+        ? [product.mainImage]
+        : ["/images/products/product-placeholder.png"]
+    return rawImages
+  }, [product?.images, product?.mainImage])
+
   // Optimized main image (high quality for detail view)
-  const mainProductImage = useMemo(() => 
-    getOptimizedImageUrl(productImages[selectedImageIndex], IMAGE_SIZES.productDetail),
-    [productImages, selectedImageIndex]
-  );
-  
+  const mainProductImage = useMemo(
+    () =>
+      getOptimizedImageUrl(
+        productImages[selectedImageIndex],
+        IMAGE_SIZES.productDetail,
+      ),
+    [productImages, selectedImageIndex],
+  )
+
   // Optimized thumbnails (small)
-  const thumbnailImages = useMemo(() => 
-    productImages.map(img => getOptimizedImageUrl(img, IMAGE_SIZES.thumbnail)),
-    [productImages]
-  );
-  
+  const thumbnailImages = useMemo(
+    () =>
+      productImages.map((img) =>
+        getOptimizedImageUrl(img, IMAGE_SIZES.thumbnail),
+      ),
+    [productImages],
+  )
+
   const relatedProducts = (relatedProductsData?.data || [])
     .filter((p) => p.id !== product?.id)
     .slice(0, 4)
-  
+
   const isInWishlist = product ? wishlist.isInWishlist(product.id) : false
   const inStock = (product?.stock_quantity || 0) > 0
 
@@ -124,7 +163,9 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center px-4">
         <Package className="h-12 w-12 text-[#C19A5B] mb-3" />
-        <h1 className="font-playfair text-xl font-bold text-[#3B2C23] mb-2">Product Not Found</h1>
+        <h1 className="font-playfair text-xl font-bold text-[#3B2C23] mb-2">
+          Product Not Found
+        </h1>
         <Link href="/products">
           <button className="text-[#A4552A] font-medium text-sm hover:underline underline-offset-4">
             Return to Shop
@@ -136,33 +177,40 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
-      
       {/* ─────────────────────────────────────────────
           BREADCRUMB
       ────────────────────────────────────────────── */}
       <div className="border-b border-[#EAD6C3]/20 bg-white/50">
-        <div className="max-w-[1380px] mx-auto px-4 md:px-6 py-3"> {/* Increased width */}
+        <div className="max-w-[1380px] mx-auto px-4 md:px-6 py-3">
+          {" "}
+          {/* Increased width */}
           <div className="flex items-center gap-2 text-[11px] text-[#7A6A5C] font-inter uppercase tracking-wide">
-            <Link href="/" className="hover:text-[#A4552A] transition-colors">Home</Link>
+            <Link href="/" className="hover:text-[#A4552A] transition-colors">
+              Home
+            </Link>
             <span className="opacity-40">/</span>
-            <Link href="/products" className="hover:text-[#A4552A] transition-colors">Shop</Link>
+            <Link
+              href="/products"
+              className="hover:text-[#A4552A] transition-colors"
+            >
+              Shop
+            </Link>
             <span className="opacity-40">/</span>
-            <span className="text-[#3B2C23] font-semibold truncate max-w-[200px]">{product.name || product.title}</span>
+            <span className="text-[#3B2C23] font-semibold truncate max-w-[200px]">
+              {product.name || product.title}
+            </span>
           </div>
         </div>
       </div>
-
       {/* ─────────────────────────────────────────────
           GLOBAL CONTAINER FOR CONTENT
           Max-width increased to 1380px to reduce side padding
       ────────────────────────────────────────────── */}
       <div className="max-w-[1380px] mx-auto px-4 md:px-6 pb-12">
-
         {/* ─────────────────────────────────────────────
             SECTION 1: PRODUCT HERO
         ────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-8">
-          
           {/* LEFT: GALLERY (7 Cols - Wider Image Area) */}
           <div className="lg:col-span-7 flex flex-col-reverse lg:flex-row gap-4 h-fit">
             {/* Thumbnails */}
@@ -176,10 +224,16 @@ export default function ProductDetail() {
                       "relative w-16 h-20 lg:w-20 lg:h-24 rounded-[6px] overflow-hidden border transition-all shrink-0",
                       selectedImageIndex === idx
                         ? "border-[#A4552A] ring-1 ring-[#A4552A]/20"
-                        : "border-[#EAD6C3]/30 hover:border-[#C19A5B]"
+                        : "border-[#EAD6C3]/30 hover:border-[#C19A5B]",
                     )}
                   >
-                    <Image src={thumbnailImages[idx]} alt={`View ${idx + 1}`} fill className="object-cover" sizes="80px" />
+                    <Image
+                      src={thumbnailImages[idx]}
+                      alt={`View ${idx + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
                   </button>
                 ))}
               </div>
@@ -192,7 +246,7 @@ export default function ProductDetail() {
                 alt={product.name || product.title || "Product"}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
-                sizes={getResponsiveSizes('detail')}
+                sizes={getResponsiveSizes("detail")}
                 priority
                 onClick={() => setIsImageModalOpen(true)}
               />
@@ -202,20 +256,25 @@ export default function ProductDetail() {
           {/* RIGHT: PRODUCT INFO (5 Cols - Content Area) */}
           <div className="lg:col-span-5 flex flex-col h-full">
             <div className="sticky top-24 space-y-6">
-              
               {/* Header Group */}
               <div className="space-y-2">
                 <h1 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-bold text-[#3B2C23] leading-[1.2]">
                   {product.name || product.title}
                 </h1>
-                
+
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(averageRating) ? "fill-[#D4AF37] text-[#D4AF37]" : "text-[#C19A5B]/30"}`} />
+                      <Star
+                        key={i}
+                        className={`w-3.5 h-3.5 ${i < Math.round(averageRating) ? "fill-[#D4AF37] text-[#D4AF37]" : "text-[#C19A5B]/30"}`}
+                      />
                     ))}
                   </div>
-                  <a href="#reviews" className="text-xs text-[#7A6A5C] hover:text-[#A4552A] underline underline-offset-2">
+                  <a
+                    href="#reviews"
+                    className="text-xs text-[#7A6A5C] hover:text-[#A4552A] underline underline-offset-2"
+                  >
                     {averageRating.toFixed(1)} ({totalReviews} reviews)
                   </a>
                 </div>
@@ -227,32 +286,41 @@ export default function ProductDetail() {
                   <span className="font-inter text-2xl md:text-3xl font-bold text-[#A4552A]">
                     {formatPrice(product.price || 0)}
                   </span>
-                  {product.original_price && product.original_price > product.price && (
-                    <span className="font-inter text-sm text-[#7A6A5C]/60 line-through decoration-[#7A6A5C]/40">
-                      {formatPrice(product.original_price)}
-                    </span>
-                  )}
+                  {product.original_price &&
+                    product.original_price > product.price && (
+                      <span className="font-inter text-sm text-[#7A6A5C]/60 line-through decoration-[#7A6A5C]/40">
+                        {formatPrice(product.original_price)}
+                      </span>
+                    )}
                 </div>
-                
+
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBF7EF] border border-[#3FAF6C]/20">
-                                  <div className={`w-1.5 h-1.5 rounded-full ${inStock ? "bg-[#2E7D4D]" : "bg-red-500"}`} />
+                  <div
+                    className={`w-1.5 h-1.5 rounded-full ${inStock ? "bg-[#2E7D4D]" : "bg-red-500"}`}
+                  />
                   <span className="text-[10px] font-bold uppercase tracking-wide text-[#2E7D4D]">
                     {inStock ? "In Stock" : "Out of Stock"}
                   </span>
                 </div>
-                {product.original_price && product.original_price > product.price && (
-                  <SavingsBadge originalPrice={product.original_price} salePrice={product.price} />
-                )}
+                {product.original_price &&
+                  product.original_price > product.price && (
+                    <SavingsBadge
+                      originalPrice={product.original_price}
+                      salePrice={product.price}
+                    />
+                  )}
               </div>
 
               {/* Low Stock Alert */}
-              {product.stock_quantity !== undefined && <StockAlert stock={product.stock_quantity} />}
+              {product.stock_quantity !== undefined && (
+                <StockAlert stock={product.stock_quantity} />
+              )}
 
               {/* Trust Strip */}
               <div className="flex items-center gap-6 py-2">
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#5C4A3D]">
                   <Truck className="w-3.5 h-3.5 text-[#A4552A]" />
-                  <span>Free shipping {'>'} ₹2000</span>
+                  <span>Free shipping {">"} ₹2000</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#5C4A3D]">
                   <Package className="w-3.5 h-3.5 text-[#A4552A]" />
@@ -266,7 +334,9 @@ export default function ProductDetail() {
 
               {/* Essence */}
               <p className="text-sm text-[#3B2C23]/80 font-inter leading-relaxed">
-                {product.description?.slice(0, 180) || "Handcrafted with traditional Kalamkari techniques, showcasing authentic artisan craftsmanship. Each piece tells a story of heritage and skilled artistry."}...
+                {product.description?.slice(0, 180) ||
+                  "Handcrafted with traditional Kalamkari techniques, showcasing authentic artisan craftsmanship. Each piece tells a story of heritage and skilled artistry."}
+                ...
               </p>
 
               {/* Actions */}
@@ -281,7 +351,9 @@ export default function ProductDetail() {
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="flex-1 text-center font-inter text-sm font-medium">{quantity}</span>
+                    <span className="flex-1 text-center font-inter text-sm font-medium">
+                      {quantity}
+                    </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
                       className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23]"
@@ -306,12 +378,17 @@ export default function ProductDetail() {
                     onClick={handleToggleWishlist}
                     className={cn(
                       "flex-1 h-[40px] border rounded-[6px] flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-wide transition-all",
-                      isInWishlist 
-                        ? "border-[#A4552A] text-[#A4552A] bg-[#FFF4E8]" 
-                        : "border-[#EAD6C3] text-[#7A6A5C] hover:border-[#A4552A] hover:text-[#A4552A]"
+                      isInWishlist
+                        ? "border-[#A4552A] text-[#A4552A] bg-[#FFF4E8]"
+                        : "border-[#EAD6C3] text-[#7A6A5C] hover:border-[#A4552A] hover:text-[#A4552A]",
                     )}
                   >
-                    <Heart className={cn("w-3.5 h-3.5", isInWishlist && "fill-current")} />
+                    <Heart
+                      className={cn(
+                        "w-3.5 h-3.5",
+                        isInWishlist && "fill-current",
+                      )}
+                    />
                     Wishlist
                   </button>
                   <button
@@ -323,7 +400,6 @@ export default function ProductDetail() {
                   </button>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -333,21 +409,30 @@ export default function ProductDetail() {
         ────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Offset to align with content column (7 cols space) */}
-          <div className="hidden lg:block lg:col-span-7" /> 
-          
+          <div className="hidden lg:block lg:col-span-7" />
+
           <div className="lg:col-span-5 bg-white rounded-[10px] border border-[#EAD6C3]/30 overflow-hidden shadow-sm">
             <Accordion type="single" collapsible defaultValue="details">
-              
-              <AccordionItem value="details" className="border-b border-[#EAD6C3]/20 px-6">
+              <AccordionItem
+                value="details"
+                className="border-b border-[#EAD6C3]/20 px-6"
+              >
                 <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#3B2C23] hover:no-underline">
                   Product Details
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-[#3B2C23]/70 font-inter leading-relaxed">
                   {product.specifications ? (
                     <ul className="space-y-2 list-disc pl-4 marker:text-[#EAD6C3]">
-                      {Object.entries(product.specifications).map(([key, value]) => (
-                        <li key={key}><span className="font-medium text-[#3B2C23]">{key}:</span> {String(value)}</li>
-                      ))}
+                      {Object.entries(product.specifications).map(
+                        ([key, value]) => (
+                          <li key={key}>
+                            <span className="font-medium text-[#3B2C23]">
+                              {key}:
+                            </span>{" "}
+                            {String(value)}
+                          </li>
+                        ),
+                      )}
                     </ul>
                   ) : (
                     <p>Dimensions: 6.5 meters. Occasion: Festive, Wedding.</p>
@@ -355,27 +440,35 @@ export default function ProductDetail() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="craft" className="border-b border-[#EAD6C3]/20 px-6">
+              <AccordionItem
+                value="craft"
+                className="border-b border-[#EAD6C3]/20 px-6"
+              >
                 <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#3B2C23] hover:no-underline">
                   Material & Craft
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-[#3B2C23]/70 font-inter leading-relaxed">
-                  <p className="mb-2"><strong className="text-[#3B2C23]">Fabric:</strong> Pure cotton with natural dyes.</p>
-                  <p><strong className="text-[#3B2C23]">Technique:</strong> Traditional hand-painted Kalamkari using organic colors derived from roots, leaves, and minerals.</p>
+                  <p className="mb-2">
+                    <strong className="text-[#3B2C23]">Fabric:</strong> Pure
+                    cotton with natural dyes.
+                  </p>
+                  <p>
+                    <strong className="text-[#3B2C23]">Technique:</strong>{" "}
+                    Traditional hand-painted Kalamkari using organic colors
+                    derived from roots, leaves, and minerals.
+                  </p>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="shipping" className="px-6 border-b-0">
                 <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#3B2C23] hover:no-underline">
-                  Shipping & Returns
+                  Shipping
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-[#3B2C23]/70 font-inter leading-relaxed">
                   <p className="mb-1">• Free shipping on orders over ₹2000</p>
                   <p className="mb-1">• Delivery: 5-7 business days</p>
-                  <p>• Returns: 7-day return policy for unused items</p>
                 </AccordionContent>
               </AccordionItem>
-
             </Accordion>
           </div>
         </div>
@@ -392,7 +485,7 @@ export default function ProductDetail() {
             <h2 className="font-playfair text-2xl font-bold text-[#3B2C23] mb-8 text-center">
               You May Also Love
             </h2>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
               {relatedProducts.map((relProduct) => (
                 <Link
@@ -402,11 +495,14 @@ export default function ProductDetail() {
                 >
                   <div className="relative aspect-[4/5] bg-white rounded-[8px] overflow-hidden border border-[#EAD6C3]/30 mb-3">
                     <Image
-                      src={getOptimizedImageUrl(relProduct.images?.[0] || relProduct.mainImage, IMAGE_SIZES.productCard)}
+                      src={getOptimizedImageUrl(
+                        relProduct.images?.[0] || relProduct.mainImage,
+                        IMAGE_SIZES.productCard,
+                      )}
                       alt={relProduct.name || relProduct.title || "Product"}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes={getResponsiveSizes('grid')}
+                      sizes={getResponsiveSizes("grid")}
                       loading="lazy"
                     />
                     {relProduct.isFeatured && (
@@ -426,9 +522,8 @@ export default function ProductDetail() {
             </div>
           </div>
         )}
-
-      </div> {/* END GLOBAL CONTAINER */}
-
+      </div>{" "}
+      {/* END GLOBAL CONTAINER */}
       {/* Image Modal */}
       <AnimatePresence>
         {isImageModalOpen && (
@@ -443,22 +538,23 @@ export default function ProductDetail() {
               <X className="w-8 h-8" />
             </button>
             <div className="relative w-full h-full max-w-4xl flex items-center justify-center">
-              <Image 
-                src={mainProductImage} 
-                alt="Fullscreen view" 
-                fill 
-                className="object-contain" 
+              <Image
+                src={mainProductImage}
+                alt="Fullscreen view"
+                fill
+                className="object-contain"
               />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* Reviews Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ProductReviews productId={product.id} productName={product.title || product.name} />
+        <ProductReviews
+          productId={product.id}
+          productName={product.title || product.name}
+        />
       </div>
-
     </div>
   )
 }

@@ -1,10 +1,9 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, Heart, Award, Users, Leaf, Check } from "lucide-react";
-import { cn } from "@/shared/utils";
+import { motion } from "framer-motion"
+import Image from "next/image"
+import Link from "next/link"
+import { ArrowRight, Heart, Award, Users, Leaf, Check } from "lucide-react"
 
 export default function AboutPage() {
   // --- Data ---
@@ -12,7 +11,7 @@ export default function AboutPage() {
     { number: "50+", label: "Master Artisans" },
     { number: "1000+", label: "Happy Customers" },
     { number: "4", label: "Years of Heritage" },
-  ];
+  ]
 
   const teamMembers = [
     {
@@ -33,7 +32,7 @@ export default function AboutPage() {
       image:
         "https://static.wixstatic.com/media/07221c_b9f5ac481d3e4258b0892671da656df3~mv2.png/v1/fill/w_448,h_640,al_c,q_85,usm_0.66_1.00_0.01/Manager.png",
     },
-  ];
+  ]
 
   const values = [
     {
@@ -60,13 +59,13 @@ export default function AboutPage() {
         "Keeping the rich heritage of Indian textile traditions alive for future generations.",
       icon: Users,
     },
-  ];
+  ]
 
   // --- Animation Variants ---
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
-  };
+  }
 
   const staggerContainer = {
     hidden: { opacity: 0 },
@@ -74,7 +73,7 @@ export default function AboutPage() {
       opacity: 1,
       transition: { staggerChildren: 0.15 },
     },
-  };
+  }
 
   return (
     <div className="w-full min-h-screen bg-[#FAF3EC] text-[#3B2C23]">
@@ -174,19 +173,20 @@ export default function AboutPage() {
                   tradition while making it accessible to the modern world.
                 </p>
                 <p>
-                  From our studio in Srikalahasti, we create authentic hand-painted
-                  masterpieces including Sarees, Duppatas, and exquisite Wall Paintings.
-                  Each piece is a testament to the skill of our master artisans and
-                  the rich heritage of the region.
+                  From our studio in Srikalahasti, we create authentic
+                  hand-painted masterpieces including Sarees, Duppatas, and
+                  exquisite Wall Paintings. Each piece is a testament to the
+                  skill of our master artisans and the rich heritage of the
+                  region.
                 </p>
               </div>
 
               {/* Stats Row */}
               <div className="grid grid-cols-3 gap-4 pt-8 border-t border-[#3B2C23]/10">
                 {[
-                    { number: "200+", label: "Master Artisans" },
-                    { number: "GSTIN", label: "37EVOPS6191D1ZX" },
-                    { number: "EST.", label: "2026" },
+                  { number: "200+", label: "Master Artisans" },
+                  { number: "GSTIN", label: "37EVOPS6191D1ZX" },
+                  { number: "EST.", label: "1999" },
                 ].map((stat, i) => (
                   <div key={i} className="text-center">
                     <div className="font-playfair font-bold text-xl md:text-2xl text-[#B35E2E] mb-1">
@@ -393,5 +393,5 @@ export default function AboutPage() {
         </div>
       </section>
     </div>
-  );
+  )
 }

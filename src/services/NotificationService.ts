@@ -1,12 +1,17 @@
-import { supabase } from '../lib/supabase/client'
-import { EnhancedOrder, NotificationLog, NotificationType, NotificationStatus } from '../lib/supabase/enhanced-types'
+import { supabase } from "../lib/supabase/client"
+import {
+  EnhancedOrder,
+  NotificationLog,
+  NotificationType,
+  NotificationStatus,
+} from "../lib/supabase/enhanced-types"
 
 /**
  * Notification Service
- * 
+ *
  * Manages multi-channel customer notifications with comprehensive logging
  * Supports email, push, and SMS notifications with retry logic
- * 
+ *
  * Requirements: 3.1, 3.2, 3.5
  */
 
@@ -18,19 +23,21 @@ export interface NotificationTemplate {
 
 export interface NotificationOptions {
   channels?: NotificationType[]
-  priority?: 'high' | 'normal' | 'low'
+  priority?: "high" | "normal" | "low"
   scheduleAt?: Date
   metadata?: Record<string, any>
 }
 
 export class NotificationService {
-  
   /**
    * Email notification templates for different order statuses
    */
-  private static readonly EMAIL_TEMPLATES: Record<string, NotificationTemplate> = {
+  private static readonly EMAIL_TEMPLATES: Record<
+    string,
+    NotificationTemplate
+  > = {
     order_confirmed: {
-      subject: 'Order Confirmed - #{orderNumber}',
+      subject: "Order Confirmed - #{orderNumber}",
       body: `Dear {customerName},
 
 Thank you for your order! We've received your order #{orderNumber} and payment has been confirmed.
@@ -70,11 +77,11 @@ The Team`,
   <p>If you have any questions, feel free to contact our support team.</p>
   
   <p>Best regards,<br>The Team</p>
-</div>`
+</div>`,
     },
-    
+
     order_packing: {
-      subject: 'Your Order is Being Prepared - #{orderNumber}',
+      subject: "Your Order is Being Prepared - #{orderNumber}",
       body: `Dear {customerName},
 
 Great news! Your order #{orderNumber} is now being carefully prepared and packed by our team.
@@ -114,11 +121,11 @@ The Team`,
   <p>Thank you for your patience!</p>
   
   <p>Best regards,<br>The Team</p>
-</div>`
+</div>`,
     },
-    
+
     order_shipped: {
-      subject: 'Your Order Has Been Shipped! - #{orderNumber}',
+      subject: "Your Order Has Been Shipped! - #{orderNumber}",
       body: `Dear {customerName},
 
 Exciting news! Your order #{orderNumber} has been shipped and is on its way to you!
@@ -169,11 +176,11 @@ The Team`,
   <p>If you have any questions or concerns, please don't hesitate to contact us.</p>
   
   <p>Best regards,<br>The Team</p>
-</div>`
+</div>`,
     },
-    
+
     order_delivered: {
-      subject: 'Your Order Has Been Delivered! - #{orderNumber}',
+      subject: "Your Order Has Been Delivered! - #{orderNumber}",
       body: `Dear {customerName},
 
 Great news! Your order #{orderNumber} has been successfully delivered!
@@ -210,11 +217,11 @@ The Team`,
   <p>Thank you for shopping with us! We look forward to serving you again.</p>
   
   <p>Best regards,<br>The Team</p>
-</div>`
+</div>`,
     },
-    
+
     order_cancelled: {
-      subject: 'Order Cancelled - #{orderNumber}',
+      subject: "Order Cancelled - #{orderNumber}",
       body: `Dear {customerName},
 
 Your order #{orderNumber} has been cancelled as requested.
@@ -223,9 +230,6 @@ Cancellation Details:
 - Order Number: #{orderNumber}
 - Cancelled On: {cancelledDate}
 - Reason: {cancellationReason}
-
-Refund Information:
-If you've already made a payment, the refund will be processed within 5-7 business days to your original payment method.
 
 Questions?
 If you have any questions about this cancellation or need further assistance, please contact our support team.
@@ -246,17 +250,14 @@ The Team`,
     <p><strong>Reason:</strong> {cancellationReason}</p>
   </div>
   
-  <h3>Refund Information</h3>
-  <p>If you've already made a payment, the refund will be processed within 5-7 business days to your original payment method.</p>
-  
   <h3>Questions?</h3>
   <p>If you have any questions about this cancellation or need further assistance, please contact our support team.</p>
   
   <p>We hope to serve you again in the future!</p>
   
   <p>Best regards,<br>The Team</p>
-</div>`
-    }
+</div>`,
+    },
   }
 
   /**
@@ -265,36 +266,43 @@ The Team`,
   public static async sendOrderUpdate(
     order: EnhancedOrder,
     status: string,
-    options: NotificationOptions = {}
+    options: NotificationOptions = {},
   ): Promise<boolean> {
     try {
-      const { channels = ['email'], priority = 'normal', metadata = {} } = options
-      
+      const {
+        channels = ["email"],
+        priority = "normal",
+        metadata = {},
+      } = options
+
       // Check notification preferences
       const preferences = order.notification_preferences
       if (!preferences) {
-        console.warn('No notification preferences found for order:', order.id)
+        console.warn("No notification preferences found for order:", order.id)
         return false
       }
 
       // Filter channels based on user preferences
-      const enabledChannels = channels.filter(channel => {
-        if (channel === 'email') return preferences.email
-        if (channel === 'push') return preferences.push
-        if (channel === 'sms') return preferences.sms
+      const enabledChannels = channels.filter((channel) => {
+        if (channel === "email") return preferences.email
+        if (channel === "push") return preferences.push
+        if (channel === "sms") return preferences.sms
         return false
       })
 
       if (enabledChannels.length === 0) {
-        console.log('No enabled notification channels for order:', order.id)
+        console.log("No enabled notification channels for order:", order.id)
         return true // Not an error, user has disabled notifications
       }
 
       // Check timing preference
-      if (preferences.timing_preference === 'milestone_only') {
-        const milestones = ['paid', 'shipped', 'delivered', 'cancelled']
+      if (preferences.timing_preference === "milestone_only") {
+        const milestones = ["paid", "shipped", "delivered", "cancelled"]
         if (!milestones.includes(status)) {
-          console.log('Skipping non-milestone notification for order:', order.id)
+          console.log(
+            "Skipping non-milestone notification for order:",
+            order.id,
+          )
           return true
         }
       }
@@ -302,21 +310,26 @@ The Team`,
       // Send notifications through enabled channels
       let success = true
       for (const channel of enabledChannels) {
-        const sent = await this.sendNotification(order, status, channel, metadata)
+        const sent = await this.sendNotification(
+          order,
+          status,
+          channel,
+          metadata,
+        )
         if (!sent) success = false
       }
 
       // Update last notification sent timestamp
       if (success) {
         await supabase
-          .from('orders')
+          .from("orders")
           .update({ last_notification_sent: new Date().toISOString() })
-          .eq('id', order.id)
+          .eq("id", order.id)
       }
 
       return success
     } catch (error) {
-      console.error('Error sending order update notification:', error)
+      console.error("Error sending order update notification:", error)
       return false
     }
   }
@@ -328,12 +341,12 @@ The Team`,
     order: EnhancedOrder,
     status: string,
     channel: NotificationType,
-    metadata: Record<string, any>
+    metadata: Record<string, any>,
   ): Promise<boolean> {
     try {
       const template = this.getTemplateForStatus(status)
       if (!template) {
-        console.warn('No template found for status:', status)
+        console.warn("No template found for status:", status)
         return false
       }
 
@@ -341,31 +354,53 @@ The Team`,
       const recipient = this.getRecipient(order, channel)
 
       if (!recipient) {
-        console.warn('No recipient found for channel:', channel)
+        console.warn("No recipient found for channel:", channel)
         return false
       }
 
       // Send notification based on channel
       let sent = false
       switch (channel) {
-        case 'email':
-          sent = await this.sendEmail(recipient, content.subject, content.body, content.htmlBody)
+        case "email":
+          sent = await this.sendEmail(
+            recipient,
+            content.subject,
+            content.body,
+            content.htmlBody,
+          )
           break
-        case 'push':
-          sent = await this.sendPushNotification(order, content.subject, content.body)
+        case "push":
+          sent = await this.sendPushNotification(
+            order,
+            content.subject,
+            content.body,
+          )
           break
-        case 'sms':
+        case "sms":
           sent = await this.sendSMS(recipient, content.body)
           break
       }
 
       // Log notification
-      await this.logNotification(order.id, channel, sent ? 'sent' : 'failed', template.subject, recipient)
+      await this.logNotification(
+        order.id,
+        channel,
+        sent ? "sent" : "failed",
+        template.subject,
+        recipient,
+      )
 
       return sent
     } catch (error) {
       console.error(`Error sending ${channel} notification:`, error)
-      await this.logNotification(order.id, channel, 'failed', '', '', String(error))
+      await this.logNotification(
+        order.id,
+        channel,
+        "failed",
+        "",
+        "",
+        String(error),
+      )
       return false
     }
   }
@@ -373,13 +408,15 @@ The Team`,
   /**
    * Gets appropriate template for order status
    */
-  private static getTemplateForStatus(status: string): NotificationTemplate | null {
+  private static getTemplateForStatus(
+    status: string,
+  ): NotificationTemplate | null {
     const templateMap: Record<string, string> = {
-      'paid': 'order_confirmed',
-      'in_packing': 'order_packing',
-      'shipped': 'order_shipped',
-      'delivered': 'order_delivered',
-      'cancelled': 'order_cancelled'
+      paid: "order_confirmed",
+      in_packing: "order_packing",
+      shipped: "order_shipped",
+      delivered: "order_delivered",
+      cancelled: "order_cancelled",
     }
 
     const templateKey = templateMap[status]
@@ -392,22 +429,24 @@ The Team`,
   private static populateTemplate(
     template: NotificationTemplate,
     order: EnhancedOrder,
-    metadata: Record<string, any>
+    metadata: Record<string, any>,
   ): { subject: string; body: string; htmlBody?: string } {
     const data = {
       orderNumber: order.id.substring(0, 8).toUpperCase(),
-      customerName: order.customer_name || 'Valued Customer',
+      customerName: order.customer_name || "Valued Customer",
       totalAmount: order.total_amount.toFixed(2),
-      orderDate: new Date(order.created_at).toLocaleDateString('en-IN'),
-      courierName: metadata.courierName || order.shipping_company || 'Courier',
-      trackingNumber: order.tracking_id || 'N/A',
-      trackingUrl: metadata.trackingUrl || '#',
-      estimatedDelivery: metadata.estimatedDelivery || 'Soon',
-      deliveryTimeframe: metadata.deliveryTimeframe || '3-7 business days',
+      orderDate: new Date(order.created_at).toLocaleDateString("en-IN"),
+      courierName: metadata.courierName || order.shipping_company || "Courier",
+      trackingNumber: order.tracking_id || "N/A",
+      trackingUrl: metadata.trackingUrl || "#",
+      estimatedDelivery: metadata.estimatedDelivery || "Soon",
+      deliveryTimeframe: metadata.deliveryTimeframe || "3-7 business days",
       deliveryAddress: this.formatAddress(order.shipping_address),
-      deliveredDate: order.delivered_at ? new Date(order.delivered_at).toLocaleDateString('en-IN') : 'Today',
-      cancelledDate: new Date().toLocaleDateString('en-IN'),
-      cancellationReason: order.cancellation_reason || 'Customer request'
+      deliveredDate: order.delivered_at
+        ? new Date(order.delivered_at).toLocaleDateString("en-IN")
+        : "Today",
+      cancelledDate: new Date().toLocaleDateString("en-IN"),
+      cancellationReason: order.cancellation_reason || "Customer request",
     }
 
     let subject = template.subject
@@ -417,10 +456,10 @@ The Team`,
     // Replace placeholders
     Object.entries(data).forEach(([key, value]) => {
       const placeholder = `{${key}}`
-      subject = subject.replace(new RegExp(placeholder, 'g'), String(value))
-      body = body.replace(new RegExp(placeholder, 'g'), String(value))
+      subject = subject.replace(new RegExp(placeholder, "g"), String(value))
+      body = body.replace(new RegExp(placeholder, "g"), String(value))
       if (htmlBody) {
-        htmlBody = htmlBody.replace(new RegExp(placeholder, 'g'), String(value))
+        htmlBody = htmlBody.replace(new RegExp(placeholder, "g"), String(value))
       }
     })
 
@@ -430,16 +469,19 @@ The Team`,
   /**
    * Gets recipient for notification channel
    */
-  private static getRecipient(order: EnhancedOrder, channel: NotificationType): string {
+  private static getRecipient(
+    order: EnhancedOrder,
+    channel: NotificationType,
+  ): string {
     switch (channel) {
-      case 'email':
-        return order.customer_email || ''
-      case 'sms':
-        return order.customer_phone || ''
-      case 'push':
-        return order.user_id || ''
+      case "email":
+        return order.customer_email || ""
+      case "sms":
+        return order.customer_phone || ""
+      case "push":
+        return order.user_id || ""
       default:
-        return ''
+        return ""
     }
   }
 
@@ -447,20 +489,20 @@ The Team`,
    * Formats shipping address for display
    */
   private static formatAddress(address: any): string {
-    if (!address) return 'Address not provided'
-    
-    if (typeof address === 'string') return address
-    
+    if (!address) return "Address not provided"
+
+    if (typeof address === "string") return address
+
     const parts = [
       address.line1,
       address.line2,
       address.city,
       address.state,
       address.postalCode,
-      address.country
+      address.country,
     ].filter(Boolean)
-    
-    return parts.join(', ')
+
+    return parts.join(", ")
   }
 
   /**
@@ -470,18 +512,18 @@ The Team`,
     to: string,
     subject: string,
     body: string,
-    htmlBody?: string
+    htmlBody?: string,
   ): Promise<boolean> {
     try {
       // TODO: Integrate with actual email service (SendGrid, AWS SES, etc.)
-      console.log('Sending email:', { to, subject })
-      
+      console.log("Sending email:", { to, subject })
+
       // For now, just log the email
       // In production, replace with actual email service integration
-      
+
       return true
     } catch (error) {
-      console.error('Error sending email:', error)
+      console.error("Error sending email:", error)
       return false
     }
   }
@@ -492,14 +534,14 @@ The Team`,
   private static async sendPushNotification(
     order: EnhancedOrder,
     title: string,
-    body: string
+    body: string,
   ): Promise<boolean> {
     try {
       // Will be implemented in task 5.2
-      console.log('Push notification:', { title, body })
+      console.log("Push notification:", { title, body })
       return true
     } catch (error) {
-      console.error('Error sending push notification:', error)
+      console.error("Error sending push notification:", error)
       return false
     }
   }
@@ -510,10 +552,10 @@ The Team`,
   private static async sendSMS(to: string, message: string): Promise<boolean> {
     try {
       // Optional: Integrate with SMS service (Twilio, AWS SNS, etc.)
-      console.log('Sending SMS:', { to, message })
+      console.log("Sending SMS:", { to, message })
       return true
     } catch (error) {
-      console.error('Error sending SMS:', error)
+      console.error("Error sending SMS:", error)
       return false
     }
   }
@@ -527,42 +569,44 @@ The Team`,
     status: NotificationStatus,
     template: string,
     recipient: string,
-    errorMessage?: string
+    errorMessage?: string,
   ): Promise<void> {
     try {
-      await supabase.from('notification_logs').insert({
+      await supabase.from("notification_logs").insert({
         order_id: orderId,
         notification_type: type,
         status,
         content_template: template,
         recipient,
         error_message: errorMessage,
-        sent_at: new Date().toISOString()
+        sent_at: new Date().toISOString(),
       })
     } catch (error) {
-      console.error('Error logging notification:', error)
+      console.error("Error logging notification:", error)
     }
   }
 
   /**
    * Gets notification history for an order
    */
-  public static async getNotificationHistory(orderId: string): Promise<NotificationLog[]> {
+  public static async getNotificationHistory(
+    orderId: string,
+  ): Promise<NotificationLog[]> {
     try {
       const { data, error } = await supabase
-        .from('notification_logs')
-        .select('*')
-        .eq('order_id', orderId)
-        .order('sent_at', { ascending: false })
+        .from("notification_logs")
+        .select("*")
+        .eq("order_id", orderId)
+        .order("sent_at", { ascending: false })
 
       if (error) {
-        console.error('Error fetching notification history:', error)
+        console.error("Error fetching notification history:", error)
         return []
       }
 
       return data as NotificationLog[]
     } catch (error) {
-      console.error('Error in getNotificationHistory:', error)
+      console.error("Error in getNotificationHistory:", error)
       return []
     }
   }
@@ -570,28 +614,30 @@ The Team`,
   /**
    * Retries failed notifications
    */
-  public static async retryFailedNotification(notificationId: string): Promise<boolean> {
+  public static async retryFailedNotification(
+    notificationId: string,
+  ): Promise<boolean> {
     try {
       const { data: notification, error } = await supabase
-        .from('notification_logs')
-        .select('*')
-        .eq('id', notificationId)
+        .from("notification_logs")
+        .select("*")
+        .eq("id", notificationId)
         .single()
 
       if (error || !notification) {
-        console.error('Notification not found:', notificationId)
+        console.error("Notification not found:", notificationId)
         return false
       }
 
       // Get order details
       const { data: order } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('id', notification.order_id)
+        .from("orders")
+        .select("*")
+        .eq("id", notification.order_id)
         .single()
 
       if (!order) {
-        console.error('Order not found:', notification.order_id)
+        console.error("Order not found:", notification.order_id)
         return false
       }
 
@@ -600,21 +646,21 @@ The Team`,
         order as EnhancedOrder,
         order.status,
         notification.notification_type as NotificationType,
-        {}
+        {},
       )
 
       // Update retry count
       await supabase
-        .from('notification_logs')
+        .from("notification_logs")
         .update({
           retry_count: notification.retry_count + 1,
-          status: sent ? 'sent' : 'failed'
+          status: sent ? "sent" : "failed",
         })
-        .eq('id', notificationId)
+        .eq("id", notificationId)
 
       return sent
     } catch (error) {
-      console.error('Error retrying notification:', error)
+      console.error("Error retrying notification:", error)
       return false
     }
   }

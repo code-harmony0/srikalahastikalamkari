@@ -52,8 +52,8 @@ export default function Footer() {
               </div>
             </div>
             <p className="font-playfair italic text-[#FFF8F0]/80 text-[14px] max-w-sm">
-              “Preserving the ancient pen-art tradition with devotion since
-              2026.”
+              "Preserving the ancient pen-art tradition with devotion since
+              1999."
             </p>
           </div>
 
@@ -131,12 +131,7 @@ export default function Footer() {
               Support
             </h4>
             <ul className="space-y-2">
-              {[
-                "Shipping Policy",
-                "Returns & Exchanges",
-                "Textile Care",
-                "FAQs",
-              ].map((item) => (
+              {["Shipping Policy", "Textile Care", "FAQs"].map((item) => (
                 <li key={item}>
                   <Link
                     href={`/${item.split(" ")[0].toLowerCase()}`}
@@ -216,7 +211,7 @@ export default function Footer() {
         {/* 3️⃣ BOTTOM ROW: Utility & Socials */}
         <div className="py-5 border-t border-[#FFF8F0]/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[#FFF8F0]/50">
           <div className="flex items-center gap-4">
-            <span>© 2026 Srikalahasti Kalamkari</span>
+            <span>© 1999 Srikalahasti Kalamkari</span>
             <span className="w-1 h-1 rounded-full bg-[#FFF8F0]/20" />
             <Link
               href="/privacy"
@@ -237,16 +232,18 @@ export default function Footer() {
               Artistry from Srikalahasti.
             </span>
             <div className="flex items-center gap-4">
-                <a
-                  href="https://www.instagram.com/srikalahasti_kalamkari_offical"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-full border border-[#C19A5B]/30 text-[#FFF8F0]/80 hover:text-white hover:border-[#C19A5B] hover:bg-[#C19A5B]/10 transition-all duration-300 group"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="w-5 h-5 text-[#C19A5B] group-hover:scale-110 transition-transform" />
-                  <span className="text-[13px] font-medium">@srikalahasti_kalamkari_offical</span>
-                </a>
+              <a
+                href="https://www.instagram.com/srikalahasti_kalamkari_offical"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 px-4 py-2 rounded-full border border-[#C19A5B]/30 text-[#FFF8F0]/80 hover:text-white hover:border-[#C19A5B] hover:bg-[#C19A5B]/10 transition-all duration-300 group"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5 text-[#C19A5B] group-hover:scale-110 transition-transform" />
+                <span className="text-[13px] font-medium">
+                  @srikalahasti_kalamkari_offical
+                </span>
+              </a>
             </div>
           </div>
         </div>

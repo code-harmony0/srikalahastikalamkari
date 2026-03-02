@@ -1,23 +1,87 @@
-"use client";
+"use client"
 
-import React from "react";
-import { MessageCircle } from "lucide-react";
-import { motion } from "framer-motion";
+import React from "react"
+import { MessageCircle } from "lucide-react"
+import { motion } from "framer-motion"
+import { usePathname } from "next/navigation"
 
 interface WhatsAppButtonProps {
-  phoneNumber?: string;
-  message?: string;
+  phoneNumber?: string
+  message?: string
 }
 
 export function WhatsAppButton({
-  phoneNumber = "919876543210", // Replace with actual number
-  message = "Hi! I have a question about your products.",
+  phoneNumber = "917288848882", // Replace with actual number
+  message,
 }: WhatsAppButtonProps) {
+  const pathname = usePathname()
+
+  // Generate dynamic message based on current page
+  const generateMessage = () => {
+    if (message) return message
+
+    const currentUrl = typeof window !== "undefined" ? window.location.href : ""
+
+    // Check if we're on a product page
+    if (pathname?.startsWith("/products/")) {
+      // Try to get product info from window.__PRODUCT_DATA if available
+      // This will be set by product pages
+      if (typeof window !== "undefined" && (window as any).__PRODUCT_DATA) {
+        const productData = (window as any).__PRODUCT_DATA
+        const productName = productData.name
+        const productPrice = productData.price
+        const productId = productData.id
+
+        if (productName) {
+          let productMessage = `Hi! I'm interested in "${productName}"`
+          if (productPrice) {
+            productMessage += ` (priced at ₹${productPrice})`
+          }
+          productMessage += `. Could you please provide more information about this product?`
+
+          if (productId) {
+            productMessage += ` Product ID: ${productId}`
+          }
+
+          productMessage += `\n\nProduct Link: ${currentUrl}`
+
+          return productMessage
+        }
+      }
+
+      // Fallback: extract product name from URL slug
+      const slug = pathname.split("/")[2]
+      if (slug) {
+        // Convert slug to readable name (e.g., "kalamkari-saree" -> "Kalamkari Saree")
+        const productName = slug
+          .split("-")
+          .map(
+            (word) =>
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+          )
+          .join(" ")
+
+        return `Hi! I'm interested in the "${productName}". Could you please provide more information about this product?\n\nProduct Link: ${currentUrl}`
+      }
+
+      // If no slug, use generic with URL
+      return `Hi! I have a question about your products.\n\nCurrent Page: ${currentUrl}`
+    }
+
+    // For non-product pages
+    if (pathname === "/") {
+      return "Hi! I'm interested in your Kalamkari products. Could you please provide more information?"
+    }
+
+    return `Hi! I have a question about your products.\n\nCurrent Page: ${currentUrl}`
+  }
+
   const handleClick = () => {
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(whatsappUrl, "_blank");
-  };
+    const dynamicMessage = generateMessage()
+    const encodedMessage = encodeURIComponent(dynamicMessage)
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
+    window.open(whatsappUrl, "_blank")
+  }
 
   return (
     <motion.button
@@ -31,14 +95,14 @@ export function WhatsAppButton({
       aria-label="Chat on WhatsApp"
     >
       <MessageCircle className="w-7 h-7 text-white" />
-      
+
       {/* Tooltip */}
       <span className="absolute right-full mr-3 px-3 py-1.5 bg-white text-slate-700 text-sm font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
         Chat with us
       </span>
-      
+
       {/* Pulse animation */}
       <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
     </motion.button>
-  );
+  )
 }
