@@ -92,7 +92,7 @@ export default function ShippingPage() {
                   If you face any issues with delivery, please contact us within 24 hours of the expected delivery date:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Email: shrikailashkalamkari@gmail.com</li>
+                  <li>Email: shrikalahastikalamkari@gmail.com</li>
                   <li>Phone: +91 72888 48881 / +91 72888 48882</li>
                 </ul>
                 <p>

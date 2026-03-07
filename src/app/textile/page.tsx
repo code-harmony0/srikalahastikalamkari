@@ -171,7 +171,7 @@ export default function TextileCarePage() {
                   If you have any questions about caring for your particular item, please don't hesitate to contact us:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Email: shrikailashkalamkari@gmail.com</li>
+                  <li>Email: shrikalahastikalamkari@gmail.com</li>
                   <li>Phone: +91 72888 48881 / +91 72888 48882</li>
                   <li>Visit: # 17-68, Bharathi Nagar, Tirupati Main Road, Srikalahasti-517640</li>
                 </ul>
