@@ -1,4 +1,4 @@
-# Claude Code + Gemini CLI - Shri Kailash Kalamkari Project
+# Claude Code + Gemini CLI - Shri Kalahasti Kalamkari Project
 
 ## MANDATORY: Use Gemini CLI Before Making Changes
 
@@ -229,7 +229,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Page Title | Shri Kailash Kalamkari",
+  title: "Page Title | Shri Kalahasti Kalamkari",
   description: "Page description",
   openGraph: {
     title: "OG Title",
