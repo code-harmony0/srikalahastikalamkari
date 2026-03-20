@@ -2,12 +2,12 @@ import Razorpay from "razorpay";
 import { NextRequest, NextResponse } from "next/server";
 import environment from "@/shared/config/environment";
 
-const razorpay = new Razorpay({
-  key_id: environment.razorpay.keyId,
-  key_secret: environment.razorpay.keySecret,
-});
-
 export async function POST(req: NextRequest) {
+  const razorpay = new Razorpay({
+    key_id: environment.razorpay.keyId,
+    key_secret: environment.razorpay.keySecret,
+  });
+
   try {
     const { amount } = await req.json();
 
