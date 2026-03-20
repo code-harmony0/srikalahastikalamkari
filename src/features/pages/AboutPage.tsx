@@ -143,8 +143,8 @@ export default function AboutPage() {
             >
               <div className="aspect-[4/5] relative rounded-[12px] overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
                 <Image
-                  src="https://static.wixstatic.com/media/07221c_2d9705923c15466887b842567c2d0261~mv2.png"
-                  alt="Artisan painting Kalamkari"
+                  src="/images/gallery/gallery-3.jpg"
+                  alt="Elderly master artisan painting fine Kalamkari artwork"
                   fill
                   className="object-cover hover:scale-105 transition-transform duration-700"
                 />

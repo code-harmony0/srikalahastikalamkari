@@ -202,6 +202,16 @@ export default function HomePage() {
       alt: "High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted mixed traditional patterns with floral vines and paisleys, natural dyes in warm earthy tones, soft cloth folds visible",
       brightness: "medium",
     },
+    {
+      src: "/images/hero/hero-6.jpg",
+      alt: "Elegant woman wearing a teal Kalamkari saree with traditional bird and floral motifs in natural dyes",
+      brightness: "medium",
+    },
+    {
+      src: "/images/hero/hero-7.jpg",
+      alt: "Woman wearing a cream and red Kalamkari saree featuring Ganesha and divine motifs hand-painted by master artisans",
+      brightness: "medium",
+    },
   ]
 
   useEffect(() => {
@@ -334,40 +344,40 @@ export default function HomePage() {
 
   const galleryImages = [
     {
-      src: "/images/gallery/gallery-1.png",
-      alt: "Elegant woman in vibrant Kalamkari saree",
-      category: "Human Connection",
+      src: "/images/gallery/gallery-1.jpg",
+      alt: "Artisan hands painting intricate Kalamkari motifs with natural pigments in traditional copper bowls",
+      category: "Craft Process",
       tone: "Warm",
     },
     {
-      src: "/images/gallery/gallery-2.png",
-      alt: "Close-up of hand-painted floral motifs",
+      src: "/images/gallery/gallery-2.jpg",
+      alt: "Close-up of dark navy Kalamkari silk saree featuring colourful deity and bird motifs",
       category: "Hero Textile",
-      tone: "Neutral",
+      tone: "Rich",
     },
     {
-      src: "/images/gallery/gallery-3.png",
-      alt: "Master artisan at work in Srikalahasti",
-      category: "Human Connection",
+      src: "/images/gallery/gallery-3.jpg",
+      alt: "Elderly master artisan painting fine Kalamkari artwork with a bamboo pen in his Srikalahasti studio",
+      category: "Heritage",
       tone: "Artisan",
     },
     {
-      src: "/images/gallery/gallery-4.png",
-      alt: "Natural dye extraction from temple flowers",
+      src: "/images/gallery/gallery-4.jpg",
+      alt: "Pink Kalamkari fabric scroll depicting Lord Vishnu and Krishna in traditional hand-painted style",
       category: "Cultural Detail",
-      tone: "Bright",
+      tone: "Vibrant",
     },
     {
-      src: "/images/gallery/gallery-5.png",
-      alt: "Intricate texture of handwoven silk",
-      category: "Hero Textile",
-      tone: "Textural",
-    },
-    {
-      src: "/images/gallery/gallery-6.png",
-      alt: "Heritage display of 500-year old patterns",
-      category: "Cultural Detail",
+      src: "/images/gallery/gallery-5.jpg",
+      alt: "Two artisans collaborating to paint Kalamkari patterns on stretched fabric over a wooden loom",
+      category: "Craft Process",
       tone: "Warm",
+    },
+    {
+      src: "/images/gallery/gallery-6.jpg",
+      alt: "Woman artisan seated on the floor hand-painting a large Kalamkari piece with traditional ink",
+      category: "Heritage",
+      tone: "Earthy",
     },
   ]
 
