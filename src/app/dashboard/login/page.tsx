@@ -24,37 +24,24 @@ export default function AdminLoginPage() {
     setError("");
     setLoading(true);
 
-    console.log("🔐 Login attempt started");
-    console.log("Email entered:", email);
-    console.log("Password length:", password.length);
-
     // Basic validation
     if (!email || !password) {
-      console.error("❌ Validation failed: Missing email or password");
       setError("Please enter both email and password");
       setLoading(false);
       return;
     }
 
     if (!email.includes("@")) {
-      console.error("❌ Validation failed: Invalid email format");
       setError("Please enter a valid email address");
       setLoading(false);
       return;
     }
 
     try {
-      // Check against environment variables (development only)
-      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "harmonycode@gmail.com";
-      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "Test@123";
-
-      console.log("Expected email:", adminEmail);
-      console.log("Expected password:", adminPassword);
-      console.log("Email match:", email === adminEmail);
-      console.log("Password match:", password === adminPassword);
+      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 
       if (email === adminEmail && password === adminPassword) {
-        console.log("✅ Credentials match! Logging in...");
         
         // Store admin auth state in both localStorage and cookies
         localStorage.setItem("isLoggedIn", "true");
@@ -67,22 +54,17 @@ export default function AdminLoginPage() {
         const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60;
         document.cookie = `isLoggedIn=true; path=/; max-age=${maxAge}; SameSite=Lax`;
 
-        console.log("✅ Auth state saved, redirecting to dashboard...");
-        
         // Small delay to ensure cookie is set, then redirect
         setTimeout(() => {
           window.location.href = "/dashboard";
         }, 100);
       } else {
-        console.error("❌ Credentials don't match");
         setError("Invalid email or password. Please try again.");
       }
     } catch (err: any) {
-      console.error("❌ Login error:", err);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
-      console.log("🔐 Login attempt finished");
     }
   };
 
@@ -157,28 +139,6 @@ export default function AdminLoginPage() {
                 </p>
               </div>
 
-              {/* Development Credentials Helper */}
-              <div className="mb-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl">
-                <p className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">Development Credentials</p>
-                <div className="space-y-1 text-sm">
-                  <p className="text-blue-800">
-                    <span className="font-semibold">Email:</span> harmonycode@gmail.com
-                  </p>
-                  <p className="text-blue-800">
-                    <span className="font-semibold">Password:</span> Test@123
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail("harmonycode@gmail.com");
-                    setPassword("Test@123");
-                  }}
-                  className="mt-3 text-xs font-semibold text-blue-700 hover:text-blue-900 underline"
-                >
-                  Click to auto-fill credentials
-                </button>
-              </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Error Alert */}
