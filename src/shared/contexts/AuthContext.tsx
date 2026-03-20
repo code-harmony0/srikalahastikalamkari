@@ -23,6 +23,7 @@ import {
 } from "firebase/auth"
 import { auth } from "../config/firebase"
 
+
 type AuthContextType = {
   user: FirebaseUser | null
   loading: boolean
@@ -103,25 +104,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Phone Authentication with OTP
   const signInWithPhone = async (phoneNumber: string, recaptchaContainer: string) => {
     try {
-      // Initialize reCAPTCHA verifier
-      const recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainer, {
-        size: 'invisible',
-        callback: () => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber
-        },
-        'expired-callback': () => {
-          // Response expired. Ask user to solve reCAPTCHA again
-          console.log('reCAPTCHA expired')
-        }
-      })
+      // Clean up previous verifier
+      if ((window as any).recaptchaVerifier) {
+        try { (window as any).recaptchaVerifier.clear() } catch (_) {}
+        (window as any).recaptchaVerifier = null
+      }
+      const container = document.getElementById(recaptchaContainer)
+      if (container) container.innerHTML = ""
 
-      // Send OTP to phone number
-      const confirmation = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier)
+      const verifier = new RecaptchaVerifier(auth, recaptchaContainer, { size: "invisible" })
+      await verifier.render()
+      ;(window as any).recaptchaVerifier = verifier
+
+      const confirmation = await signInWithPhoneNumber(auth, phoneNumber, verifier)
       setConfirmationResult(confirmation)
-
       return { error: null }
     } catch (error: any) {
       console.error("Error sending OTP:", error)
+      if ((window as any).recaptchaVerifier) {
+        try { (window as any).recaptchaVerifier.clear() } catch (_) {}
+        (window as any).recaptchaVerifier = null
+      }
       return { error }
     }
   }

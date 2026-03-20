@@ -56,3 +56,10 @@ package-lock.json
 # Wix/Astro Remnants (deprecated)
 .astro/
 .wix/
+
+# AI & Local Config
+.agents/
+.claude/
+skills-lock.json
+firebase-debug.log
+supabase/.temp/

@@ -56,10 +56,9 @@ export function KPICard({
 
   const isPrimary = variant === "primary";
 
-  // Common styles for CONSISTENT structure
-  // Using specific 14px radius and 20px padding as requested
+  // Using responsive radius and padding
   const cardStyles = cn(
-    "relative overflow-hidden cursor-pointer rounded-[14px] p-5 h-[140px]", 
+    "relative overflow-hidden cursor-pointer rounded-xl md:rounded-[14px] p-4 md:p-5 h-[120px] md:h-[140px]", 
     "transition-all duration-300 ease-out hover:-translate-y-1",
     isPrimary 
       ? "bg-[#0F172A] shadow-lg shadow-slate-900/20 ring-1 ring-white/10" 
@@ -136,7 +135,7 @@ export function KPICard({
 
       {/* Sparkline - Line Only, No Fill, Max 18px Height (Strict) */}
       {sparklineData && sparklineData.length > 0 && (
-        <div className="absolute bottom-5 right-5 w-24 h-[18px] pointer-events-none" style={{ opacity: 0.35 }}>
+        <div className="absolute bottom-4 bottom-5 right-4 md:right-5 w-20 md:w-24 h-[14px] md:h-[18px] pointer-events-none" style={{ opacity: 0.35 }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={sparklineData}>
               <Area

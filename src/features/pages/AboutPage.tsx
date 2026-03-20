@@ -15,22 +15,24 @@ export default function AboutPage() {
 
   const teamMembers = [
     {
-      name: "Priya Sharma",
-      role: "Founder & Creative Director",
-      image:
-        "https://static.wixstatic.com/media/07221c_a472c3ef713149fc9e659225e7b494f5~mv2.png/v1/fill/w_448,h_640,al_c,q_85,usm_0.66_1.00_0.01/Founder.png",
+      name: "Shaik Saleem Basha",
+      role: "Founder",
+      image: "/images/about/shaik-saleem-basha.jpg",
     },
     {
-      name: "Rajesh Kumar",
+      name: "Shaik Abdul Vajid",
+      role: "Operation Manager",
+      image: "/images/about/shaik-abdul-vajid.jpg",
+    },
+    {
+      name: "Yalasiri Anitha",
       role: "Master Artisan",
-      image:
-        "https://static.wixstatic.com/media/07221c_24d1a5224a3a4efdba5941d80526de9d~mv2.png/v1/fill/w_448,h_640,al_c,q_85,usm_0.66_1.00_0.01/Artisan.png",
+      image: "/images/about/anitha.jpg",
     },
     {
-      name: "Anjali Patel",
-      role: "Operations Manager",
-      image:
-        "https://static.wixstatic.com/media/07221c_b9f5ac481d3e4258b0892671da656df3~mv2.png/v1/fill/w_448,h_640,al_c,q_85,usm_0.66_1.00_0.01/Manager.png",
+      name: "Muni Krishna Reddy",
+      role: "Colouring Master",
+      image: "/images/about/muni.jpg",
     },
   ]
 
@@ -267,7 +269,7 @@ export default function AboutPage() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center"
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 justify-center"
           >
             {teamMembers.map((member, i) => (
               <motion.div
@@ -280,6 +282,8 @@ export default function AboutPage() {
                     src={member.image}
                     alt={member.name}
                     fill
+                    priority
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>

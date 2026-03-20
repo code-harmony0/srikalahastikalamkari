@@ -32,7 +32,7 @@ export function ChartCard({
   className,
 }: ChartCardProps) {
   return (
-    <Card className={cn("h-[320px] flex flex-col rounded-[14px]", className)}>
+    <Card className={cn("h-[280px] md:h-[320px] flex flex-col rounded-xl md:rounded-[14px]", className)}>
       {/* Header Section */}
       <CardHeader className="mb-4 flex-shrink-0">
         <div className="flex items-center gap-3">

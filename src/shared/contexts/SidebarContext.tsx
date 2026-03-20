@@ -15,19 +15,29 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Load preference from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("sidebar-collapsed");
-    if (saved !== null) {
-      setIsCollapsed(saved === "true");
+    const isMobile = window.innerWidth <= 1024;
+    if (isMobile) {
+      setIsCollapsed(true);
+    } else {
+      const saved = localStorage.getItem("sidebar-collapsed");
+      if (saved !== null) {
+        setIsCollapsed(saved === "true");
+      }
     }
 
-    // Auto-collapse on mobile/tablet
+    let lastIsMobile = isMobile;
+
     const handleResize = () => {
-      if (window.innerWidth < 768 && !isCollapsed) {
+      const currentIsMobile = window.innerWidth <= 1024;
+      if (currentIsMobile && !lastIsMobile) {
         setIsCollapsed(true);
+      } else if (!currentIsMobile && lastIsMobile) {
+        const saved = localStorage.getItem("sidebar-collapsed");
+        setIsCollapsed(saved === "true");
       }
+      lastIsMobile = currentIsMobile;
     };
 
-    handleResize(); // Check on mount
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);

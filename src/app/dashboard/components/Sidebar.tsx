@@ -168,16 +168,9 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
+      className={`sidebar ${isCollapsed ? 'collapsed' : 'mobile-open'}`}
       style={{ width: isCollapsed ? 80 : 280 }}
     >
-      {/* Mobile Overlay */}
-      {!isCollapsed && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-[-1]"
-          onClick={() => toggleSidebar()}
-        />
-      )}
       <div className="sidebar-content">
         <div className="sidebar-header">
           <div className="logo-container">

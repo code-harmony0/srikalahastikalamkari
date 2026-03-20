@@ -22,7 +22,18 @@ import { formatPrice, cn } from "@/shared/utils";
 import { toast } from "sonner";
 import { PageHero } from "./page-hero";
 import { ShippingWidget } from "./ShippingWidget";
-import { supabase } from "@/lib/supabase/client";
+import environment from "@/shared/config/environment";
+// --- Razorpay Script Loader ---
+function loadRazorpayScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if ((window as any).Razorpay) { resolve(); return; }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
+    document.body.appendChild(script);
+  });
+}
 
 // --- Types ---
 interface FormData {
@@ -125,8 +136,7 @@ export default function CheckoutPage() {
   );
   const discount = appliedCoupon?.discountAmount || 0;
   const shipping = 0;
-  const tax = Math.round((subtotal - discount) * 0.05);
-  const total = subtotal - discount + shipping + tax;
+  const total = subtotal - discount + shipping;
 
   // Handle coupon apply
   const handleApplyCoupon = async () => {
@@ -192,77 +202,87 @@ const handleSubmit = async (e: React.FormEvent) => {
     setIsProcessing(true)
 
     try {
-      // Create order in Supabase
-      const shippingAddress = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
-      }
-
-      // Insert order using admin client to bypass RLS
-      const { data: order, error: orderError } = await supabase
-        .from("orders")
-        .insert({
-          status: "paid", // Since there's no payment, mark as paid
-          total_amount: total / 100, // Convert from paise to rupees
-          shipping_address: shippingAddress,
-          customer_email: formData.email,
-          user_id: null, // No user authentication yet
-        })
-        .select()
-        .single()
-
-      if (orderError) {
-        throw orderError
-      }
-
-      // Insert order items
-      const currentCartItems = cart.items
-        .map((item) => {
-          const product = products.find((p) => p.id === item.productId);
-          return { ...item, product };
-        })
-        .filter((item) => item.product);
-
-      const orderItems = currentCartItems
-        .map(({ product, quantity }) => {
-          if (!product) return null
-          return {
-            order_id: order.id,
-            product_id: product.id,
-            quantity: quantity,
-            price_at_purchase: product.price / 100, // Convert from paise to rupees
-          }
-        })
-        .filter((item): item is NonNullable<typeof item> => item !== null)
-
-      const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(orderItems)
-
-      if (itemsError) {
-        throw itemsError
-      }
-
-      // Clear cart and show success
-      cart.clearCart()
-      toast.success("Order placed successfully! 🎉", {
-        description: `Order #${order.id.slice(0, 8)} confirmation sent to ${formData.email}`,
+      // Step 1: Create Razorpay order on server
+      const orderRes = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: total }),
       })
 
-      // Redirect to orders page to see the order
-      setTimeout(() => {
-        router.push("/orders")
-      }, 1500)
+      const orderData = await orderRes.json()
+      if (!orderRes.ok) throw new Error(orderData.error || "Failed to initiate payment")
+
+      // Step 2: Prepare cart items to send to verify route
+      const cartPayload = cart.items
+        .map((item) => {
+          const product = products.find((p: any) => p.id === item.productId)
+          if (!product) return null
+          return { productId: product.id, price: product.price, quantity: item.quantity }
+        })
+        .filter(Boolean)
+
+      // Step 3: Load Razorpay JS and open payment modal
+      await loadRazorpayScript()
+
+      const options = {
+        key: environment.razorpay.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Shri Kalahasti Kalamkari",
+        description: "Authentic Kalamkari Purchase",
+        order_id: orderData.orderId,
+        prefill: {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: { color: "#A4552A" },
+        handler: async (response: {
+          razorpay_payment_id: string
+          razorpay_order_id: string
+          razorpay_signature: string
+        }) => {
+          // Step 4: Verify payment and save order on server
+          const verifyRes = await fetch("/api/razorpay/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              formData,
+              cartItems: cartPayload,
+              totalAmount: total,
+            }),
+          })
+
+          const verifyData = await verifyRes.json()
+          if (!verifyRes.ok) throw new Error(verifyData.error || "Payment verification failed")
+
+          cart.clearCart()
+          toast.success("Order placed successfully!", {
+            description: `Order #${verifyData.orderId.slice(0, 8)} confirmed. Thank you!`,
+          })
+          setTimeout(() => router.push("/orders"), 1500)
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessing(false)
+            toast.error("Payment cancelled. Please try again.")
+          },
+        },
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rzp = new (window as any).Razorpay(options)
+      rzp.on("payment.failed", () => {
+        setIsProcessing(false)
+        toast.error("Payment failed. Please try again.")
+      })
+      rzp.open()
     } catch (error) {
       console.error("Checkout Error:", error)
       toast.error("Something went wrong. Please try again.")
-    } finally {
       setIsProcessing(false)
     }
   };
@@ -602,14 +622,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       {shipping === 0 ? "Free" : formatPrice(shipping)}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-[#3B2C23]/70 font-inter">
-                      GST (5%)
-                    </span>
-                    <span className="font-medium text-[#3B2C23]">
-                      {formatPrice(tax)}
-                    </span>
-                  </div>
+
 
                   <div className="flex justify-between items-center pt-4 border-t border-[#EAD6C3] mt-2">
                     <span className="font-playfair font-bold text-lg text-[#3B2C23]">

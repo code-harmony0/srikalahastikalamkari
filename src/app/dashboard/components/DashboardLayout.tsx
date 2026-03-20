@@ -15,14 +15,14 @@ interface DashboardLayoutProps {
 function MainContent({ children }: { children: React.ReactNode }) {
   const { isCollapsed, toggleSidebar } = useSidebar();
   return (
-    <main className={`main-content transition-all duration-300 ease-in-out w-full lg:w-auto ${isCollapsed ? 'lg:ml-[80px]' : 'lg:ml-[280px]'} pt-16 lg:pt-0`}>
+    <main className={`main-content transition-all duration-300 ease-in-out w-full lg:w-auto ${isCollapsed ? 'lg:ml-[80px]' : 'lg:ml-[280px]'} p-4 md:p-6 lg:p-8 pt-20 lg:pt-8`}>
       {children}
     </main>
   );
 }
 
 function DashboardLayoutContent({ children }: DashboardLayoutProps) {
-  const { toggleSidebar } = useSidebar();
+  const { isCollapsed, toggleSidebar } = useSidebar();
   return (
     <div className="dashboard-root">
       {/* Mobile Top Bar */}
@@ -37,6 +37,11 @@ function DashboardLayoutContent({ children }: DashboardLayoutProps) {
           <span className="font-bold text-slate-900">Kalamkari Admin</span>
         </div>
       </div>
+
+      <div 
+        className={`lg:hidden sidebar-overlay ${!isCollapsed ? 'visible' : ''}`}
+        onClick={() => !isCollapsed && toggleSidebar()}
+      />
 
       <Sidebar />
       <MainContent>

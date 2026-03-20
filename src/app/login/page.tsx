@@ -38,6 +38,20 @@ export default function UserLoginPage() {
     }
   }, [resendTimer])
 
+  // Cleanup RecaptchaVerifier on unmount
+  useEffect(() => {
+    return () => {
+      if ((window as any).recaptchaVerifier) {
+        try {
+          (window as any).recaptchaVerifier.clear()
+        } catch (e) {
+          console.error("Failed to clear recaptcha verifier on unmount:", e)
+        }
+        ;(window as any).recaptchaVerifier = null
+      }
+    }
+  }, [])
+
   // --- Handlers ---
 
   const handleSendOtp = async (e: React.FormEvent) => {

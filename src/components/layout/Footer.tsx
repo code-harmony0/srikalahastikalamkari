@@ -247,6 +247,17 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        <div className="py-3 border-t border-[#FFF8F0]/10 text-center text-[11px] text-[#FFF8F0]/40 font-inter">
+          Designed &amp; maintained by{" "}
+          <a
+            href="https://www.exploreconsultancyservices.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#C19A5B]/60 hover:text-[#C19A5B] transition-colors"
+          >
+            Explore Consultancy Services
+          </a>
+        </div>
       </div>
     </footer>
   )

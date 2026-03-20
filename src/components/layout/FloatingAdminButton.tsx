@@ -4,9 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Settings, X } from "lucide-react";
+import environment from "@/shared/config/environment";
 
 export default function FloatingAdminButton() {
   const [isVisible, setIsVisible] = useState(true);
+
+  // Never show in production
+  if (environment.isProduction) return null;
 
   if (!isVisible) return null;
 

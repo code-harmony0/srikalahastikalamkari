@@ -318,7 +318,7 @@ export default function OrdersPage() {
                         <span>{order.order_items?.length || 0} items</span>
                         <span>•</span>
                         <span className="font-semibold text-[#A4552A]">
-                          {formatPrice(order.total_amount * 100)}
+                          {formatPrice(order.total_amount)}
                         </span>
                       </div>
                     </div>
@@ -410,12 +410,12 @@ export default function OrdersPage() {
                                       {item.products?.name || "Product"}
                                     </h5>
                                     <p className="text-xs text-[#7A6A5C] font-inter">
-                                      Qty: {item.quantity} × {formatPrice(item.price_at_purchase * 100)}
+                                      Qty: {item.quantity} × {formatPrice(item.price_at_purchase)}
                                     </p>
                                   </div>
                                   <div className="text-right">
                                     <p className="font-inter text-sm font-semibold text-[#A4552A]">
-                                      {formatPrice(item.price_at_purchase * item.quantity * 100)}
+                                      {formatPrice(item.price_at_purchase * item.quantity)}
                                     </p>
                                     {(order.status === 'shipped' || order.status === 'paid') && (
                                       <button
@@ -478,7 +478,7 @@ export default function OrdersPage() {
                               <div className="bg-[#FFF8F0]/50 p-3 rounded-lg space-y-2">
                                 <div className="flex justify-between text-xs font-inter">
                                   <span className="text-[#7A6A5C]">Subtotal</span>
-                                  <span className="text-[#3B2C23]">{formatPrice(order.total_amount * 100)}</span>
+                                  <span className="text-[#3B2C23]">{formatPrice(order.order_items.reduce((sum, item) => sum + item.price_at_purchase * item.quantity, 0))}</span>
                                 </div>
                                 <div className="flex justify-between text-xs font-inter">
                                   <span className="text-[#7A6A5C]">Shipping</span>
@@ -487,7 +487,7 @@ export default function OrdersPage() {
                                 <div className="flex justify-between pt-2 border-t border-[#EAD6C3]/30">
                                   <span className="text-sm font-semibold text-[#3B2C23] font-inter">Total</span>
                                   <span className="text-lg font-bold text-[#A4552A] font-playfair">
-                                    {formatPrice(order.total_amount * 100)}
+                                    {formatPrice(order.total_amount)}
                                   </span>
                                 </div>
                               </div>

@@ -67,25 +67,25 @@ const FormSection = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-slate-50 transition-colors"
       >
-        <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="h-8 w-8 md:h-9 md:w-9 shrink-0 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
             {icon}
           </div>
-          <span className="text-base font-semibold text-slate-900">{title}</span>
+          <span className="text-sm md:text-base font-semibold text-slate-900 text-left line-clamp-1">{title}</span>
           {badge && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 rounded-full">
+            <span className="shrink-0 px-1.5 md:px-2 py-0.5 text-[10px] md:text-xs font-medium bg-amber-100 text-amber-700 rounded-full flex items-center">
               {badge}
             </span>
           )}
         </div>
-        <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+        <div className="h-8 w-8 shrink-0 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 ml-2">
           {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </div>
       </button>
       {isOpen && (
-        <div className="p-6 pt-2 border-t border-slate-100 bg-slate-50/30">
+        <div className="p-4 pt-2 md:p-6 md:pt-2 border-t border-slate-100 bg-slate-50/30">
           {children}
         </div>
       )}
@@ -753,10 +753,10 @@ const validateForm = () => {
   };
 
   return (
-    <div className="p-8 min-h-screen bg-slate-50/50 font-sans">
+    <div className="px-0 py-4 md:p-8 min-h-screen bg-slate-50/50 font-sans">
       <Button
         variant="ghost"
-        className="mb-6 hover:bg-white rounded-xl h-11 px-4"
+        className="mb-4 md:mb-6 mt-4 md:mt-0 ml-4 hover:bg-white rounded-xl h-11 px-2 md:px-4"
         onClick={() => router.push("/dashboard/products")}
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -764,24 +764,24 @@ const validateForm = () => {
       </Button>
 
       <form onSubmit={handleSubmit}>
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden max-w-4xl mx-auto">
-          <div className="p-8 border-b border-slate-100">
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+        <div className="bg-white rounded-none md:rounded-2xl shadow-sm border-y md:border border-slate-100 overflow-hidden max-w-4xl mx-auto">
+          <div className="px-4 py-6 md:p-8 border-b border-slate-100">
+            <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
               {isEditMode ? "Edit Product" : "Add New Product"}
             </h2>
-            <p className="text-slate-500 mt-2">
+            <p className="text-sm md:text-base text-slate-500 mt-1 md:mt-2">
               {isEditMode ? "Update the product details below" : "Fill in the details to add a new product to your inventory"}
             </p>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="px-4 py-6 md:p-6 space-y-4 md:space-y-6">
             {/* Section 1: Basic Details */}
             <FormSection
               title="Basic Details"
               icon={<FileText className="h-4 w-4" />}
               badge="Required"
             >
-              <div className="space-y-4">
-                <div className="space-y-2">
+              <div className="space-y-3 md:space-y-4">
+                <div className="space-y-1.5 md:space-y-2">
                   <Label htmlFor="name" className="text-slate-700 font-medium">
                     Product Name <span className="text-red-500">*</span>
                   </Label>
@@ -790,7 +790,7 @@ const validateForm = () => {
                     placeholder="Enter product name"
                     value={formData.name}
                     onChange={(e) => handleChange("name", e.target.value)}
-                    className={`h-11 rounded-xl border-slate-200 ${errors.name ? "border-red-500" : ""}`}
+                    className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 ${errors.name ? "border-red-500" : ""}`}
                   />
                   {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                 </div>
@@ -805,7 +805,7 @@ const validateForm = () => {
                     rows={4}
                     value={formData.description}
                     onChange={(e) => handleChange("description", e.target.value)}
-                    className={`rounded-xl border-slate-200 ${errors.description ? "border-red-500" : ""}`}
+                    className={`rounded-lg md:rounded-xl border-slate-200 text-sm md:text-base ${errors.description ? "border-red-500" : ""}`}
                   />
                   {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
                 </div>
@@ -818,9 +818,9 @@ const validateForm = () => {
               icon={<DollarSign className="h-4 w-4" />}
               badge="Required"
             >
-              <div className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
+              <div className="space-y-3 md:space-y-4">
+                <div className="grid gap-3 md:gap-4 md:grid-cols-2">
+                  <div className="space-y-1.5 md:space-y-2">
                     <Label htmlFor="price" className="text-slate-700 font-medium">
                       Price (₹) <span className="text-red-500">*</span>
                     </Label>
@@ -832,7 +832,7 @@ const validateForm = () => {
                       placeholder="0.00"
                       value={formData.price}
                       onChange={(e) => handleChange("price", e.target.value)}
-                      className={`h-11 rounded-xl border-slate-200 focus:border-slate-400 ${errors.price ? "border-red-500" : ""}`}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 focus:border-slate-400 ${errors.price ? "border-red-500" : ""}`}
                     />
                     {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
                   </div>
@@ -847,13 +847,13 @@ const validateForm = () => {
                       placeholder="0.00 (optional - for showing discount)"
                       value={formData.originalPrice}
                       onChange={(e) => handleChange("originalPrice", e.target.value)}
-                      className={`h-11 rounded-xl border-slate-200 focus:border-slate-400 ${errors.originalPrice ? "border-red-500" : ""}`}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 focus:border-slate-400 ${errors.originalPrice ? "border-red-500" : ""}`}
                     />
                   </div>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
+                <div className="grid gap-3 md:gap-4 md:grid-cols-2">
+                  <div className="space-y-1.5 md:space-y-2">
                     <Label htmlFor="quantity" className="text-slate-700 font-medium">
                       Stock Quantity <span className="text-red-500">*</span>
                     </Label>
@@ -864,14 +864,14 @@ const validateForm = () => {
                       placeholder="Enter quantity"
                       value={formData.quantity}
                       onChange={(e) => handleChange("quantity", e.target.value)}
-                      className={`h-11 rounded-xl border-slate-200 focus:border-slate-400 ${errors.quantity ? "border-red-500" : ""}`}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 focus:border-slate-400 ${errors.quantity ? "border-red-500" : ""}`}
                     />
                     {errors.quantity && <p className="text-sm text-red-500">{errors.quantity}</p>}
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 md:space-y-2">
                     <Label className="text-slate-700 font-medium">Stock Status</Label>
-                    <div className="flex items-center gap-3 h-11 px-4 rounded-xl border border-slate-200 bg-white">
+                    <div className="flex items-center gap-3 h-10 md:h-11 px-4 rounded-lg md:rounded-xl border border-slate-200 bg-white">
                       <Checkbox
                         id="inStock"
                         checked={formData.inStock}
@@ -892,8 +892,8 @@ const validateForm = () => {
               icon={<FolderTree className="h-4 w-4" />}
               badge="Required"
             >
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
+              <div className="grid gap-3 md:gap-4 md:grid-cols-2">
+                <div className="space-y-1.5 md:space-y-2">
                   <Label htmlFor="category" className="text-slate-700 font-medium">
                     Category <span className="text-red-500">*</span>
                   </Label>
@@ -901,7 +901,7 @@ const validateForm = () => {
                     value={formData.category}
                     onValueChange={(value) => handleChange("category", value)}
                   >
-                    <SelectTrigger className={`h-11 rounded-xl border-slate-200 ${errors.category ? "border-red-500" : ""}`}>
+                    <SelectTrigger className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 ${errors.category ? "border-red-500" : ""}`}>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border-slate-200">
@@ -915,14 +915,14 @@ const validateForm = () => {
                   {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5 md:space-y-2">
                   <Label htmlFor="subCategory" className="text-slate-700 font-medium">Sub Category</Label>
                   <Select
                     value={formData.subCategory}
                     onValueChange={(value) => handleChange("subCategory", value)}
                     disabled={!formData.category || filteredSubCategories.length === 0}
                   >
-                    <SelectTrigger className="h-11 rounded-xl border-slate-200">
+                    <SelectTrigger className="h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200">
                       <SelectValue placeholder={!formData.category ? "Select category first" : "Select sub category"} />
                     </SelectTrigger>
                     <SelectContent className="bg-white border-slate-200">
@@ -991,7 +991,7 @@ const validateForm = () => {
                     </button>
                   )}
                 </div>
-                <div className="grid grid-cols-8 sm:grid-cols-12 gap-2.5 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2.5 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
                   {colorPalette.map((color) => {
                     const isSelected = selectedColors.includes(color);
                     return (
@@ -1406,10 +1406,10 @@ const validateForm = () => {
             </FormSection>
 
             {/* Actions */}
-            <div className="flex gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4">
               <Button
                 type="submit"
-                className="bg-slate-900 hover:bg-slate-800 text-white h-12 px-8 rounded-xl font-semibold shadow-lg shadow-slate-900/10"
+                className="bg-slate-900 hover:bg-slate-800 text-white h-11 md:h-12 px-8 rounded-lg md:rounded-xl font-semibold shadow-lg shadow-slate-900/10"
                 disabled={loading || compressing}
               >
                 {loading ? (
@@ -1432,7 +1432,7 @@ const validateForm = () => {
                 variant="outline"
                 onClick={() => router.push("/dashboard/products")}
                 disabled={loading}
-                className="h-12 px-8 rounded-xl border-slate-200 hover:bg-slate-50"
+                className="h-11 md:h-12 px-8 rounded-lg md:rounded-xl border-slate-200 hover:bg-slate-50"
               >
                 Cancel
               </Button>
