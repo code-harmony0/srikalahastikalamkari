@@ -41,7 +41,7 @@ const Sidebar = () => {
     localStorage.removeItem("rememberMe")
     // Clear cookie
     document.cookie = "isLoggedIn=; path=/; max-age=0"
-    router.push("/dashboard/login")
+    router.push("/admin/login")
   }
 
   const [pendingOrders, setPendingOrders] = useState(0)
