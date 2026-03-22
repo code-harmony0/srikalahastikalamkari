@@ -17,11 +17,15 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Redirect authenticated users away from admin login
-  if (pathname === '/admin/login') {
+  // Handle /admin and /admin/login
+  if (pathname === '/admin' || pathname === '/admin/login') {
     const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true'
     if (isLoggedIn) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+    // /admin → /admin/login
+    if (pathname === '/admin') {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }
 
@@ -32,6 +36,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
+    '/admin',
     '/admin/login',
   ],
 }
