@@ -9,7 +9,6 @@ import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
 import { toast } from "sonner";
 import { cn } from "@/shared/utils";
-import { useCategories } from "@/shared/hooks/use-categories";
 import { Product } from "@/shared/types";
 
 interface ProductCardCompactProps {
@@ -41,14 +40,8 @@ export const ProductCardCompact = memo(
       [product]
     );
 
-    const { data: categories } = useCategories();
-    const categoryName = useMemo(() => {
-      if (!categories?.data || !product.category_id) return null;
-      const category = categories.data.find(
-        (c: any) => c.id === product.category_id
-      );
-      return category?.name || null;
-    }, [categories, product.category_id]);
+    const categoryName = (product as any).categoryName || null;
+    const subCategoryName = (product as any).subCategoryName || null;
 
     const wishlist = useWishlistStore();
     const cart = useCartStore();
@@ -149,11 +142,23 @@ export const ProductCardCompact = memo(
 
           {/* META SECTION - Compact info */}
           <div className="p-3 space-y-1.5">
-            {/* Category - Small, muted */}
-            {categoryName && (
-              <span className="font-playfair italic text-accent text-[10px] leading-none block">
-                {categoryName}
-              </span>
+            {/* Category / Subcategory */}
+            {(categoryName || subCategoryName) && (
+              <div className="flex items-center gap-1 flex-wrap">
+                {categoryName && (
+                  <span className="font-playfair italic text-accent text-[10px] leading-none">
+                    {categoryName}
+                  </span>
+                )}
+                {categoryName && subCategoryName && (
+                  <span className="text-accent/40 text-[10px] leading-none">›</span>
+                )}
+                {subCategoryName && (
+                  <span className="font-playfair italic text-accent/80 text-[10px] leading-none">
+                    {subCategoryName}
+                  </span>
+                )}
+              </div>
             )}
 
             {/* Product Name - Primary visual anchor, max 2 lines */}

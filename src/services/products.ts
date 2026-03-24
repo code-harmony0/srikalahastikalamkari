@@ -827,7 +827,7 @@ export const getProductsPaginated = async (
 
     let query = supabase
       .from("products")
-      .select("*, product_variants(*), categories:category_id(id, name)", { count: "exact" });
+      .select("*, product_variants(*), categories:category_id(id, name), sub_category:sub_category_id(id, name)", { count: "exact" });
 
     // Search
     if (filters.search) {
@@ -901,6 +901,7 @@ export const getProductsPaginated = async (
         inStock: (p.stock_quantity ?? 0) > 0,
         in_stock: (p.stock_quantity ?? 0) > 0,
         categoryName: p.categories?.name || null,
+        subCategoryName: p.sub_category?.name || null,
         variants: p.product_variants || [],
     }));
 
