@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
 import { useProducts } from "@/shared/hooks/use-products";
 import { productsService } from "@/services/products";
-import { useCategories } from "@/shared/hooks/use-categories";
+import { useFilterCategories } from "@/shared/hooks/use-filter-categories";
 import {
   SlidersHorizontal,
   ChevronDown,
@@ -76,20 +76,24 @@ export default function ProductsPage() {
 
   const gridRef = useRef<HTMLDivElement>(null);
   
-  const { data: categories } = useCategories();
-
+  const { categories: filterCategories } = useFilterCategories();
 
   // Resolve category IDs from selected names for the API
+  // Must search both parent categories AND subcategories
   const categoryIds = useMemo(() => {
-     if (selectedCategories.length === 0 || !categories?.data) return undefined;
+     if (selectedCategories.length === 0 || !filterCategories.length) return undefined;
      const selectedNames = new Set(selectedCategories);
-     // Find all matching categories (both parent and sub-categories)
-     const matchedIds = categories.data
-        .filter((c: any) => selectedNames.has(c.name))
-        .map((c: any) => c.id);
-     
+     const matchedIds: string[] = [];
+
+     for (const cat of filterCategories) {
+       if (selectedNames.has(cat.name)) matchedIds.push(cat.id);
+       for (const sub of cat.subcategories || []) {
+         if (selectedNames.has(sub.name)) matchedIds.push(sub.id);
+       }
+     }
+
      return matchedIds.length > 0 ? matchedIds : undefined;
-  }, [selectedCategories, categories]);
+  }, [selectedCategories, filterCategories]);
 
 
   // Prepare filters for React Query
