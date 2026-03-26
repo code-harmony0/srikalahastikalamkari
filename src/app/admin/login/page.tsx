@@ -1,75 +1,88 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/app/dashboard/ui/button";
-import { Input } from "@/app/dashboard/ui/input";
-import { Label } from "@/app/dashboard/ui/label";
-import { Card, CardContent } from "@/shared/ui/card";
-import { Checkbox } from "@/shared/ui/checkbox";
-import { AlertCircle, Lock, Mail, Shield, ArrowRight, Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
+import React, { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/app/dashboard/ui/button"
+import { Input } from "@/app/dashboard/ui/input"
+import { Label } from "@/app/dashboard/ui/label"
+import { Card, CardContent } from "@/shared/ui/card"
+import { Checkbox } from "@/shared/ui/checkbox"
+import {
+  AlertCircle,
+  Lock,
+  Mail,
+  Shield,
+  ArrowRight,
+  Eye,
+  EyeOff,
+} from "lucide-react"
+import Link from "next/link"
 
 export default function AdminLoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [rememberMe, setRememberMe] = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+    e.preventDefault()
+    setError("")
+    setLoading(true)
 
     // Basic validation
     if (!email || !password) {
-      setError("Please enter both email and password");
-      setLoading(false);
-      return;
+      setError("Please enter both email and password")
+      setLoading(false)
+      return
     }
 
     if (!email.includes("@")) {
-      setError("Please enter a valid email address");
-      setLoading(false);
-      return;
+      setError("Please enter a valid email address")
+      setLoading(false)
+      return
     }
 
     try {
-      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL
+      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
 
       if (email === adminEmail && password === adminPassword) {
-        
         // Store admin auth state in both localStorage and cookies
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userRole", "admin");
+        localStorage.setItem("isLoggedIn", "true")
+        localStorage.setItem("userRole", "admin")
         if (rememberMe) {
-          localStorage.setItem("rememberMe", "true");
+          localStorage.setItem("rememberMe", "true")
         }
 
         // Set cookie for middleware
-        const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60;
-        document.cookie = `isLoggedIn=true; path=/; max-age=${maxAge}; SameSite=Lax`;
+        const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60
+        document.cookie = `isLoggedIn=true; path=/; max-age=${maxAge}; SameSite=Lax`
 
         // Small delay to ensure cookie is set, then redirect
         setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 100);
+          window.location.href = "/dashboard"
+        }, 100)
       } else {
-        setError("Invalid email or password. Please try again.");
+        setError("Invalid email or password. Please try again.")
       }
     } catch (err: any) {
-      setError("An error occurred. Please try again.");
+      setError("An error occurred. Please try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex bg-[#f8fafc]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
+    <div
+      className="min-h-screen flex bg-[#f8fafc]"
+      style={{
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      }}
+    >
       {/* Left Side - Brand Section (55%) */}
       <div className="hidden lg:flex lg:w-[55%] bg-[#0f172a] relative overflow-hidden">
         {/* Subtle background glow effects */}
@@ -80,13 +93,16 @@ export default function AdminLoginPage() {
           {/* Logo */}
           <div
             className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-8"
-            style={{ boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)' }}
+            style={{ boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)" }}
           >
             <Shield className="w-10 h-10 text-white" />
           </div>
 
           {/* Brand Title */}
-          <h1 className="text-5xl font-bold text-white mb-4 tracking-tight" style={{ letterSpacing: '-0.5px' }}>
+          <h1
+            className="text-5xl font-bold text-white mb-4 tracking-tight"
+            style={{ letterSpacing: "-0.5px" }}
+          >
             Srikalahasti Kalamkari
           </h1>
           <p className="text-xl text-slate-300 mb-12 max-w-md">
@@ -96,14 +112,31 @@ export default function AdminLoginPage() {
           {/* Features List */}
           <div className="w-full max-w-md space-y-4 text-left">
             {[
-              { icon: "📊", title: "Real-time Analytics", desc: "Monitor your store performance" },
-              { icon: "🛍️", title: "Product Management", desc: "Complete inventory control" },
-              { icon: "📦", title: "Order Processing", desc: "Streamlined fulfillment" },
+              {
+                icon: "📊",
+                title: "Real-time Analytics",
+                desc: "Monitor your store performance",
+              },
+              {
+                icon: "🛍️",
+                title: "Product Management",
+                desc: "Complete inventory control",
+              },
+              {
+                icon: "📦",
+                title: "Order Processing",
+                desc: "Streamlined fulfillment",
+              },
             ].map((feature, idx) => (
-              <div key={idx} className="flex items-start gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+              <div
+                key={idx}
+                className="flex items-start gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10"
+              >
                 <span className="text-3xl">{feature.icon}</span>
                 <div>
-                  <h3 className="text-white font-semibold mb-1">{feature.title}</h3>
+                  <h3 className="text-white font-semibold mb-1">
+                    {feature.title}
+                  </h3>
                   <p className="text-slate-400 text-sm">{feature.desc}</p>
                 </div>
               </div>
@@ -119,19 +152,27 @@ export default function AdminLoginPage() {
           <div className="lg:hidden text-center mb-12">
             <div
               className="inline-flex items-center justify-center w-16 h-16 bg-[#0f172a] rounded-2xl mb-4 mx-auto"
-              style={{ boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)' }}
+              style={{ boxShadow: "0 4px 12px rgba(15, 23, 42, 0.15)" }}
             >
               <Shield className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-[#0f172a] tracking-tight">Admin Portal</h1>
+            <h1 className="text-3xl font-bold text-[#0f172a] tracking-tight">
+              Admin Portal
+            </h1>
           </div>
 
           {/* Form Card */}
-          <Card className="border-0 shadow-2xl bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)' }}>
+          <Card
+            className="border-0 shadow-2xl bg-white rounded-2xl overflow-hidden"
+            style={{ boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)" }}
+          >
             <CardContent className="p-10">
               {/* Header */}
               <div className="mb-10">
-                <h2 className="text-3xl font-bold text-[#0f172a] mb-3 tracking-tight" style={{ letterSpacing: '-0.5px' }}>
+                <h2
+                  className="text-3xl font-bold text-[#0f172a] mb-3 tracking-tight"
+                  style={{ letterSpacing: "-0.5px" }}
+                >
                   Welcome back
                 </h2>
                 <p className="text-[#64748b] text-base">
@@ -139,13 +180,10 @@ export default function AdminLoginPage() {
                 </p>
               </div>
 
-
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Error Alert */}
                 {error && (
-                  <div
-                    className="flex items-start gap-3 p-4 bg-red-50 border-2 border-red-200 rounded-xl animate-in fade-in slide-in-from-top-2"
-                  >
+                  <div className="flex items-start gap-3 p-4 bg-red-50 border-2 border-red-200 rounded-xl animate-in fade-in slide-in-from-top-2">
                     <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
                     <p className="text-sm font-medium text-red-800">{error}</p>
                   </div>
@@ -156,7 +194,7 @@ export default function AdminLoginPage() {
                   <Label
                     htmlFor="email"
                     className="text-xs font-bold text-[#64748b] uppercase tracking-widest"
-                    style={{ letterSpacing: '0.1em' }}
+                    style={{ letterSpacing: "0.1em" }}
                   >
                     Email Address
                   </Label>
@@ -180,7 +218,7 @@ export default function AdminLoginPage() {
                   <Label
                     htmlFor="password"
                     className="text-xs font-bold text-[#64748b] uppercase tracking-widest"
-                    style={{ letterSpacing: '0.1em' }}
+                    style={{ letterSpacing: "0.1em" }}
                   >
                     Password
                   </Label>
@@ -200,7 +238,9 @@ export default function AdminLoginPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94a3b8] hover:text-[#64748b] transition-colors"
                       disabled={loading}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -217,7 +257,9 @@ export default function AdminLoginPage() {
                     <Checkbox
                       id="remember"
                       checked={rememberMe}
-                      onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        setRememberMe(checked as boolean)
+                      }
                       disabled={loading}
                       className="border-[#e2e8f0] data-[state=checked]:bg-[#0f172a] data-[state=checked]:border-[#0f172a]"
                     />
@@ -234,7 +276,7 @@ export default function AdminLoginPage() {
                 <Button
                   type="submit"
                   className="w-full h-12 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-base rounded-xl transition-all duration-200 mt-8"
-                  style={{ boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)' }}
+                  style={{ boxShadow: "0 4px 12px rgba(15, 23, 42, 0.2)" }}
                   disabled={loading}
                 >
                   {loading ? (
@@ -270,7 +312,9 @@ export default function AdminLoginPage() {
               <div className="mt-8 pt-6 border-t border-[#f1f5f9]">
                 <div className="flex items-center justify-center gap-2 text-sm text-[#94a3b8]">
                   <Shield className="h-4 w-4 text-emerald-600" />
-                  <span className="font-medium">Secured with enterprise-grade encryption</span>
+                  <span className="font-medium">
+                    Secured with enterprise-grade encryption
+                  </span>
                 </div>
               </div>
 
@@ -291,10 +335,10 @@ export default function AdminLoginPage() {
 
           {/* Footer */}
           <p className="mt-8 text-center text-xs text-[#94a3b8] font-medium uppercase tracking-wider">
-            Srikalahasti Kalamkari © 2026
+            Srikalahasti Kalamkari © 1999
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 }
