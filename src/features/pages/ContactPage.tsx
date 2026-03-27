@@ -149,7 +149,7 @@ export default function ContactPage() {
             <ContactCard
               icon={Mail}
               title="Email & GSTIN"
-              content="shrikalahastikalamkari@gmail.com"
+              content="srikalahastikalamkari.sk@gmail.com"
               subContent="GSTIN: 37EVOPS6191D1ZX"
             />
             <ContactCard

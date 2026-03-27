@@ -261,10 +261,11 @@ const Categories = () => {
     setSubCategoryImageCompressing(true)
     try {
       const options = {
-        maxSizeMB: 0.4,
-        maxWidthOrHeight: 1200,
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1600,
         useWebWorker: true,
-        initialQuality: 0.75,
+        fileType: "image/webp",
+        initialQuality: 0.92,
       }
       const compressed = await imageCompression(file, options)
       setSubCategoryImageFile(compressed)

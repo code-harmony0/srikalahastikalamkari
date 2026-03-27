@@ -406,13 +406,14 @@ const AddProduct = () => {
       const preview = await previewPromise;
       newPreviews.push(preview);
 
-      // Compress with better settings
+      // High-quality WebP conversion — preserves handcraft detail for zooming
       try {
         const options = {
-          maxSizeMB: 0.3, // Much smaller - 300KB max instead of 1MB
-          maxWidthOrHeight: 1200, // Smaller max dimension
+          maxSizeMB: 4,           // Allow up to 4MB — WebP will naturally be far smaller
+          maxWidthOrHeight: 2400, // Full resolution for zoom detail
           useWebWorker: true,
-          initialQuality: 0.7, // Start with 70% quality
+          fileType: "image/webp", // WebP: ~35% smaller than JPEG at same visual quality
+          initialQuality: 0.92,   // Near-lossless — every brushstroke preserved
         };
 
         const compressedFile = await imageCompression(file, options);
@@ -1230,11 +1231,11 @@ const validateForm = () => {
                             className="w-full h-full object-contain p-2"
                           />
                         </div>
-                        {/* Individual Compression Stats */}
+                        {/* WebP conversion stats */}
                         {compressionStats[index] && (
                           <div className="mt-1 text-center">
                             <p className="text-xs text-green-600 truncate">
-                              {compressionStats[index]}
+                              WebP: {compressionStats[index]}
                             </p>
                           </div>
                         )}

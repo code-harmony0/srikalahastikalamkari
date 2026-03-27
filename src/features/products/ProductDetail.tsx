@@ -245,11 +245,24 @@ export default function ProductDetail() {
                 src={mainProductImage}
                 alt={product.name || product.title || "Product"}
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
+                className={cn(
+                  "object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in",
+                  !inStock && "grayscale-[20%]"
+                )}
                 sizes={getResponsiveSizes("detail")}
                 priority
                 onClick={() => setIsImageModalOpen(true)}
               />
+              {/* Out of Stock Indicator */}
+              {!inStock && (
+                <div className="absolute top-4 left-4 z-10">
+                  <div className="bg-red-600 px-3 py-1.5 rounded-sm shadow-md">
+                    <span className="text-white text-xs font-bold tracking-wide uppercase">
+                      Out of Stock
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -294,11 +307,22 @@ export default function ProductDetail() {
                     )}
                 </div>
 
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBF7EF] border border-[#3FAF6C]/20">
+                <div className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1 rounded-full border",
+                  inStock
+                    ? "bg-[#EBF7EF] border-[#3FAF6C]/20"
+                    : "bg-red-50 border-red-200"
+                )}>
                   <div
-                    className={`w-1.5 h-1.5 rounded-full ${inStock ? "bg-[#2E7D4D]" : "bg-red-500"}`}
+                    className={cn(
+                      "w-1.5 h-1.5 rounded-full",
+                      inStock ? "bg-[#2E7D4D]" : "bg-red-500 animate-pulse"
+                    )}
                   />
-                  <span className="text-[10px] font-bold uppercase tracking-wide text-[#2E7D4D]">
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-wide",
+                    inStock ? "text-[#2E7D4D]" : "text-red-600"
+                  )}>
                     {inStock ? "In Stock" : "Out of Stock"}
                   </span>
                 </div>
@@ -341,13 +365,31 @@ export default function ProductDetail() {
 
               {/* Actions */}
               <div className="space-y-3 pt-2">
+                {/* Out of Stock Banner - Prominent warning */}
+                {!inStock && (
+                  <div className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-red-100 border border-red-200 flex items-center justify-center flex-shrink-0">
+                      <X className="w-5 h-5 text-red-600" />
+                    </div>
+                    <div>
+                      <p className="text-red-800 font-semibold text-sm">Currently Unavailable</p>
+                      <p className="text-red-600 text-xs mt-0.5">This item is out of stock. Add to wishlist to be notified when available.</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex gap-3 h-[48px]">
                   {/* Quantity */}
-                  <div className="flex items-center border border-[#EAD6C3] rounded-[6px] bg-white w-28 shrink-0">
+                  <div className={cn(
+                    "flex items-center border rounded-[6px] w-28 shrink-0",
+                    inStock
+                      ? "border-[#EAD6C3] bg-white"
+                      : "border-gray-200 bg-gray-50 opacity-50"
+                  )}>
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23]"
-                      disabled={quantity <= 1}
+                      className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23] disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={quantity <= 1 || !inStock}
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
@@ -356,20 +398,25 @@ export default function ProductDetail() {
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23]"
+                      className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23] disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={!inStock}
                     >
                       <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  {/* Add to Cart */}
+                  {/* Add to Cart - Prominent disabled state */}
                   <button
                     onClick={handleAddToCart}
                     disabled={!inStock}
-                    className="flex-1 bg-[#A4552A] hover:bg-[#8B3F20] text-white rounded-[6px] font-inter font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98]"
+                    className={cn(
+                      "flex-1 rounded-[6px] font-inter font-medium text-sm flex items-center justify-center gap-2 transition-all",
+                      inStock
+                        ? "bg-[#A4552A] hover:bg-[#8B3F20] text-white shadow-sm active:scale-[0.98]"
+                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                    )}
                   >
-                    Add to Cart
+                    {inStock ? "Add to Cart" : "Out of Stock"}
                   </button>
                 </div>
 

@@ -178,38 +178,23 @@ export default function HomePage() {
   // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns (LOCAL)
   const heroBackgroundImages = [
     {
-      src: "/images/hero/hero-1.png",
-      alt: "High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted floral vine patterns with delicate leaves, natural dyes in warm earthy tones, soft cloth folds visible",
+      src: "/images/hero/saree-1.jpg",
+      alt: "Woman wearing a black Kalamkari saree with vibrant floral patterns and gold zari border",
       brightness: "medium",
     },
     {
-      src: "/images/hero/hero-2.png",
-      alt: "High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted peacock patterns with elaborate feather details, natural dyes in warm earthy tones, soft cloth folds visible",
+      src: "/images/hero/saree-2.jpg",
+      alt: "Woman wearing a cream Kalamkari saree with blue floral vines and traditional pallu depicting a divine figure",
       brightness: "medium",
     },
     {
-      src: "/images/hero/hero-3.png",
-      alt: "High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted intricate paisley patterns, natural dyes in warm earthy tones, soft cloth folds visible",
+      src: "/images/hero/saree-3.jpg",
+      alt: "Woman wearing a green Kalamkari silk saree with mythological figures and gold zari border",
       brightness: "medium",
     },
     {
-      src: "/images/hero/hero-4.png",
-      alt: "High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted lotus flower patterns with botanical elements, natural dyes in warm earthy tones, soft cloth folds visible",
-      brightness: "medium",
-    },
-    {
-      src: "/images/hero/hero-5.png",
-      alt: "High-quality photograph of authentic Kalamkari saree fabric showing real handcrafted mixed traditional patterns with floral vines and paisleys, natural dyes in warm earthy tones, soft cloth folds visible",
-      brightness: "medium",
-    },
-    {
-      src: "/images/hero/hero-6.jpg",
-      alt: "Elegant woman wearing a teal Kalamkari saree with traditional bird and floral motifs in natural dyes",
-      brightness: "medium",
-    },
-    {
-      src: "/images/hero/hero-7.jpg",
-      alt: "Woman wearing a cream and red Kalamkari saree featuring Ganesha and divine motifs hand-painted by master artisans",
+      src: "/images/hero/saree-4.jpg",
+      alt: "Woman wearing a maroon Kalamkari dupatta with traditional Srikalahasti hand-painted motifs",
       brightness: "medium",
     },
   ]
@@ -481,7 +466,7 @@ export default function HomePage() {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  className={`object-cover transition-opacity ease-in-out ${index === currentImageIndex ? "opacity-100" : "opacity-0"}`}
+                  className={`object-cover object-top transition-opacity ease-in-out ${index === currentImageIndex ? "opacity-100" : "opacity-0"}`}
                   style={{ transitionDuration: "2000ms" }}
                   priority={index === 0}
                 />

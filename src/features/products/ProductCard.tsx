@@ -4,7 +4,7 @@ import React, { memo, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Star, Heart, CheckCircle2, ShoppingBag } from "lucide-react";
+import { Star, Heart, ShoppingBag } from "lucide-react";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
 import { toast } from "sonner";
@@ -155,6 +155,7 @@ export const ProductCard = memo(
               className={cn(
                 "object-cover transition-all duration-700 ease-out group-hover:scale-105",
                 hoverImage ? "group-hover:opacity-0" : "",
+                !product.in_stock && "grayscale-[30%] brightness-95",
               )}
               sizes={imageSizes}
               loading="lazy"
@@ -164,14 +165,19 @@ export const ProductCard = memo(
             />
           </Link>
 
-          {/* Badges */}
-          <div className="absolute top-2 left-2 flex flex-col gap-1.5 z-20 pointer-events-none">
-            {!product.in_stock && (
-              <span className="bg-gray-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-[2px] uppercase tracking-wider shadow-sm w-fit">
-                Sold Out
-              </span>
-            )}
-          </div>
+          {/* OUT OF STOCK - Subtle overlay + bottom strip */}
+          {!product.in_stock && (
+            <>
+              <div className="absolute inset-0 bg-[#3B2C23]/15 z-15 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+                <div className="bg-[#3B2C23]/80 backdrop-blur-[2px] py-1.5 px-3 flex items-center justify-center gap-1.5">
+                  <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
+                    Out of Stock
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Wishlist Button (Grid View Only - List view has it in content) */}
           {!isList && (
@@ -278,16 +284,19 @@ export const ProductCard = memo(
                 onClick={handleAddToCart}
                 disabled={!product.in_stock}
                 className={cn(
-                  "bg-[#A4552A] text-white transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed",
+                  "transition-all shadow-sm flex items-center justify-center gap-2",
+                  product.in_stock
+                    ? "bg-[#A4552A] text-white hover:shadow-md hover:bg-[#8B3F20]"
+                    : "bg-[#E8DDD0] text-[#9B8B7E] cursor-not-allowed",
                   // 🛠 Compact Button sizing
                   isList
-                    ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide hover:bg-[#8B3F20]"
-                    : "w-8 h-8 rounded-full hover:bg-[#8B3F20]",
+                    ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide"
+                    : "w-8 h-8 rounded-full",
                 )}
-                title="Add to Cart"
+                title={product.in_stock ? "Add to Cart" : "Out of Stock"}
               >
                 {isList ? (
-                  <>{product.in_stock ? "Add" : "Sold"}</>
+                  <>{product.in_stock ? "Add" : "Unavailable"}</>
                 ) : (
                   <ShoppingBag className="w-3.5 h-3.5" />
                 )}

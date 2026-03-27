@@ -83,41 +83,53 @@ export const CuratedProductCard = memo(
               src={productData.image}
               alt={productData.name}
               fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              className={cn(
+                "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]",
+                !product.in_stock && "grayscale-[30%] brightness-95"
+              )}
               sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
               loading="lazy"
             />
 
-            {/* Badges - top-left */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-              {!product.in_stock && (
-                <span className="bg-gray-800/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  Sold Out
-                </span>
-              )}
-              {badge && product.in_stock !== false && (
+            {/* OUT OF STOCK - Bottom strip indicator */}
+            {!product.in_stock && (
+              <>
+                <div className="absolute inset-0 bg-[#3B2C23]/15 z-15 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+                  <div className="bg-[#3B2C23]/80 backdrop-blur-[2px] py-1.5 flex items-center justify-center">
+                    <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
+                      Out of Stock
+                    </span>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Badges - top-left (only when in stock) */}
+            {badge && product.in_stock !== false && (
+              <div className="absolute top-3 left-3 z-10">
                 <span className="bg-[#3B2C23]/80 text-[#FFF8F0] text-[10px] font-medium px-2.5 py-1 rounded-full tracking-wide">
                   {badge}
                 </span>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* Quick Add - Corner icon */}
-            <button
-              onClick={handleAddToCart}
-              disabled={!product.in_stock}
-              className={cn(
-                "absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center",
-                "bg-white text-[#3B2C23] shadow-md",
-                "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
-                "transition-all duration-300",
-                "hover:bg-[#A4552A] hover:text-white",
-                "disabled:opacity-40 disabled:cursor-not-allowed"
-              )}
-              aria-label="Add to cart"
-            >
-              <ShoppingBag className="w-4 h-4" />
-            </button>
+            {/* Quick Add - Corner icon (hidden when out of stock) */}
+            {product.in_stock && (
+              <button
+                onClick={handleAddToCart}
+                className={cn(
+                  "absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center",
+                  "bg-white text-[#3B2C23] shadow-md",
+                  "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
+                  "transition-all duration-300",
+                  "hover:bg-[#A4552A] hover:text-white"
+                )}
+                aria-label="Add to cart"
+              >
+                <ShoppingBag className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
           {/* CONTENT AREA - Padded, structured */}

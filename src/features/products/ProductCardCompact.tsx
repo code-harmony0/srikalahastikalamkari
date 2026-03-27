@@ -108,18 +108,26 @@ export const ProductCardCompact = memo(
               src={mainImage}
               alt={productData.name}
               fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              className={cn(
+                "object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+                !product.in_stock && "grayscale-[30%] brightness-95"
+              )}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
 
-            {/* Badges - Top Left */}
-            <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
-              {!product.in_stock && (
-                <span className="bg-muted-foreground text-background text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
-                  Sold Out
-                </span>
-              )}
-            </div>
+            {/* OUT OF STOCK - Bottom strip indicator */}
+            {!product.in_stock && (
+              <>
+                <div className="absolute inset-0 bg-black/10 z-15 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+                  <div className="bg-red-600 py-1 flex items-center justify-center">
+                    <span className="text-white text-[9px] font-bold tracking-wider uppercase">
+                      Out of Stock
+                    </span>
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* Wishlist Button - Top Right, always visible on mobile */}
             <button
@@ -213,12 +221,12 @@ export const ProductCardCompact = memo(
                 disabled={!product.in_stock}
                 className={cn(
                   "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
-                  "bg-primary text-primary-foreground shadow-sm",
-                  "hover:bg-primary/90 hover:shadow-md",
-                  "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-sm",
-                  "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1"
+                  "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1",
+                  product.in_stock
+                    ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 )}
-                aria-label="Add to cart"
+                aria-label={product.in_stock ? "Add to cart" : "Out of stock"}
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
               </button>

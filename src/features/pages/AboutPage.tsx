@@ -86,10 +86,10 @@ export default function AboutPage() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://static.wixstatic.com/media/07221c_071767876ac742d2aadac0238ead57d0~mv2.png"
+            src="/images/about/about_us.webp"
             alt="Kalamkari artisans working"
             fill
-            className="object-cover"
+            className="object-cover object-center scale-125"
             priority
           />
           <div className="absolute inset-0 bg-[#28140A]/55" />{" "}

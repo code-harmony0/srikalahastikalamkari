@@ -145,11 +145,11 @@ export const BLUR_DATA_URL =
  * Use with browser-image-compression library.
  */
 export const COMPRESSION_OPTIONS = {
-  maxSizeMB: 0.5, // Max 500KB per image
-  maxWidthOrHeight: 1920, // Max dimension (good for retina)
-  useWebWorker: true, // Better performance
-  fileType: "image/webp", // Modern format
-  initialQuality: 0.85, // Good balance of quality/size
+  maxSizeMB: 4,           // Allow up to 4MB — WebP output will be far smaller than original
+  maxWidthOrHeight: 2400, // Full resolution for retina + zoom
+  useWebWorker: true,
+  fileType: "image/webp", // ~35% smaller than JPEG at same visual quality
+  initialQuality: 0.92,   // Near-lossless — critical for handcraft detail
 }
 
 /**

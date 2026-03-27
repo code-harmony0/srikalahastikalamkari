@@ -12,13 +12,13 @@ export default function AppWrapper({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const isDashboardRoute = pathname.startsWith("/dashboard")
+  const isAdminRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/admin")
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5DC]">
-      {!isDashboardRoute && <Header />}
+      {!isAdminRoute && <Header />}
       <main className="flex-1">{children}</main>
-      {!isDashboardRoute && (
+      {!isAdminRoute && (
         <>
           <Footer />
           <FloatingAdminButton />
