@@ -1,14 +1,6 @@
 import { supabase, supabaseAdmin } from "../lib/supabase/client"
-
-// Define OrderStatus locally since enhanced-types was removed
-type OrderStatus =
-  | "pending"
-  | "paid"
-  | "in_packing"
-  | "packed"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
+import { OrderTrackingService } from "../services/OrderTrackingService"
+import { EnhancedOrder, OrderStatus } from "../lib/supabase/enhanced-types"
 
 export interface Order {
   id: string

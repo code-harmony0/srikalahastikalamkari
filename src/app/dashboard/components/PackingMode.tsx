@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { Button } from "@/app/dashboard/ui/button"
 import { Input } from "@/app/dashboard/ui/input"
 import { Badge } from "@/shared/ui/badge"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
+import { Progress } from "@/shared/ui/progress"
 import { toast } from "sonner"
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import {
@@ -675,12 +675,7 @@ const PackingMode: React.FC<PackingModeProps> = ({
           {/* Progress Bar */}
           {scanMode === "product" && (
             <div className="flex items-center gap-4">
-              <div className="h-3 flex-1 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-600 transition-all duration-300"
-                  style={{ width: `${progressPercentage}%` }}
-                />
-              </div>
+              <Progress value={progressPercentage} className="h-3 flex-1" />
               <span className="text-sm font-semibold min-w-[140px] text-right text-gray-700">
                 {totalScanned}/{totalItemsToScan} •{" "}
                 {Math.round(progressPercentage)}%
