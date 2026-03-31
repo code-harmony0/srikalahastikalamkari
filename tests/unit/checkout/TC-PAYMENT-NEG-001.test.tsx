@@ -191,11 +191,12 @@ describe("TC-PAYMENT-NEG-001: Payment Failure Handling", () => {
    */
   describe("Scenario 5: Invalid UPI ID", () => {
     const invalidUPIs = [
-      "invalid@",
-      "@upi",
-      "user@",
-      "user@invalid",
-      "user@@upi",
+      "invalid@", // missing handle after @
+      "@upi", // missing username
+      "user@", // missing handle
+      "user@x", // handle too short (1 char)
+      "user@@upi", // double @
+      "user@upi@extra", // multiple @
     ]
 
     invalidUPIs.forEach((upi) => {
