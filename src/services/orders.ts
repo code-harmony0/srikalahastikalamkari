@@ -1,6 +1,14 @@
 import { supabase, supabaseAdmin } from "../lib/supabase/client"
-import { OrderTrackingService } from "../services/OrderTrackingService"
-import { EnhancedOrder, OrderStatus } from "../lib/supabase/enhanced-types"
+
+// Define OrderStatus locally since enhanced-types was removed
+type OrderStatus =
+  | "pending"
+  | "paid"
+  | "in_packing"
+  | "packed"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
 
 export interface Order {
   id: string
@@ -63,10 +71,12 @@ export async function getOrderStatistics(): Promise<OrderStats> {
 
     // Filter orders by time periods
     const currentMonthOrders = ordersByStatus.filter(
-      order => new Date(order.created_at) >= currentMonthStart
+      (order) => new Date(order.created_at) >= currentMonthStart,
     )
     const lastMonthOrders = ordersByStatus.filter(
-      order => new Date(order.created_at) >= lastMonthStart && new Date(order.created_at) <= lastMonthEnd
+      (order) =>
+        new Date(order.created_at) >= lastMonthStart &&
+        new Date(order.created_at) <= lastMonthEnd,
     )
 
     // Calculate stats
@@ -74,12 +84,17 @@ export async function getOrderStatistics(): Promise<OrderStats> {
       total_orders: totalOrders || 0,
       total_revenue: ordersByStatus.reduce(
         (sum, order) => sum + (order.total_amount || 0),
-        0
+        0,
       ),
-      pending_orders: ordersByStatus.filter((o) => o.status === "pending" || o.status === "paid").length,
-      processing_orders: ordersByStatus.filter((o) => o.status === "in_packing").length,
-      shipped_orders: ordersByStatus.filter((o) => o.status === "shipped").length,
-      cancelled_orders: ordersByStatus.filter((o) => o.status === "cancelled").length,
+      pending_orders: ordersByStatus.filter(
+        (o) => o.status === "pending" || o.status === "paid",
+      ).length,
+      processing_orders: ordersByStatus.filter((o) => o.status === "in_packing")
+        .length,
+      shipped_orders: ordersByStatus.filter((o) => o.status === "shipped")
+        .length,
+      cancelled_orders: ordersByStatus.filter((o) => o.status === "cancelled")
+        .length,
       recent_orders: [],
     }
 
@@ -96,7 +111,7 @@ export async function getOrderStatistics(): Promise<OrderStats> {
             images
           )
         )
-      `
+      `,
       )
       .order("created_at", { ascending: false })
       .limit(5)
@@ -133,7 +148,7 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
             images
           )
         )
-      `
+      `,
       )
       .eq("id", orderId)
       .single()
@@ -160,7 +175,7 @@ export async function getOrders(limit = 10, offset = 0): Promise<Order[]> {
             images
           )
         )
-      `
+      `,
       )
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1)
@@ -181,11 +196,20 @@ export async function updateOrderStatus(
     shippingCompany?: string
     cancellationReason?: string
     adminEmail?: string
-  }
+  },
 ): Promise<boolean> {
   try {
-    const updatedOrder = await OrderTrackingService.updateOrderStatus(orderId, status, metadata)
-    return updatedOrder !== null
+    // Update order status directly via Supabase
+    const { error } = await supabaseAdmin
+      .from("orders")
+      .update({
+        status,
+        updated_at: new Date().toISOString(),
+        ...metadata,
+      })
+      .eq("id", orderId)
+
+    return !error
   } catch (error) {
     console.error("Error updating order status:", error)
     return false
@@ -241,33 +265,33 @@ export async function createOrder(orderData: {
 
 export const shipOrder = async (
   orderId: string,
-  shippingDetails: { shipping_company: string; tracking_id: string }
+  shippingDetails: { shipping_company: string; tracking_id: string },
 ): Promise<{ data: any | null; error: any }> => {
   try {
-    const updatedOrder = await OrderTrackingService.updateOrderStatus(
-      orderId, 
-      'shipped', 
-      {
-        trackingId: shippingDetails.tracking_id,
-        shippingCompany: shippingDetails.shipping_company
-      }
-    )
+    // Update order status to shipped directly via Supabase
+    const { error } = await supabaseAdmin
+      .from("orders")
+      .update({
+        status: "shipped",
+        tracking_id: shippingDetails.tracking_id,
+        shipping_company: shippingDetails.shipping_company,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", orderId)
 
-    if (!updatedOrder) {
-      return { data: null, error: { message: 'Failed to update order status' } }
+    if (error) {
+      return { data: null, error: { message: "Failed to update order status" } }
     }
 
-    return { data: updatedOrder, error: null }
+    return { data: { id: orderId, status: "shipped" }, error: null }
   } catch (error) {
     return { data: null, error }
   }
 }
 
-
-
 export const createPackingSession = async (
   orderId: string,
-  adminEmail: string
+  adminEmail: string,
 ): Promise<{ data: any | null; error: any }> => {
   try {
     const { data: existingSession, error: checkError } = await supabaseAdmin
@@ -300,7 +324,11 @@ export const createPackingSession = async (
       return { data: null, error }
     }
 
-    await OrderTrackingService.updateOrderStatus(orderId, 'in_packing')
+    // Update order status to in_packing
+    await supabaseAdmin
+      .from("orders")
+      .update({ status: "in_packing", updated_at: new Date().toISOString() })
+      .eq("id", orderId)
 
     return { data, error: null }
   } catch (error) {
@@ -310,7 +338,7 @@ export const createPackingSession = async (
 
 export const updatePackingScanProgress = async (
   sessionId: string,
-  scanProgress: Record<string, number>
+  scanProgress: Record<string, number>,
 ): Promise<{ data: any | null; error: any }> => {
   try {
     const { data, error } = await supabaseAdmin
@@ -331,7 +359,7 @@ export const updatePackingScanProgress = async (
 }
 
 export const completePackingSession = async (
-  sessionId: string
+  sessionId: string,
 ): Promise<{ data: any | null; error: any }> => {
   try {
     const { data: session, error: fetchError } = await supabaseAdmin
@@ -350,7 +378,7 @@ export const completePackingSession = async (
     const startedAt = new Date(session.started_at)
     const completedAt = new Date()
     const durationMinutes = Math.round(
-      (completedAt.getTime() - startedAt.getTime()) / 60000
+      (completedAt.getTime() - startedAt.getTime()) / 60000,
     )
 
     const { data, error } = await supabaseAdmin
@@ -368,7 +396,11 @@ export const completePackingSession = async (
       return { data: null, error }
     }
 
-    await OrderTrackingService.updateOrderStatus(session.order_id, 'packed')
+    // Update order status to packed
+    await supabaseAdmin
+      .from("orders")
+      .update({ status: "packed", updated_at: new Date().toISOString() })
+      .eq("id", session.order_id)
 
     return { data, error: null }
   } catch (error) {
@@ -377,7 +409,7 @@ export const completePackingSession = async (
 }
 
 export const cancelPackingSession = async (
-  sessionId: string
+  sessionId: string,
 ): Promise<{ data: any | null; error: any }> => {
   try {
     const { data: session, error: fetchError } = await supabaseAdmin
@@ -404,7 +436,11 @@ export const cancelPackingSession = async (
       return { data: null, error }
     }
 
-    await OrderTrackingService.updateOrderStatus(session.order_id, 'paid')
+    // Update order status back to paid (cancelled packing)
+    await supabaseAdmin
+      .from("orders")
+      .update({ status: "paid", updated_at: new Date().toISOString() })
+      .eq("id", session.order_id)
 
     return { data, error: null }
   } catch (error) {
@@ -413,7 +449,7 @@ export const cancelPackingSession = async (
 }
 
 export const getActivePackingSession = async (
-  orderId: string
+  orderId: string,
 ): Promise<{ data: any | null; error: any }> => {
   try {
     const { data, error } = await supabaseAdmin
@@ -435,17 +471,17 @@ export const getActivePackingSession = async (
 
 export const cancelOrder = async (
   orderId: string,
-  reason: string
+  reason: string,
 ): Promise<{ data: any | null; error: any }> => {
   try {
     const updatedOrder = await OrderTrackingService.updateOrderStatus(
-      orderId, 
-      'cancelled', 
-      { cancellationReason: reason }
+      orderId,
+      "cancelled",
+      { cancellationReason: reason },
     )
 
     if (!updatedOrder) {
-      return { data: null, error: { message: 'Failed to cancel order' } }
+      return { data: null, error: { message: "Failed to cancel order" } }
     }
 
     return { data: updatedOrder, error: null }
@@ -455,108 +491,129 @@ export const cancelOrder = async (
 }
 
 // Enhanced barcode generation for products
-export const generateProductBarcode = async (productId: string, productName: string): Promise<string> => {
+export const generateProductBarcode = async (
+  productId: string,
+  productName: string,
+): Promise<string> => {
   try {
     // Check if product already has a barcode
     const { data: existingProduct } = await supabaseAdmin
       .from("products")
       .select("barcode")
       .eq("id", productId)
-      .single();
+      .single()
 
     if (existingProduct?.barcode) {
-      return existingProduct.barcode;
+      return existingProduct.barcode
     }
 
     // Generate SKU-based barcode
-    const cleanName = productName.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 6);
-    const cleanId = productId.replace(/[^0-9]/g, '').slice(-6).padStart(6, '0');
-    const barcode = `${cleanName}${cleanId}`;
+    const cleanName = productName
+      .replace(/[^A-Z0-9]/gi, "")
+      .toUpperCase()
+      .slice(0, 6)
+    const cleanId = productId
+      .replace(/[^0-9]/g, "")
+      .slice(-6)
+      .padStart(6, "0")
+    const barcode = `${cleanName}${cleanId}`
 
     // Update product with generated barcode
-    await supabaseAdmin
-      .from("products")
-      .update({ barcode })
-      .eq("id", productId);
+    await supabaseAdmin.from("products").update({ barcode }).eq("id", productId)
 
-    return barcode;
+    return barcode
   } catch (error) {
-    console.error("Error generating product barcode:", error);
+    console.error("Error generating product barcode:", error)
     // Fallback to simple ID-based barcode
-    return productId.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(-12);
+    return productId
+      .replace(/[^A-Z0-9]/gi, "")
+      .toUpperCase()
+      .slice(-12)
   }
-};
+}
 
 // Generate Order QR data
 export const generateOrderQrData = (order: any): string => {
   return JSON.stringify({
     id: order.id,
-    customer: order.shipping_address?.firstName || order.customer_name || 'Guest',
+    customer:
+      order.shipping_address?.firstName || order.customer_name || "Guest",
     items: order.order_items?.length || 0,
     total: order.total_amount,
-    timestamp: new Date().toISOString()
-  });
-};
+    timestamp: new Date().toISOString(),
+  })
+}
 
 // Generate shipping package ID
 export const generateShippingId = (orderId: string): string => {
-  const timestamp = Date.now().toString().slice(-6);
-  const orderShort = orderId.slice(-4).toUpperCase();
-  return `PKG-${orderShort}-${timestamp}`;
-};
+  const timestamp = Date.now().toString().slice(-6)
+  const orderShort = orderId.slice(-4).toUpperCase()
+  return `PKG-${orderShort}-${timestamp}`
+}
 
 // Bulk generate barcodes for all products without them
-export const generateMissingBarcodes = async (): Promise<{ success: number; errors: number }> => {
+export const generateMissingBarcodes = async (): Promise<{
+  success: number
+  errors: number
+}> => {
   try {
     const { data: products } = await supabaseAdmin
       .from("products")
       .select("id, name, barcode")
-      .is("barcode", null);
+      .is("barcode", null)
 
     if (!products || products.length === 0) {
-      return { success: 0, errors: 0 };
+      return { success: 0, errors: 0 }
     }
 
-    let success = 0;
-    let errors = 0;
+    let success = 0
+    let errors = 0
 
     for (const product of products) {
       try {
-        await generateProductBarcode(product.id, product.name);
-        success++;
+        await generateProductBarcode(product.id, product.name)
+        success++
       } catch (error) {
-        console.error(`Failed to generate barcode for product ${product.id}:`, error);
-        errors++;
+        console.error(
+          `Failed to generate barcode for product ${product.id}:`,
+          error,
+        )
+        errors++
       }
     }
 
-    return { success, errors };
+    return { success, errors }
   } catch (error) {
-    console.error("Error in bulk barcode generation:", error);
-    return { success: 0, errors: 1 };
+    console.error("Error in bulk barcode generation:", error)
+    return { success: 0, errors: 1 }
   }
-};
+}
 
 // Check if user has purchased a product
-export async function hasPurchasedProduct(productId: string, customerEmail: string): Promise<boolean> {
+export async function hasPurchasedProduct(
+  productId: string,
+  customerEmail: string,
+): Promise<boolean> {
   try {
     const { data, error } = await supabaseAdmin
       .from("orders")
-      .select(`
+      .select(
+        `
         id,
         order_items!inner (
           product_id
         )
-      `)
+      `,
+      )
       .eq("customer_email", customerEmail)
       .eq("order_items.product_id", productId)
       .in("status", ["paid", "shipped", "packed", "in_packing"])
-      .limit(1);
+      .limit(1)
 
-    if (error) throw error;
-    return (data?.length || 0) > 0;
+    if (error) throw error
+    return (data?.length || 0) > 0
   } catch (error) {
-    console.error("Error checking purchase history:", error);
-    return false;
+    console.error("Error checking purchase history:", error)
+    return false
   }
 }
