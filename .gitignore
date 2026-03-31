@@ -60,6 +60,12 @@ package-lock.json
 # AI & Local Config
 .agents/
 .claude/
+CLAUDE.md
+.kiro/
+skill-lock*
 skills-lock.json
 firebase-debug.log
 supabase/.temp/
+
+# Documentation (local only)
+docs/
