@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { Card, CardHeader } from "./Card";
-import { cn } from "@/shared/utils";
+import * as React from "react"
+import { Card, CardHeader } from "@/shared/ui/card"
+import { cn } from "@/shared/utils"
 
 /**
  * Data Table Component
- * 
+ *
  * Displays tabular data with visual subordination to KPI cards.
- * 
+ *
  * Critical Constraints:
  * - Row height: 56px
  * - Cell padding: 12px
@@ -19,25 +19,25 @@ import { cn } from "@/shared/utils";
  */
 
 export interface TableColumn<T> {
-  key: keyof T | string;
-  label: string;
-  sortable?: boolean;
-  align?: "left" | "center" | "right";
-  render?: (item: T) => React.ReactNode;
+  key: keyof T | string
+  label: string
+  sortable?: boolean
+  align?: "left" | "center" | "right"
+  render?: (item: T) => React.ReactNode
 }
 
 export interface DataTableProps<T> {
-  title: string;
-  icon?: React.ReactNode;
-  columns: TableColumn<T>[];
-  data: T[];
-  onRowClick?: (item: T) => void;
-  actions?: React.ReactNode;
+  title: string
+  icon?: React.ReactNode
+  columns: TableColumn<T>[]
+  data: T[]
+  onRowClick?: (item: T) => void
+  actions?: React.ReactNode
   emptyState?: {
-    icon: React.ReactNode;
-    message: string;
-  };
-  className?: string;
+    icon: React.ReactNode
+    message: string
+  }
+  className?: string
 }
 
 export function DataTable<T extends Record<string, any>>({
@@ -51,7 +51,7 @@ export function DataTable<T extends Record<string, any>>({
   className,
 }: DataTableProps<T>) {
   return (
-    <Card className={cn("overflow-hidden", className)} hover={false}>
+    <Card className={cn("overflow-hidden", className)}>
       {/* Header */}
       <CardHeader className="mb-4">
         <div className="flex items-center gap-3">
@@ -82,7 +82,9 @@ export function DataTable<T extends Record<string, any>>({
                     "px-3 py-3 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider",
                     column.align === "center" && "text-center",
                     column.align === "right" && "text-right",
-                    column.align !== "center" && column.align !== "right" && "text-left"
+                    column.align !== "center" &&
+                      column.align !== "right" &&
+                      "text-left",
                   )}
                 >
                   {column.label}
@@ -119,7 +121,8 @@ export function DataTable<T extends Record<string, any>>({
                   onClick={() => onRowClick?.(item)}
                   className={cn(
                     "border-b border-gray-200 dark:border-gray-700 h-14", // 56px row height
-                    onRowClick && "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    onRowClick &&
+                      "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
                   )}
                 >
                   {columns.map((column, colIndex) => (
@@ -128,7 +131,7 @@ export function DataTable<T extends Record<string, any>>({
                       className={cn(
                         "px-3 py-3 text-sm text-gray-900 dark:text-white", // 12px cell padding
                         column.align === "center" && "text-center",
-                        column.align === "right" && "text-right"
+                        column.align === "right" && "text-right",
                       )}
                     >
                       {column.render
@@ -143,5 +146,5 @@ export function DataTable<T extends Record<string, any>>({
         </table>
       </div>
     </Card>
-  );
+  )
 }

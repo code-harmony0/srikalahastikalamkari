@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { Card, CardHeader } from "./Card";
-import { cn } from "@/shared/utils";
+import * as React from "react"
+import { Card, CardHeader } from "@/shared/ui/card"
+import { cn } from "@/shared/utils"
 
 /**
  * Chart Card Component
- * 
+ *
  * Wrapper for chart visualizations with visual subordination to KPI cards.
- * 
+ *
  * Critical Constraints:
  * - Maximum height: 320px (strict)
  * - Padding: 20px (inherited from Card)
@@ -17,11 +17,11 @@ import { cn } from "@/shared/utils";
  */
 
 export interface ChartCardProps {
-  title: string;
-  icon?: React.ReactNode;
-  children: React.ReactNode;
-  actions?: React.ReactNode;
-  className?: string;
+  title: string
+  icon?: React.ReactNode
+  children: React.ReactNode
+  actions?: React.ReactNode
+  className?: string
 }
 
 export function ChartCard({
@@ -32,7 +32,12 @@ export function ChartCard({
   className,
 }: ChartCardProps) {
   return (
-    <Card className={cn("h-[280px] md:h-[320px] flex flex-col rounded-xl md:rounded-[14px]", className)}>
+    <Card
+      className={cn(
+        "h-[280px] md:h-[320px] flex flex-col rounded-xl md:rounded-[14px]",
+        className,
+      )}
+    >
       {/* Header Section */}
       <CardHeader className="mb-4 flex-shrink-0">
         <div className="flex items-center gap-3">
@@ -55,5 +60,5 @@ export function ChartCard({
         {children}
       </div>
     </Card>
-  );
+  )
 }

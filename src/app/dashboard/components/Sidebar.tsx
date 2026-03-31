@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
@@ -19,11 +19,15 @@ import {
   FiPercent,
   FiHeart,
 } from "react-icons/fi"
-import "./Sidebar.css"
 import { useAuth } from "@/shared/contexts/AuthContext"
 import { useSidebar } from "@/shared/contexts/SidebarContext"
 import { toast } from "sonner"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/ui/tooltip"
 
 const Sidebar = () => {
   const router = useRouter()
@@ -31,8 +35,6 @@ const Sidebar = () => {
   const { user, logout } = useAuth()
   const { isCollapsed, toggleSidebar } = useSidebar()
   const role = (user as any)?.metadata?.role
-
-  
 
   const handleLogout = async () => {
     await logout()
@@ -53,13 +55,13 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchBadges = async () => {
       const { supabase } = await import("@/lib/supabase/client")
-      
+
       // Pending orders
       const { count: pendingCount } = await supabase
         .from("orders")
         .select("*", { count: "exact", head: true })
         .in("status", ["pending", "paid"])
-      
+
       // Low stock products
       const { count: stockCount } = await supabase
         .from("products")
@@ -168,7 +170,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`sidebar ${isCollapsed ? 'collapsed' : 'mobile-open'}`}
+      className={`sidebar ${isCollapsed ? "collapsed" : "mobile-open"}`}
       style={{ width: isCollapsed ? 80 : 280 }}
     >
       <div className="sidebar-content">
@@ -189,8 +191,8 @@ const Sidebar = () => {
               </div>
             )}
           </div>
-          
-          <button 
+
+          <button
             className="sidebar-toggle-btn"
             onClick={toggleSidebar}
             title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
@@ -212,22 +214,28 @@ const Sidebar = () => {
                       >
                         <item.icon className="nav-icon" />
                         {/* Badge for collapsed state - show count on icon */}
-                        {isCollapsed && item.badge != null && item.badge > 0 && (
-                          <span className={`absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-md ${
-                            item.badgeColor || "bg-[#A4552A]"
-                          }`}>
-                            {item.badge}
-                          </span>
-                        )}
+                        {isCollapsed &&
+                          item.badge != null &&
+                          item.badge > 0 && (
+                            <span
+                              className={`absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-md ${
+                                item.badgeColor || "bg-[#A4552A]"
+                              }`}
+                            >
+                              {item.badge}
+                            </span>
+                          )}
                         {!isCollapsed && (
                           <span className="flex items-center w-full">
                             {item.label}
                             {/* @ts-ignore */}
                             {item.badge > 0 && (
-                              <span className={`ml-auto text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
-                                // @ts-ignore
-                                item.badgeColor || "bg-[#A4552A]"
-                              }`}>
+                              <span
+                                className={`ml-auto text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
+                                  // @ts-ignore
+                                  item.badgeColor || "bg-[#A4552A]"
+                                }`}
+                              >
                                 {/* @ts-ignore */}
                                 {item.badge}
                               </span>
@@ -242,10 +250,12 @@ const Sidebar = () => {
                           {item.label}
                           {/* @ts-ignore */}
                           {item.badge > 0 && (
-                            <span className={`text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
-                              // @ts-ignore
-                              item.badgeColor || "bg-[#A4552A]"
-                            }`}>
+                            <span
+                              className={`text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
+                                // @ts-ignore
+                                item.badgeColor || "bg-[#A4552A]"
+                              }`}
+                            >
                               {/* @ts-ignore */}
                               {item.badge}
                             </span>
@@ -267,17 +277,11 @@ const Sidebar = () => {
             <TooltipTrigger asChild>
               <button className="logout-btn" onClick={handleLogout}>
                 <FiLogOut className="logout-icon shrink-0" />
-                {!isCollapsed && (
-                  <span>
-                    Logout
-                  </span>
-                )}
+                {!isCollapsed && <span>Logout</span>}
               </button>
             </TooltipTrigger>
             {isCollapsed && (
-              <TooltipContent side="right">
-                Logout
-              </TooltipContent>
+              <TooltipContent side="right">Logout</TooltipContent>
             )}
           </Tooltip>
         </TooltipProvider>
