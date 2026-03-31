@@ -136,15 +136,41 @@ export const updateSubCategory = async (
   }
 ): Promise<{ data: any | null; error: any }> => {
   const dbPayload: any = {}
+
   if (payload.name) {
     dbPayload.name = payload.name
-    dbPayload.slug = payload.name
+
+    const baseSlug = payload.name
       .toLowerCase()
       .trim()
       .replace(/[^\w\s-]/g, "")
       .replace(/[\s_-]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+      .replace(/^-+|-+$/g, "")
+
+    // Determine parent_id: use the new one from payload, or fetch the current one
+    let parentId = payload.category_id
+    if (!parentId) {
+      const { data: current } = await supabase
+        .from("categories")
+        .select("parent_id")
+        .eq("id", id)
+        .single()
+      parentId = current?.parent_id ?? undefined
+    }
+
+    // Build slug with parent prefix, same as createSubCategory
+    if (parentId) {
+      const { data: parentCat } = await supabase
+        .from("categories")
+        .select("slug")
+        .eq("id", parentId)
+        .single()
+      dbPayload.slug = parentCat ? `${parentCat.slug}-${baseSlug}` : baseSlug
+    } else {
+      dbPayload.slug = baseSlug
+    }
   }
+
   if (payload.description) dbPayload.description = payload.description
   if (payload.category_id) dbPayload.parent_id = payload.category_id
   if (payload.image_url !== undefined) dbPayload.image_url = payload.image_url

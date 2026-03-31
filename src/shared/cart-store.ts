@@ -27,6 +27,7 @@ export const useCartStore = create<CartState>()(
           console.error('Cannot add product to cart: Missing product.id');
           return;
         }
+        const maxStock = (product as any).stock_quantity ?? (product as any).quantity ?? Infinity;
         set((state) => {
           const variantId = (product as any).selectedVariant?.id;
           const existingItem = state.items.find(
@@ -34,17 +35,20 @@ export const useCartStore = create<CartState>()(
           );
 
           if (existingItem) {
+            const newQty = Math.min(existingItem.quantity + quantity, maxStock);
+            if (newQty === existingItem.quantity) return state; // already at stock limit
             return {
               items: state.items.map((item) =>
                 (item.productId === product.id && item.variant === variantId)
-                  ? { ...item, quantity: item.quantity + quantity }
+                  ? { ...item, quantity: newQty, maxStock }
                   : item
               ),
             };
           }
 
+          const initialQty = Math.min(quantity, maxStock);
           return {
-            items: [...state.items, { productId: product.id, quantity, variant: variantId }],
+            items: [...state.items, { productId: product.id, quantity: initialQty, variant: variantId, maxStock }],
           };
         });
       },
@@ -62,9 +66,11 @@ export const useCartStore = create<CartState>()(
         }
 
         set((state) => ({
-          items: state.items.map((item) =>
-            item.productId === productId ? { ...item, quantity } : item
-          ),
+          items: state.items.map((item) => {
+            if (item.productId !== productId) return item;
+            const capped = item.maxStock ? Math.min(quantity, item.maxStock) : quantity;
+            return { ...item, quantity: capped };
+          }),
         }));
       },
 

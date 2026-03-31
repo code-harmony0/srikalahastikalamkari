@@ -70,6 +70,15 @@ export const ProductCard = memo(
         return;
       }
 
+      const maxStock = product.stock_quantity ?? product.quantity ?? 0;
+      const existingItem = cart.items.find((i) => i.productId === product.id);
+      const currentQty = existingItem?.quantity ?? 0;
+
+      if (currentQty >= maxStock) {
+        toast.error(`Only ${maxStock} in stock`);
+        return;
+      }
+
       cart.addItem(product, 1);
       toast.success("Added to cart");
     };

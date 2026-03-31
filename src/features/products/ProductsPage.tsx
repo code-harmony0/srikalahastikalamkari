@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
 import { useProducts } from "@/shared/hooks/use-products";
@@ -61,27 +62,48 @@ function getPageNumbers(current: number, total: number): (number | "...")[] {
 }
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState("default");
-  
+
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
+  // Sync ?category= URL param once, then remove it so returning to the page
+  // or re-renders don't force the category back if the user deselected it.
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      setSelectedCategories([decodeURIComponent(cat)]);
+      setCurrentPage(1);
+      // Consume the param — strip it from the URL so it won't re-apply
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("category");
+      const newUrl = params.toString() ? `${pathname}?${params}` : pathname;
+      router.replace(newUrl, { scroll: false });
+    }
+  }, [searchParams, pathname, router]);
+
   const gridRef = useRef<HTMLDivElement>(null);
   
-  const { categories: filterCategories } = useFilterCategories();
+  const { categories: filterCategories, isLoading: categoriesLoading } = useFilterCategories();
 
   // Resolve category IDs from selected names for the API
   // Must search both parent categories AND subcategories
   const categoryIds = useMemo(() => {
-     if (selectedCategories.length === 0 || !filterCategories.length) return undefined;
+     if (selectedCategories.length === 0) return undefined;
+     // Categories still loading — defer; don't show all products yet
+     if (categoriesLoading || !filterCategories.length) return ["00000000-0000-0000-0000-000000000000"];
      const selectedNames = new Set(selectedCategories);
      const matchedIds: string[] = [];
 
@@ -92,8 +114,10 @@ export default function ProductsPage() {
        }
      }
 
-     return matchedIds.length > 0 ? matchedIds : undefined;
-  }, [selectedCategories, filterCategories]);
+     // No DB match for the selected category — return impossible ID so 0 results show
+     // instead of falling through to show all products
+     return matchedIds.length > 0 ? matchedIds : ["00000000-0000-0000-0000-000000000000"];
+  }, [selectedCategories, filterCategories, categoriesLoading]);
 
 
   // Prepare filters for React Query

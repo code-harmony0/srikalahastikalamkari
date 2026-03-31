@@ -4,7 +4,6 @@ import React from "react";
 import Sidebar from "./Sidebar";
 import { SidebarProvider, useSidebar } from "@/shared/contexts/SidebarContext";
 import "../styles/dashboard.css";
-import "../styles/dashboard.css";
 import "../styles/tables.css";
 import { Menu } from "lucide-react";
 

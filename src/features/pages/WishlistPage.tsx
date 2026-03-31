@@ -3,10 +3,12 @@
 import { useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAllProducts } from "@/shared/hooks/use-products";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import {
   Heart,
   ShoppingBag,
@@ -19,9 +21,18 @@ import { toast } from "sonner";
 import { cn, formatPrice } from "@/shared/utils";
 
 export default function WishlistPage() {
+  const router = useRouter()
+  const { user: firebaseUser } = useAuth()
   const { data: products = [], isLoading } = useAllProducts();
   const wishlist = useWishlistStore();
   const cart = useCartStore();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (firebaseUser === null) {
+      router.push("/login")
+    }
+  }, [firebaseUser, router])
 
   // 🛍 Merge Wishlist Items with Product Data
   const wishlistItems = useMemo(
@@ -208,7 +219,7 @@ export default function WishlistPage() {
                   >
                     <Image
                       src={
-                        product.mainImage || product.image || "/placeholder.png"
+                        product.images?.[0] || product.mainImage || product.image || "/placeholder.png"
                       }
                       alt={product.title || product.name || "Product"}
                       fill

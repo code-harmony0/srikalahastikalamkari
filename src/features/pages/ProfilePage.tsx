@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import {
@@ -27,8 +27,23 @@ import { useUserProfileStore } from "@/shared/user-profile-store"
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { signOut } = useAuth()
-  const { profile: user } = useUserProfileStore()
+  const { user: firebaseUser, signOut } = useAuth()
+  const { profile: user, updateProfile } = useUserProfileStore()
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!firebaseUser) {
+      router.push("/login")
+      return
+    }
+    // Sync Firebase auth data into the profile store
+    const updates: Record<string, string> = {}
+    if (firebaseUser.phoneNumber && user.phone !== firebaseUser.phoneNumber)
+      updates.phone = firebaseUser.phoneNumber
+    if (firebaseUser.email && user.email !== firebaseUser.email)
+      updates.email = firebaseUser.email
+    if (Object.keys(updates).length > 0) updateProfile(updates)
+  }, [firebaseUser])
 
   const handleSignOut = async () => {
     try {

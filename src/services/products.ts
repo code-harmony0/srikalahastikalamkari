@@ -829,10 +829,12 @@ export const getProductsPaginated = async (
       .from("products")
       .select("*, product_variants(*), categories:category_id(id, name), sub_category:sub_category_id(id, name)", { count: "exact" });
 
-    // Search
+    // Search by name only (not description) to avoid cross-category false positives.
+    // Strip trailing 's' so "sarees" matches "Kalamkari Saree" and "Kalamkari Sarees".
     if (filters.search) {
       const q = filters.search.trim().toLowerCase();
-      query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
+      const stem = q.endsWith("s") ? q.slice(0, -1) : q;
+      query = query.ilike("name", `%${stem}%`);
     }
 
     if (filters.category_id) {
@@ -918,6 +920,20 @@ export const productsService = {
   async getAll(): Promise<Product[]> {
     const { data } = await getProducts();
     return (data || []) as Product[];
+  },
+  // Efficient featured query — fetches ONLY featured products, no full-table scan
+  async getFeaturedEfficient(limit = 6): Promise<Product[]> {
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, category_id, categories:category_id(id, name)")
+      .eq("is_featured", true)
+      .limit(limit)
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.warn("getFeaturedEfficient error:", error.message);
+      return [];
+    }
+    return (data || []) as unknown as Product[];
   },
   async getFeatured(): Promise<Product[]> {
     const { data } = await getProducts();

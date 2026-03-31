@@ -21,7 +21,10 @@ import {
   signInWithPhoneNumber,
   ConfirmationResult,
 } from "firebase/auth"
-import { auth } from "../config/firebase"
+import { auth, initAppCheckOnDemand } from "../config/firebase"
+import { useUserProfileStore } from "../user-profile-store"
+import { useWishlistStore } from "../wishlist-store"
+import { useCartStore } from "../cart-store"
 
 
 type AuthContextType = {
@@ -57,8 +60,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const googleProvider = new GoogleAuthProvider()
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user)
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      const currentUid = firebaseUser?.uid || null
+
+      if (!currentUid) {
+        // User signed out — wipe all user-specific local data
+        useUserProfileStore.getState().resetForUser("")
+        useWishlistStore.getState().clearWishlist()
+        useCartStore.getState().clearCart()
+      } else {
+        // User signed in — check if it's a different user from what's stored
+        const storedOwnerId = useUserProfileStore.getState().profile._ownerId
+        if (!storedOwnerId || storedOwnerId !== currentUid) {
+          // Different user (or first login) — clear previous user's data
+          useUserProfileStore.getState().resetForUser(currentUid)
+          useWishlistStore.getState().clearWishlist()
+          useCartStore.getState().clearCart()
+        }
+      }
+
+      setUser(firebaseUser)
       setLoading(false)
     })
 
@@ -104,6 +125,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Phone Authentication with OTP
   const signInWithPhone = async (phoneNumber: string, recaptchaContainer: string) => {
     try {
+      // Init App Check on first phone auth attempt (deferred from page load)
+      await initAppCheckOnDemand()
       // Clean up previous verifier
       if ((window as any).recaptchaVerifier) {
         try { (window as any).recaptchaVerifier.clear() } catch (_) {}

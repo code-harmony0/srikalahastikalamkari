@@ -107,18 +107,18 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2">
               {[
-                "Kalamkari Sarees",
-                "Kalamkari Duppatas",
-                "Dress Materials",
-                "Wall Paintings",
-                "Canvas Paintings",
+                { label: "Kalamkari Sarees", category: "Sarees" },
+                { label: "Kalamkari Dupattas", category: "Dupattas" },
+                { label: "Dress Materials", category: "Fabrics" },
+                { label: "Wall Paintings", category: "Wall Paintings" },
+                { label: "Canvas Paintings", category: "Canvas Paintings" },
               ].map((item) => (
-                <li key={item}>
+                <li key={item.label}>
                   <Link
-                    href={`/products?category=${item.toLowerCase().replace(" ", "-")}`}
+                    href={`/products?category=${encodeURIComponent(item.category)}`}
                     className="text-[#FFF8F0]/70 hover:text-[#C19A5B] transition-colors text-[13px] block hover:translate-x-1 duration-200"
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -153,33 +153,19 @@ export default function Footer() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Phones */}
               <div className="space-y-3">
-                <div className="group">
-                  <span className="text-[10px] text-[#FFF8F0]/40 uppercase tracking-wider block mb-0.5">
-                    Customer Care
+                <span className="text-[10px] text-[#FFF8F0]/40 uppercase tracking-wider block mb-0.5">
+                  Customer Care
+                </span>
+                <div className="space-y-1">
+                  <span className="flex items-center gap-2 text-[13px] text-[#FFF8F0]/90 font-medium">
+                    <Phone className="w-3.5 h-3.5 text-[#C19A5B]" /> +91 72888 48881
                   </span>
-                  <div className="space-y-1">
-                    <a
-                      href="tel:+917288848881"
-                      className="flex items-center gap-2 text-[13px] text-[#FFF8F0]/90 group-hover:text-[#C19A5B] transition-colors font-medium"
-                    >
-                      <Phone className="w-3.5 h-3.5 text-[#C19A5B]" /> +91 72888
-                      48881
-                    </a>
-                    <a
-                      href="tel:+917288848882"
-                      className="flex items-center gap-2 text-[13px] text-[#FFF8F0]/90 group-hover:text-[#C19A5B] transition-colors font-medium"
-                    >
-                      <Phone className="w-3.5 h-3.5 text-[#C19A5B]" /> +91 72888
-                      48882
-                    </a>
-                    <a
-                      href="tel:+917288848883"
-                      className="flex items-center gap-2 text-[13px] text-[#FFF8F0]/90 group-hover:text-[#C19A5B] transition-colors font-medium"
-                    >
-                      <Phone className="w-3.5 h-3.5 text-[#C19A5B]" /> +91 72888
-                      48883
-                    </a>
-                  </div>
+                  <span className="flex items-center gap-2 text-[13px] text-[#FFF8F0]/90 font-medium">
+                    <Phone className="w-3.5 h-3.5 text-[#C19A5B]" /> +91 72888 48882
+                  </span>
+                  <span className="flex items-center gap-2 text-[13px] text-[#FFF8F0]/90 font-medium">
+                    <Phone className="w-3.5 h-3.5 text-[#C19A5B]" /> +91 72888 48883
+                  </span>
                 </div>
               </div>
 

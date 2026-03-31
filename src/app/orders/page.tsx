@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
@@ -28,6 +29,7 @@ import { ReviewSubmissionDialog } from "@/features/orders/ReviewSubmissionDialog
 import { cn, formatPrice } from "@/shared/utils"
 import { supabase } from "@/lib/supabase/client"
 import { useToast } from "@/shared/ui/use-toast"
+import { useAuth } from "@/shared/contexts/AuthContext"
 import { 
   calculateEstimatedDelivery, 
   getTrackingUrl, 
@@ -60,6 +62,8 @@ interface Order {
 
 
 export default function OrdersPage() {
+  const router = useRouter()
+  const { user: firebaseUser } = useAuth()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
@@ -83,14 +87,28 @@ export default function OrdersPage() {
   const [totalCount, setTotalCount] = useState(0)
   const itemsPerPage = 10
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (firebaseUser === null) {
+      router.push("/login")
+    }
+  }, [firebaseUser, router])
+
   useEffect(() => {
     fetchOrders()
-  }, [currentPage])
+  }, [currentPage, firebaseUser])
 
   const fetchOrders = async () => {
+    if (!firebaseUser?.phoneNumber) {
+      setOrders([])
+      setTotalCount(0)
+      setLoading(false)
+      return
+    }
+
     try {
       setLoading(true)
-      
+
       const from = (currentPage - 1) * itemsPerPage
       const to = from + itemsPerPage - 1
 
@@ -118,6 +136,7 @@ export default function OrdersPage() {
             )
           )
         `, { count: 'exact' })
+        .eq("customer_phone", firebaseUser.phoneNumber)
         .order("created_at", { ascending: false })
         .range(from, to)
 

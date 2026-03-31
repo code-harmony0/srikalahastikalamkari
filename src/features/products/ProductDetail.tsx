@@ -129,8 +129,16 @@ export default function ProductDetail() {
   // Handlers
   const handleAddToCart = () => {
     if (!product) return
-    cart.addItem(product, quantity)
-    toast.success(`Added ${quantity} item(s) to cart`)
+    const maxStock = product.stock_quantity ?? 0
+    const existingItem = cart.items.find((i) => i.productId === product.id)
+    const currentQty = existingItem?.quantity ?? 0
+    const addable = Math.min(quantity, maxStock - currentQty)
+    if (addable <= 0) {
+      toast.error(`Only ${maxStock} in stock`)
+      return
+    }
+    cart.addItem(product, addable)
+    toast.success(`Added ${addable} item(s) to cart`)
   }
 
   const handleToggleWishlist = () => {

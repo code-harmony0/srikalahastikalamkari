@@ -46,28 +46,21 @@ export default function AdminLoginPage() {
     }
 
     try {
-      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL
-      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, rememberMe }),
+      })
 
-      if (email === adminEmail && password === adminPassword) {
-        // Store admin auth state in both localStorage and cookies
-        localStorage.setItem("isLoggedIn", "true")
-        localStorage.setItem("userRole", "admin")
-        if (rememberMe) {
-          localStorage.setItem("rememberMe", "true")
-        }
+      const data = await res.json()
 
-        // Set cookie for middleware
-        const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60
-        document.cookie = `isLoggedIn=true; path=/; max-age=${maxAge}; SameSite=Lax`
-
-        // Small delay to ensure cookie is set, then redirect
-        setTimeout(() => {
-          window.location.href = "/dashboard"
-        }, 100)
-      } else {
-        setError("Invalid email or password. Please try again.")
+      if (!res.ok) {
+        setError(data.error || "Invalid email or password. Please try again.")
+        return
       }
+
+      // Cookie is set server-side by the API route
+      window.location.href = "/dashboard"
     } catch (err: any) {
       setError("An error occurred. Please try again.")
     } finally {

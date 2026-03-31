@@ -290,23 +290,13 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         ${isSelected || hasSubSelected ? "bg-[#FFF4E8] border border-[#C19A5B]/30" : "hover:bg-[#FFF4E8]/50 border border-transparent"}
                       `}
                     >
-                      <div className="flex items-center gap-3">
-                         {/* Thumbnail if available, or icon */}
-                         <div className="w-8 h-8 rounded-md bg-[#C19A5B]/10 flex items-center justify-center overflow-hidden">
-                            {category.image_url ? (
-                                <img src={category.image_url} alt={category.name} className="w-full h-full object-cover" />
-                            ) : (
-                                <Package className="w-4 h-4 text-[#C19A5B]" />
-                            )}
-                         </div>
-                         <div className="text-left">
-                             <span className={`block text-[13px] font-medium leading-tight ${isSelected || hasSubSelected ? "text-[#A4552A]" : "text-[#3B2C23]"}`}>
-                                 {category.name}
-                             </span>
-                             {hasSubSelected && (
-                                <span className="text-[10px] text-[#A4552A]/80">Filter active</span>
-                             )}
-                         </div>
+                      <div className="text-left">
+                        <span className={`block text-[13px] font-medium leading-tight ${isSelected || hasSubSelected ? "text-[#A4552A]" : "text-[#3B2C23]"}`}>
+                          {category.name}
+                        </span>
+                        {hasSubSelected && (
+                          <span className="text-[10px] text-[#A4552A]/80">Filter active</span>
+                        )}
                       </div>
                       <ChevronRight className="w-4 h-4 text-[#C19A5B]/60" />
                     </button>
@@ -372,7 +362,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 return (
                   <button
                     key={preset.label}
-                    onClick={() => setPriceRange(preset.range)}
+                    onClick={() => setPriceRange(isActive ? [0, 50000] : preset.range)}
                     className={`
                       px-3 py-1.5 rounded-lg text-[10px] font-semibold tracking-wide transition-all
                       ${
