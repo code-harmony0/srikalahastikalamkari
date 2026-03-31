@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Area,
@@ -9,21 +9,21 @@ import {
   XAxis,
   YAxis,
   Legend,
-} from "recharts";
+} from "recharts"
 
 interface DemandFlowChartProps {
   data: {
-    date: string;
-    orders: number;
-    items_sold: number;
-    revenue: number;
-  }[];
+    date: string
+    orders: number
+    items_sold: number
+    revenue: number
+  }[]
 }
 
 const formatRevenue = (value: number) => {
-  if (value >= 1000) return `₹${(value / 1000).toFixed(0)}k`;
-  return `₹${value}`;
-};
+  if (value >= 1000) return `₹${(value / 1000).toFixed(0)}k`
+  return `₹${value}`
+}
 
 export function DemandFlowChart({ data }: DemandFlowChartProps) {
   return (
@@ -85,11 +85,20 @@ export function DemandFlowChart({ data }: DemandFlowChartProps) {
             boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
             padding: "12px 16px",
           }}
-          itemStyle={{ fontSize: "12px", fontWeight: 600, paddingBottom: "4px" }}
-          labelStyle={{ fontSize: "12px", color: "#64748B", marginBottom: "8px" }}
-          formatter={(value: any, name?: string) => {
-            if (name === "Revenue") return [`₹${Number(value).toLocaleString("en-IN")}`, name];
-            return [value, name || ""];
+          itemStyle={{
+            fontSize: "12px",
+            fontWeight: 600,
+            paddingBottom: "4px",
+          }}
+          labelStyle={{
+            fontSize: "12px",
+            color: "#64748B",
+            marginBottom: "8px",
+          }}
+          formatter={(value: any, name: any) => {
+            if (name === "Revenue")
+              return [`₹${Number(value).toLocaleString("en-IN")}`, name]
+            return [value, name || ""]
           }}
         />
 
@@ -137,10 +146,15 @@ export function DemandFlowChart({ data }: DemandFlowChartProps) {
           strokeWidth={3}
           fill="url(#colorOrders)"
           fillOpacity={0.1}
-          activeDot={{ r: 5, fill: "#16A34A", strokeWidth: 2, stroke: "#FFFFFF" }}
+          activeDot={{
+            r: 5,
+            fill: "#16A34A",
+            strokeWidth: 2,
+            stroke: "#FFFFFF",
+          }}
           animationDuration={1500}
         />
       </AreaChart>
     </ResponsiveContainer>
-  );
+  )
 }

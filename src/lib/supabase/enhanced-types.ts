@@ -1,4 +1,4 @@
-export type OrderStatus = 
+export type OrderStatus =
   | "pending"
   | "paid"
   | "in_packing"
@@ -42,4 +42,16 @@ export interface OrderTrackingEvent {
     shippingCompany?: string
     notes?: string
   }
+}
+
+export interface ContactInquiry {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  subject: string
+  message: string
+  status: "new" | "solved" | "ignored"
+  created_at: string
+  updated_at: string
 }
