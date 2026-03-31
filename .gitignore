@@ -3,6 +3,11 @@ node_modules
 .pnp
 .pnp.js
 .yarn/install-state.gz
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/versions
+.yarnrc.yml
 
 # Next.js
 .next/
