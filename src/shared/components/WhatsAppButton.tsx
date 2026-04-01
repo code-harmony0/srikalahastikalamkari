@@ -11,7 +11,7 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({
-  phoneNumber = "917288848882", // Replace with actual number
+  phoneNumber = "917288848881", // Replace with actual number
   message,
 }: WhatsAppButtonProps) {
   const pathname = usePathname()

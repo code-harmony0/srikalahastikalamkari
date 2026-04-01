@@ -12,7 +12,8 @@ export default function AppWrapper({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const isAdminRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/admin")
+  const isAdminRoute =
+    pathname.startsWith("/dashboard") || pathname.startsWith("/admin")
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5DC]">
@@ -22,7 +23,7 @@ export default function AppWrapper({
         <>
           <Footer />
           <FloatingAdminButton />
-          <WhatsAppButton phoneNumber="917288848882" />
+          <WhatsAppButton phoneNumber="917288848881" />
         </>
       )}
     </div>
