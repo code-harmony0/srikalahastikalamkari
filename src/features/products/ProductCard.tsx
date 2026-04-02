@@ -17,10 +17,11 @@ interface ProductCardProps {
   product: Product;
   index?: number;
   viewMode?: "grid" | "list";
+  priority?: boolean;
 }
 
 export const ProductCard = memo(
-  ({ product, index = 0, viewMode = "grid" }: ProductCardProps) => {
+  ({ product, index = 0, viewMode = "grid", priority = false }: ProductCardProps) => {
     // Memoized field mapping for better performance and type safety
     const productData = useMemo(
       () => ({
@@ -167,7 +168,8 @@ export const ProductCard = memo(
                 !product.in_stock && "grayscale-[30%] brightness-95",
               )}
               sizes={imageSizes}
-              loading="lazy"
+              priority={priority}
+              loading={priority ? undefined : "lazy"}
               placeholder="blur"
               blurDataURL={BLUR_DATA_URL}
               onError={() => setImgSrc("/images/placeholder.png")}

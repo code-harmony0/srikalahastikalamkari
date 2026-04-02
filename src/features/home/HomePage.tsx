@@ -660,6 +660,8 @@ export default function HomePage() {
                       className="w-full aspect-[4/5] object-cover object-center group-hover:scale-105 transition-transform duration-1000"
                       width={600}
                       height={750}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/10 transition-opacity duration-500 group-hover:opacity-0"></div>
                   </div>

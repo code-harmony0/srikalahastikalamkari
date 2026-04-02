@@ -26,8 +26,6 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: true,
 
-  // Output configuration - standalone for Docker/deployment
-  output: "standalone",
   distDir: ".next",
 
   // Trailing slash for SEO consistency

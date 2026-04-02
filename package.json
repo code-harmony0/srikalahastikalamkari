@@ -12,7 +12,7 @@
     "build:profile": "next build --profile",
     "export": "next build && next export",
     "start": "next start",
-    "deploy": "npm run build && zip -r deploy.zip src .next/standalone .next/static public package.json package-lock.json next.config.mjs tsconfig.json tailwind.config.ts postcss.config.js jest.config.js jest.setup.js .env.local -x '*.DS_Store' -x '*.test.*' -x '*.spec.*'",
+    "deploy": "npm run build && rm -f deploy.zip && zip -r deploy.zip src public server.js package.json package-lock.json next.config.mjs tailwind.config.ts postcss.config.js tsconfig.json jest.config.js jest.setup.js .env.local -x '*.DS_Store' && echo '✅ deploy.zip ready. Hostinger entry point: server.js'",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "jest --passWithNoTests",

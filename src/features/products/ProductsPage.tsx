@@ -495,6 +495,7 @@ export default function ProductsPage() {
                             key={product.id}
                             product={product}
                             index={index % itemsPerPage}
+                            priority={index < 8}
                           />
                         ) : (
                           <ProductCard
@@ -502,6 +503,7 @@ export default function ProductsPage() {
                             product={product}
                             index={index % itemsPerPage}
                             viewMode="list"
+                            priority={index < 8}
                           />
                         )
                       )}

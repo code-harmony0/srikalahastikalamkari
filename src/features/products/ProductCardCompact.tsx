@@ -14,6 +14,7 @@ import { Product } from "@/shared/types";
 interface ProductCardCompactProps {
   product: Product;
   index?: number;
+  priority?: boolean;
 }
 
 /**
@@ -26,7 +27,7 @@ interface ProductCardCompactProps {
  * 5. Actions (accessible)
  */
 export const ProductCardCompact = memo(
-  ({ product, index = 0 }: ProductCardCompactProps) => {
+  ({ product, index = 0, priority = false }: ProductCardCompactProps) => {
     // Memoized field mapping
     const productData = useMemo(
       () => ({
@@ -121,6 +122,8 @@ export const ProductCardCompact = memo(
                 !product.in_stock && "grayscale-[30%] brightness-95"
               )}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              priority={priority}
+              loading={priority ? undefined : "lazy"}
             />
 
             {/* OUT OF STOCK - Bottom strip indicator */}
