@@ -933,7 +933,11 @@ export const productsService = {
       console.warn("getFeaturedEfficient error:", error.message);
       return [];
     }
-    return (data || []) as unknown as Product[];
+    return ((data || []) as any[]).map((p) => ({
+      ...p,
+      in_stock: (p.stock_quantity ?? 0) > 0,
+      inStock: (p.stock_quantity ?? 0) > 0,
+    })) as unknown as Product[];
   },
   async getFeatured(): Promise<Product[]> {
     const { data } = await getProducts();
