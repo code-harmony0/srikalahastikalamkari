@@ -108,8 +108,6 @@ export default function Header() {
     { label: "Shop", href: "/products" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
-    { label: "Privacy", href: "/privacy" },
-    { label: "Terms", href: "/terms" },
   ];
 
   const isActive = (path: string) => pathname === path;
