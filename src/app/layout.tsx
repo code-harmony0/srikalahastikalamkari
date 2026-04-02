@@ -21,18 +21,64 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Srikalahasti Kalamkari - Traditional Handcrafted Art",
+  title: {
+    default: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees & Fabrics",
+    template: "%s | Srikalahasti Kalamkari",
+  },
   description:
-    "Authentic Srikalahasti Kalamkari sarees and fabrics, handcrafted with traditional techniques",
+    "Buy authentic Srikalahasti Kalamkari sarees, dupattas and fabrics handcrafted using traditional pen-work techniques. Direct from Srikalahasti artisans.",
   keywords: [
     "srikalahasti kalamkari",
-    "sarees",
-    "traditional",
-    "handcrafted",
-    "indian fabric",
+    "srikalahastikalamkari",
+    "kalamkari sarees",
+    "kalamkari fabric",
+    "handcrafted sarees",
+    "traditional kalamkari",
+    "pen kalamkari",
+    "andhra pradesh sarees",
+    "indian handloom sarees",
+    "buy kalamkari sarees online",
+    "srikalahasti",
   ],
+  authors: [{ name: "Srikalahasti Kalamkari" }],
+  creator: "Srikalahasti Kalamkari",
+  metadataBase: new URL("https://srikalahastikalamkari.in"),
   alternates: {
     canonical: "https://srikalahastikalamkari.in",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://srikalahastikalamkari.in",
+    siteName: "Srikalahasti Kalamkari",
+    title: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees & Fabrics",
+    description:
+      "Buy authentic Srikalahasti Kalamkari sarees, dupattas and fabrics handcrafted using traditional pen-work techniques. Direct from Srikalahasti artisans.",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees & Fabrics",
+    description:
+      "Buy authentic Srikalahasti Kalamkari sarees handcrafted using traditional pen-work techniques.",
+    images: ["/images/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   manifest: "/manifest.json",
   icons: {
@@ -49,6 +95,48 @@ export const metadata: Metadata = {
   },
 }
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://srikalahastikalamkari.in/#organization",
+      name: "Srikalahasti Kalamkari",
+      url: "https://srikalahastikalamkari.in",
+      logo: "https://srikalahastikalamkari.in/images/logo.jpg",
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+91-72888-48881",
+        contactType: "customer service",
+        availableLanguage: ["English", "Telugu"],
+      },
+      sameAs: [],
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://srikalahastikalamkari.in/#localbusiness",
+      name: "Srikalahasti Kalamkari",
+      description:
+        "Authentic Srikalahasti Kalamkari sarees and fabrics handcrafted using traditional pen-work techniques by skilled artisans.",
+      url: "https://srikalahastikalamkari.in",
+      telephone: "+91-72888-48881",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Srikalahasti",
+        addressRegion: "Andhra Pradesh",
+        addressCountry: "IN",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 13.7497,
+        longitude: 79.6988,
+      },
+      priceRange: "₹₹",
+      image: "https://srikalahastikalamkari.in/images/logo.jpg",
+    },
+  ],
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -60,6 +148,12 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body>
         <ThemeProvider>
           <Providers>
