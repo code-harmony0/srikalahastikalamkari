@@ -213,6 +213,26 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Cache control for privacy and terms pages
+        source: "/privacy",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, must-revalidate",
+          },
+        ],
+      },
+      {
+        // Cache control for privacy and terms pages
+        source: "/terms",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, must-revalidate",
+          },
+        ],
+      },
     ]
   },
 
