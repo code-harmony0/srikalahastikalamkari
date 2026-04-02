@@ -198,19 +198,6 @@ export default function Footer() {
         <div className="py-5 border-t border-[#FFF8F0]/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-[#FFF8F0]/50">
           <div className="flex items-center gap-4">
             <span>© 1999 Srikalahasti Kalamkari</span>
-            <span className="w-1 h-1 rounded-full bg-[#FFF8F0]/20" />
-            <Link
-              href="/privacy"
-              className="hover:text-[#C19A5B] transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/terms"
-              className="hover:text-[#C19A5B] transition-colors"
-            >
-              Terms
-            </Link>
           </div>
 
           <div className="flex items-center gap-6">
