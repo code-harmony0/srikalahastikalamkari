@@ -919,6 +919,7 @@ export default function HomePage() {
                             className="w-full h-full object-cover"
                             width={800}
                             height={520}
+                            sizes="(max-width: 768px) 100vw, 50vw"
                           />
                         </motion.div>
 
@@ -1028,6 +1029,7 @@ export default function HomePage() {
                             className="w-full h-full object-cover"
                             width={800}
                             height={520}
+                            sizes="(max-width: 768px) 100vw, 50vw"
                           />
                         </motion.div>
 
