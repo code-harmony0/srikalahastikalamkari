@@ -1192,6 +1192,7 @@ export default function HomePage() {
           />
 
           {/* Advanced Luxury: Looping Gold Thread Animation */}
+          {!isMobile && (
           <div className="absolute inset-0 pointer-events-none opacity-[0.05]">
             <svg
               width="100%"
@@ -1236,6 +1237,7 @@ export default function HomePage() {
               />
             </svg>
           </div>
+          )}
 
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 relative z-10">
             {/* Aligned Global Header Style */}
