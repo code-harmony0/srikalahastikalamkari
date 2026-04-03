@@ -513,26 +513,6 @@ export default function HomePage() {
               </motion.div>
             </div>
 
-            {/* Minimalist Scroll Cue - Positioned right side to avoid card overlap */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2, duration: 1 }}
-              className="absolute bottom-4 right-2 z-30 hidden lg:flex flex-col items-center gap-4"
-            >
-              <motion.div
-                animate={{ height: [0, 48, 0], opacity: [0, 1, 0] }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="w-[1px] bg-accent h-12 origin-top"
-              />
-              <span className="font-sans text-[10px] font-bold tracking-[0.5em] text-foreground/40 uppercase">
-                Scroll
-              </span>
-            </motion.div>
           </div>
 
           {/* RIGHT COLUMN: Visual & Parallax */}
