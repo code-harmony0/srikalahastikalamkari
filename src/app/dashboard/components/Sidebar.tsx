@@ -19,6 +19,8 @@ import {
   FiPercent,
   FiHeart,
 } from "react-icons/fi"
+import "./Sidebar.css"
+import { supabase } from "@/lib/supabase/client"
 import { useAuth } from "@/shared/contexts/AuthContext"
 import { useSidebar } from "@/shared/contexts/SidebarContext"
 import { toast } from "sonner"
@@ -54,8 +56,6 @@ const Sidebar = () => {
 
   useEffect(() => {
     const fetchBadges = async () => {
-      const { supabase } = await import("@/lib/supabase/client")
-
       // Pending orders
       const { count: pendingCount } = await supabase
         .from("orders")

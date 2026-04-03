@@ -50,25 +50,25 @@ const LineChart = ({ data, lines, xAxisKey = "name" }: LineChartProps) => {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <RechartsLineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+      <RechartsLineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
         <CartesianGrid
           strokeDasharray="3 3"
           vertical={false}
-          className="stroke-slate-100 dark:stroke-slate-800" // Ultra subtle grid
+          stroke="#cbd5e1"
         />
         <XAxis
           dataKey={xAxisKey}
           tick={{ fontSize: 11, fontWeight: 500, fill: '#94A3B8' }}
           tickLine={false}
           axisLine={false}
-          tickMargin={12}
+          tickMargin={8}
         />
         <YAxis
           tick={{ fontSize: 11, fontWeight: 500, fill: '#94A3B8' }}
           tickLine={false}
           axisLine={false}
-          tickMargin={12}
-          width={40}
+          tickMargin={6}
+          width={50}
           tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value}
         />
         <Tooltip

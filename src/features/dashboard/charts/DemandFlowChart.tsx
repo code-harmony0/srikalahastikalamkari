@@ -30,7 +30,7 @@ export function DemandFlowChart({ data }: DemandFlowChartProps) {
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
         data={data}
-        margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+        margin={{ top: 10, right: 20, left: 5, bottom: 30 }}
       >
         <defs>
           <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
@@ -46,7 +46,7 @@ export function DemandFlowChart({ data }: DemandFlowChartProps) {
         <CartesianGrid
           strokeDasharray="3 3"
           vertical={false}
-          className="stroke-slate-100 dark:stroke-slate-800"
+          stroke="#cbd5e1"
         />
 
         <XAxis
@@ -54,7 +54,7 @@ export function DemandFlowChart({ data }: DemandFlowChartProps) {
           tick={{ fontSize: 11, fontWeight: 500, fill: "#64748B" }}
           tickLine={false}
           axisLine={false}
-          tickMargin={12}
+          tickMargin={8}
           minTickGap={30}
         />
 
@@ -63,8 +63,8 @@ export function DemandFlowChart({ data }: DemandFlowChartProps) {
           tick={{ fontSize: 11, fontWeight: 500, fill: "#64748B" }}
           tickLine={false}
           axisLine={false}
-          tickMargin={12}
-          width={40}
+          tickMargin={8}
+          width={50}
         />
 
         <YAxis
@@ -74,7 +74,8 @@ export function DemandFlowChart({ data }: DemandFlowChartProps) {
           tickLine={false}
           axisLine={false}
           tickFormatter={formatRevenue}
-          width={50}
+          tickMargin={6}
+          width={65}
         />
 
         <Tooltip

@@ -1,0 +1,115 @@
+/* ========================================================================== */
+/* TABLE STYLES - DASHBOARD                                                    */
+/* ========================================================================== */
+
+.dashboard-root table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Table headers - Clean and minimal */
+.dashboard-root table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #f8fafc;
+}
+
+.dashboard-root table thead th {
+  color: #64748b;
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: var(--space-sm, 12px) var(--space-lg, 24px);
+  border-bottom: 1px solid #e2e8f0;
+  background-color: transparent !important;
+  text-align: left;
+}
+
+.dashboard-root table thead th:last-child {
+  text-align: right;
+}
+
+/* Table rows */
+.dashboard-root table tbody tr {
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dashboard-root table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.dashboard-root table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+.dashboard-root table tbody td {
+  padding: var(--space-md, 16px) var(--space-lg, 24px);
+  color: #334155;
+  font-size: var(--font-size-base, 14px);
+  vertical-align: middle;
+}
+
+/* Row height consistency */
+.dashboard-root table tbody tr {
+  min-height: 56px;
+}
+
+/* Specific Alignment */
+.dashboard-root .text-amount,
+.dashboard-root table td:last-child {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.dashboard-root .text-stock {
+  text-align: right;
+}
+
+/* Empty state */
+.dashboard-root .table-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl, 48px) var(--space-lg, 24px);
+  text-align: center;
+}
+
+.dashboard-root .table-empty-state-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md, 16px);
+}
+
+.dashboard-root .table-empty-state-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #94a3b8;
+}
+
+.dashboard-root .table-empty-state-title {
+  font-size: var(--font-size-md, 16px);
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: var(--space-xs, 8px);
+}
+
+.dashboard-root .table-empty-state-subtitle {
+  font-size: var(--font-size-sm, 13px);
+  color: #94a3b8;
+}
+
+/* Dialogs/Popups - white background */
+.dashboard-root [role="dialog"],
+.dashboard-root [role="alertdialog"] {
+  background-color: #ffffff !important;
+}

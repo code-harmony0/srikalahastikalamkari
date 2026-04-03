@@ -3,6 +3,8 @@
 import React from "react"
 import Sidebar from "./Sidebar"
 import { useSidebar, SidebarProvider } from "@/shared/contexts/SidebarContext"
+import "../styles/dashboard.css"
+import "../styles/tables.css"
 import { Menu } from "lucide-react"
 
 interface DashboardLayoutProps {

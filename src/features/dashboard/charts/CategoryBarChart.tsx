@@ -36,15 +36,14 @@ export function CategoryBarChart({ data }: CategoryBarChartProps) {
       <BarChart
         data={sortedData}
         layout="vertical"
-        margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
+        margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
         barSize={32}
       >
-        <CartesianGrid 
-            strokeDasharray="3 3" 
-            horizontal={true} 
-            vertical={false} 
-            className="stroke-slate-100 dark:stroke-slate-800"
-            opacity={0.5}
+        <CartesianGrid
+          strokeDasharray="3 3"
+          horizontal={true}
+          vertical={false}
+          stroke="#cbd5e1"
         />
         
         <XAxis type="number" hide />

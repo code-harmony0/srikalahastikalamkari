@@ -1,0 +1,336 @@
+.sidebar {
+  width: 280px;
+  background: #ffffff;
+  color: #1e293b;
+  height: 100vh;
+  padding: 0;
+  border-right: 1px solid #e2e8f0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.03);
+  z-index: 50;
+  overflow: hidden;
+}
+
+/* Sidebar Transitions - Ultra smooth with GPU acceleration */
+.sidebar {
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: width;
+}
+
+.sidebar * {
+  transition: opacity 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              margin 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              padding 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Base styles for desktop are handled by standard classes,
+   Mobile specific overrides below */
+
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important; /* Always full width on mobile when open */
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02); /* Default shadow for mobile (hidden) */
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Overlay backdrop */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .sidebar-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* GPU acceleration for smoother animations */
+.sidebar-content,
+.sidebar-header,
+.sidebar-footer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fafbfc;
+  position: relative;
+  min-height: 93px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar.collapsed .sidebar-header {
+  padding: 24px 18px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  box-shadow: 0 2px 8px rgba(30, 41, 59, 0.15);
+}
+
+.sidebar.collapsed .logo-icon {
+  margin: 0 auto;
+}
+
+.brand-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.brand-subtitle {
+  margin: 3px 0 0 0;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.sidebar:hover .sidebar-toggle-btn {
+  right: 10px;
+}
+
+.sidebar.collapsed .sidebar-toggle-btn {
+  right: 10px;
+}
+
+.sidebar-toggle-btn:hover {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.sidebar-nav {
+  padding: 16px 12px;
+}
+
+.sidebar.collapsed .sidebar-nav {
+  padding: 16px 8px;
+}
+
+.sidebar-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  color: #64748b;
+  text-decoration: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 14px;
+  position: relative;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.sidebar.collapsed .sidebar-nav a {
+  padding: 12px;
+  justify-content: center;
+}
+
+.sidebar-nav a span {
+  opacity: 1;
+  visibility: visible;
+  display: inline-flex;
+}
+
+.sidebar.collapsed .sidebar-nav a > span:not(.absolute) {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+  display: none;
+}
+
+/* Badge should always be visible */
+.sidebar-nav a span.absolute {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  width: auto !important;
+}
+
+/* Header text hiding */
+.brand-name,
+.brand-subtitle {
+  transition: opacity 0.15s ease;
+}
+
+.sidebar.collapsed .brand-name,
+.sidebar.collapsed .brand-subtitle {
+  display: none;
+  visibility: hidden;
+}
+
+/* Logout text hiding */
+.logout-btn span {
+  transition: opacity 0.15s ease;
+}
+
+.sidebar.collapsed .logout-btn span {
+  display: none;
+  visibility: hidden;
+}
+
+.sidebar-nav a:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.sidebar-nav a.active {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #0f172a;
+  font-weight: 600;
+  border-left: 3px solid #0f172a;
+  margin-left: -3px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.sidebar-nav a.active .nav-icon {
+  color: #0f172a;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.sidebar-nav a:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+.sidebar.collapsed .nav-icon {
+  margin-right: 0;
+}
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid #f1f5f9;
+  background: #fafbfc;
+}
+
+.sidebar.collapsed .sidebar-footer {
+  padding: 16px 8px;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar.collapsed .logout-btn {
+  justify-content: center;
+  padding: 12px;
+}
+
+.logout-btn:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.logout-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Tooltip Offset */
+[data-radix-popper-content-wrapper] {
+  z-index: 100 !important;
+}

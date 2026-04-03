@@ -175,7 +175,7 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
             <div className="space-y-2">
               <Label className="text-slate-900 font-medium">Shipping Provider</Label>
               <Select value={shippingCompany} onValueChange={setShippingCompany}>
-                <SelectTrigger className="rounded-xl h-11 border-slate-300 focus:border-slate-900 focus:ring-0/10">
+                <SelectTrigger className="rounded-xl h-11 border-slate-300 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -196,7 +196,7 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
                   value={trackingId}
                   onChange={(e) => setTrackingId(e.target.value)}
                   placeholder="e.g. D123456789"
-                  className="font-mono uppercase rounded-xl h-11 border-slate-300 focus:border-slate-900 focus:ring-0/10"
+                  className="font-mono uppercase rounded-xl h-11 border-slate-300 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
                 />
                 {trackingId && (
                   <div className="text-xs text-blue-700 bg-blue-50 p-3 rounded-lg flex items-center gap-2 border border-blue-200">

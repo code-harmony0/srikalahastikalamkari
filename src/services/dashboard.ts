@@ -10,6 +10,7 @@ export interface DashboardKPIs {
   // Month-over-month growth (real data)
   revenue_growth: number
   orders_growth: number
+  completion_rate_growth: number // percentage-point change vs last month
   // Derived
   avg_order_value: number
   pending_orders: number
@@ -101,6 +102,12 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
 
   const completionRate = totalOrders > 0 ? (shipped / totalOrders) * 100 : 0
 
+  const lastMonthShipped = lastMonthOrders.filter(o => o.status === "shipped").length
+  const lastMonthCompletionRate = lastMonthOrders.length > 0
+    ? (lastMonthShipped / lastMonthOrders.length) * 100
+    : 0
+  const completionRateGrowth = completionRate - lastMonthCompletionRate
+
   return {
     total_revenue: totalRevenue,
     total_orders: totalOrders,
@@ -108,6 +115,7 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
     completion_rate: completionRate,
     revenue_growth: revenueGrowth,
     orders_growth: ordersGrowth,
+    completion_rate_growth: completionRateGrowth,
     avg_order_value: totalOrders > 0 ? totalRevenue / totalOrders : 0,
     pending_orders: pending,
     processing_orders: processing,

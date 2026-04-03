@@ -156,7 +156,7 @@ export function KPICard({
       {/* Sparkline - Line Only, No Fill, Max 18px Height (Strict) */}
       {sparklineData && sparklineData.length > 0 && (
         <div
-          className="absolute bottom-4 bottom-5 right-4 md:right-5 w-20 md:w-24 h-[14px] md:h-[18px] pointer-events-none"
+          className="absolute bottom-5 right-4 md:right-5 w-20 md:w-24 h-[14px] md:h-[18px] pointer-events-none"
           style={{ opacity: 0.35 }}
         >
           <ResponsiveContainer width="100%" height="100%">

@@ -186,7 +186,7 @@ export default function DashboardPage() {
                 title="Total Revenue"
                 value={formatCurrency(kpis?.total_revenue || 0)}
                 icon={<IndianRupee className="h-5 w-5" />}
-                trend={{ value: Number((kpis?.revenue_growth || 0).toFixed(1)), direction: (kpis?.revenue_growth || 0) >= 0 ? "up" : "down" }}
+                trend={{ value: Number((kpis?.revenue_growth || 0).toFixed(1)), direction: (kpis?.revenue_growth ?? 0) > 0 ? "up" : (kpis?.revenue_growth ?? 0) < 0 ? "down" : "neutral" }}
                 sparklineData={sparklines?.revenue}
                 sparklineColor="#FFFFFF"
                 comparison="vs last month"
@@ -197,7 +197,7 @@ export default function DashboardPage() {
                 title="Orders Placed"
                 value={kpis?.total_orders || 0}
                 icon={<ShoppingBag className="h-5 w-5" />}
-                trend={{ value: Number((kpis?.orders_growth || 0).toFixed(1)), direction: (kpis?.orders_growth || 0) >= 0 ? "up" : "down" }}
+                trend={{ value: Number((kpis?.orders_growth || 0).toFixed(1)), direction: (kpis?.orders_growth ?? 0) > 0 ? "up" : (kpis?.orders_growth ?? 0) < 0 ? "down" : "neutral" }}
                 sparklineData={sparklines?.orders}
                 sparklineColor="#16A34A"
                 comparison="vs last month"
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                 title="Products in Stock"
                 value={kpis?.product_count || 0}
                 icon={<Package className="h-5 w-5" />}
-                trend={{ value: Number((kpis?.avg_order_value || 0).toFixed(0)), direction: "neutral" }}
+                trend={undefined}
                 sparklineData={sparklines?.items_sold}
                 sparklineColor="#F59E0B"
                 comparison={`Avg order: ${formatCurrency(kpis?.avg_order_value || 0)}`}
@@ -219,7 +219,7 @@ export default function DashboardPage() {
                 title="Completion Rate"
                 value={`${Math.round(kpis?.completion_rate || 0)}%`}
                 icon={<CheckCircle className="h-5 w-5" />}
-                trend={{ value: Number((kpis?.completion_rate || 0).toFixed(1)), direction: (kpis?.completion_rate || 0) >= 50 ? "up" : "down" }}
+                trend={{ value: Number((kpis?.completion_rate_growth || 0).toFixed(1)), direction: (kpis?.completion_rate_growth ?? 0) > 0 ? "up" : (kpis?.completion_rate_growth ?? 0) < 0 ? "down" : "neutral" }}
                 sparklineData={sparklines?.completion}
                 sparklineColor="#2563EB"
                 comparison={`${kpis?.shipped_orders || 0} of ${kpis?.total_orders || 0} shipped`}

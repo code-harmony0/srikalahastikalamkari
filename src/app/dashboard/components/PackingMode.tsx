@@ -648,7 +648,7 @@ const PackingMode: React.FC<PackingModeProps> = ({
                     ? "📱 Scan Order QR Code..."
                     : "📷 Scan Product Barcode..."
                 }
-                className="text-xl font-mono h-14 bg-white text-slate-900 placeholder:text-gray-500 border-slate-300 focus:border-slate-900 focus:ring-2 focus:ring-0/10 rounded-xl"
+                className="text-xl font-mono h-14 bg-white text-slate-900 placeholder:text-gray-500 border-slate-300 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 rounded-xl"
                 autoFocus
               />
               <Button
@@ -803,7 +803,7 @@ const PackingMode: React.FC<PackingModeProps> = ({
                   value={shippingId}
                   onChange={(e) => setShippingId(e.target.value)}
                   placeholder="Enter or generate shipping ID..."
-                  className="h-12 text-lg font-mono border-slate-300 focus:border-slate-900 focus:ring-0/10 rounded-xl"
+                  className="h-12 text-lg font-mono border-slate-300 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 rounded-xl"
                 />
               </div>
               <Button
