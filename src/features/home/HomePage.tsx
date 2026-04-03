@@ -12,6 +12,7 @@ import {
 import { productsService } from "@/services/products"
 import { promotionsService } from "@/services/promotions"
 import { Product, Promotion } from "@/shared/types"
+import { useIsMobile } from "@/shared/hooks/useIsMobile"
 import Image from "next/image"
 import { Button } from "@/shared/ui/button"
 import {
@@ -165,15 +166,22 @@ export default function HomePage() {
   const heroRef = useRef<HTMLDivElement>(null)
   const heroControls = useAnimation()
 
+  const isMobile = useIsMobile()
+
   // Parallax scroll effects
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   })
 
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"])
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
+  const _heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"])
+  const _heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
+  const _heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
+
+  // Mobile: static values — same visual result but no scroll listener overhead
+  const heroY = isMobile ? "0%" : _heroY
+  const heroOpacity = isMobile ? 1 : _heroOpacity
+  const heroScale = isMobile ? 1 : _heroScale
 
   // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns (LOCAL)
   const heroBackgroundImages = [
