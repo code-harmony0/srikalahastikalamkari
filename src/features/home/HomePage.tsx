@@ -183,6 +183,9 @@ export default function HomePage() {
   const heroOpacity = isMobile ? 1 : _heroOpacity
   const heroScale = isMobile ? 1 : _heroScale
 
+  const { scrollYProgress: galleryScrollProgress } = useScroll()
+  const galleryBgY = useTransform(galleryScrollProgress, [0, 1], [0, -150])
+
   // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns (LOCAL)
   const heroBackgroundImages = [
     {
@@ -1187,7 +1190,7 @@ export default function HomePage() {
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M70 10 L130 70 L70 130 L10 70 Z' fill='none' stroke='%23C8A874' stroke-width='0.5'/%3E%3C/svg%3E")`,
               backgroundSize: "280px 280px",
-              y: useTransform(useScroll().scrollYProgress, [0, 1], [0, -150]), // Refined 0.4x-style drift
+              y: isMobile ? 0 : galleryBgY,
             }}
           />
 
