@@ -258,47 +258,44 @@ export default function HomePage() {
   // Remove duplicate background image carousel effect
   // (keeping only the one above for 5-second intervals)
 
-  // Auto-scroll gallery
+  // Auto-scroll gallery — RAF-based, pauses when hidden, respects user interaction
   useEffect(() => {
     const scrollContainer = galleryScrollRef.current
     if (!scrollContainer) return
 
     let scrollPosition = 0
-    let isAutoScrolling = true
     let lastInteractionTime = Date.now()
+    let rafId: number
 
     const autoScroll = () => {
-      if (!isAutoScrolling || !scrollContainer) return
-
-      // Check if user has interacted recently (pause auto-scroll for 5 seconds after interaction)
-      if (Date.now() - lastInteractionTime < 5000) {
-        return
+      if (scrollContainer) {
+        const timeSinceInteraction = Date.now() - lastInteractionTime
+        if (timeSinceInteraction > 5000) {
+          const maxScroll =
+            scrollContainer.scrollWidth - scrollContainer.clientWidth
+          scrollPosition += 1.5
+          if (scrollPosition >= maxScroll) {
+            scrollPosition = 0
+          }
+          scrollContainer.scrollLeft = scrollPosition
+        }
       }
-
-      scrollPosition += 2
-      const maxScroll =
-        scrollContainer.scrollWidth - scrollContainer.clientWidth
-
-      if (scrollPosition >= maxScroll) {
-        scrollPosition = 0 // Loop back to start
-      }
-
-      scrollContainer.scrollLeft = scrollPosition
+      rafId = requestAnimationFrame(autoScroll)
     }
 
-    const scrollInterval = setInterval(autoScroll, 50)
-
-    // Pause auto-scroll on user interaction
     const handleUserInteraction = () => {
       lastInteractionTime = Date.now()
+      scrollPosition = scrollContainer.scrollLeft
     }
 
-    scrollContainer.addEventListener("wheel", handleUserInteraction)
-    scrollContainer.addEventListener("touchstart", handleUserInteraction)
+    scrollContainer.addEventListener("wheel", handleUserInteraction, { passive: true })
+    scrollContainer.addEventListener("touchstart", handleUserInteraction, { passive: true })
     scrollContainer.addEventListener("mousedown", handleUserInteraction)
 
+    rafId = requestAnimationFrame(autoScroll)
+
     return () => {
-      clearInterval(scrollInterval)
+      cancelAnimationFrame(rafId)
       scrollContainer.removeEventListener("wheel", handleUserInteraction)
       scrollContainer.removeEventListener("touchstart", handleUserInteraction)
       scrollContainer.removeEventListener("mousedown", handleUserInteraction)
