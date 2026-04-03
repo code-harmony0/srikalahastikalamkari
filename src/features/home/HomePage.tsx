@@ -521,17 +521,24 @@ export default function HomePage() {
               style={{ y: heroY, scale: heroScale }}
               className="absolute inset-0 w-full h-[120%]"
             >
-              {heroBackgroundImages.map((image, index) => (
-                <Image
-                  key={index}
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className={`object-cover object-top transition-opacity ease-in-out ${index === currentImageIndex ? "opacity-100" : "opacity-0"}`}
-                  style={{ transitionDuration: "2000ms" }}
-                  priority={index === 0}
-                />
-              ))}
+              {heroBackgroundImages.map((image, index) => {
+                const isActive = index === currentImageIndex
+                const isNext =
+                  index === (currentImageIndex + 1) % heroBackgroundImages.length
+                // Only render current + next slide — browser won't download the others
+                if (!isActive && !isNext && index !== 0) return null
+                return (
+                  <Image
+                    key={index}
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className={`object-cover object-top transition-opacity ease-in-out ${isActive ? "opacity-100" : "opacity-0"}`}
+                    style={{ transitionDuration: "2000ms" }}
+                    priority={index === 0}
+                  />
+                )
+              })}
 
               {/* Image Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-l from-black/20 via-transparent to-transparent opacity-30"></div>
