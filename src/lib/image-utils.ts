@@ -1,9 +1,8 @@
-/**
- * Image Optimization Utilities
- *
- * Provides utility functions for generating optimized image URLs
- * using Supabase Image Transformations and Next.js best practices.
- */
+import {
+  PRODUCT_IMAGE_PLACEHOLDER,
+  type CfImageVariant,
+  resolveProductImageSrc,
+} from "@/lib/cloudflare-images"
 
 export interface ImageOptimizationOptions {
   width?: number
@@ -12,69 +11,11 @@ export interface ImageOptimizationOptions {
   resize?: "cover" | "contain" | "fill"
 }
 
-/**
- * Generates an optimized image URL using Supabase Image Transformations.
- * Only applies transformations to Supabase-hosted images.
- *
- * @param url - Original image URL
- * @param options - Optimization options (width, height, quality, resize mode)
- * @returns Optimized image URL with transformation parameters
- *
- * @example
- * // Get 400px wide thumbnail
- * getOptimizedImageUrl(productImage, { width: 400, quality: 75 });
- *
- * // Get small avatar
- * getOptimizedImageUrl(avatar, { width: 80, height: 80, resize: 'cover' });
- */
 export function getOptimizedImageUrl(
   url: string | null | undefined,
-  options?: ImageOptimizationOptions,
+  options?: ImageOptimizationOptions & { variant?: CfImageVariant },
 ): string {
-  // Return placeholder for missing URLs
-  if (!url) return "/images/placeholder.png"
-
-  // Only transform Supabase-hosted images
-  if (!url.includes("supabase.co/storage")) {
-    return url
-  }
-
-  // TEMPORARY FIX: Due to Supabase 403 errors with render endpoint,
-  // return original URL without transformations
-  // TODO: Fix Supabase storage permissions and re-enable transformations
-  console.warn(
-    "Using original Supabase URL due to transformation endpoint issues",
-  )
-  return url
-
-  // Build transformation URL (DISABLED FOR NOW)
-  /*
-  const transformUrl = url.replace(
-    '/storage/v1/object/public/',
-    '/storage/v1/render/image/public/'
-  );
-  
-  const params = new URLSearchParams();
-  
-  if (options?.width) {
-    params.set('width', options.width.toString());
-  }
-  
-  if (options?.height) {
-    params.set('height', options.height.toString());
-  }
-  
-  if (options?.quality) {
-    params.set('quality', options.quality.toString());
-  }
-  
-  if (options?.resize) {
-    params.set('resize', options.resize);
-  }
-  
-  const paramString = params.toString();
-  return paramString ? `${transformUrl}?${paramString}` : transformUrl;
-  */
+  return resolveProductImageSrc(url, options?.variant ?? "thumb")
 }
 
 /**
@@ -82,7 +23,7 @@ export function getOptimizedImageUrl(
  * Use these with getOptimizedImageUrl for consistency.
  */
 export const IMAGE_SIZES = {
-  // Product grid thumbnails
+  // Cloudflare Images variants: thumb=400px, medium=1000px, full=2000px.
   productCard: { width: 400, quality: 80 },
 
   // Compact product cards
@@ -91,8 +32,8 @@ export const IMAGE_SIZES = {
   // Hero/featured products
   productHero: { width: 800, quality: 85 },
 
-  // Product detail main image
-  productDetail: { width: 1200, quality: 90 },
+  // Product detail main image (updated to 1000px for medium tier)
+  productDetail: { width: 1000, quality: 85 },
 
   // Small thumbnails (subcategories, cart items)
   thumbnail: { width: 80, quality: 70 },
@@ -145,11 +86,11 @@ export const BLUR_DATA_URL =
  * Use with browser-image-compression library.
  */
 export const COMPRESSION_OPTIONS = {
-  maxSizeMB: 4,           // Allow up to 4MB — WebP output will be far smaller than original
+  maxSizeMB: 4, // Allow up to 4MB — WebP output will be far smaller than original
   maxWidthOrHeight: 2400, // Full resolution for retina + zoom
   useWebWorker: true,
   fileType: "image/webp", // ~35% smaller than JPEG at same visual quality
-  initialQuality: 0.92,   // Near-lossless — critical for handcraft detail
+  initialQuality: 0.92, // Near-lossless — critical for handcraft detail
 }
 
 /**
@@ -183,3 +124,5 @@ export function getOptimizedImageProps(
     placeholder: "blur",
   }
 }
+
+export { PRODUCT_IMAGE_PLACEHOLDER }

@@ -1,0 +1,14 @@
+{
+  "name": "supabase-blob-migration",
+  "version": "1.0.0",
+  "description": "Migrate .blob images to proper extensions in Supabase Storage",
+  "type": "module",
+  "scripts": {
+    "migrate": "node migrate-blob-images.js",
+    "dry-run": "DRY_RUN=true node migrate-blob-images.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "node-fetch": "^3.3.2"
+  }
+}

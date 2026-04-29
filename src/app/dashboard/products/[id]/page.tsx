@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useInventory } from "@/shared/contexts/InventoryContext";
-import { Button } from "@/app/dashboard/ui/button";
-import { Badge } from "@/shared/ui/badge";
+import React, { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import { useInventory } from "@/shared/contexts/InventoryContext"
+import { Button } from "@/app/dashboard/ui/button"
+import { Badge } from "@/shared/ui/badge"
 import {
   ArrowLeft,
   Edit,
@@ -19,8 +19,8 @@ import {
   EyeOff,
   DollarSign,
   Boxes,
-} from "lucide-react";
-import Barcode from "react-barcode";
+} from "lucide-react"
+import Barcode from "react-barcode"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,8 +30,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/shared/ui/alert-dialog";
-import { toast } from "sonner";
+} from "@/shared/ui/alert-dialog"
+import { toast } from "sonner"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
+import { getImageTier } from "@/lib/image-tiers"
 
 // Collapsible Section Component for Product Details
 const DetailSection = ({
@@ -40,12 +42,12 @@ const DetailSection = ({
   children,
   defaultOpen = true,
 }: {
-  title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
+  title: string
+  icon: React.ReactNode
+  children: React.ReactNode
+  defaultOpen?: boolean
 }) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -76,28 +78,26 @@ const DetailSection = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 const ProductDetails = () => {
-  const params = useParams();
-  const id = params.id as string;
-  const router = useRouter();
-  ;
+  const params = useParams()
+  const id = params.id as string
+  const router = useRouter()
+  console.log("📄 ProductDetail page loaded with ID:", id)
 
-  console.log("📄 ProductDetail page loaded with ID:", id);
+  const inventoryContext = useInventory()
+  console.log("🔧 ProductDetail: Inventory context:", !!inventoryContext)
 
-  const inventoryContext = useInventory();
-  console.log("🔧 ProductDetail: Inventory context:", !!inventoryContext);
-
-  const { products, deleteProduct, loading } = inventoryContext;
+  const { products, deleteProduct, loading } = inventoryContext
   console.log("📊 ProductDetail: Context data:", {
     productsCount: products?.length,
     loading,
-  });
-  const [product, setProduct] = useState<any>(null);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  })
+  const [product, setProduct] = useState<any>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // Temporarily disabled to test page loading
   // useEffect(() => {
@@ -107,24 +107,24 @@ const ProductDetails = () => {
 
   // Load product data with proper error handling
   useEffect(() => {
-    console.log("🔍 ProductDetail: Starting product load for ID:", id);
+    console.log("🔍 ProductDetail: Starting product load for ID:", id)
     console.log("📊 Context state:", {
       loading,
       productsCount: products.length,
       products,
-    });
+    })
 
     // If still loading products, wait
     if (loading) {
-      console.log("⏳ Waiting for products to load...");
-      return;
+      console.log("⏳ Waiting for products to load...")
+      return
     }
 
     // If no products loaded, show error
     if (products.length === 0) {
-      console.log("❌ No products available");
-      setProduct(null);
-      return;
+      console.log("❌ No products available")
+      setProduct(null)
+      return
     }
 
     // Find the product by ID
@@ -134,13 +134,13 @@ const ProductDetails = () => {
       "among",
       products.length,
       "products",
-    );
+    )
     console.log(
       "📋 Available product IDs:",
       products.map((p) => p.id),
-    );
+    )
 
-    const foundProduct = products.find((p: any) => String(p.id) === String(id));
+    const foundProduct = products.find((p: any) => String(p.id) === String(id))
 
     if (foundProduct) {
       console.log(
@@ -148,32 +148,32 @@ const ProductDetails = () => {
         foundProduct.name,
         "ID:",
         foundProduct.id,
-      );
-      setProduct(foundProduct);
+      )
+      setProduct(foundProduct)
     } else {
-      console.log("❌ Product not found:", id);
+      console.log("❌ Product not found:", id)
       console.log(
         "📋 Available products:",
         products.map((p) => ({ id: p.id, name: p.name })),
-      );
-      setProduct(null);
+      )
+      setProduct(null)
     }
-  }, [id, products, loading]);
+  }, [id, products, loading])
 
   const handleDelete = async () => {
     if (product) {
-      await deleteProduct(product.id);
+      await deleteProduct(product.id)
       toast.success("Product Deleted", {
-        description: `${product.name} has been removed`
-      });
-      router.push("/dashboard/products");
+        description: `${product.name} has been removed`,
+      })
+      router.push("/dashboard/products")
     }
-  };
+  }
 
   const handleEdit = () => {
-    sessionStorage.setItem(`product_${product.id}`, JSON.stringify(product));
-    router.push(`/dashboard/add-product?edit=${product.id}`);
-  };
+    sessionStorage.setItem(`product_${product.id}`, JSON.stringify(product))
+    router.push(`/dashboard/add-product?edit=${product.id}`)
+  }
 
   if (loading) {
     return (
@@ -185,7 +185,7 @@ const ProductDetails = () => {
           </p>
         </div>
       </div>
-    );
+    )
   }
 
   if (!product && !loading) {
@@ -215,13 +215,12 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
-  const images = product.images || (product.image ? [product.image] : []);
-  const currentImage =
-    images[currentImageIndex] || "https://placehold.co/600x600?text=No+Image";
-  const isVisible = product.isVisible !== false;
+  const images = product.images || (product.image ? [product.image] : [])
+  const currentImage = getImageTier(images, "medium", currentImageIndex)
+  const isVisible = product.isVisible !== false
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 bg-[#f8fafc] min-h-screen font-sans">
@@ -308,11 +307,16 @@ const ProductDetails = () => {
         <div className="lg:col-span-2 space-y-4">
           {/* Main Image */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group">
-            <div className="aspect-square bg-slate-50 flex items-center justify-center p-6">
-              <img
+            <div className="relative aspect-square bg-slate-50 flex items-center justify-center p-6">
+              <OptimizedImage
                 src={currentImage}
                 alt={product.name}
-                className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                fill
+                className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
+                imageType="productDetail"
+                objectFit="contain"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                placeholder="empty"
               />
             </div>
           </div>
@@ -324,16 +328,20 @@ const ProductDetails = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
-                  className={`aspect-square rounded-xl overflow-hidden transition-all duration-300 ${
+                  className={`relative aspect-square rounded-xl overflow-hidden transition-all duration-300 ${
                     currentImageIndex === index
                       ? "ring-2 ring-slate-900 scale-105"
                       : "ring-1 ring-slate-200 hover:ring-slate-300 opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <img
-                    src={img}
+                  <OptimizedImage
+                    src={getImageTier(images, "thumb", index)}
                     alt={`${product.name} ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    imageType="thumbnail"
+                    sizes="80px"
+                    placeholder="empty"
                   />
                 </button>
               ))}
@@ -595,7 +603,7 @@ const ProductDetails = () => {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
-};
+  )
+}
 
-export default ProductDetails;
+export default ProductDetails

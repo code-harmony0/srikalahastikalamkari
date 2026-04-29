@@ -1,27 +1,33 @@
-"use client";
+"use client"
 
-import React, { memo, useMemo } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Star, Heart, ShoppingBag } from "lucide-react";
-import { useWishlistStore } from "@/shared/wishlist-store";
-import { useCartStore } from "@/shared/cart-store";
-import { toast } from "sonner";
-import { cn } from "@/shared/utils";
-import { useCategories } from "@/shared/hooks/use-categories";
-import { Product } from "@/shared/types";
-import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes, BLUR_DATA_URL } from "@/lib/image-utils";
+import React, { memo, useMemo } from "react"
+import Link from "next/link"
+import { motion } from "framer-motion"
+import { Star, Heart, ShoppingBag } from "lucide-react"
+import { useWishlistStore } from "@/shared/wishlist-store"
+import { useCartStore } from "@/shared/cart-store"
+import { toast } from "sonner"
+import { cn } from "@/shared/utils"
+import { useCategories } from "@/shared/hooks/use-categories"
+import { Product } from "@/shared/types"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
+import { getResponsiveSizes } from "@/lib/image-utils"
+import { getImageTier } from "@/lib/image-tiers"
 
 interface ProductCardProps {
-  product: Product;
-  index?: number;
-  viewMode?: "grid" | "list";
-  priority?: boolean;
+  product: Product
+  index?: number
+  viewMode?: "grid" | "list"
+  priority?: boolean
 }
 
 export const ProductCard = memo(
-  ({ product, index = 0, viewMode = "grid", priority = false }: ProductCardProps) => {
+  ({
+    product,
+    index = 0,
+    viewMode = "grid",
+    priority = false,
+  }: ProductCardProps) => {
     // Memoized field mapping for better performance and type safety
     const productData = useMemo(
       () => ({
@@ -31,85 +37,68 @@ export const ProductCard = memo(
         originalPrice: product.original_price || product.originalPrice || null,
         images: product.images || [],
         image:
-          product.image || product.mainImage || product.images?.[0] || null,
+          getImageTier(product?.images, "thumb", 0) ||
+          product.mainImage ||
+          product.images?.[0] ||
+          "/images/products/product-placeholder.png",
         slug: product.slug,
       }),
       [product],
-    );
+    )
 
-    const { data: categories } = useCategories();
+    const { data: categories } = useCategories()
     const categoryName = useMemo(() => {
-      if (!categories?.data || !product.category_id) return "Uncategorized";
+      if (!categories?.data || !product.category_id) return "Uncategorized"
       const category = categories.data.find(
         (c: any) => c.id === product.category_id,
-      );
-      return category?.name || "Uncategorized";
-    }, [categories, product.category_id]);
+      )
+      return category?.name || "Uncategorized"
+    }, [categories, product.category_id])
 
-    const wishlist = useWishlistStore();
-    const cart = useCartStore();
-    const isWishlisted = wishlist.items.includes(product.id);
+    const wishlist = useWishlistStore()
+    const cart = useCartStore()
+    const isWishlisted = wishlist.items.includes(product.id)
 
     const toggleWishlist = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault()
+      e.stopPropagation()
       if (isWishlisted) {
-        wishlist.removeItem(product.id);
-        toast.success("Removed from wishlist");
+        wishlist.removeItem(product.id)
+        toast.success("Removed from wishlist")
       } else {
-        wishlist.addItem(product.id);
-        toast.success("Added to wishlist");
+        wishlist.addItem(product.id)
+        toast.success("Added to wishlist")
       }
-    };
+    }
 
     const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault()
+      e.stopPropagation()
 
       if (!product.in_stock) {
-        toast.error("Out of stock");
-        return;
+        toast.error("Out of stock")
+        return
       }
 
-      const maxStock = product.stock_quantity ?? product.quantity ?? 0;
-      const existingItem = cart.items.find((i) => i.productId === product.id);
-      const currentQty = existingItem?.quantity ?? 0;
+      const maxStock = product.stock_quantity ?? product.quantity ?? 0
+      const existingItem = cart.items.find((i) => i.productId === product.id)
+      const currentQty = existingItem?.quantity ?? 0
 
       if (currentQty >= maxStock) {
-        toast.error(`Only ${maxStock} in stock`);
-        return;
+        toast.error(`Only ${maxStock} in stock`)
+        return
       }
 
-      cart.addItem(product, 1);
-      toast.success("Added to cart");
-    };
+      cart.addItem(product, 1)
+      toast.success("Added to cart")
+    }
 
-    const isList = viewMode === "list";
+    const isList = viewMode === "list"
 
-    // Safe Image Access with Optimization
-    const optimizedImage = useMemo(() => 
-      getOptimizedImageUrl(productData.image, isList ? IMAGE_SIZES.productCardCompact : IMAGE_SIZES.productCard),
-      [productData.image, isList]
-    );
-    
-    const [imgSrc, setImgSrc] = React.useState(optimizedImage);
-    
-    // Update state if product changes
-    React.useEffect(() => {
-        setImgSrc(optimizedImage);
-    }, [optimizedImage]);
+    const productUrl = `/products/${product.slug || product.id}`
 
-    const mainImage = imgSrc;
-    const hoverImage = useMemo(() => 
-      productData.images && productData.images.length > 1
-        ? getOptimizedImageUrl(productData.images[1], isList ? IMAGE_SIZES.productCardCompact : IMAGE_SIZES.productCard)
-        : null,
-      [productData.images, isList]
-    );
-    const productUrl = `/products/${product.slug || product.id}`;
-    
     // Responsive sizes for different layouts
-    const imageSizes = isList ? "180px" : getResponsiveSizes('grid');
+    const imageSizes = isList ? "180px" : getResponsiveSizes("grid")
 
     const cardVariants = {
       hidden: { opacity: 0, y: 15 },
@@ -118,7 +107,7 @@ export const ProductCard = memo(
         y: 0,
         transition: { duration: 0.3, delay: index * 0.04 },
       },
-    };
+    }
 
     return (
       <motion.div
@@ -144,35 +133,38 @@ export const ProductCard = memo(
         >
           <Link href={productUrl} className="block w-full h-full">
             {/* Secondary Image (Hover) */}
-            {hoverImage && (
-              <Image
-                src={hoverImage}
+            {productData.images && productData.images.length > 1 && (
+              <OptimizedImage
+                src={
+                  getImageTier(product?.images, "thumb", 1) ||
+                  "/images/products/product-placeholder.png"
+                }
                 alt={`${productData.name} alternate`}
                 fill
                 className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
                 sizes={imageSizes}
+                imageType={isList ? "productCardCompact" : "productCard"}
+                priority={false}
                 loading="lazy"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
               />
             )}
 
             {/* Main Image */}
-            <Image
-              src={mainImage}
+            <OptimizedImage
+              src={productData.image}
               alt={productData.name}
               fill
               className={cn(
                 "object-cover transition-all duration-700 ease-out group-hover:scale-105",
-                hoverImage ? "group-hover:opacity-0" : "",
+                productData.images && productData.images.length > 1
+                  ? "group-hover:opacity-0"
+                  : "",
                 !product.in_stock && "grayscale-[30%] brightness-95",
               )}
               sizes={imageSizes}
+              imageType={isList ? "productCardCompact" : "productCard"}
               priority={priority}
               loading={priority ? undefined : "lazy"}
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL}
-              onError={() => setImgSrc("/images/placeholder.png")}
             />
           </Link>
 
@@ -258,7 +250,13 @@ export const ProductCard = memo(
                         ₹{product.original_price.toLocaleString()}
                       </span>
                       <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
-                        -{Math.round(((productData.originalPrice - productData.price) / productData.originalPrice) * 100)}%
+                        -
+                        {Math.round(
+                          ((productData.originalPrice - productData.price) /
+                            productData.originalPrice) *
+                            100,
+                        )}
+                        %
                       </span>
                     </>
                   )}
@@ -316,8 +314,8 @@ export const ProductCard = memo(
           </div>
         </div>
       </motion.div>
-    );
+    )
   },
-);
+)
 
-ProductCard.displayName = "ProductCard";
+ProductCard.displayName = "ProductCard"

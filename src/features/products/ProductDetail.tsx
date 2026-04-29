@@ -1,7 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
-import Image from "next/image"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -32,11 +31,9 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
-import {
-  getOptimizedImageUrl,
-  IMAGE_SIZES,
-  getResponsiveSizes,
-} from "@/lib/image-utils"
+import { getResponsiveSizes } from "@/lib/image-utils"
+import { getImageTier } from "@/lib/image-tiers"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { ProductReviews } from "./ProductReviews"
 import { useReviews } from "@/shared/hooks/use-reviews"
 import { StockAlert, SavingsBadge } from "@/shared/components/UrgencyTriggers"
@@ -65,6 +62,20 @@ export default function ProductDetail() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
+  const [fullImage, setFullImage] = useState<string | null>(null)
+
+  const handleZoom = useCallback(() => {
+    if (!product?.images?.length) return
+
+    const full = getImageTier(product?.images, "full", selectedImageIndex)
+    setFullImage(full || "/images/products/product-placeholder.png")
+
+    setIsImageModalOpen(true)
+  }, [product?.images, selectedImageIndex])
+
+  const handleCloseZoomModal = useCallback(() => {
+    setIsImageModalOpen(false)
+  }, [])
 
   const cart = useCartStore()
   const wishlist = useWishlistStore()
@@ -88,36 +99,22 @@ export default function ProductDetail() {
         delete (window as any).__PRODUCT_DATA
       }
     }
-  }, [product])
-
-  // Derived Data - Optimize images for different contexts
-  const productImages = useMemo(() => {
-    const rawImages = product?.images?.length
-      ? product.images
-      : product?.mainImage
-        ? [product.mainImage]
-        : ["/images/products/product-placeholder.png"]
-    return rawImages
-  }, [product?.images, product?.mainImage])
+  }, [product?.id]) // Only update when product.id changes
 
   // Optimized main image (high quality for detail view)
-  const mainProductImage = useMemo(
-    () =>
-      getOptimizedImageUrl(
-        productImages[selectedImageIndex],
-        IMAGE_SIZES.productDetail,
-      ),
-    [productImages, selectedImageIndex],
-  )
+  const mainProductImage = useMemo(() => {
+    const img = getImageTier(product?.images, "medium", selectedImageIndex)
+    return img || "/images/products/product-placeholder.png"
+  }, [product?.images, selectedImageIndex])
 
-  // Optimized thumbnails (small)
-  const thumbnailImages = useMemo(
-    () =>
-      productImages.map((img) =>
-        getOptimizedImageUrl(img, IMAGE_SIZES.thumbnail),
-      ),
-    [productImages],
-  )
+  // Optimized thumbnails (small) - each thumbnail shows different image
+  const thumbnailImages = useMemo(() => {
+    if (!product?.images?.length) return []
+    return product.images.map((img, idx) => {
+      const thumb = getImageTier(product?.images, "thumb", idx)
+      return thumb || "/images/products/product-placeholder.png"
+    })
+  }, [product?.images])
 
   const relatedProducts = (relatedProductsData?.data || [])
     .filter((p) => p.id !== product?.id)
@@ -222,12 +219,16 @@ export default function ProductDetail() {
           {/* LEFT: GALLERY (7 Cols - Wider Image Area) */}
           <div className="lg:col-span-7 flex flex-col-reverse lg:flex-row gap-4 h-fit">
             {/* Thumbnails */}
-            {productImages.length > 1 && (
+            {product?.images && product.images.length > 1 && (
               <div className="flex lg:flex-col gap-3 overflow-x-auto lg:h-[600px] scrollbar-hide shrink-0 py-1 px-1">
-                {productImages.map((img, idx) => (
+                {(product?.images || []).map((img, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setSelectedImageIndex(idx)}
+                    onClick={() => {
+                      if (product?.images && idx < product.images.length) {
+                        setSelectedImageIndex(idx)
+                      }
+                    }}
                     className={cn(
                       "relative w-16 h-20 lg:w-20 lg:h-24 rounded-[6px] overflow-hidden border transition-all shrink-0",
                       selectedImageIndex === idx
@@ -235,12 +236,18 @@ export default function ProductDetail() {
                         : "border-[#EAD6C3]/30 hover:border-[#C19A5B]",
                     )}
                   >
-                    <Image
-                      src={thumbnailImages[idx]}
+                    <OptimizedImage
+                      src={
+                        thumbnailImages[idx] ||
+                        "/images/products/product-placeholder.png"
+                      }
                       alt={`View ${idx + 1}`}
                       fill
                       className="object-cover"
                       sizes="80px"
+                      imageType="thumbnail"
+                      priority={false}
+                      loading="lazy"
                     />
                   </button>
                 ))}
@@ -249,17 +256,19 @@ export default function ProductDetail() {
 
             {/* Main Image */}
             <div className="flex-1 relative aspect-[4/5] bg-white rounded-[10px] overflow-hidden border border-[#EAD6C3]/20 shadow-sm group lg:h-[600px]">
-              <Image
+              <OptimizedImage
                 src={mainProductImage}
                 alt={product.name || product.title || "Product"}
                 fill
                 className={cn(
                   "object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in",
-                  !inStock && "grayscale-[20%]"
+                  !inStock && "grayscale-[20%]",
                 )}
                 sizes={getResponsiveSizes("detail")}
-                priority
-                onClick={() => setIsImageModalOpen(true)}
+                imageType="productDetail"
+                priority={false} // Remove priority - only for above-fold hero images
+                loading="lazy"
+                onClick={handleZoom}
               />
               {/* Out of Stock Indicator */}
               {!inStock && (
@@ -315,22 +324,26 @@ export default function ProductDetail() {
                     )}
                 </div>
 
-                <div className={cn(
-                  "flex items-center gap-1.5 px-2.5 py-1 rounded-full border",
-                  inStock
-                    ? "bg-[#EBF7EF] border-[#3FAF6C]/20"
-                    : "bg-red-50 border-red-200"
-                )}>
+                <div
+                  className={cn(
+                    "flex items-center gap-1.5 px-2.5 py-1 rounded-full border",
+                    inStock
+                      ? "bg-[#EBF7EF] border-[#3FAF6C]/20"
+                      : "bg-red-50 border-red-200",
+                  )}
+                >
                   <div
                     className={cn(
                       "w-1.5 h-1.5 rounded-full",
-                      inStock ? "bg-[#2E7D4D]" : "bg-red-500 animate-pulse"
+                      inStock ? "bg-[#2E7D4D]" : "bg-red-500 animate-pulse",
                     )}
                   />
-                  <span className={cn(
-                    "text-[10px] font-bold uppercase tracking-wide",
-                    inStock ? "text-[#2E7D4D]" : "text-red-600"
-                  )}>
+                  <span
+                    className={cn(
+                      "text-[10px] font-bold uppercase tracking-wide",
+                      inStock ? "text-[#2E7D4D]" : "text-red-600",
+                    )}
+                  >
                     {inStock ? "In Stock" : "Out of Stock"}
                   </span>
                 </div>
@@ -380,20 +393,27 @@ export default function ProductDetail() {
                       <X className="w-5 h-5 text-red-600" />
                     </div>
                     <div>
-                      <p className="text-red-800 font-semibold text-sm">Currently Unavailable</p>
-                      <p className="text-red-600 text-xs mt-0.5">This item is out of stock. Add to wishlist to be notified when available.</p>
+                      <p className="text-red-800 font-semibold text-sm">
+                        Currently Unavailable
+                      </p>
+                      <p className="text-red-600 text-xs mt-0.5">
+                        This item is out of stock. Add to wishlist to be
+                        notified when available.
+                      </p>
                     </div>
                   </div>
                 )}
 
                 <div className="flex gap-3 h-[48px]">
                   {/* Quantity */}
-                  <div className={cn(
-                    "flex items-center border rounded-[6px] w-28 shrink-0",
-                    inStock
-                      ? "border-[#EAD6C3] bg-white"
-                      : "border-gray-200 bg-gray-50 opacity-50"
-                  )}>
+                  <div
+                    className={cn(
+                      "flex items-center border rounded-[6px] w-28 shrink-0",
+                      inStock
+                        ? "border-[#EAD6C3] bg-white"
+                        : "border-gray-200 bg-gray-50 opacity-50",
+                    )}
+                  >
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -421,7 +441,7 @@ export default function ProductDetail() {
                       "flex-1 rounded-[6px] font-inter font-medium text-sm flex items-center justify-center gap-2 transition-all",
                       inStock
                         ? "bg-[#A4552A] hover:bg-[#8B3F20] text-white shadow-sm active:scale-[0.98]"
-                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-200 text-gray-500 cursor-not-allowed",
                     )}
                   >
                     {inStock ? "Add to Cart" : "Out of Stock"}
@@ -549,15 +569,17 @@ export default function ProductDetail() {
                   className="group block"
                 >
                   <div className="relative aspect-[4/5] bg-white rounded-[8px] overflow-hidden border border-[#EAD6C3]/30 mb-3">
-                    <Image
-                      src={getOptimizedImageUrl(
-                        relProduct.images?.[0] || relProduct.mainImage,
-                        IMAGE_SIZES.productCard,
-                      )}
+                    <OptimizedImage
+                      src={(() => {
+                        const img = getImageTier(relProduct?.images, "thumb", 0)
+                        return img || "/images/products/product-placeholder.png"
+                      })()}
                       alt={relProduct.name || relProduct.title || "Product"}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes={getResponsiveSizes("grid")}
+                      imageType="productCard"
+                      priority={false}
                       loading="lazy"
                     />
                     {relProduct.isFeatured && (
@@ -593,11 +615,18 @@ export default function ProductDetail() {
               <X className="w-8 h-8" />
             </button>
             <div className="relative w-full h-full max-w-4xl flex items-center justify-center">
-              <Image
-                src={mainProductImage}
+              <OptimizedImage
+                src={fullImage || "/images/products/product-placeholder.png"}
                 alt="Fullscreen view"
                 fill
                 className="object-contain"
+                variant="full"
+                context="zoom"
+                objectFit="contain"
+                sizes="100vw"
+                priority={false}
+                loading="lazy"
+                placeholder="empty"
               />
             </div>
           </motion.div>

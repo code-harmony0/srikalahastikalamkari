@@ -13,8 +13,8 @@ export function ThemeProvider({ children, ...props }: React.ComponentProps<typeo
     <NextThemesProvider
       attribute="class"
       defaultTheme="light"
-      enableSystem
-      disableTransitionOnChange={false}
+      enableSystem={false}
+      disableTransitionOnChange
       {...props}
     >
       {children}

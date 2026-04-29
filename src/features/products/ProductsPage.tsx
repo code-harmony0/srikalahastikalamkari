@@ -1,13 +1,13 @@
 // @ts-nocheck
-"use client";
+"use client"
 
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { useQueryClient } from "@tanstack/react-query";
-import { useProducts } from "@/shared/hooks/use-products";
-import { productsService } from "@/services/products";
-import { useFilterCategories } from "@/shared/hooks/use-filter-categories";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
+import { useQueryClient } from "@tanstack/react-query"
+import { useProducts } from "@/shared/hooks/use-products"
+import { productsService } from "@/services/products"
+import { useFilterCategories } from "@/shared/hooks/use-filter-categories"
 import {
   SlidersHorizontal,
   ChevronDown,
@@ -17,13 +17,13 @@ import {
   LayoutGrid,
   List as ListIcon,
   X,
-} from "lucide-react";
-import { ProductCard } from "./ProductCard";
+} from "lucide-react"
+import { ProductCard } from "./ProductCard"
 import {
   ProductCardCompact,
   ProductCardCompactSkeleton,
-} from "./ProductCardCompact";
-import dynamic from "next/dynamic";
+} from "./ProductCardCompact"
+import dynamic from "next/dynamic"
 
 const FilterSidebar = dynamic(
   () => import("./FilterSidebar").then((mod) => mod.FilterSidebar),
@@ -39,161 +39,179 @@ const FilterSidebar = dynamic(
         ))}
       </div>
     ),
-  }
-);
+  },
+)
 
 // Pagination helper: generates page numbers with ellipsis
 function getPageNumbers(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
 
-  const pages: (number | "...")[] = [1];
+  const pages: (number | "...")[] = [1]
 
-  if (current > 3) pages.push("...");
+  if (current > 3) pages.push("...")
 
-  const start = Math.max(2, current - 1);
-  const end = Math.min(total - 1, current + 1);
+  const start = Math.max(2, current - 1)
+  const end = Math.min(total - 1, current + 1)
 
-  for (let i = start; i <= end; i++) pages.push(i);
+  for (let i = start; i <= end; i++) pages.push(i)
 
-  if (current < total - 2) pages.push("...");
+  if (current < total - 2) pages.push("...")
 
-  pages.push(total);
-  return pages;
+  pages.push(total)
+  return pages
 }
 
 export default function ProductsPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
 
   // Filter states
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [sortBy, setSortBy] = useState("default");
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000])
+  const [inStockOnly, setInStockOnly] = useState(false)
+  const [sortBy, setSortBy] = useState("default")
 
   // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(12);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(12)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [showFilters, setShowFilters] = useState(false)
 
   // Sync ?category= URL param once, then remove it so returning to the page
   // or re-renders don't force the category back if the user deselected it.
   useEffect(() => {
-    const cat = searchParams.get("category");
+    const cat = searchParams.get("category")
     if (cat) {
-      setSelectedCategories([decodeURIComponent(cat)]);
-      setCurrentPage(1);
+      setSelectedCategories([decodeURIComponent(cat)])
+      setCurrentPage(1)
       // Consume the param — strip it from the URL so it won't re-apply
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("category");
-      const newUrl = params.toString() ? `${pathname}?${params}` : pathname;
-      router.replace(newUrl, { scroll: false });
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete("category")
+      const newUrl = params.toString() ? `${pathname}?${params}` : pathname
+      router.replace(newUrl, { scroll: false })
     }
-  }, [searchParams, pathname, router]);
+  }, [searchParams, pathname, router])
 
-  const gridRef = useRef<HTMLDivElement>(null);
-  
-  const { categories: filterCategories, isLoading: categoriesLoading } = useFilterCategories();
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  const { categories: filterCategories, isLoading: categoriesLoading } =
+    useFilterCategories()
 
   // Resolve category IDs from selected names for the API
   // Must search both parent categories AND subcategories
   const categoryIds = useMemo(() => {
-     if (selectedCategories.length === 0) return undefined;
-     // Categories still loading — defer; don't show all products yet
-     if (categoriesLoading || !filterCategories.length) return ["00000000-0000-0000-0000-000000000000"];
-     const selectedNames = new Set(selectedCategories);
-     const matchedIds: string[] = [];
+    if (selectedCategories.length === 0) return undefined
+    // Categories still loading — defer; don't show all products yet
+    if (categoriesLoading || !filterCategories.length)
+      return ["00000000-0000-0000-0000-000000000000"]
+    const selectedNames = new Set(selectedCategories)
+    const matchedIds: string[] = []
 
-     for (const cat of filterCategories) {
-       if (selectedNames.has(cat.name)) matchedIds.push(cat.id);
-       for (const sub of cat.subcategories || []) {
-         if (selectedNames.has(sub.name)) matchedIds.push(sub.id);
-       }
-     }
+    for (const cat of filterCategories) {
+      if (selectedNames.has(cat.name)) matchedIds.push(cat.id)
+      for (const sub of cat.subcategories || []) {
+        if (selectedNames.has(sub.name)) matchedIds.push(sub.id)
+      }
+    }
 
-     // No DB match for the selected category — return impossible ID so 0 results show
-     // instead of falling through to show all products
-     return matchedIds.length > 0 ? matchedIds : ["00000000-0000-0000-0000-000000000000"];
-  }, [selectedCategories, filterCategories, categoriesLoading]);
-
+    // No DB match for the selected category — return impossible ID so 0 results show
+    // instead of falling through to show all products
+    return matchedIds.length > 0
+      ? matchedIds
+      : ["00000000-0000-0000-0000-000000000000"]
+  }, [selectedCategories, filterCategories, categoriesLoading])
 
   // Prepare filters for React Query
-  const filters = useMemo(() => ({
+  const filters = useMemo(
+    () => ({
       page: currentPage,
       limit: itemsPerPage,
       search: searchQuery || undefined,
-      category_id: (categoryIds && categoryIds.length > 0) ? categoryIds : undefined,
+      category_id:
+        categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
       price_min: priceRange[0],
       price_max: priceRange[1],
       in_stock: inStockOnly || undefined,
-      sort_by: sortBy
-  }), [currentPage, itemsPerPage, searchQuery, categoryIds, priceRange, inStockOnly, sortBy]);
+      sort_by: sortBy,
+    }),
+    [
+      currentPage,
+      itemsPerPage,
+      searchQuery,
+      categoryIds,
+      priceRange,
+      inStockOnly,
+      sortBy,
+    ],
+  )
 
   // Use Server-Side Pagination
-  const { data: queryData, isLoading, isFetching } = useProducts(filters);
-  const products = queryData?.data || [];
-  const totalCount = queryData?.count || 0;
+  const { data: queryData, isLoading, isFetching } = useProducts(filters)
+  const products = queryData?.data || []
+  const totalCount = queryData?.count || 0
 
   // Optimize: Prefetch next page
-  const queryClient = useQueryClient();
-  
+  const queryClient = useQueryClient()
+
   useEffect(() => {
     if (currentPage < Math.ceil(totalCount / itemsPerPage)) {
-      const nextFilters = { ...filters, page: currentPage + 1 };
+      const nextFilters = { ...filters, page: currentPage + 1 }
       queryClient.prefetchQuery({
         queryKey: ["products", nextFilters],
         queryFn: () => productsService.getPaginated(nextFilters),
-      });
+      })
     }
-  }, [filters, currentPage, totalCount, itemsPerPage, queryClient]);
-  
-  // Compute product counts for sidebar (client side approximation or separate API)
-  // Since we are paginating, we can't count purely on client. 
-  // For now, we'll retain the old logic if we had all products, but since we don't, 
-  // we might pass empty counts or fetch counts separately. 
-  // For this step, we'll pass empty object or implement a reliable count later.
-  const productCounts = {}; 
+  }, [filters, currentPage, totalCount, itemsPerPage, queryClient])
 
-  
+  // Compute product counts for sidebar (client side approximation or separate API)
+  // Since we are paginating, we can't count purely on client.
+  // For now, we'll retain the old logic if we had all products, but since we don't,
+  // we might pass empty counts or fetch counts separately.
+  // For this step, we'll pass empty object or implement a reliable count later.
+  const productCounts = {}
+
   // Pagination
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
-  const pageNumbers = getPageNumbers(currentPage, totalPages);
+  const totalPages = Math.ceil(totalCount / itemsPerPage)
+  const pageNumbers = getPageNumbers(currentPage, totalPages)
 
   // Reset page on filter change
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategories, priceRange, sortBy, inStockOnly, itemsPerPage]);
+    setCurrentPage(1)
+  }, [
+    searchQuery,
+    selectedCategories,
+    priceRange,
+    sortBy,
+    inStockOnly,
+    itemsPerPage,
+  ])
 
   // Scroll to top on page change
-  const goToPage = useCallback(
-    (page: number) => {
-      setCurrentPage(page);
-      gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    },
-    []
-  );
+  const goToPage = useCallback((page: number) => {
+    setCurrentPage(page)
+    gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [])
 
   const clearAllFilters = useCallback(() => {
-    setSearchQuery("");
-    setSelectedCategories([]);
-    setPriceRange([0, 50000]);
-    setInStockOnly(false);
-    setCurrentPage(1);
-  }, []);
+    setSearchQuery("")
+    setSelectedCategories([])
+    setPriceRange([0, 50000])
+    setInStockOnly(false)
+    setCurrentPage(1)
+  }, [])
 
   const getActiveFiltersCount = () => {
-    let count = 0;
-    if (searchQuery) count++;
-    if (selectedCategories.length > 0) count += selectedCategories.length;
-    if (priceRange[0] > 0 || priceRange[1] < 50000) count++;
-    if (inStockOnly) count++;
-    return count;
-  };
+    let count = 0
+    if (searchQuery) count++
+    if (selectedCategories.length > 0) count += selectedCategories.length
+    if (priceRange[0] > 0 || priceRange[1] < 50000) count++
+    if (inStockOnly) count++
+    return count
+  }
 
-  const hasActiveFilters = getActiveFiltersCount() > 0;
+  const hasActiveFilters = getActiveFiltersCount() > 0
 
   // Filter bar props shared between mobile and desktop sidebar
   const filterProps = {
@@ -208,7 +226,7 @@ export default function ProductsPage() {
     clearFilters: clearAllFilters,
     productCounts,
     totalProducts: totalCount,
-  };
+  }
 
   return (
     <div className="w-full min-h-screen bg-background">
@@ -241,7 +259,9 @@ export default function ProductsPage() {
             </p>
 
             <motion.button
-              onClick={() => gridRef.current?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                gridRef.current?.scrollIntoView({ behavior: "smooth" })
+              }
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2, duration: 0.8 }}
@@ -337,7 +357,7 @@ export default function ProductsPage() {
                           <button
                             onClick={() =>
                               setSelectedCategories(
-                                selectedCategories.filter((c) => c !== cat)
+                                selectedCategories.filter((c) => c !== cat),
                               )
                             }
                           >
@@ -386,7 +406,6 @@ export default function ProductsPage() {
                         </span>
                       )}
                     </button>
-
                   </div>
 
                   {/* Right: Sort, View Toggle, Items per page */}
@@ -421,7 +440,9 @@ export default function ProductsPage() {
                     <div className="relative hidden sm:block">
                       <select
                         value={itemsPerPage}
-                        onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                        onChange={(e) =>
+                          setItemsPerPage(Number(e.target.value))
+                        }
                         className="appearance-none pl-3 pr-8 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white text-[11px] font-bold text-[#3B2C23] uppercase tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/30 cursor-pointer shadow-sm"
                       >
                         <option value={12}>12 / page</option>
@@ -466,7 +487,7 @@ export default function ProductsPage() {
                         key={i}
                         className="bg-white h-[180px] rounded-xl animate-pulse border border-[#C19A5B]/10 shadow-sm"
                       />
-                    )
+                    ),
                   )}
                 </div>
               ) : products.length > 0 ? (
@@ -494,18 +515,18 @@ export default function ProductsPage() {
                           <ProductCardCompact
                             key={product.id}
                             product={product}
-                            index={index % itemsPerPage}
+                            index={index}
                             priority={index < 8}
                           />
                         ) : (
                           <ProductCard
                             key={product.id}
                             product={product}
-                            index={index % itemsPerPage}
+                            index={index}
                             viewMode="list"
                             priority={index < 8}
                           />
-                        )
+                        ),
                       )}
                     </AnimatePresence>
                   </motion.div>
@@ -513,7 +534,19 @@ export default function ProductsPage() {
                   {/* Pagination Footer - Dashboard Style */}
                   <div className="mt-12 px-6 py-4 border-t border-[#C19A5B]/10 bg-[#FFF8F0]/30 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="text-sm text-[#3B2C23]/60">
-                      Showing <span className="font-semibold text-[#A4552A]">{Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)}-{Math.min(currentPage * itemsPerPage, totalCount)}</span> of <span className="font-semibold text-[#3B2C23]">{totalCount}</span> products
+                      Showing{" "}
+                      <span className="font-semibold text-[#A4552A]">
+                        {Math.min(
+                          (currentPage - 1) * itemsPerPage + 1,
+                          totalCount,
+                        )}
+                        -{Math.min(currentPage * itemsPerPage, totalCount)}
+                      </span>{" "}
+                      of{" "}
+                      <span className="font-semibold text-[#3B2C23]">
+                        {totalCount}
+                      </span>{" "}
+                      products
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -524,37 +557,42 @@ export default function ProductsPage() {
                         Previous
                       </button>
                       <div className="flex items-center gap-1">
-                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                          let pNum = i + 1;
-                          if (totalPages > 5) {
-                            if (currentPage <= 3) {
-                              pNum = i + 1;
-                            } else if (currentPage >= totalPages - 2) {
-                              pNum = totalPages - 4 + i;
-                            } else {
-                              pNum = currentPage - 2 + i;
+                        {Array.from(
+                          { length: Math.min(5, totalPages) },
+                          (_, i) => {
+                            let pNum = i + 1
+                            if (totalPages > 5) {
+                              if (currentPage <= 3) {
+                                pNum = i + 1
+                              } else if (currentPage >= totalPages - 2) {
+                                pNum = totalPages - 4 + i
+                              } else {
+                                pNum = currentPage - 2 + i
+                              }
                             }
-                          }
-                          if (pNum > totalPages) return null;
-                          
-                          return (
-                            <button
-                              key={pNum}
-                              onClick={() => goToPage(pNum)}
-                              disabled={isFetching}
-                              className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
-                                currentPage === pNum 
-                                  ? 'bg-[#A4552A] text-white shadow-md shadow-[#A4552A]/20' 
-                                  : 'text-[#3B2C23]/60 hover:bg-[#FFF4E8] hover:text-[#A4552A]'
-                              }`}
-                            >
-                              {pNum}
-                            </button>
-                          );
-                        })}
+                            if (pNum > totalPages) return null
+
+                            return (
+                              <button
+                                key={pNum}
+                                onClick={() => goToPage(pNum)}
+                                disabled={isFetching}
+                                className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
+                                  currentPage === pNum
+                                    ? "bg-[#A4552A] text-white shadow-md shadow-[#A4552A]/20"
+                                    : "text-[#3B2C23]/60 hover:bg-[#FFF4E8] hover:text-[#A4552A]"
+                                }`}
+                              >
+                                {pNum}
+                              </button>
+                            )
+                          },
+                        )}
                       </div>
                       <button
-                        onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
+                        onClick={() =>
+                          goToPage(Math.min(totalPages, currentPage + 1))
+                        }
                         disabled={currentPage >= totalPages || isFetching}
                         className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFF4E8] hover:border-[#C19A5B] transition-all"
                       >
@@ -595,6 +633,5 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
-
