@@ -24,6 +24,8 @@ import {
   getActivePackingSession,
   Order as BackendOrder,
 } from "@/services/orders"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
+import { getImageTier } from "@/lib/image-tiers"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -851,15 +853,19 @@ const PackingMode: React.FC<PackingModeProps> = ({
                     <div className="flex gap-4">
                       {/* Product Image */}
                       {(item.products?.images?.[0] || item.image) && (
-                        <div className="flex-shrink-0">
-                          <img
+                        <div className="relative flex-shrink-0 w-20 h-20 rounded-xl border-2 border-gray-200 shadow-sm overflow-hidden">
+                          <OptimizedImage
                             src={
-                              item.products?.images?.[0] ||
+                              getImageTier(item.products?.images, "thumb", 0) ||
                               item.image ||
-                              "/images/products/product-placeholder.png"
+                              null
                             }
                             alt={item.products?.name || item.name || "Product"}
-                            className="w-20 h-20 object-cover rounded-xl border-2 border-gray-200 shadow-sm"
+                            fill
+                            className="object-cover"
+                            imageType="thumbnail"
+                            sizes="80px"
+                            placeholder="empty"
                           />
                         </div>
                       )}

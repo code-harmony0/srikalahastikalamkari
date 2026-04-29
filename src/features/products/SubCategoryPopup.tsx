@@ -5,10 +5,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/dialog";
-import Image from "next/image";
 import { cn } from "@/shared/utils";
 import { Check } from "lucide-react";
-import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-utils";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface SubCategoryPopupProps {
   isOpen: boolean;
@@ -122,13 +121,15 @@ export function SubCategoryPopup({
                       {/* Thumbnail */}
                       <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden shrink-0 bg-[#FDFBF7]">
                         {sub.image_url ? (
-                            <Image 
-                              src={getOptimizedImageUrl(sub.image_url, IMAGE_SIZES.thumbnail)} 
+                            <OptimizedImage
+                              src={sub.image_url}
                               alt={sub.name} 
                               fill 
                               className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              imageType="thumbnail"
                               sizes="56px"
                               loading="lazy"
+                              placeholder="empty"
                             />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-[#C19A5B]/30 text-xs">

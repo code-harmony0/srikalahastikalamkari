@@ -1,55 +1,100 @@
-import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/client";
+import { NextRequest, NextResponse } from "next/server"
+
+const CLOUDFLARE_TIMEOUT_MS = 45_000
+
+type CloudflareImagesResponse = {
+  success?: boolean
+  result?: {
+    id?: string
+  }
+  errors?: Array<{
+    message?: string
+  }>
+}
+
+const cfErrorMessage = (data: CloudflareImagesResponse) =>
+  data.errors
+    ?.map((error) => error.message)
+    .filter(Boolean)
+    .join(", ") || "Cloudflare Images upload failed"
+
+async function cloudflareFetch(input: string, init: RequestInit) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), CLOUDFLARE_TIMEOUT_MS)
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData();
-    const file = formData.get("file") as File;
-
-    if (!file) {
-      return NextResponse.json(
-        { error: "No file provided" },
-        { status: 400 }
-      );
+    if (request.cookies.get("isLoggedIn")?.value !== "true") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Generate unique filename
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${Math.random()
-      .toString(36)
-      .substring(2)}_${Date.now()}.${fileExt}`;
+    const accountId = process.env.CF_ACCOUNT_ID?.trim()
+    const token = process.env.CF_IMAGES_TOKEN?.trim()
 
-    // Convert File to ArrayBuffer then to Buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Upload using admin client (server-side only)
-    const { error: uploadError } = await supabaseAdmin.storage
-      .from("products")
-      .upload(fileName, buffer, {
-        contentType: file.type,
-        upsert: false,
-      });
-
-    if (uploadError) {
-      console.error("Upload error:", uploadError);
+    if (!accountId || !token) {
       return NextResponse.json(
-        { error: uploadError.message },
-        { status: 500 }
-      );
+        { error: "Cloudflare Images secrets are not configured." },
+        { status: 500 },
+      )
     }
 
-    // Get public URL
-    const { data } = supabaseAdmin.storage
-      .from("products")
-      .getPublicUrl(fileName);
+    const formData = await request.formData()
+    const file = formData.get("file")
 
-    return NextResponse.json({ url: data.publicUrl });
-  } catch (error: any) {
-    console.error("Image upload failed:", error);
-    return NextResponse.json(
-      { error: error.message || "Upload failed" },
-      { status: 500 }
-    );
+    if (!(file instanceof File)) {
+      return NextResponse.json({ error: "Missing image file" }, { status: 400 })
+    }
+
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json(
+        { error: "Only image uploads are supported" },
+        { status: 400 },
+      )
+    }
+
+    const cloudflareFormData = new FormData()
+    cloudflareFormData.append("file", file, file.name)
+
+    const response = await cloudflareFetch(
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/images/v1`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: cloudflareFormData,
+      },
+    )
+
+    const data = (await response.json().catch(
+      () => ({}),
+    )) as CloudflareImagesResponse
+
+    if (!response.ok || !data.success || !data.result?.id) {
+      return NextResponse.json(
+        { error: cfErrorMessage(data) },
+        { status: response.status || 502 },
+      )
+    }
+
+    return NextResponse.json({
+      imageId: data.result.id,
+      url: data.result.id,
+    })
+  } catch (error: unknown) {
+    const message =
+      error instanceof DOMException && error.name === "AbortError"
+        ? "Cloudflare image upload timed out."
+        : error instanceof Error
+          ? error.message
+          : "Cloudflare Images upload failed"
+
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

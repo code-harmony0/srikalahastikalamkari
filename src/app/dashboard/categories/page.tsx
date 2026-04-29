@@ -54,6 +54,7 @@ import {
 } from "@/services/categories"
 import { uploadImage } from "@/services/products"
 import imageCompression from "browser-image-compression"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
 
 const Categories = () => {
   const [categories, setCategories] = useState<any[]>([])
@@ -528,12 +529,20 @@ const Categories = () => {
                     >
                       <TableCell>
                         <div 
-                          className="h-16 w-16 rounded-md bg-slate-100 overflow-hidden border border-slate-200 cursor-zoom-in"
+                          className="relative h-16 w-16 rounded-md bg-slate-100 overflow-hidden border border-slate-200 cursor-zoom-in"
                           onMouseEnter={() => subCat.image_url && setHoveredImage({ url: subCat.image_url, name: subCat.name })}
                           onMouseLeave={() => setHoveredImage(null)}
                         >
                            {subCat.image_url ? (
-                             <img src={subCat.image_url} alt={subCat.name} className="h-full w-full object-cover" />
+                             <OptimizedImage
+                               src={subCat.image_url}
+                               alt={subCat.name}
+                               fill
+                               className="object-cover"
+                               imageType="thumbnail"
+                               sizes="64px"
+                               placeholder="empty"
+                             />
                            ) : (
                              <div className="h-full w-full flex items-center justify-center bg-slate-50 text-slate-300">
                                <Upload className="h-4 w-4" />
@@ -703,11 +712,26 @@ const Categories = () => {
                 onClick={handleSubCategoryImageBoxClick}
               >
                 {subCategoryImagePreview ? (
-                  <img
-                    src={subCategoryImagePreview}
-                    alt="Subcategory preview"
-                    className="w-full h-48 object-cover rounded-xl"
-                  />
+                  subCategoryImagePreview.startsWith("data:") ||
+                  subCategoryImagePreview.startsWith("blob:") ? (
+                    <img
+                      src={subCategoryImagePreview}
+                      alt="Subcategory preview"
+                      className="w-full h-48 object-cover rounded-xl"
+                    />
+                  ) : (
+                    <div className="relative w-full h-48 rounded-xl overflow-hidden">
+                      <OptimizedImage
+                        src={subCategoryImagePreview}
+                        alt="Subcategory preview"
+                        fill
+                        className="object-cover"
+                        imageType="category"
+                        sizes="320px"
+                        placeholder="empty"
+                      />
+                    </div>
+                  )
                 ) : (
                   <div className="flex flex-col items-center justify-center text-slate-500 space-y-2">
                     <div className="w-12 h-12 rounded-full bg-white border border-slate-300 flex items-center justify-center">
@@ -812,7 +836,15 @@ const Categories = () => {
         >
           <div className="bg-white p-2 rounded-2xl shadow-2xl border border-slate-200">
             <div className="w-80 h-80 rounded-xl overflow-hidden relative bg-slate-100">
-              <img src={hoveredImage.url} alt={hoveredImage.name} className="w-full h-full object-cover" />
+              <OptimizedImage
+                src={hoveredImage.url}
+                alt={hoveredImage.name}
+                fill
+                className="object-cover"
+                imageType="category"
+                sizes="320px"
+                placeholder="empty"
+              />
               <div className="absolute bottom-0 inset-x-0 bg-black/60 p-3 text-white text-sm font-medium text-center backdrop-blur-md">
                 {hoveredImage.name}
               </div>

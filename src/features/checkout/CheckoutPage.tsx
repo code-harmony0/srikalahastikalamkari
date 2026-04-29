@@ -23,6 +23,8 @@ import { toast } from "sonner";
 import { PageHero } from "./page-hero";
 import { ShippingWidget } from "./ShippingWidget";
 import environment from "@/shared/config/environment";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 // --- Razorpay Script Loader ---
 function loadRazorpayScript(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -508,10 +510,19 @@ const handleSubmit = async (e: React.FormEvent) => {
                       >
                         {/* Tiny Image */}
                         <div className="w-12 h-16 bg-[#FDFBF7] rounded border border-[#EAD6C3]/50 shrink-0 overflow-hidden relative">
-                          <img
-                            src={product.mainImage || "/images/placeholder.png"}
-                            alt={product.title}
-                            className="object-cover w-full h-full"
+                          <OptimizedImage
+                            src={
+                              getImageTier(product.images, "thumb", 0) ||
+                              product.mainImage ||
+                              product.image ||
+                              null
+                            }
+                            alt={product.title || product.name || "Product"}
+                            fill
+                            className="object-cover"
+                            imageType="thumbnail"
+                            sizes="48px"
+                            placeholder="empty"
                           />
                         </div>
                         <div className="flex-1 min-w-0">

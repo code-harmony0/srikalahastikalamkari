@@ -118,6 +118,7 @@ export function preloadCriticalResources(): void {
 
   const criticalResources = [
     { rel: "preload", href: "/images/hero-saree.webp", as: "image" as const },
+    { rel: "preconnect", href: "https://imagedelivery.net" },
     { rel: "preconnect", href: process.env.NEXT_PUBLIC_SUPABASE_URL || "" },
     { rel: "dns-prefetch", href: "https://checkout.razorpay.com" },
   ]

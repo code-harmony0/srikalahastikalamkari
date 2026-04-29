@@ -1,4 +1,13 @@
 import { supabase } from "@/lib/supabase/client"
+import { validateImageRef } from "@/lib/image-validation"
+
+const toValidationError = (error: unknown) => ({
+  message: error instanceof Error ? error.message : "Invalid image reference",
+  details: null,
+  hint: "Use Cloudflare Image IDs for new image values. Existing legacy http(s) URLs are temporarily allowed during migration.",
+  code: "VALIDATION",
+  status: 400,
+})
 
 export const getCategories = async (): Promise<{
   data: any[] | null
@@ -92,6 +101,16 @@ export const createSubCategory = async (payload: {
   category_id: string // UUID string
   image_url?: string | null
 }): Promise<{ data: any | null; error: any }> => {
+  let imageUrl: string | null
+  try {
+    imageUrl = validateImageRef(payload.image_url ?? null, {
+      allowLegacy: true,
+      fieldName: "image_url",
+    })
+  } catch (error) {
+    return { data: null, error: toValidationError(error) }
+  }
+
   // Generate base slug
   const baseSlug = payload.name
     .toLowerCase()
@@ -114,7 +133,7 @@ export const createSubCategory = async (payload: {
     name: payload.name,
     description: payload.description,
     parent_id: payload.category_id, // Use parent_id for hierarchical structure
-    image_url: payload.image_url ?? null,
+    image_url: imageUrl,
     slug,
   }
   const { data, error } = await supabase
@@ -173,7 +192,16 @@ export const updateSubCategory = async (
 
   if (payload.description) dbPayload.description = payload.description
   if (payload.category_id) dbPayload.parent_id = payload.category_id
-  if (payload.image_url !== undefined) dbPayload.image_url = payload.image_url
+  if (payload.image_url !== undefined) {
+    try {
+      dbPayload.image_url = validateImageRef(payload.image_url, {
+        allowLegacy: true,
+        fieldName: "image_url",
+      })
+    } catch (error) {
+      return { data: null, error: toValidationError(error) }
+    }
+  }
 
   const { data, error } = await supabase
     .from("categories")

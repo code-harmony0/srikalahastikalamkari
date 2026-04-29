@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAllProducts } from "@/shared/hooks/use-products";
@@ -18,7 +17,8 @@ import { formatPrice } from "@/shared/utils";
 import { toast } from "sonner";
 import { cn } from "@/shared/utils";
 import { ShippingWidget } from "./ShippingWidget";
-import { getOptimizedImageUrl, IMAGE_SIZES } from "@/lib/image-utils";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 
 export default function CartPage() {
   const { data: products = [] } = useAllProducts();
@@ -160,11 +160,11 @@ export default function CartPage() {
           >
             <AnimatePresence mode="popLayout">
               {cartItems.map(({ productId, quantity, product }) => {
-                // API Field Mapping - Optimized for cart thumbnails
-                const imageUrl = getOptimizedImageUrl(
-                  product.image || product.images?.[0],
-                  IMAGE_SIZES.cartItem
-                );
+                const imageRef =
+                  getImageTier(product.images, "thumb", 0) ||
+                  product.image ||
+                  product.mainImage ||
+                  null;
                 const productName = product.name || "Unknown Product";
                 const stock = product.stock_quantity || 0;
                 const productLink = `/products/${product.slug || product.id}`;
@@ -182,14 +182,16 @@ export default function CartPage() {
                   >
                     {/* Image */}
                     <Link href={productLink} className="relative shrink-0">
-                      <div className="w-24 h-24 rounded-[10px] overflow-hidden border border-[#EAD6C3] bg-[#FDFBF7]">
-                        <Image
-                          src={imageUrl}
+                      <div className="relative w-24 h-24 rounded-[10px] overflow-hidden border border-[#EAD6C3] bg-[#FDFBF7]">
+                        <OptimizedImage
+                          src={imageRef}
                           alt={productName}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          imageType="cartItem"
                           sizes="96px"
                           loading="lazy"
+                          placeholder="empty"
                         />
                       </div>
                     </Link>

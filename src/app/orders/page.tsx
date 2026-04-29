@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Package,
@@ -26,6 +25,8 @@ import {
   Star,
 } from "lucide-react"
 import { ReviewSubmissionDialog } from "@/features/orders/ReviewSubmissionDialog"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
+import { getImageTier } from "@/lib/image-tiers"
 import { cn, formatPrice } from "@/shared/utils"
 import { supabase } from "@/lib/supabase/client"
 import { useToast } from "@/shared/ui/use-toast"
@@ -290,11 +291,14 @@ export default function OrdersPage() {
                           className="relative w-12 h-12 bg-[#FFF4E8] rounded-lg border-2 border-white shadow-sm flex-shrink-0 overflow-hidden"
                         >
                           {item.products?.images?.[0] ? (
-                            <Image
-                              src={item.products.images[0]}
+                            <OptimizedImage
+                              src={getImageTier(item.products.images, "thumb", 0)}
                               alt={item.products.name || "Product"}
                               fill
                               className="object-cover"
+                              imageType="thumbnail"
+                              sizes="48px"
+                              placeholder="empty"
                             />
                           ) : (
                             <Package className="w-5 h-5 text-[#C19A5B] absolute inset-0 m-auto" />
@@ -414,11 +418,14 @@ export default function OrdersPage() {
                                 <div key={item.id} className="flex gap-3 p-2 rounded-lg hover:bg-[#FFF8F0]/50">
                                   <div className="relative w-14 h-14 bg-[#FFF4E8] rounded-lg border border-[#EAD6C3]/30 flex-shrink-0 overflow-hidden">
                                     {item.products?.images?.[0] ? (
-                                      <Image
-                                        src={item.products.images[0]}
+                                      <OptimizedImage
+                                        src={getImageTier(item.products.images, "thumb", 0)}
                                         alt={item.products.name || "Product"}
                                         fill
                                         className="object-cover"
+                                        imageType="thumbnail"
+                                        sizes="56px"
+                                        placeholder="empty"
                                       />
                                     ) : (
                                       <Package className="w-5 h-5 text-[#C19A5B] absolute inset-0 m-auto" />
@@ -442,7 +449,8 @@ export default function OrdersPage() {
                                           isOpen: true,
                                           productId: item.products?.id || "",
                                           productName: item.products?.name || "",
-                                          productImage: item.products?.images?.[0] || "",
+                                          productImage:
+                                            getImageTier(item.products?.images, "thumb", 0) || "",
                                         })}
                                         className="mt-2 text-xs font-medium text-[#C19A5B] hover:text-[#A4552A] flex items-center justify-end gap-1 transition-colors"
                                       >

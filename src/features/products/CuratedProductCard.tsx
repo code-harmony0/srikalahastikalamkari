@@ -1,7 +1,6 @@
 "use client";
 
 import React, { memo, useMemo } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Star, ShoppingBag } from "lucide-react";
@@ -9,7 +8,8 @@ import { useCartStore } from "@/shared/cart-store";
 import { toast } from "sonner";
 import { Product } from "@/shared/types";
 import { cn } from "@/shared/utils";
-import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes } from "@/lib/image-utils";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 
 interface CuratedProductCardProps {
   product: Product;
@@ -26,11 +26,11 @@ export const CuratedProductCard = memo(
         price: product.price || 0,
         originalPrice: product.original_price || product.originalPrice || null,
         slug: product.slug,
-        // Optimized for hero/curated section (larger images)
-        image: getOptimizedImageUrl(
-          product.image || product.mainImage || product.images?.[0],
-          IMAGE_SIZES.productHero
-        ),
+        image:
+          getImageTier(product?.images, "medium", 0) ||
+          product.image ||
+          product.mainImage ||
+          "/images/products/product-placeholder.png",
       }),
       [product]
     );
@@ -86,7 +86,7 @@ export const CuratedProductCard = memo(
         <Link href={productUrl} className="flex flex-col h-full">
           {/* IMAGE AREA - Inside card, max 55-60% height */}
           <div className="relative aspect-[4/5] max-h-[200px] overflow-hidden bg-[#F8F4EF]">
-            <Image
+            <OptimizedImage
               src={productData.image}
               alt={productData.name}
               fill
@@ -94,6 +94,7 @@ export const CuratedProductCard = memo(
                 "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]",
                 !product.in_stock && "grayscale-[30%] brightness-95"
               )}
+              imageType="productHero"
               sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
               loading="lazy"
             />

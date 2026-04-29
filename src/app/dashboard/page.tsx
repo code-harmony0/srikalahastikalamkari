@@ -44,6 +44,7 @@ import { ChartCard } from "@/features/dashboard/ChartCard";
 import { DataTable, type TableColumn } from "@/features/dashboard/DataTable";
 import { StatusBadge, type StatusType } from "@/features/dashboard/StatusBadge";
 import { dashboardKeys } from "@/shared/lib/query-client";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 // Skeleton loader for charts
 function ChartSkeleton() {
@@ -150,8 +151,16 @@ export default function DashboardPage() {
       label: "Product",
       render: (product) => (
         <div className="flex items-center gap-2">
-          <div className="h-10 w-10 rounded bg-gray-100 dark:bg-gray-700 overflow-hidden">
-            <img src={product.image || "/placeholder.svg"} alt={product.name} className="h-full w-full object-cover" loading="lazy" />
+          <div className="relative h-10 w-10 rounded bg-gray-100 dark:bg-gray-700 overflow-hidden">
+            <OptimizedImage
+              src={product.image || null}
+              alt={product.name}
+              fill
+              className="object-cover"
+              imageType="thumbnail"
+              sizes="40px"
+              placeholder="empty"
+            />
           </div>
           <span className="font-medium line-clamp-1">{product.name}</span>
         </div>

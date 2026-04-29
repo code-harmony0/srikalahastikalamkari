@@ -50,6 +50,7 @@ import { useInventory } from "@/shared/contexts/InventoryContext"
 import imageCompression from "browser-image-compression"
 import Barcode from "react-barcode"
 import { generateBarcode } from "@/shared/utils/barcodeUtils"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -687,8 +688,11 @@ const AddProduct = () => {
     try {
       let imageUrls: string[] = []
 
-      // 1. Keep existing images that haven't been removed
-      const existingUrls = imagePreviews.filter((url) => url.startsWith("http"))
+      // 1. Keep existing persisted refs that haven't been removed.
+      // New file previews are data/blob URLs and are uploaded below.
+      const existingUrls = imagePreviews.filter(
+        (url) => !url.startsWith("data:") && !url.startsWith("blob:"),
+      )
 
       // 2. Upload all files in `imageFiles`
       const newUploadPromises = imageFiles.map((file) => uploadImage(file))
@@ -1479,12 +1483,25 @@ const AddProduct = () => {
                           >
                             <X className="h-3 w-3" />
                           </Button>
-                          <div className="aspect-square bg-white">
-                            <img
-                              src={preview}
-                              alt={`Preview ${index + 1}`}
-                              className="w-full h-full object-contain p-2"
-                            />
+                          <div className="aspect-square bg-white relative">
+                            {preview.startsWith("data:") ||
+                            preview.startsWith("blob:") ? (
+                              <img
+                                src={preview}
+                                alt={`Preview ${index + 1}`}
+                                className="w-full h-full object-contain p-2"
+                              />
+                            ) : (
+                              <OptimizedImage
+                                src={preview}
+                                alt={`Preview ${index + 1}`}
+                                fill
+                                className="object-contain p-2"
+                                imageType="thumbnail"
+                                sizes="120px"
+                                placeholder="empty"
+                              />
+                            )}
                           </div>
                           {/* WebP conversion stats */}
                           {compressionStats[index] && (

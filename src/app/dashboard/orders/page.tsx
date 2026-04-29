@@ -14,6 +14,8 @@ import {
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/app/dashboard/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 import {
   Dialog,
   DialogContent,
@@ -464,11 +466,15 @@ const Orders = () => {
                     <div className="flex items-center gap-2">
                       <div className="flex -space-x-2 overflow-hidden">
                       {order.order_items && order.order_items.slice(0, 3).map((item, i) => (
-                          <div key={i} className="h-7 w-7 rounded-full ring-2 ring-white bg-slate-100 overflow-hidden border border-slate-300">
-                            <img
-                              className="h-full w-full object-cover"
-                              src={item.products?.images?.[0] || "/images/products/product-placeholder.png"}
+                          <div key={i} className="relative h-7 w-7 rounded-full ring-2 ring-white bg-slate-100 overflow-hidden border border-slate-300">
+                            <OptimizedImage
+                              className="object-cover"
+                              src={getImageTier(item.products?.images, "thumb", 0)}
                               alt={item.products?.name || "Product"}
+                              fill
+                              imageType="thumbnail"
+                              sizes="28px"
+                              placeholder="empty"
                             />
                           </div>
                         ))}

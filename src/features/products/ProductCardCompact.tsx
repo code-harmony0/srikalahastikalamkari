@@ -1,7 +1,6 @@
 "use client";
 
 import React, { memo, useMemo } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Heart, ShoppingBag, Star } from "lucide-react";
@@ -10,6 +9,8 @@ import { useCartStore } from "@/shared/cart-store";
 import { toast } from "sonner";
 import { cn } from "@/shared/utils";
 import { Product } from "@/shared/types";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 
 interface ProductCardCompactProps {
   product: Product;
@@ -35,7 +36,10 @@ export const ProductCardCompact = memo(
         price: product.price || 0,
         originalPrice: product.original_price || product.originalPrice || null,
         image:
-          product.image || product.mainImage || product.images?.[0] || null,
+          getImageTier(product?.images, "thumb", 0) ||
+          product.image ||
+          product.mainImage ||
+          null,
         slug: product.slug,
       }),
       [product]
@@ -81,7 +85,7 @@ export const ProductCardCompact = memo(
       toast.success("Added to cart");
     };
 
-    const mainImage = productData.image || "/images/placeholder.png";
+    const mainImage = productData.image || "/images/products/product-placeholder.png";
     const productUrl = `/products/${product.slug || product.id}`;
 
     const discountPercent =
@@ -113,7 +117,7 @@ export const ProductCardCompact = memo(
         <Link href={productUrl} className="block">
           {/* IMAGE SECTION - Fixed 4:5 aspect ratio */}
           <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-            <Image
+            <OptimizedImage
               src={mainImage}
               alt={productData.name}
               fill
@@ -121,6 +125,7 @@ export const ProductCardCompact = memo(
                 "object-cover transition-transform duration-500 ease-out group-hover:scale-105",
                 !product.in_stock && "grayscale-[30%] brightness-95"
               )}
+              imageType="productCardCompact"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               priority={priority}
               loading={priority ? undefined : "lazy"}

@@ -8,6 +8,8 @@ import { Trash2, Search, ArrowRight, Star, Loader2, Package } from "lucide-react
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 
 const FeaturedManager = () => {
     const { products, updateProduct } = useInventory();
@@ -68,10 +70,14 @@ const FeaturedManager = () => {
                             <div className="group relative bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-all">
                                 {/* Image Aspect Ratio 3:4 */}
                                 <div className="aspect-[3/4] bg-slate-100 relative">
-                                     <img
-                                        src={product.images?.[0] || product.image || ""}
+                                     <OptimizedImage
+                                        src={getImageTier(product.images, "thumb", 0) || product.image || null}
                                         alt={product.name}
-                                        className="w-full h-full object-cover"
+                                        fill
+                                        className="object-cover"
+                                        imageType="productCard"
+                                        sizes="(max-width: 768px) 50vw, 33vw"
+                                        placeholder="empty"
                                     />
                                     {/* Overlay Action */}
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

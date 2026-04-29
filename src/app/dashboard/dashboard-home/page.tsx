@@ -24,6 +24,7 @@ import {
 } from "lucide-react"
 import { getOrderStatistics, OrderStats } from "@/services/orders"
 import { supabase, supabaseAdmin } from "@/lib/supabase/client"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
 
 interface OrderPreview {
   id: string
@@ -404,11 +405,15 @@ const Dashboard = () => {
                       <div className="h-6 w-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
                         {idx + 1}
                       </div>
-                      <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-300">
-                        <img
-                          src={product.image || "/placeholder.svg"}
+                      <div className="relative h-10 w-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-300">
+                        <OptimizedImage
+                          src={product.image || null}
                           alt={product.name}
-                          className="h-full w-full object-cover"
+                          fill
+                          className="object-cover"
+                          imageType="thumbnail"
+                          sizes="40px"
+                          placeholder="empty"
                         />
                       </div>
                       <div className="flex-1 min-w-0 pr-2">

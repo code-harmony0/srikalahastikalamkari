@@ -13,7 +13,7 @@ import {
 } from "@/shared/ui/dialog";
 import { toast } from "sonner";
 import { Loader2, Send } from "lucide-react";
-import Image from "next/image";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface ReviewSubmissionDialogProps {
   isOpen: boolean;
@@ -101,11 +101,14 @@ export function ReviewSubmissionDialog({
 
         <div className="flex items-center gap-4 py-4 border-b border-[#EAD6C3]/50 mb-4">
           <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#EAD6C3]">
-            <Image
+            <OptimizedImage
               src={productImage}
               alt={productName}
               fill
               className="object-cover"
+              imageType="thumbnail"
+              sizes="64px"
+              placeholder="empty"
             />
           </div>
           <div>

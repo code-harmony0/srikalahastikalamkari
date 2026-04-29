@@ -1,9 +1,38 @@
 import { supabase, supabaseAdmin } from "@/lib/supabase/client";
+import { validateImageRef, validateImageRefArray } from "@/lib/image-validation";
 import type { Product } from "@/shared/types";
+
+const toValidationError = (error: unknown) => ({
+  message: error instanceof Error ? error.message : "Invalid image reference",
+  details: null,
+  hint: "Use Cloudflare Image IDs for new image values. Existing legacy http(s) URLs are temporarily allowed during migration.",
+  code: "VALIDATION",
+  status: 400,
+});
 
 const sanitizePayload = (payload: Partial<Product>) => {
   const p: any = { ...payload };
   Object.keys(p).forEach((k) => p[k] === undefined && delete p[k]);
+
+  if (p.image !== undefined) {
+    p.image = validateImageRef(p.image, {
+      allowLegacy: true,
+      fieldName: "image",
+    });
+  }
+
+  if (p.mainImage !== undefined) {
+    p.mainImage = validateImageRef(p.mainImage, {
+      allowLegacy: true,
+      fieldName: "mainImage",
+    });
+  }
+
+  if (p.images !== undefined) {
+    p.images = validateImageRefArray(p.images, "images", {
+      allowLegacy: true,
+    });
+  }
 
   if (p.price !== undefined) p.price = p.price === "" ? null : Number(p.price);
   
@@ -336,7 +365,12 @@ export const getProductBySlug = async (
 export const createProduct = async (
   payload: Partial<Product>,
 ): Promise<{ data: Product | null; error: any }> => {
-  const sanitized = sanitizePayload(payload);
+  let sanitized: Partial<Product>;
+  try {
+    sanitized = sanitizePayload(payload);
+  } catch (error) {
+    return { data: null, error: toValidationError(error) };
+  }
   const invalid = findInvalidIdField(sanitized as Record<string, any>);
   if (invalid) {
     const message = `Invalid id for column ${invalid.field}: ${JSON.stringify(
@@ -504,7 +538,12 @@ export const updateProduct = async (
   id: string,
   payload: Partial<Product>,
 ): Promise<{ data: Product | null; error: any }> => {
-  const sanitized = sanitizePayload(payload);
+  let sanitized: Partial<Product>;
+  try {
+    sanitized = sanitizePayload(payload);
+  } catch (error) {
+    return { data: null, error: toValidationError(error) };
+  }
   const invalid = findInvalidIdField(sanitized as Record<string, any>);
   if (invalid) {
     const message = `Invalid id for column ${invalid.field}: ${JSON.stringify(
@@ -659,7 +698,7 @@ export const uploadImage = async (
       throw new Error(data.error || "Upload failed");
     }
 
-    return { url: data.url, error: null };
+    return { url: data.imageId || data.url, error: null };
   } catch (error: any) {
     console.error("Image upload failed:", error);
     return { url: null, error };

@@ -20,6 +20,8 @@ import { Button } from "@/app/dashboard/ui/button";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent } from "@/shared/ui/card";
 import { Separator } from "@/shared/ui/separator";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 
 interface OrderItem {
   id: string;
@@ -248,12 +250,16 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
                 {(order.order_items || []).map((item, index) => (
                   <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
                     <div className="flex gap-4">
-                      <div className="w-24 h-24 bg-gray-100 rounded-xl border border-gray-200 flex-shrink-0 overflow-hidden">
+                      <div className="relative w-24 h-24 bg-gray-100 rounded-xl border border-gray-200 flex-shrink-0 overflow-hidden">
                         {item.products?.images?.[0] ? (
-                          <img 
-                            src={item.products.images[0]} 
+                          <OptimizedImage
+                            src={getImageTier(item.products.images, "thumb", 0)}
                             alt={item.products.name || "Product"}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            imageType="cartItem"
+                            sizes="96px"
+                            placeholder="empty"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">

@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +18,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn, formatPrice } from "@/shared/utils";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 
 export default function WishlistPage() {
   const router = useRouter()
@@ -217,14 +218,19 @@ export default function WishlistPage() {
                     href={`/products/${product.slug || product.id}`}
                     className="relative block aspect-[3/4] bg-[#FDFBF7] overflow-hidden border-b border-[#EAD6C3]/50"
                   >
-                    <Image
+                    <OptimizedImage
                       src={
-                        product.images?.[0] || product.mainImage || product.image || "/placeholder.png"
+                        getImageTier(product.images, "thumb", 0) ||
+                        product.mainImage ||
+                        product.image ||
+                        null
                       }
                       alt={product.title || product.name || "Product"}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      imageType="productCard"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      placeholder="empty"
                     />
 
                     {/* Overlay */}

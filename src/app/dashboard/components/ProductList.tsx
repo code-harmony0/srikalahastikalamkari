@@ -54,6 +54,8 @@ import { supabase } from "@/lib/supabase/client";
 
 import { useProducts } from "@/shared/hooks/use-products";
 import { useQueryClient } from "@tanstack/react-query";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { getImageTier } from "@/lib/image-tiers";
 
 interface FilterState {
   categories: string[];
@@ -658,15 +660,19 @@ const ProductList = () => {
                         router.push(`/dashboard/products/${product.id}`);
                       }}
                     >
-                      <div className="h-16 w-16 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden">
-                        <img
+                      <div className="relative h-16 w-16 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden">
+                        <OptimizedImage
                           src={
+                            getImageTier(product.images, "thumb", 0) ||
                             product.image ||
-                            product.images?.[0] ||
-                            "https://placehold.co/400x400?text=No+Image"
+                            null
                           }
                           alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          imageType="thumbnail"
+                          sizes="64px"
+                          placeholder="empty"
                         />
                       </div>
                     </TableCell>
