@@ -12,7 +12,7 @@
     "build:profile": "next build --profile",
     "export": "next build && next export",
     "start": "next start",
-    "deploy": "npm run build && rm -f deploy.zip && zip -r deploy.zip .next src public server.js package.json package-lock.json next.config.mjs tailwind.config.ts postcss.config.js tsconfig.json .env.local -x '*.DS_Store' -x '.next/cache/*' && echo '✅ deploy.zip ready. Hostinger entry point: server.js'",
+    "deploy": "npm run build && rm -f deploy.zip && zip -r deploy.zip .next src public supabase/migrations server.js package.json package-lock.json next.config.mjs tailwind.config.ts postcss.config.js tsconfig.json .env.local -x '*.DS_Store' -x '.next/cache/*' && echo '✅ deploy.zip ready. Hostinger entry point: server.js'",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "jest --passWithNoTests",

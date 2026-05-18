@@ -10,7 +10,7 @@ Heritage hand-painted Kalamkari sarees e-commerce platform built with Next.js 14
 npm run deploy
 ```
 
-This builds the app, copies static assets into the standalone bundle, then zips source files for upload.
+This builds the app, then zips the Next.js build output, source files, Supabase migration SQL files, and required runtime config for upload.
 
 ### Step 2 — Upload to Hostinger
 
@@ -18,13 +18,16 @@ This builds the app, copies static assets into the standalone bundle, then zips 
 2. Extract it
 3. In Hostinger Node.js app settings, set **Entry Point** to:
    ```
-   .next/standalone/server.js
+   server.js
    ```
 4. Hostinger will run `npm install` + `npm run build` automatically
-   - `postbuild` script will copy static files into place
-   - Then it starts `.next/standalone/server.js`
+   - Then it starts `server.js`
 
 That's it — no manual commands needed.
+
+## Database
+
+This project uses Supabase as the hosted production database, so there is no local SQLite/database file to upload to Hostinger. The deploy zip includes `supabase/migrations/*.sql` as schema reference files only; production data remains in the Supabase project configured by the environment variables.
 
 
 ## Environment Variables
@@ -35,6 +38,10 @@ Required in `.env.local`:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_RAZORPAY_KEY_ID=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_CF_IMAGES_HASH=
+CF_ACCOUNT_ID=
+CF_IMAGES_TOKEN=
 ```
 
 ## WhatsApp Number
