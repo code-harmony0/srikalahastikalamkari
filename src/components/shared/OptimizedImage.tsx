@@ -11,6 +11,8 @@ import {
 import {
   isCloudflareDeliveryUrl,
   isLocalOrPreviewImage,
+  getProductImageDebugInfo,
+  isProductImageDebugEnabled,
   PRODUCT_IMAGE_PLACEHOLDER,
   resolveProductImageSrc,
   type CfImageVariant,
@@ -138,10 +140,33 @@ export const OptimizedImage = memo(
       setImgSrc(resolvedSrc)
     }, [resolvedSrc])
 
+    useEffect(() => {
+      if (!isProductImageDebugEnabled()) return
+
+      console.info("[image-debug][OptimizedImage]", {
+        alt,
+        imageType,
+        context,
+        requestedVariant: variant,
+        resolvedVariant,
+        rawSrcType: typeof src,
+        debug: getProductImageDebugInfo(rawRef, resolvedVariant),
+      })
+    }, [alt, context, imageType, rawRef, resolvedSrc, resolvedVariant, src, variant])
+
     const handleError = () => {
       if (!hasError) {
         setHasError(true)
         setImgSrc(PRODUCT_IMAGE_PLACEHOLDER)
+        if (isProductImageDebugEnabled()) {
+          console.error("[image-debug][OptimizedImage:error]", {
+            alt,
+            imageType,
+            resolvedVariant,
+            failedSrc: imgSrc,
+            fallback: PRODUCT_IMAGE_PLACEHOLDER,
+          })
+        }
         onError?.()
       }
     }

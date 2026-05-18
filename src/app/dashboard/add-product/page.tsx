@@ -52,6 +52,10 @@ import Barcode from "react-barcode"
 import { generateBarcode } from "@/shared/utils/barcodeUtils"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import {
+  getProductImageDebugInfo,
+  isProductImageDebugEnabled,
+} from "@/lib/cloudflare-images"
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -79,6 +83,12 @@ const formatIndianNumber = (num: string | number): string => {
     lastThree
 
   return formatted + decPart
+}
+
+const summarizeImageRef = (ref: string) => {
+  if (ref.startsWith("data:")) return `data-url:${ref.slice(0, 32)}...`
+  if (ref.startsWith("blob:")) return `blob-url:${ref.slice(0, 48)}...`
+  return ref
 }
 
 // Collapsible Section Component
@@ -222,6 +232,28 @@ const AddProduct = () => {
   // Variants state
   const [variants, setVariants] = useState<any[]>([])
   const [showVariants, setShowVariants] = useState(false)
+
+  useEffect(() => {
+    if (!isProductImageDebugEnabled()) return
+
+    console.info("[image-debug][dashboard-product-form:state]", {
+      mode: isEditMode ? "edit" : "create",
+      editingProductId,
+      pendingUploadFiles: imageFiles.map((file) => ({
+        name: file.name,
+        type: file.type,
+        sizeBytes: file.size,
+      })),
+      previewCount: imagePreviews.length,
+      previews: imagePreviews.map((ref, index) => ({
+        index,
+        ref: summarizeImageRef(ref),
+        debug: ref.startsWith("data:") || ref.startsWith("blob:")
+          ? { sourceType: "local-preview" }
+          : getProductImageDebugInfo(ref, "thumb"),
+      })),
+    })
+  }, [editingProductId, imageFiles, imagePreviews, isEditMode])
 
   const addVariant = () => {
     setVariants([
@@ -463,6 +495,19 @@ const AddProduct = () => {
   const processFiles = async (files: File[]) => {
     if (files.length === 0) return
 
+    if (isProductImageDebugEnabled()) {
+      console.info("[image-debug][dashboard-product-form:files-selected]", {
+        selectedCount: files.length,
+        existingPreviewCount: imagePreviews.length,
+        existingUploadFileCount: imageFiles.length,
+        files: files.map((file) => ({
+          name: file.name,
+          type: file.type,
+          sizeBytes: file.size,
+        })),
+      })
+    }
+
     // Check image limit (max 5)
     const remainingSlots = 5 - imageFiles.length
     if (remainingSlots <= 0) {
@@ -515,6 +560,17 @@ const AddProduct = () => {
 
         newStats.push(`${originalSize}MB → ${compressedSize}MB (-${savings}%)`)
         newCompressedFiles.push(compressedFile)
+
+        if (isProductImageDebugEnabled()) {
+          console.info("[image-debug][dashboard-product-form:compressed]", {
+            name: file.name,
+            originalType: file.type,
+            originalSizeBytes: file.size,
+            compressedType: compressedFile.type,
+            compressedSizeBytes: compressedFile.size,
+            stat: `${originalSize}MB -> ${compressedSize}MB (-${savings}%)`,
+          })
+        }
       } catch (error) {
         console.error("Compression failed:", error)
         newStats.push("Failed, using original")
@@ -694,9 +750,38 @@ const AddProduct = () => {
         (url) => !url.startsWith("data:") && !url.startsWith("blob:"),
       )
 
+      if (isProductImageDebugEnabled()) {
+        console.info("[image-debug][dashboard-product-form:submit-start]", {
+          mode: isEditMode ? "edit" : "create",
+          editingProductId,
+          existingPersistedRefs: existingUrls.map((ref, index) => ({
+            index,
+            ref: summarizeImageRef(ref),
+            debug: getProductImageDebugInfo(ref, "thumb"),
+          })),
+          newUploadFiles: imageFiles.map((file) => ({
+            name: file.name,
+            type: file.type,
+            sizeBytes: file.size,
+          })),
+        })
+      }
+
       // 2. Upload all files in `imageFiles`
       const newUploadPromises = imageFiles.map((file) => uploadImage(file))
       const uploadResults = await Promise.all(newUploadPromises)
+
+      if (isProductImageDebugEnabled()) {
+        console.info("[image-debug][dashboard-product-form:upload-results]", {
+          results: uploadResults.map((result, index) => ({
+            index,
+            hasError: Boolean(result.error),
+            errorMessage: result.error?.message,
+            storedRef: result.url,
+            debug: getProductImageDebugInfo(result.url, "thumb"),
+          })),
+        })
+      }
 
       // Check for errors
       const failedUploads = uploadResults.filter((r) => r.error)
@@ -708,6 +793,18 @@ const AddProduct = () => {
 
       // 3. Combine
       imageUrls = [...existingUrls, ...newUrls]
+
+      if (isProductImageDebugEnabled()) {
+        console.info("[image-debug][dashboard-product-form:final-images]", {
+          refsWrittenToProduct: imageUrls.map((ref, index) => ({
+            index,
+            ref,
+            thumb: getProductImageDebugInfo(ref, "thumb"),
+            medium: getProductImageDebugInfo(ref, "medium"),
+            full: getProductImageDebugInfo(ref, "full"),
+          })),
+        })
+      }
 
       // Generate unique barcode for new products
       let barcode = editingProduct?.barcode // Keep existing barcode if updating

@@ -13,8 +13,8 @@ const warnOnce = (key: string, message: string, meta?: unknown) => {
   console.warn(message, meta)
 }
 
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const CF_UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const SLUG_RE = /^[a-zA-Z0-9_-]{24,64}$/
 
 const normalizeBase = (base: string) => base.replace(/\/+$/, "")
@@ -38,7 +38,7 @@ export function isLikelyCfImageId(ref: string): boolean {
     return false
   }
   if (/[/?#.]/.test(trimmed)) return false
-  if (UUID_RE.test(trimmed)) return true
+  if (CF_UUID_RE.test(trimmed)) return true
 
   const ok = allowSlugIds() && SLUG_RE.test(trimmed) && /[-_]/.test(trimmed)
   if (ok) {
@@ -136,4 +136,72 @@ export function resolveProductImageSrc(
 
 export function isCloudflareDeliveryUrl(src: string): boolean {
   return src.startsWith("https://imagedelivery.net/")
+}
+
+export function getProductImageDebugInfo(
+  imageRef: string | null | undefined,
+  variant: CfImageVariant,
+) {
+  const input = imageRef ?? null
+  const trimmed = (imageRef ?? "").trim()
+  const resolvedSrc = resolveProductImageSrc(imageRef, variant)
+  const isPlaceholder = resolvedSrc === PRODUCT_IMAGE_PLACEHOLDER
+
+  let sourceType:
+    | "empty"
+    | "cloudflare-id"
+    | "cloudflare-delivery-url"
+    | "legacy-supabase-storage"
+    | "legacy-supabase-render"
+    | "legacy-url"
+    | "local-or-preview"
+    | "unhandled" = "empty"
+
+  if (!trimmed) {
+    sourceType = "empty"
+  } else if (isCloudflareDeliveryUrl(trimmed)) {
+    sourceType = "cloudflare-delivery-url"
+  } else if (isLikelyCfImageId(trimmed)) {
+    sourceType = "cloudflare-id"
+  } else if (trimmed.includes("/storage/v1/render/image/")) {
+    sourceType = "legacy-supabase-render"
+  } else if (trimmed.includes("supabase.co/storage")) {
+    sourceType = "legacy-supabase-storage"
+  } else if (isLocalOrPreviewImage(trimmed)) {
+    sourceType = "local-or-preview"
+  } else if (isLegacyImageUrl(trimmed)) {
+    sourceType = "legacy-url"
+  } else {
+    sourceType = "unhandled"
+  }
+
+  return {
+    input,
+    variant,
+    sourceType,
+    resolvedSrc,
+    isPlaceholder,
+    resolvedToCloudflare: isCloudflareDeliveryUrl(resolvedSrc),
+    hasCloudflareHash: Boolean(process.env.NEXT_PUBLIC_CF_IMAGES_HASH?.trim()),
+  }
+}
+
+export function isProductImageDebugEnabled(): boolean {
+  if (process.env.NEXT_PUBLIC_IMAGE_DEBUG === "true") return true
+  if (typeof window === "undefined") return false
+
+  try {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get("imageDebug") === "1") {
+      window.localStorage.setItem("imageDebug", "1")
+      return true
+    }
+    if (params.get("imageDebug") === "0") {
+      window.localStorage.removeItem("imageDebug")
+      return false
+    }
+    return window.localStorage.getItem("imageDebug") === "1"
+  } catch {
+    return false
+  }
 }

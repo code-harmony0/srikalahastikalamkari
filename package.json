@@ -17,7 +17,10 @@
     "type-check": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci --coverage"
+    "test:ci": "jest --ci --coverage",
+    "images:migrate:dry-run": "node scripts/migrate-supabase-images-to-cloudflare.mjs",
+    "images:migrate:apply": "node scripts/migrate-supabase-images-to-cloudflare.mjs --apply",
+    "images:migrate:verify": "node scripts/migrate-supabase-images-to-cloudflare.mjs --verify"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

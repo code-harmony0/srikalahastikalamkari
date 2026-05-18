@@ -34,6 +34,10 @@ import {
 import { toast } from "sonner"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { getImageTier } from "@/lib/image-tiers"
+import {
+  getProductImageDebugInfo,
+  isProductImageDebugEnabled,
+} from "@/lib/cloudflare-images"
 
 // Collapsible Section Component for Product Details
 const DetailSection = ({
@@ -98,6 +102,31 @@ const ProductDetails = () => {
   const [product, setProduct] = useState<any>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    if (!product || !isProductImageDebugEnabled()) return
+
+    const imageRefs = product.images || (product.image ? [product.image] : [])
+    const selectedMediumRef = getImageTier(imageRefs, "medium", currentImageIndex)
+    const selectedThumbRef = getImageTier(imageRefs, "thumb", currentImageIndex)
+    const selectedFullRef = getImageTier(imageRefs, "full", currentImageIndex)
+
+    console.info("[image-debug][dashboard-product-view]", {
+      productId: product.id,
+      productName: product.name,
+      currentImageIndex,
+      imagesFieldType: Array.isArray(product.images)
+        ? typeof product.images[0]
+        : typeof product.image,
+      imagesCount: imageRefs.length,
+      rawImages: imageRefs,
+      selected: {
+        thumb: getProductImageDebugInfo(selectedThumbRef, "thumb"),
+        medium: getProductImageDebugInfo(selectedMediumRef, "medium"),
+        full: getProductImageDebugInfo(selectedFullRef, "full"),
+      },
+    })
+  }, [product, currentImageIndex])
 
   // Temporarily disabled to test page loading
   // useEffect(() => {
