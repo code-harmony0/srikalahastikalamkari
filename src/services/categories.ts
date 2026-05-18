@@ -4,10 +4,30 @@ import { validateImageRef } from "@/lib/image-validation"
 const toValidationError = (error: unknown) => ({
   message: error instanceof Error ? error.message : "Invalid image reference",
   details: null,
-  hint: "Use Cloudflare Image IDs for new image values. Existing legacy http(s) URLs are temporarily allowed during migration.",
+  hint: "Use Cloudflare Image IDs for new image values. Existing legacy http(s) URLs can only be preserved unchanged during migration.",
   code: "VALIDATION",
   status: 400,
 })
+
+const getExistingCategoryImageRef = async (
+  id: string,
+): Promise<{ ref: string | null; error: any }> => {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("image_url")
+    .eq("id", id)
+    .maybeSingle()
+
+  if (error) return { ref: null, error }
+  if (!data) {
+    return {
+      ref: null,
+      error: { message: "Category not found", code: "NOT_FOUND", status: 404 },
+    }
+  }
+
+  return { ref: data.image_url ?? null, error: null }
+}
 
 export const getCategories = async (): Promise<{
   data: any[] | null
@@ -104,7 +124,6 @@ export const createSubCategory = async (payload: {
   let imageUrl: string | null
   try {
     imageUrl = validateImageRef(payload.image_url ?? null, {
-      allowLegacy: true,
       fieldName: "image_url",
     })
   } catch (error) {
@@ -194,8 +213,14 @@ export const updateSubCategory = async (
   if (payload.category_id) dbPayload.parent_id = payload.category_id
   if (payload.image_url !== undefined) {
     try {
+      const existingImageRef = await getExistingCategoryImageRef(id)
+      if (existingImageRef.error) {
+        return { data: null, error: existingImageRef.error }
+      }
+
       dbPayload.image_url = validateImageRef(payload.image_url, {
         allowLegacy: true,
+        allowedLegacyRefs: [existingImageRef.ref],
         fieldName: "image_url",
       })
     } catch (error) {

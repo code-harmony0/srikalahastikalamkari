@@ -1,6 +1,13 @@
 "use client"
 
-import { useState, useMemo, useEffect, useCallback } from "react"
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+  type PointerEvent,
+} from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -33,6 +40,10 @@ import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
 import { getResponsiveSizes } from "@/lib/image-utils"
 import { getImageTier } from "@/lib/image-tiers"
+import {
+  isProductImageDebugEnabled,
+  resolveProductImageSrc,
+} from "@/lib/cloudflare-images"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { ProductReviews } from "./ProductReviews"
 import { useReviews } from "@/shared/hooks/use-reviews"
@@ -63,6 +74,8 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [fullImage, setFullImage] = useState<string | null>(null)
+  const [magnifier, setMagnifier] = useState({ visible: false, x: 50, y: 50 })
+  const loggedMagnifierImageRef = useRef<string | null>(null)
 
   const handleZoom = useCallback(() => {
     if (!product?.images?.length) return
@@ -106,6 +119,58 @@ export default function ProductDetail() {
     const img = getImageTier(product?.images, "medium", selectedImageIndex)
     return img || "/images/products/product-placeholder.png"
   }, [product?.images, selectedImageIndex])
+
+  const magnifierImage = useMemo(
+    () => resolveProductImageSrc(mainProductImage, "medium"),
+    [mainProductImage],
+  )
+
+  const handleMagnifierMove = useCallback(
+    (event: PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType !== "mouse") return
+
+      const rect = event.currentTarget.getBoundingClientRect()
+      const x = Math.min(
+        100,
+        Math.max(0, ((event.clientX - rect.left) / rect.width) * 100),
+      )
+      const y = Math.min(
+        100,
+        Math.max(0, ((event.clientY - rect.top) / rect.height) * 100),
+      )
+
+      if (
+        loggedMagnifierImageRef.current !== mainProductImage &&
+        isProductImageDebugEnabled()
+      ) {
+        loggedMagnifierImageRef.current = mainProductImage
+        console.info("[image-debug][product-magnifier]", {
+          productId: product?.id,
+          productName: product?.name || product?.title,
+          selectedImageIndex,
+          sourceVariant: "medium",
+          rawRef: mainProductImage,
+          resolvedSrc: magnifierImage,
+          fullImageLoaded: isImageModalOpen,
+        })
+      }
+
+      setMagnifier({ visible: true, x, y })
+    },
+    [
+      isImageModalOpen,
+      magnifierImage,
+      mainProductImage,
+      product?.id,
+      product?.name,
+      product?.title,
+      selectedImageIndex,
+    ],
+  )
+
+  const handleMagnifierLeave = useCallback(() => {
+    setMagnifier((current) => ({ ...current, visible: false }))
+  }, [])
 
   // Optimized thumbnails (small) - each thumbnail shows different image
   const thumbnailImages = useMemo(() => {
@@ -255,21 +320,45 @@ export default function ProductDetail() {
             )}
 
             {/* Main Image */}
-            <div className="flex-1 relative aspect-[4/5] bg-white rounded-[10px] overflow-hidden border border-[#EAD6C3]/20 shadow-sm group lg:h-[600px]">
+            <div
+              className="flex-1 relative aspect-[4/5] bg-white rounded-[10px] overflow-hidden border border-[#EAD6C3]/20 shadow-sm group lg:h-[600px] cursor-zoom-in"
+              onPointerMove={handleMagnifierMove}
+              onPointerLeave={handleMagnifierLeave}
+              onClick={handleZoom}
+            >
               <OptimizedImage
                 src={mainProductImage}
                 alt={product.name || product.title || "Product"}
                 fill
                 className={cn(
-                  "object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in",
+                  "object-cover transition-transform duration-700 group-hover:scale-105",
                   !inStock && "grayscale-[20%]",
                 )}
                 sizes={getResponsiveSizes("detail")}
                 imageType="productDetail"
                 priority={false} // Remove priority - only for above-fold hero images
                 loading="lazy"
-                onClick={handleZoom}
               />
+              {magnifier.visible && (
+                <>
+                  <div
+                    className="pointer-events-none absolute z-20 hidden h-44 w-36 -translate-x-1/2 -translate-y-1/2 border border-[#3B2C23]/35 bg-white/20 shadow-[0_8px_24px_rgba(0,0,0,0.18),inset_0_0_0_1px_rgba(255,255,255,0.75)] backdrop-blur-[1px] lg:block"
+                    style={{
+                      left: `${magnifier.x}%`,
+                      top: `${magnifier.y}%`,
+                    }}
+                  />
+                  <div
+                    className="pointer-events-none absolute left-[calc(100%+16px)] top-0 z-30 hidden h-full w-[min(560px,42vw)] overflow-hidden rounded-[10px] border border-[#EAD6C3]/70 bg-white shadow-[0_20px_55px_rgba(59,44,35,0.22)] xl:block"
+                    style={{
+                      backgroundImage: `url("${magnifierImage}")`,
+                      backgroundPosition: `${magnifier.x}% ${magnifier.y}%`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "230% 230%",
+                    }}
+                  />
+                </>
+              )}
               {/* Out of Stock Indicator */}
               {!inStock && (
                 <div className="absolute top-4 left-4 z-10">

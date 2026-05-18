@@ -2,6 +2,7 @@ import { isCloudflareImageId, isLegacyImageUrl } from "@/lib/cloudflare-images"
 
 type ValidateImageRefOptions = {
   allowLegacy?: boolean
+  allowedLegacyRefs?: Iterable<string | null | undefined>
   fieldName?: string
 }
 
@@ -22,7 +23,11 @@ export function validateImageRef(
   ref: unknown,
   options: ValidateImageRefOptions = {},
 ): string | null {
-  const { allowLegacy = false, fieldName = "image ref" } = options
+  const {
+    allowLegacy = false,
+    allowedLegacyRefs,
+    fieldName = "image ref",
+  } = options
 
   if (ref === null || ref === undefined || ref === "") return null
   if (typeof ref !== "string") {
@@ -34,14 +39,28 @@ export function validateImageRef(
 
   if (isCloudflareImageId(trimmed)) return trimmed
 
-  if (allowLegacy && isLegacyImageUrl(trimmed)) {
-    warnLegacyRef(fieldName, trimmed)
-    return trimmed
+  if (isLegacyImageUrl(trimmed)) {
+    const legacyAllowList =
+      allowedLegacyRefs &&
+      new Set(
+        Array.from(allowedLegacyRefs)
+          .map((value) => value?.trim())
+          .filter(Boolean),
+      )
+
+    if (allowLegacy && (!legacyAllowList || legacyAllowList.has(trimmed))) {
+      warnLegacyRef(fieldName, trimmed)
+      return trimmed
+    }
+
+    throw new Error(
+      `${fieldName} must be a Cloudflare Image ID. Existing legacy http(s) URLs may only be preserved unchanged during migration.`,
+    )
   }
 
   throw new Error(
     `${fieldName} must be a Cloudflare Image ID${
-      allowLegacy ? " or an existing legacy http(s) URL" : ""
+      allowLegacy ? " or an existing unchanged legacy http(s) URL" : ""
     }`,
   )
 }

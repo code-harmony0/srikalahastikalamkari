@@ -5,32 +5,47 @@ import type { Product } from "@/shared/types";
 const toValidationError = (error: unknown) => ({
   message: error instanceof Error ? error.message : "Invalid image reference",
   details: null,
-  hint: "Use Cloudflare Image IDs for new image values. Existing legacy http(s) URLs are temporarily allowed during migration.",
+  hint: "Use Cloudflare Image IDs for new image values. Existing legacy http(s) URLs can only be preserved unchanged during migration.",
   code: "VALIDATION",
   status: 400,
 });
 
-const sanitizePayload = (payload: Partial<Product>) => {
+type ImageSanitizeOptions = {
+  allowedLegacyRefs?: Iterable<string | null | undefined>;
+};
+
+const sanitizePayload = (
+  payload: Partial<Product>,
+  options: ImageSanitizeOptions = {},
+) => {
   const p: any = { ...payload };
   Object.keys(p).forEach((k) => p[k] === undefined && delete p[k]);
+  const imageValidation = options.allowedLegacyRefs
+    ? {
+        allowLegacy: true,
+        allowedLegacyRefs: options.allowedLegacyRefs,
+      }
+    : {
+        allowLegacy: false,
+      };
 
   if (p.image !== undefined) {
     p.image = validateImageRef(p.image, {
-      allowLegacy: true,
       fieldName: "image",
+      ...imageValidation,
     });
   }
 
   if (p.mainImage !== undefined) {
     p.mainImage = validateImageRef(p.mainImage, {
-      allowLegacy: true,
       fieldName: "mainImage",
+      ...imageValidation,
     });
   }
 
   if (p.images !== undefined) {
     p.images = validateImageRefArray(p.images, "images", {
-      allowLegacy: true,
+      ...imageValidation,
     });
   }
 
@@ -126,6 +141,36 @@ const sanitizePayload = (payload: Partial<Product>) => {
   });
 
   return mapped as Partial<Product>;
+};
+
+const collectStringRefs = (refs: unknown): string[] => {
+  if (typeof refs === "string") return [refs];
+  if (!Array.isArray(refs)) return [];
+
+  return refs.filter((ref): ref is string => typeof ref === "string");
+};
+
+const getExistingProductImageRefs = async (
+  id: string,
+): Promise<{ refs: string[]; error: any }> => {
+  const { data, error } = await supabase
+    .from("products")
+    .select("image, images")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return { refs: [], error };
+  if (!data) {
+    return {
+      refs: [],
+      error: { message: "Product not found", code: "NOT_FOUND", status: 404 },
+    };
+  }
+
+  return {
+    refs: [...collectStringRefs(data.image), ...collectStringRefs(data.images)],
+    error: null,
+  };
 };
 
 const findInvalidIdField = (obj: Record<string, any>) => {
@@ -540,7 +585,14 @@ export const updateProduct = async (
 ): Promise<{ data: Product | null; error: any }> => {
   let sanitized: Partial<Product>;
   try {
-    sanitized = sanitizePayload(payload);
+    const existingImageRefs = await getExistingProductImageRefs(id);
+    if (existingImageRefs.error) {
+      return { data: null, error: existingImageRefs.error };
+    }
+
+    sanitized = sanitizePayload(payload, {
+      allowedLegacyRefs: existingImageRefs.refs,
+    });
   } catch (error) {
     return { data: null, error: toValidationError(error) };
   }

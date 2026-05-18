@@ -15,9 +15,11 @@ const getArg = (name, fallback) => {
 
 const apply = args.has("--apply")
 const verify = args.has("--verify")
+const checkDelivery = args.has("--check-delivery")
 const includeExternal = args.has("--include-external")
 const concurrency = Number(getArg("--concurrency", "4"))
 const limit = Number(getArg("--limit", "0"))
+const sampleSize = Number(getArg("--sample", "8"))
 
 const requiredEnv = [
   "NEXT_PUBLIC_SUPABASE_URL",
@@ -81,6 +83,12 @@ const extensionForContentType = (contentType) => {
   if (contentType.includes("gif")) return "gif"
   if (contentType.includes("jpeg") || contentType.includes("jpg")) return "jpg"
   return "jpg"
+}
+
+const resolveCloudflareDeliveryUrl = (imageId, variant = "medium") => {
+  const hash = process.env.NEXT_PUBLIC_CF_IMAGES_HASH?.trim()
+  if (!hash || !uuidRe.test(imageId)) return null
+  return `https://imagedelivery.net/${hash}/${imageId}/${variant}`
 }
 
 async function loadRows() {
@@ -155,28 +163,144 @@ function buildVerificationReport(rows) {
       rows: rows.categories.length,
     },
   }
+  const samples = []
+  const unresolved = []
 
   const bump = (bucket, key) => {
     bucket[key] = (bucket[key] ?? 0) + 1
   }
 
+  const trackRef = ({ table, id, name, column, imageRef }) => {
+    const sourceType = classifyImageRef(imageRef)
+    const entry = {
+      table,
+      id,
+      name,
+      column,
+      sourceType,
+      imageRef,
+      deliveryUrl:
+        sourceType === "cloudflare-id"
+          ? resolveCloudflareDeliveryUrl(imageRef)
+          : null,
+    }
+
+    if (samples.length < sampleSize) samples.push(entry)
+    if (
+      sourceType !== "cloudflare-id" &&
+      sourceType !== "empty" &&
+      unresolved.length < sampleSize
+    ) {
+      unresolved.push(entry)
+    }
+  }
+
   for (const product of rows.products) {
     if (!Array.isArray(product.images)) {
       bump(report.products, `images:${classifyImageRef(product.images)}`)
+      trackRef({
+        table: "products",
+        id: product.id,
+        name: product.name,
+        column: "images",
+        imageRef: product.images,
+      })
       continue
     }
 
     bump(report.products, "images:arrays")
-    for (const imageRef of product.images) {
+    for (const [index, imageRef] of product.images.entries()) {
       bump(report.products, `images:${classifyImageRef(imageRef)}`)
+      trackRef({
+        table: "products",
+        id: product.id,
+        name: product.name,
+        column: `images[${index}]`,
+        imageRef,
+      })
     }
   }
 
   for (const category of rows.categories) {
     bump(report.categories, `image_url:${classifyImageRef(category.image_url)}`)
+    trackRef({
+      table: "categories",
+      id: category.id,
+      name: category.name,
+      column: "image_url",
+      imageRef: category.image_url,
+    })
   }
 
-  return report
+  return {
+    report,
+    samples,
+    unresolved,
+  }
+}
+
+async function buildDeliveryReport(rows) {
+  const entries = []
+  const seen = new Set()
+
+  const add = ({ table, id, name, column, imageRef }) => {
+    if (classifyImageRef(imageRef) !== "cloudflare-id") return
+    const deliveryUrl = resolveCloudflareDeliveryUrl(imageRef)
+    if (!deliveryUrl || seen.has(deliveryUrl)) return
+    seen.add(deliveryUrl)
+    entries.push({ table, id, name, column, imageRef, deliveryUrl })
+  }
+
+  for (const product of rows.products) {
+    if (!Array.isArray(product.images)) continue
+    product.images.forEach((imageRef, index) => {
+      add({
+        table: "products",
+        id: product.id,
+        name: product.name,
+        column: `images[${index}]`,
+        imageRef,
+      })
+    })
+  }
+
+  for (const category of rows.categories) {
+    add({
+      table: "categories",
+      id: category.id,
+      name: category.name,
+      column: "image_url",
+      imageRef: category.image_url,
+    })
+  }
+
+  const selectedEntries = limit > 0 ? entries.slice(0, limit) : entries
+  const checked = await runWithConcurrency(selectedEntries, async (entry) => {
+    try {
+      const response = await fetch(entry.deliveryUrl, { method: "HEAD" })
+      return {
+        ...entry,
+        ok: response.ok,
+        status: response.status,
+        contentType: response.headers.get("content-type"),
+        contentLength: response.headers.get("content-length"),
+      }
+    } catch (error) {
+      return {
+        ...entry,
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+      }
+    }
+  })
+
+  return {
+    totalCloudflareRefs: entries.length,
+    checkedRefs: checked.length,
+    ok: checked.filter((entry) => entry.ok).length,
+    failed: checked.filter((entry) => !entry.ok),
+    samples: checked.slice(0, sampleSize),
+  }
 }
 
 async function uploadToCloudflare(sourceUrl, index, total) {
@@ -300,7 +424,13 @@ async function main() {
 
   const rows = await loadRows()
   if (verify) {
-    console.log(JSON.stringify(buildVerificationReport(rows), null, 2))
+    const verificationReport = buildVerificationReport(rows)
+    console.log(JSON.stringify(verificationReport, null, 2))
+
+    if (checkDelivery) {
+      console.log("[delivery] checking Cloudflare delivery URLs")
+      console.log(JSON.stringify(await buildDeliveryReport(rows), null, 2))
+    }
     return
   }
 
