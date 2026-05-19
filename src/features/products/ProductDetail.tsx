@@ -5,8 +5,7 @@ import {
   useMemo,
   useEffect,
   useCallback,
-  useRef,
-  type PointerEvent,
+  type MouseEvent,
 } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -40,10 +39,7 @@ import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
 import { getResponsiveSizes } from "@/lib/image-utils"
 import { getImageTier } from "@/lib/image-tiers"
-import {
-  isProductImageDebugEnabled,
-  resolveProductImageSrc,
-} from "@/lib/cloudflare-images"
+import { resolveProductImageSrc } from "@/lib/cloudflare-images"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { ProductReviews } from "./ProductReviews"
 import { useReviews } from "@/shared/hooks/use-reviews"
@@ -74,20 +70,25 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [fullImage, setFullImage] = useState<string | null>(null)
-  const [magnifier, setMagnifier] = useState({ visible: false, x: 50, y: 50 })
-  const loggedMagnifierImageRef = useRef<string | null>(null)
+  const [zoomMagnifier, setZoomMagnifier] = useState({
+    visible: false,
+    x: 50,
+    y: 50,
+  })
 
   const handleZoom = useCallback(() => {
     if (!product?.images?.length) return
 
     const full = getImageTier(product?.images, "full", selectedImageIndex)
     setFullImage(full || "/images/products/product-placeholder.png")
+    setZoomMagnifier({ visible: false, x: 50, y: 50 })
 
     setIsImageModalOpen(true)
   }, [product?.images, selectedImageIndex])
 
   const handleCloseZoomModal = useCallback(() => {
     setIsImageModalOpen(false)
+    setZoomMagnifier((current) => ({ ...current, visible: false }))
   }, [])
 
   const cart = useCartStore()
@@ -120,15 +121,17 @@ export default function ProductDetail() {
     return img || "/images/products/product-placeholder.png"
   }, [product?.images, selectedImageIndex])
 
-  const magnifierImage = useMemo(
-    () => resolveProductImageSrc(mainProductImage, "medium"),
-    [mainProductImage],
+  const zoomMagnifierImage = useMemo(
+    () =>
+      resolveProductImageSrc(
+        fullImage || "/images/products/product-placeholder.png",
+        "full",
+      ),
+    [fullImage],
   )
 
-  const handleMagnifierMove = useCallback(
-    (event: PointerEvent<HTMLDivElement>) => {
-      if (event.pointerType !== "mouse") return
-
+  const handleZoomMagnifierMove = useCallback(
+    (event: MouseEvent<HTMLDivElement>) => {
       const rect = event.currentTarget.getBoundingClientRect()
       const x = Math.min(
         100,
@@ -139,37 +142,17 @@ export default function ProductDetail() {
         Math.max(0, ((event.clientY - rect.top) / rect.height) * 100),
       )
 
-      if (
-        loggedMagnifierImageRef.current !== mainProductImage &&
-        isProductImageDebugEnabled()
-      ) {
-        loggedMagnifierImageRef.current = mainProductImage
-        console.info("[image-debug][product-magnifier]", {
-          productId: product?.id,
-          productName: product?.name || product?.title,
-          selectedImageIndex,
-          sourceVariant: "medium",
-          rawRef: mainProductImage,
-          resolvedSrc: magnifierImage,
-          fullImageLoaded: isImageModalOpen,
-        })
-      }
-
-      setMagnifier({ visible: true, x, y })
+      setZoomMagnifier({
+        visible: true,
+        x,
+        y,
+      })
     },
-    [
-      isImageModalOpen,
-      magnifierImage,
-      mainProductImage,
-      product?.id,
-      product?.name,
-      product?.title,
-      selectedImageIndex,
-    ],
+    [],
   )
 
-  const handleMagnifierLeave = useCallback(() => {
-    setMagnifier((current) => ({ ...current, visible: false }))
+  const handleZoomMagnifierLeave = useCallback(() => {
+    setZoomMagnifier((current) => ({ ...current, visible: false }))
   }, [])
 
   // Optimized thumbnails (small) - each thumbnail shows different image
@@ -321,9 +304,7 @@ export default function ProductDetail() {
 
             {/* Main Image */}
             <div
-              className="flex-1 relative aspect-[4/5] bg-white rounded-[10px] overflow-hidden border border-[#EAD6C3]/20 shadow-sm group lg:h-[600px] cursor-zoom-in"
-              onPointerMove={handleMagnifierMove}
-              onPointerLeave={handleMagnifierLeave}
+              className="relative flex-1 aspect-[4/5] bg-white rounded-[10px] overflow-hidden border border-[#EAD6C3]/20 shadow-sm group lg:h-[600px] cursor-zoom-in"
               onClick={handleZoom}
             >
               <OptimizedImage
@@ -339,26 +320,6 @@ export default function ProductDetail() {
                 priority={false} // Remove priority - only for above-fold hero images
                 loading="lazy"
               />
-              {magnifier.visible && (
-                <>
-                  <div
-                    className="pointer-events-none absolute z-20 hidden h-44 w-36 -translate-x-1/2 -translate-y-1/2 border border-[#3B2C23]/35 bg-white/20 shadow-[0_8px_24px_rgba(0,0,0,0.18),inset_0_0_0_1px_rgba(255,255,255,0.75)] backdrop-blur-[1px] lg:block"
-                    style={{
-                      left: `${magnifier.x}%`,
-                      top: `${magnifier.y}%`,
-                    }}
-                  />
-                  <div
-                    className="pointer-events-none absolute left-[calc(100%+16px)] top-0 z-30 hidden h-full w-[min(560px,42vw)] overflow-hidden rounded-[10px] border border-[#EAD6C3]/70 bg-white shadow-[0_20px_55px_rgba(59,44,35,0.22)] xl:block"
-                    style={{
-                      backgroundImage: `url("${magnifierImage}")`,
-                      backgroundPosition: `${magnifier.x}% ${magnifier.y}%`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "230% 230%",
-                    }}
-                  />
-                </>
-              )}
               {/* Out of Stock Indicator */}
               {!inStock && (
                 <div className="absolute top-4 left-4 z-10">
@@ -698,12 +659,20 @@ export default function ProductDetail() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={() => setIsImageModalOpen(false)}
+            onClick={handleCloseZoomModal}
           >
-            <button className="absolute top-6 right-6 text-white/80 hover:text-white transition-colors">
+            <button
+              className="absolute top-6 right-6 z-20 text-white/80 hover:text-white transition-colors"
+              onClick={handleCloseZoomModal}
+            >
               <X className="w-8 h-8" />
             </button>
-            <div className="relative w-full h-full max-w-4xl flex items-center justify-center">
+            <div
+              className="relative h-full w-full max-w-5xl cursor-crosshair overflow-hidden"
+              onClick={(event) => event.stopPropagation()}
+              onMouseMove={handleZoomMagnifierMove}
+              onMouseLeave={handleZoomMagnifierLeave}
+            >
               <OptimizedImage
                 src={fullImage || "/images/products/product-placeholder.png"}
                 alt="Fullscreen view"
@@ -717,6 +686,29 @@ export default function ProductDetail() {
                 loading="lazy"
                 placeholder="empty"
               />
+              {zoomMagnifier.visible && (
+                <>
+                  <div
+                    className="pointer-events-none absolute z-10 h-32 w-28 -translate-x-1/2 -translate-y-1/2 border border-white/80 bg-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.38),inset_0_0_0_1px_rgba(255,255,255,0.55)] backdrop-blur-[1px] md:h-44 md:w-36"
+                    style={{
+                      left: `${zoomMagnifier.x}%`,
+                      top: `${zoomMagnifier.y}%`,
+                    }}
+                  />
+                  <div
+                    className="pointer-events-none absolute right-4 top-1/2 z-20 h-[min(680px,82vh)] w-[min(460px,42vw)] -translate-y-1/2 overflow-hidden rounded-[10px] border border-white/80 bg-white shadow-[0_22px_70px_rgba(0,0,0,0.52),inset_0_0_0_1px_rgba(255,255,255,0.55)] transition-opacity duration-150"
+                    style={{
+                      backgroundImage: `url("${zoomMagnifierImage}")`,
+                      backgroundPosition: `${zoomMagnifier.x}% ${zoomMagnifier.y}%`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "320% auto",
+                      imageRendering: "auto",
+                    }}
+                  >
+                    <div className="absolute inset-0 ring-1 ring-inset ring-white/50" />
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         )}
