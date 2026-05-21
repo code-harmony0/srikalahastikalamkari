@@ -11,17 +11,17 @@ export const revalidate = 3600
 
 export default function TermsAndConditionsPage() {
   return (
-    <div className="min-h-screen bg-[#FAF3EC]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
-          <h1 className="font-playfair text-4xl font-bold text-[#3B2C23] mb-2">
+        <div className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 shadow-sm p-8 md:p-12 backdrop-blur-sm">
+          <h1 className="font-playfair text-4xl font-bold text-[#1A1512] mb-2">
             Terms & Conditions
           </h1>
-          <p className="text-[#3B2C23]/60 mb-8 font-inter text-sm">
+          <p className="text-[#1A1512]/60 mb-8 font-inter text-sm">
             Last updated: November 2025
           </p>
 
-          <div className="space-y-8 text-[#3B2C23]">
+          <div className="space-y-8 text-[#1A1512]">
             <p className="font-inter text-[15px] leading-relaxed">
               Welcome to our website. By accessing or using this website, you
               agree to be bound by these Terms and Conditions. Please read them
@@ -30,7 +30,7 @@ export default function TermsAndConditionsPage() {
             </p>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 1. Acceptance of Terms
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -43,7 +43,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 2. Use of the Website
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -64,7 +64,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 3. Intellectual Property Rights
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -79,7 +79,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 4. User Accounts
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -94,7 +94,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 5. Limitation of Liability
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -109,7 +109,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 6. Third-Party Links
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -122,7 +122,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 7. Termination of Access
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -135,7 +135,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 8. Changes to Terms
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -149,7 +149,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 9. Governing Law
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -163,7 +163,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 10. Contact Us
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -172,7 +172,7 @@ export default function TermsAndConditionsPage() {
                   contact us at{" "}
                   <a
                     href="mailto:srikalahastikalamkari.sk@gmail.com"
-                    className="text-[#B35E2E] hover:underline"
+                    className="text-[#C19A5B] hover:underline"
                   >
                     srikalahastikalamkari.sk@gmail.com
                   </a>

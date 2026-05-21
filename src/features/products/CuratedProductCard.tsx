@@ -76,9 +76,9 @@ export const CuratedProductCard = memo(
           "group relative flex flex-col",
           // CARD CONTAINER - Solid background, subtle border, rounded corners
           "w-full max-w-[280px]",
-          "bg-[#FFFCF8] border border-[#E8DDD0]",
+          "bg-[#FFF8F0] border border-[#C19A5B]/20",
           "rounded-xl overflow-hidden",
-          "shadow-[0_2px_8px_rgba(59,44,35,0.06)]",
+          "shadow-[0_2px_8px_rgba(26,21,18,0.06)]",
           "transition-shadow duration-300"
         )}
       >
@@ -102,9 +102,9 @@ export const CuratedProductCard = memo(
             {/* OUT OF STOCK - Bottom strip indicator */}
             {!product.in_stock && (
               <>
-                <div className="absolute inset-0 bg-[#3B2C23]/15 z-15 pointer-events-none" />
+                <div className="absolute inset-0 bg-[#1A1512]/15 z-15 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-                  <div className="bg-[#3B2C23]/80 backdrop-blur-[2px] py-1.5 flex items-center justify-center">
+                  <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 flex items-center justify-center">
                     <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
                       Out of Stock
                     </span>
@@ -116,7 +116,7 @@ export const CuratedProductCard = memo(
             {/* Badges - top-left (only when in stock) */}
             {badge && product.in_stock !== false && (
               <div className="absolute top-3 left-3 z-10">
-                <span className="bg-[#3B2C23]/80 text-[#FFF8F0] text-[10px] font-medium px-2.5 py-1 rounded-full tracking-wide">
+                <span className="bg-[#1A1512]/80 text-[#FFF8F0] text-[10px] font-medium px-2.5 py-1 rounded-full tracking-wide">
                   {badge}
                 </span>
               </div>
@@ -128,10 +128,10 @@ export const CuratedProductCard = memo(
                 onClick={handleAddToCart}
                 className={cn(
                   "absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center",
-                  "bg-white text-[#3B2C23] shadow-md",
+                  "bg-white text-[#1A1512] shadow-md",
                   "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
                   "transition-all duration-300",
-                  "hover:bg-[#A4552A] hover:text-white"
+                  "hover:bg-[#C19A5B] hover:text-white"
                 )}
                 aria-label="Add to cart"
               >
@@ -143,19 +143,19 @@ export const CuratedProductCard = memo(
           {/* CONTENT AREA - Padded, structured */}
           <div className="flex flex-col flex-1 p-4">
             {/* PRODUCT TITLE - PRIMARY, visually dominant */}
-            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#3B2C23] line-clamp-2 mb-2 group-hover:text-[#A4552A] transition-colors duration-200">
+            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 mb-2 group-hover:text-[#C19A5B] transition-colors duration-200">
               {productData.name}
             </h3>
 
             {/* PRICE - Secondary to title */}
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="font-inter font-semibold text-[15px] text-[#A4552A]">
+              <span className="font-inter font-semibold text-[15px] text-[#1A1512]">
                 ₹{productData.price.toLocaleString()}
               </span>
               {productData.originalPrice &&
                 productData.originalPrice > productData.price && (
                   <>
-                    <span className="text-[12px] text-[#3B2C23]/40 line-through">
+                    <span className="text-[12px] text-[#1A1512]/40 line-through">
                       ₹{productData.originalPrice.toLocaleString()}
                     </span>
                     <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
@@ -166,10 +166,10 @@ export const CuratedProductCard = memo(
             </div>
 
             {/* TRUST SIGNAL - Single, subtle, at bottom */}
-            <div className="mt-auto pt-2 border-t border-[#E8DDD0]/60">
+            <div className="mt-auto pt-2 border-t border-[#C19A5B]/20">
               <div className="flex items-center gap-1.5">
                 <Star className="w-3.5 h-3.5 fill-[#C19A5B] text-[#C19A5B]" />
-                <span className="text-[11px] font-medium text-[#3B2C23]/55 tracking-wide">
+                <span className="text-[11px] font-medium text-[#1A1512]/55 tracking-wide">
                   Artisan Crafted
                 </span>
               </div>

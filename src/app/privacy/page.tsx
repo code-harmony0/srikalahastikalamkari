@@ -11,17 +11,17 @@ export const revalidate = 3600
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#FAF3EC]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
-          <h1 className="font-playfair text-4xl font-bold text-[#3B2C23] mb-2">
+        <div className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 shadow-sm p-8 md:p-12 backdrop-blur-sm">
+          <h1 className="font-playfair text-4xl font-bold text-[#1A1512] mb-2">
             Privacy Policy
           </h1>
-          <p className="text-[#3B2C23]/60 mb-8 font-inter text-sm">
+          <p className="text-[#1A1512]/60 mb-8 font-inter text-sm">
             Last updated: November 2025
           </p>
 
-          <div className="space-y-8 text-[#3B2C23]">
+          <div className="space-y-8 text-[#1A1512]">
             <p className="font-inter text-[15px] leading-relaxed">
               Your privacy is important to us. This Privacy Policy explains how
               we collect, use, disclose, and safeguard your information when you
@@ -30,7 +30,7 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 1. Information We Collect
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -44,7 +44,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 2. How We Use Your Information
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 3. Cookies and Tracking Technologies
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 4. Data Sharing and Disclosure
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -89,7 +89,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 5. Your Rights and Choices
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -102,7 +102,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 6. Data Security
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -116,7 +116,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 7. Third-Party Links
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -130,7 +130,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 8. Changes to This Policy
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -144,7 +144,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
                 9. Contact Us
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -153,7 +153,7 @@ export default function PrivacyPolicyPage() {
                   handle your data, please contact us at{" "}
                   <a
                     href="mailto:srikalahastikalamkari.sk@gmail.com"
-                    className="text-[#B35E2E] hover:underline"
+                    className="text-[#C19A5B] hover:underline"
                   >
                     srikalahastikalamkari.sk@gmail.com
                   </a>

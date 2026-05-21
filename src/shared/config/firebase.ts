@@ -34,20 +34,28 @@ export async function initAppCheckOnDemand() {
     ;(window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true
   }
 
-  const { initializeAppCheck, ReCaptchaEnterpriseProvider } = await import("firebase/app-check")
-  initializeAppCheck(app, {
-    provider: new ReCaptchaEnterpriseProvider("6LdHaY4sAAAAABqgqjuTAclT4QFfmnJ2IJ5KgY4z"),
-    isTokenAutoRefreshEnabled: true,
-  })
+  try {
+    const { initializeAppCheck, ReCaptchaEnterpriseProvider } = await import("firebase/app-check")
+    initializeAppCheck(app, {
+      provider: new ReCaptchaEnterpriseProvider("6LdHaY4sAAAAABqgqjuTAclT4QFfmnJ2IJ5KgY4z"),
+      isTokenAutoRefreshEnabled: true,
+    })
+  } catch (error) {
+    console.warn("Firebase App Check failed to initialize:", error)
+  }
 }
 
 // Analytics — deferred until after page is interactive (non-blocking)
 if (typeof window !== "undefined") {
   window.addEventListener("load", () => {
     setTimeout(async () => {
-      const { getAnalytics, isSupported } = await import("firebase/analytics")
-      const supported = await isSupported()
-      if (supported) getAnalytics(app)
+      try {
+        const { getAnalytics, isSupported } = await import("firebase/analytics")
+        const supported = await isSupported()
+        if (supported) getAnalytics(app)
+      } catch (error) {
+        console.warn("Firebase Analytics failed to load:", error)
+      }
     }, 3000) // 3s after load — well after LCP/FID are measured
   })
 }

@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const isDev = process.env.NODE_ENV === "development"
+
 const nextConfig = {
   // Experimental features for faster builds
   experimental: {
@@ -14,7 +16,8 @@ const nextConfig = {
       "lucide-react",
       "recharts",
       "@radix-ui/react-icons",
-      "framer-motion",
+      // framer-motion intentionally excluded: optimizePackageImports breaks
+      // its internal module graph in Turbopack (use-animation.mjs not found)
     ],
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
@@ -217,22 +220,10 @@ const nextConfig = {
         // Security headers for all pages
         source: "/:path*",
         headers: [
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-          {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
-          },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-DNS-Prefetch-Control", value: "on" },
         ],
       },
       {

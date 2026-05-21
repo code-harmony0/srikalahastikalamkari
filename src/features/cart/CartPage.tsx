@@ -89,21 +89,21 @@ export default function CartPage() {
   // 🪶 EMPTY STATE
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-[#FFF8F0] flex flex-col items-center justify-center px-6">
+      <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex flex-col items-center justify-center px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
           className="text-center max-w-md"
         >
-          <div className="w-20 h-20 bg-[#FFF4E8] rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/30 shadow-sm">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/30 shadow-sm">
             <ShoppingBag className="w-8 h-8 text-[#C19A5B]" strokeWidth={1.5} />
           </div>
 
-          <h1 className="font-playfair text-3xl md:text-4xl font-bold text-[#3B2C23] mb-3">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1A1512] mb-3">
             Your cart is empty
           </h1>
-          <p className="font-inter text-[#3B2C23]/60 mb-8 leading-relaxed text-base">
+          <p className="font-sans text-[#1A1512]/60 mb-8 leading-relaxed text-base">
             Explore our handcrafted collections to find your favorite pieces.
           </p>
 
@@ -111,7 +111,7 @@ export default function CartPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-8 py-3 bg-[#A4552A] text-[#FFF8F0] rounded-lg font-inter font-bold tracking-widest text-xs uppercase shadow-lg shadow-[#A4552A]/20 hover:bg-[#8B3F20] transition-all flex items-center gap-2 mx-auto"
+              className="px-8 py-3 bg-[#1A1512] text-white hover:bg-[#C19A5B] hover:text-white rounded-[4px] font-sans font-bold tracking-widest text-[11px] uppercase transition-all duration-300 shadow-md flex items-center gap-2 mx-auto"
             >
               Browse Collection <ArrowRight className="w-4 h-4" />
             </motion.button>
@@ -122,29 +122,31 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF8F0]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* 🏛 HEADER SECTION */}
-      <section className="relative h-[160px] md:h-[180px] bg-gradient-to-b from-[#FFF8F0] to-[#FFF4E8] flex flex-col items-center justify-center text-center px-6 border-b border-[#EAD6C3]">
+      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[180px] md:h-[220px] bg-[#1A1512]">
+        <div className="absolute inset-0 z-[6] pointer-events-none">
+          <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="relative z-10 flex flex-col items-center"
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
         >
-          <ShoppingBag
-            className="w-8 h-8 text-[#A4552A] mb-3 opacity-90"
-            strokeWidth={1.5}
-          />
+          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-2">
+            Your Selection
+          </span>
 
-          <h1 className="font-playfair text-3xl md:text-4xl font-bold text-[#3B2C23] mb-2">
-            Shopping Cart
+          <h1 className="font-serif text-[32px] md:text-[40px] font-bold text-white tracking-wide leading-tight mb-2 uppercase">
+            Shopping <span className="italic text-[#C19A5B] font-normal lowercase">cart</span>
           </h1>
-          <p className="font-inter text-[#3B2C23]/60 text-sm md:text-base mb-4 font-light">
-            {cartItems.length} {cartItems.length === 1 ? "item" : "items"} ready
-            for checkout
-          </p>
 
-          <div className="w-16 h-[2px] bg-gradient-to-r from-[#C19A5B] to-[#A4552A] rounded-full" />
+          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
+            {cartItems.length} {cartItems.length === 1 ? "item" : "items"} ready for checkout
+          </p>
         </motion.div>
       </section>
 
@@ -178,7 +180,7 @@ export default function CartPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.4 }}
-                    className="group bg-white rounded-[14px] border border-[#EAD6C3] p-4 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:border-[#C19A5B]/60 hover:shadow-[0_4px_12px_rgba(164,85,42,0.08)] transition-all duration-300 flex flex-col sm:flex-row gap-5 items-start sm:items-center"
+                    className="group bg-white rounded-[12px] border border-[#C19A5B]/20 p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:border-[#C19A5B]/60 hover:shadow-[0_4px_12px_rgba(26,21,18,0.06)] transition-all duration-300 flex flex-col sm:flex-row gap-5 items-start sm:items-center"
                   >
                     {/* Image */}
                     <Link href={productLink} className="relative shrink-0">
@@ -200,21 +202,21 @@ export default function CartPage() {
                     <div className="flex-1 w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="space-y-1">
                         <Link href={productLink}>
-                          <h3 className="font-inter font-bold text-[#3B2C23] text-[15px] leading-tight hover:text-[#A4552A] transition-colors">
+                          <h3 className="font-serif font-bold text-[#1A1512] text-[15px] leading-tight hover:text-[#C19A5B] transition-colors">
                             {productName}
                           </h3>
                         </Link>
-                        <p className="font-inter text-[#3B2C23]/60 text-xs line-clamp-1 max-w-[200px]">
+                        <p className="font-sans text-[#1A1512]/60 text-xs line-clamp-1 max-w-[200px]">
                           {product.description || "Hand-painted Srikalahasti Kalamkari"}
                         </p>
 
                         <div className="flex items-center gap-2 pt-1">
-                          <p className="font-inter text-[#A4552A] font-bold text-[15px]">
+                          <p className="font-sans text-[#1A1512] font-bold text-[15px]">
                             {formatPrice(product.price || 0)}
                           </p>
                           {originalPrice &&
                             originalPrice > (product.price || 0) && (
-                              <p className="font-inter text-[#3B2C23]/40 text-[12px] line-through decoration-[#A4552A]/50">
+                              <p className="font-sans text-[#1A1512]/40 text-[12px] line-through decoration-[#1A1512]/50">
                                 {formatPrice(originalPrice)}
                               </p>
                             )}
@@ -224,7 +226,7 @@ export default function CartPage() {
                       {/* Controls Row */}
                       <div className="flex items-center justify-between w-full sm:w-auto gap-6">
                         {/* Quantity */}
-                        <div className="flex items-center bg-[#FFF4E8] rounded-lg border border-[#C19A5B]/30 h-9">
+                        <div className="flex items-center bg-[#FFF8F0] rounded-[4px] border border-[#C19A5B]/30 h-9">
                           <button
                             onClick={() =>
                               handleUpdateQuantity(
@@ -234,11 +236,11 @@ export default function CartPage() {
                               )
                             }
                             disabled={quantity <= 1}
-                            className="w-8 h-full flex items-center justify-center text-[#A4552A] hover:bg-[#C19A5B]/10 disabled:opacity-30 rounded-l-lg transition-colors"
+                            className="w-8 h-full flex items-center justify-center text-[#1A1512] hover:bg-[#C19A5B]/10 disabled:opacity-30 rounded-l-[4px] transition-colors"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="w-8 text-center font-inter font-semibold text-[#3B2C23] text-sm">
+                          <span className="w-8 text-center font-sans font-semibold text-[#1A1512] text-sm">
                             {quantity}
                           </span>
                           <button
@@ -250,7 +252,7 @@ export default function CartPage() {
                               )
                             }
                             disabled={quantity >= stock}
-                            className="w-8 h-full flex items-center justify-center text-[#A4552A] hover:bg-[#C19A5B]/10 disabled:opacity-30 rounded-r-lg transition-colors"
+                            className="w-8 h-full flex items-center justify-center text-[#1A1512] hover:bg-[#C19A5B]/10 disabled:opacity-30 rounded-r-[4px] transition-colors"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -261,7 +263,7 @@ export default function CartPage() {
                           onClick={() =>
                             handleRemoveItem(productId, productName)
                           }
-                          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#EAD6C3] text-[#3B2C23]/60 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all duration-200"
+                          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#C19A5B]/20 text-[#1A1512]/60 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all duration-200"
                           title="Remove Item"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -276,7 +278,7 @@ export default function CartPage() {
             <div className="pt-4">
               <Link
                 href="/products"
-                className="inline-flex items-center gap-2 text-[#A4552A] font-inter text-sm font-medium hover:text-[#8B3F20] transition-colors group"
+                className="inline-flex items-center gap-2 text-[#C19A5B] font-sans text-sm font-semibold hover:text-[#1A1512] transition-colors group"
               >
                 <ArrowRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
                 Continue Shopping
@@ -292,39 +294,39 @@ export default function CartPage() {
             className="lg:col-span-1 space-y-6"
           >
             {/* 1. Order Summary Card */}
-            <div className="bg-white rounded-[14px] border border-[#EAD6C3] shadow-[0_2px_12px_rgba(0,0,0,0.05)] p-6 md:p-7 z-10">
-              <h2 className="font-playfair font-bold text-[#3B2C23] text-xl mb-6">
+            <div className="bg-white rounded-[12px] border border-[#C19A5B]/20 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7 z-10">
+              <h2 className="font-serif font-bold text-[#1A1512] text-xl mb-6">
                 Order Summary
               </h2>
 
-              <div className="space-y-4 mb-6 pb-6 border-b border-[#EAD6C3]">
+              <div className="space-y-4 mb-6 pb-6 border-b border-[#C19A5B]/20">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="font-inter text-[#3B2C23]/70">Subtotal</span>
-                  <span className="font-inter font-medium text-[#3B2C23]">
+                  <span className="font-sans text-[#1A1512]/70">Subtotal</span>
+                  <span className="font-sans font-medium text-[#1A1512]">
                     {formatPrice(subtotal)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="font-inter text-[#3B2C23]/70">Shipping</span>
+                  <span className="font-sans text-[#1A1512]/70">Shipping</span>
                   <span
                     className={cn(
-                      "font-inter font-medium",
-                      shipping === 0 ? "text-green-600" : "text-[#3B2C23]",
+                      "font-sans font-medium",
+                      shipping === 0 ? "text-green-600" : "text-[#1A1512]",
                     )}
                   >
                     {shipping === 0 ? "Free" : formatPrice(shipping)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="font-inter text-[#3B2C23]/70">GST (5%)</span>
-                  <span className="font-inter font-medium text-[#3B2C23]">
+                  <span className="font-sans text-[#1A1512]/70">GST (5%)</span>
+                  <span className="font-sans font-medium text-[#1A1512]">
                     {formatPrice(tax)}
                   </span>
                 </div>
               </div>
 
               {shipping === 0 && (
-                <div className="bg-[#EBF7EF] border border-[#3FAF6C]/20 rounded-lg p-3 mb-6 flex items-center gap-2.5 text-[#2E7D4D]">
+                <div className="bg-[#EBF7EF] border border-green-200/50 rounded-[4px] p-3 mb-6 flex items-center gap-2.5 text-green-700">
                   <Truck className="w-4 h-4" />
                   <span className="text-xs font-semibold">
                     Free shipping unlocked!
@@ -333,16 +335,16 @@ export default function CartPage() {
               )}
 
               <div className="flex justify-between items-center mb-8">
-                <span className="font-playfair font-bold text-[#3B2C23] text-lg">
+                <span className="font-serif font-bold text-[#1A1512] text-lg">
                   Total
                 </span>
-                <span className="font-playfair font-bold text-[#A4552A] text-2xl">
+                <span className="font-serif font-bold text-[#C19A5B] text-2xl">
                   {formatPrice(total)}
                 </span>
               </div>
 
               <Link href="/checkout" className="block">
-                <button className="w-full bg-[#A4552A] text-[#FFF8F0] py-3.5 rounded-lg font-inter font-bold text-xs uppercase tracking-widest shadow-[0_4px_12px_rgba(164,85,42,0.25)] hover:bg-[#8B3F20] hover:shadow-[0_6px_16px_rgba(164,85,42,0.35)] transition-all transform active:scale-[0.98]">
+                <button className="w-full bg-[#1A1512] text-white hover:bg-[#C19A5B] py-3.5 rounded-[4px] font-sans font-bold text-xs uppercase tracking-widest shadow-md hover:shadow-lg transition-all duration-300">
                   Proceed to Checkout
                 </button>
               </Link>

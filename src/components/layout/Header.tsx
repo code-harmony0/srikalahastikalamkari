@@ -44,7 +44,7 @@ const ActionIcon = ({
           "w-[22px] h-[22px] transition-all duration-300 ease-out",
 
           // Default State
-          "text-[#FFF8F0] group-hover:text-[#C19A5B]",
+          "text-[#1A1512] group-hover:text-[#C19A5B]",
 
           // Hover Effects
           "group-hover:-translate-y-[2px]",
@@ -63,8 +63,8 @@ const ActionIcon = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             className={cn(
-              "absolute top-0.5 right-0.5 flex items-center justify-center min-w-[16px] h-[16px] text-[9px] font-bold rounded-full border border-[#3B2C23] shadow-sm",
-              "bg-[#A4552A] text-[#FFF8F0]", // Consistent terracotta badge
+              "absolute top-0.5 right-0.5 flex items-center justify-center min-w-[16px] h-[16px] text-[9px] font-bold rounded-full shadow-sm",
+              "bg-[#1A1512] text-[#FAFAF8]", // Charcoal badge
             )}
           >
             {count}
@@ -73,9 +73,9 @@ const ActionIcon = ({
       </AnimatePresence>
 
       {/* Tooltip */}
-      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-wide bg-[#3B2C23] text-[#FFF8F0] px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-[#FFF8F0]/10 z-50">
+      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-wide bg-[#1A1512] text-[#FFF8F0] px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-[#FFF8F0]/10 z-50">
         {label}
-        <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#3B2C23] rotate-45 border-t border-l border-[#FFF8F0]/10"></span>
+        <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1A1512] rotate-45 border-t border-l border-[#FFF8F0]/10"></span>
       </span>
     </Link>
   );
@@ -120,11 +120,11 @@ export default function Header() {
             typeof window !== "undefined" && window.innerWidth < 768
               ? mobileHeaderHeight
               : headerHeight,
-          background: `linear-gradient(to right, rgba(164, 85, 42, ${bgOpacity.get()}), rgba(59, 44, 35, ${bgOpacity.get()}))`,
-          backdropFilter: "blur(8px)",
-          boxShadow: `0 2px 8px rgba(0,0,0,${shadowOpacity.get()})`,
+          backgroundColor: `rgba(250, 250, 248, ${bgOpacity.get()})`,
+          backdropFilter: "blur(12px)",
+          boxShadow: `0 1px 3px rgba(26,21,18,${shadowOpacity.get()})`,
         }}
-        className="sticky top-0 z-50 w-full transition-all duration-300 border-b border-[#FFF8F0]/10 flex items-center"
+        className="sticky top-0 z-50 w-full transition-all duration-300 border-b border-[#1A1512]/5 flex items-center"
       >
         <div className="max-w-[1280px] w-full mx-auto px-4 md:px-6 flex items-center justify-between h-full">
           {/* 1️⃣ LOGO BLOCK */}
@@ -132,22 +132,22 @@ export default function Header() {
             href="/"
             className="flex items-center gap-3 group z-50 relative"
           >
-            <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-lg overflow-hidden shadow-md border border-[#FFF8F0]/20 group-hover:-translate-y-[2px] transition-all duration-300 ease-out">
+            <div className="relative w-10 h-10 md:w-11 md:h-11 rounded-full overflow-hidden shadow-sm group-hover:-translate-y-[1px] transition-all duration-300 ease-out bg-white">
               <Image
                 src="/images/logo.jpg"
                 alt="Srikalahasti Kalamkari Logo"
-                width={48}
-                height={48}
-                className="w-full h-full object-cover"
+                width={44}
+                height={44}
+                className="w-full h-full object-cover mix-blend-multiply"
               />
-              <div className="absolute inset-0 bg-[#C19A5B] opacity-0 group-hover:opacity-1 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-[#C19A5B]/10 opacity-0 group-hover:opacity-1 transition-opacity duration-300" />
             </div>
             <div className="hidden md:flex flex-col">
-              <span className="font-serif font-bold text-[16px] md:text-[18px] text-[#FFF8F0] leading-none tracking-tight uppercase group-hover:text-white transition-colors">
+              <span className="font-serif font-bold text-[16px] md:text-[18px] text-[#1A1512] leading-none tracking-wide uppercase group-hover:text-[#C19A5B] transition-colors">
                 SRIKALAHASTI
               </span>
-              <span className="font-serif italic text-[18px] md:text-[20px] text-[#C19A5B] leading-none tracking-widest group-hover:text-[#D4AF7A] transition-colors mt-1">
-                Kalamkari
+              <span className="font-serif italic text-[14px] md:text-[15px] text-[#1A1512]/60 leading-none tracking-[0.2em] mt-1.5">
+                KALAMKARI
               </span>
             </div>
           </Link>
@@ -159,10 +159,10 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "relative text-[15px] font-medium tracking-[0.02em] transition-all duration-200 py-1",
+                  "relative text-[13px] uppercase font-bold tracking-[0.1em] transition-all duration-200 py-1",
                   isActive(link.href)
-                    ? "text-[#FFF8F0]"
-                    : "text-[#FFF8F0]/90 hover:text-[#C19A5B]",
+                    ? "text-[#1A1512]"
+                    : "text-[#1A1512]/60 hover:text-[#C19A5B]",
                 )}
               >
                 {link.label}
@@ -215,7 +215,7 @@ export default function Header() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 ml-1 text-[#FFF8F0]/90 hover:text-[#C19A5B] transition-colors active:scale-95"
+              className="md:hidden p-2 ml-1 text-[#1A1512] hover:text-[#C19A5B] transition-colors active:scale-95"
               aria-label="Toggle Menu"
             >
               {isMobileMenuOpen ? (
@@ -237,7 +237,7 @@ export default function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-[#3B2C23]/60 backdrop-blur-sm z-40 md:hidden"
+              className="fixed inset-0 bg-[#1A1512]/60 backdrop-blur-sm z-40 md:hidden"
             />
 
             <motion.div
@@ -245,7 +245,7 @@ export default function Header() {
               animate={{ y: 0 }}
               exit={{ y: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-[56px] left-0 right-0 bg-[#FFF8F0] z-40 md:hidden overflow-hidden rounded-b-2xl shadow-2xl border-b border-[#A4552A]/20"
+              className="fixed top-[56px] left-0 right-0 bg-[#FFF8F0] z-40 md:hidden overflow-hidden rounded-b-2xl shadow-2xl border-b border-[#C19A5B]/20"
             >
               <div className="flex flex-col p-6 gap-2">
                 {navLinks.map((link) => (
@@ -256,8 +256,8 @@ export default function Header() {
                     className={cn(
                       "text-lg font-medium py-3 px-4 rounded-lg transition-all duration-200 flex justify-between items-center",
                       isActive(link.href)
-                        ? "text-[#A4552A] bg-[#A4552A]/5 font-bold"
-                        : "text-[#3B2C23] hover:bg-[#A4552A]/5 hover:text-[#A4552A]",
+                        ? "text-[#1A1512] bg-[#1A1512]/5 font-bold"
+                        : "text-[#1A1512]/70 hover:bg-[#1A1512]/5 hover:text-[#1A1512]",
                     )}
                   >
                     {link.label}
@@ -267,12 +267,12 @@ export default function Header() {
                   </Link>
                 ))}
 
-                <div className="h-px bg-[#3B2C23]/10 my-3" />
+                <div className="h-px bg-[#1A1512]/10 my-3" />
 
                 <Link
                   href={user ? "/profile" : "/login"}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 py-3 px-4 text-[#3B2C23] hover:text-[#A4552A] transition-colors rounded-lg hover:bg-[#A4552A]/5 font-medium"
+                  className="flex items-center gap-3 py-3 px-4 text-[#1A1512]/70 hover:text-[#1A1512] transition-colors rounded-lg hover:bg-[#1A1512]/5 font-medium"
                 >
                   {user ? (
                     <User className="w-5 h-5" />

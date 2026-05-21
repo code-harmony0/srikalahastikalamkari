@@ -44,6 +44,25 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
+    // Guard: skip fetch if Supabase is not configured (placeholder .env.local)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+    const isUnconfigured =
+      !supabaseUrl ||
+      !supabaseKey ||
+      supabaseUrl.includes("your-project-url") ||
+      supabaseUrl === "https://your-project-url.supabase.co";
+
+    if (isUnconfigured) {
+      console.warn(
+        "⚠️ InventoryContext: Supabase credentials not configured. " +
+        "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local"
+      );
+      setProducts([]);
+      setLoading(false);
+      return;
+    }
+
     console.log("🔄 InventoryContext: Starting data fetch...");
     setLoading(true);
 

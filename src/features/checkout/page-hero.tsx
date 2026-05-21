@@ -21,7 +21,7 @@ export function PageHero({
     <section
       className={cn(
         "relative h-[200px] md:h-[240px] w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden",
-        "bg-gradient-to-b from-[#A4552A] to-[#7A3E22]", // Brand Gradient
+        "bg-[#1A1512]", // Deep Charcoal/Espresso Background
         "border-b border-[#C19A5B]/20",
         className,
       )}
@@ -58,7 +58,7 @@ export function PageHero({
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="font-inter text-[#EAD6C3] text-sm md:text-[16px] font-light tracking-wide leading-relaxed max-w-xl">
+          <p className="font-inter text-[#FFF8F0]/80 text-sm md:text-[16px] font-light tracking-wide leading-relaxed max-w-xl">
             {subtitle}
           </p>
         )}

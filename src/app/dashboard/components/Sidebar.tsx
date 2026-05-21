@@ -219,7 +219,7 @@ const Sidebar = () => {
                           item.badge > 0 && (
                             <span
                               className={`absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-md ${
-                                item.badgeColor || "bg-[#A4552A]"
+                                item.badgeColor || "bg-[#C19A5B]"
                               }`}
                             >
                               {item.badge}
@@ -233,7 +233,7 @@ const Sidebar = () => {
                               <span
                                 className={`ml-auto text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
                                   // @ts-ignore
-                                  item.badgeColor || "bg-[#A4552A]"
+                                  item.badgeColor || "bg-[#C19A5B]"
                                 }`}
                               >
                                 {/* @ts-ignore */}
@@ -253,7 +253,7 @@ const Sidebar = () => {
                             <span
                               className={`text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
                                 // @ts-ignore
-                                item.badgeColor || "bg-[#A4552A]"
+                                item.badgeColor || "bg-[#C19A5B]"
                               }`}
                             >
                               {/* @ts-ignore */}

@@ -64,53 +64,53 @@ export default function ProfilePage() {
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-3 px-4 py-3.5 rounded-[10px] transition-all duration-200 group",
+        "flex items-center gap-3 px-4 py-3.5 rounded-[10px] transition-all duration-200 group border",
         active
-          ? "bg-[#FFF4E8] border border-[#EAD6C3] shadow-sm"
-          : "hover:bg-[#FFF8F0] border border-transparent hover:border-[#EAD6C3]/50",
+          ? "bg-[#C19A5B]/10 border-[#C19A5B]/30 shadow-sm"
+          : "bg-white/40 border-[#C19A5B]/10 hover:bg-[#C19A5B]/5 hover:border-[#C19A5B]/20",
       )}
     >
       <div
         className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
+          "w-8 h-8 rounded-full flex items-center justify-center transition-colors border",
           active
-            ? "bg-[#A4552A] text-[#FFF8F0]"
-            : "bg-[#FFF8F0] text-[#A4552A] group-hover:bg-[#A4552A]/10",
+            ? "bg-[#1A1512] border-[#C19A5B]/30 text-[#C19A5B]"
+            : "bg-white border-[#C19A5B]/10 text-[#1A1512] group-hover:bg-[#1A1512] group-hover:text-[#C19A5B]",
         )}
       >
         <Icon className="w-4 h-4" />
       </div>
       <span
         className={cn(
-          "font-inter text-sm font-medium",
+          "font-sans text-sm font-medium transition-colors",
           active
-            ? "text-[#A4552A]"
-            : "text-[#3B2C23] group-hover:text-[#A4552A]",
+            ? "text-[#1A1512] font-bold"
+            : "text-[#1A1512]/80 group-hover:text-[#1A1512]",
         )}
       >
         {label}
       </span>
       <ChevronRight
         className={cn(
-          "w-4 h-4 ml-auto transition-transform",
+          "w-4 h-4 ml-auto transition-transform duration-200",
           active
-            ? "text-[#A4552A]"
-            : "text-[#EAD6C3] group-hover:text-[#A4552A] group-hover:translate-x-1",
+            ? "text-[#C19A5B]"
+            : "text-[#C19A5B]/40 group-hover:text-[#C19A5B] group-hover:translate-x-1",
         )}
       />
     </Link>
   )
 
   const InfoRow = ({ icon: Icon, label, value }: any) => (
-    <div className="flex items-start gap-4 p-4 rounded-[12px] bg-[#FDFBF7] border border-[#EAD6C3]/40 hover:border-[#C19A5B]/30 transition-colors">
-      <div className="w-10 h-10 rounded-full bg-[#FFF4E8] flex items-center justify-center shrink-0 border border-[#EAD6C3]/60 text-[#A4552A]">
+    <div className="flex items-start gap-4 p-4 rounded-[12px] bg-white/60 border border-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-colors">
+      <div className="w-10 h-10 rounded-full bg-[#1A1512] flex items-center justify-center shrink-0 border border-[#C19A5B]/20 text-[#C19A5B]">
         <Icon className="w-5 h-5" strokeWidth={1.5} />
       </div>
       <div>
-        <p className="text-[11px] font-inter font-bold text-[#7A6A5C] uppercase tracking-wide mb-1">
+        <p className="text-[11px] font-sans font-bold text-[#1A1512]/60 uppercase tracking-wide mb-1">
           {label}
         </p>
-        <p className="font-inter font-medium text-[#3B2C23] text-sm leading-snug">
+        <p className="font-sans font-semibold text-[#1A1512] text-sm leading-snug">
           {value}
         </p>
       </div>
@@ -118,14 +118,15 @@ export default function ProfilePage() {
   )
 
   return (
-    <div className="min-h-screen bg-[#FFF8F0]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* ─────────────────────────────────────────────
-          🌅 HERO SECTION (Clean Ivory Standard)
-          Matches Shopping Cart Header
+          🌅 HERO SECTION (Premium Dark Charcoal Hero)
       ────────────────────────────────────────────── */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[160px] md:h-[220px] bg-[#FAF3EC] border-b border-[#EAD6C3]/60 shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)]">
-        {/* Subtle Top Fade Hint (Warmth) */}
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#E8C3A2]/10 to-transparent pointer-events-none" />
+      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[180px] md:h-[220px] bg-[#1A1512]">
+        <div className="absolute inset-0 z-[6] pointer-events-none">
+          <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -133,31 +134,17 @@ export default function ProfilePage() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
         >
-          {/* Icon - Clean Terracotta */}
-          <div className="mb-4">
-            <User
-              className="w-7 h-7 md:w-9 md:h-9 text-[#B35E2E]"
-              strokeWidth={1.5}
-            />
-          </div>
+          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-2">
+            Customer Dashboard
+          </span>
 
-          {/* Title - Playfair Display Dark Brown */}
-          <h1 className="font-playfair text-[28px] md:text-[40px] font-bold text-[#3B2C23] tracking-wide leading-tight mb-2">
-            My Profile
+          <h1 className="font-serif text-[32px] md:text-[40px] font-bold text-white tracking-wide leading-tight mb-2 uppercase">
+            My <span className="italic text-[#C19A5B] font-normal lowercase">profile</span>
           </h1>
 
-          {/* Subtitle - Muted Inter */}
-          <p className="font-inter text-[#7A6A5C] text-[14px] md:text-[17px] font-normal tracking-wide leading-relaxed max-w-xl">
+          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
             Manage your orders, preferences, and personal details.
           </p>
-
-          {/* Minimal Accent Underline */}
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 40, opacity: 0.9 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="h-[2px] bg-[#C46C3B] mt-3 rounded-full"
-          />
         </motion.div>
       </section>
 
@@ -172,23 +159,23 @@ export default function ProfilePage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-[14px] border border-[#EAD6C3] p-8 text-center shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+              className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-8 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)]"
             >
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#D98A5F] to-[#B05A28] p-[3px] shadow-lg shadow-[#A4552A]/20">
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#1A1512] to-[#C19A5B] p-[3px] shadow-lg shadow-[#1A1512]/10">
                 <div className="w-full h-full rounded-full bg-white flex items-center justify-center border-[3px] border-white overflow-hidden">
-                  <User className="w-10 h-10 text-[#C47543]" />
+                  <User className="w-10 h-10 text-[#C19A5B]" />
                 </div>
               </div>
-              <h2 className="font-playfair text-xl font-bold text-[#3B2C23] mb-1">
+              <h2 className="font-serif text-xl font-bold text-[#1A1512] mb-1">
                 {user.name}
               </h2>
-              <p className="font-inter text-sm text-[#7A6A5C] mb-6">
+              <p className="font-sans text-sm text-[#1A1512]/60 mb-6">
                 {user.email}
               </p>
 
               <Link
                 href="/editPage"
-                className="w-full py-2.5 border border-[#EAD6C3] rounded-[8px] text-[#A4552A] font-inter text-xs font-bold uppercase tracking-widest hover:bg-[#FFF4E8] hover:border-[#A4552A]/40 transition-all flex items-center justify-center gap-2"
+                className="w-full py-2.5 border border-[#C19A5B]/40 rounded-[8px] text-[#1A1512] font-sans text-xs font-bold uppercase tracking-widest hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <Edit2 className="w-3.5 h-3.5" /> Edit Profile
               </Link>
@@ -199,7 +186,7 @@ export default function ProfilePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-[14px] border border-[#EAD6C3] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.03)] space-y-1"
+              className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-1"
             >
               <SidebarLink
                 href="/profile"
@@ -210,14 +197,14 @@ export default function ProfilePage() {
               <SidebarLink href="/orders" icon={Package} label="My Orders" />
               <SidebarLink href="/wishlist" icon={Heart} label="Wishlist" />
 
-              <div className="h-px bg-[#EAD6C3]/40 my-2 mx-4" />
+              <div className="h-px bg-[#C19A5B]/20 my-2 mx-4" />
 
               <button 
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-[10px] text-[#B03B2A] hover:bg-[#FFF4E8] transition-colors group"
+                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-[10px] text-red-700 hover:bg-red-500/10 hover:text-red-700 transition-colors group"
               >
                 <LogOut className="w-4 h-4" />
-                <span className="font-inter text-sm font-medium">Sign Out</span>
+                <span className="font-sans text-sm font-medium">Sign Out</span>
               </button>
             </motion.div>
           </div>
@@ -231,12 +218,12 @@ export default function ProfilePage() {
               transition={{ delay: 0.2 }}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-playfair text-2xl font-bold text-[#3B2C23]">
+                <h3 className="font-serif text-2xl font-bold text-[#1A1512]">
                   Personal Information
                 </h3>
               </div>
 
-              <div className="bg-white rounded-[14px] border border-[#EAD6C3] p-6 md:p-8 shadow-[0_2px_8px_rgba(0,0,0,0.03)] grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InfoRow icon={User} label="Full Name" value={user.name} />
                 <InfoRow icon={Mail} label="Email Address" value={user.email} />
                 <InfoRow icon={Phone} label="Phone Number" value={user.phone} />
@@ -255,12 +242,12 @@ export default function ProfilePage() {
               transition={{ delay: 0.3 }}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-playfair text-2xl font-bold text-[#3B2C23]">
+                <h3 className="font-serif text-2xl font-bold text-[#1A1512]">
                   Recent Orders
                 </h3>
                 <Link
                   href="/orders"
-                  className="text-[#A4552A] text-sm font-inter font-medium hover:underline decoration-[#A4552A]/30 underline-offset-4"
+                  className="text-[#C19A5B] text-sm font-sans font-medium hover:text-[#1A1512] transition-colors hover:underline decoration-[#C19A5B]/30 underline-offset-4"
                 >
                   View All
                 </Link>
@@ -268,15 +255,15 @@ export default function ProfilePage() {
 
               <div className="space-y-4">
                 {recentOrders.length === 0 ? (
-                  <div className="bg-white rounded-[14px] border border-dashed border-[#EAD6C3] p-12 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#FFF8F0] flex items-center justify-center text-[#C19A5B]/50">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-dashed border-[#C19A5B]/40 p-12 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#1A1512]/5 flex items-center justify-center text-[#C19A5B]/50">
                       <ShoppingBag className="w-8 h-8" />
                     </div>
-                    <h4 className="font-playfair text-lg font-bold text-[#3B2C23]">No orders yet</h4>
-                    <p className="text-sm text-[#7A6A5C] mt-1 mb-6">Your recent purchases will appear here.</p>
+                    <h4 className="font-serif text-lg font-bold text-[#1A1512]">No orders yet</h4>
+                    <p className="text-sm text-[#1A1512]/60 mt-1 mb-6">Your recent purchases will appear here.</p>
                     <Link 
                       href="/shop"
-                      className="px-6 py-2 bg-[#A4552A] text-white rounded-full text-sm font-bold hover:bg-[#8B3F20] transition-colors inline-block"
+                      className="px-6 py-2 bg-[#1A1512] text-white rounded-full text-sm font-bold hover:bg-[#C19A5B] transition-colors inline-block"
                     >
                       Start Shopping
                     </Link>
@@ -286,30 +273,30 @@ export default function ProfilePage() {
                     <Link
                       key={order.id}
                       href={`/orders/${order.id}`}
-                      className="group bg-white rounded-[14px] border border-[#EAD6C3] p-5 hover:border-[#C19A5B]/60 hover:shadow-[0_4px_16px_rgba(164,85,42,0.08)] transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer"
+                      className="group bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-5 hover:border-[#C19A5B]/60 hover:shadow-[0_4px_20px_rgba(193,154,91,0.08)] transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer"
                     >
                       <div className="flex items-center gap-4">
                         {/* Handcrafted Icon Box */}
-                        <div className="w-12 h-12 bg-[#FDFBF7] rounded-[10px] border border-[#EAD6C3] flex items-center justify-center group-hover:bg-[#FFF4E8] transition-colors">
+                        <div className="w-12 h-12 bg-white rounded-[10px] border border-[#C19A5B]/20 flex items-center justify-center group-hover:bg-[#1A1512] transition-colors">
                           <Package
                             className="w-6 h-6 text-[#C19A5B]"
                             strokeWidth={1.5}
                           />
                         </div>
                         <div>
-                          <p className="font-inter font-bold text-[#3B2C23] text-sm mb-0.5">
+                          <p className="font-sans font-bold text-[#1A1512] text-sm mb-0.5">
                             {order.id}
                           </p>
-                          <div className="font-inter text-xs text-[#7A6A5C] flex items-center gap-2">
+                          <div className="font-sans text-xs text-[#1A1512]/60 flex items-center gap-2">
                             <span>{order.date}</span>
-                            <span className="w-1 h-1 rounded-full bg-[#EAD6C3]" />
+                            <span className="w-1 h-1 rounded-full bg-[#C19A5B]/30" />
                             <span>{order.items} Items</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between w-full sm:w-auto gap-6 pl-16 sm:pl-0">
-                        <p className="font-inter font-bold text-[#A4552A] text-[15px]">
+                        <p className="font-sans font-bold text-[#1A1512] text-[15px]">
                           {formatPrice(order.total)}
                         </p>
 
@@ -317,8 +304,8 @@ export default function ProfilePage() {
                           className={cn(
                             "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 border transition-colors",
                             order.status === "Shipped"
-                              ? "bg-[#EBF7EF] text-[#2E7D4D] border-[#3FAF6C]/20"
-                              : "bg-[#FFF4E8] text-[#B05A28] border-[#E8B35B]/30",
+                              ? "bg-green-500/10 text-green-700 border-green-500/20"
+                              : "bg-[#C19A5B]/10 text-[#C19A5B] border-[#C19A5B]/20",
                           )}
                         >
                           {order.status === "Shipped" ? (
@@ -329,7 +316,7 @@ export default function ProfilePage() {
                           {order.status}
                         </div>
 
-                        <ChevronRight className="w-4 h-4 text-[#EAD6C3] group-hover:text-[#A4552A] group-hover:translate-x-1 transition-all" />
+                        <ChevronRight className="w-4 h-4 text-[#C19A5B]/40 group-hover:text-[#1A1512] group-hover:translate-x-1 transition-all" />
                       </div>
                     </Link>
                   ))

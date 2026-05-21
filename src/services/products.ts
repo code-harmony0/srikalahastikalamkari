@@ -191,6 +191,16 @@ export const getProducts = async (): Promise<{
   data: Product[] | null;
   error: any;
 }> => {
+  // Early exit if Supabase is not configured with real credentials
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  if (
+    !supabaseUrl ||
+    supabaseUrl.includes("your-project-url") ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return { data: [], error: null };
+  }
+
   console.log("🔍 getProducts: Starting product fetch...");
 
   // Create a timeout promise

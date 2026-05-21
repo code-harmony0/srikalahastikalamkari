@@ -36,11 +36,14 @@ export default function FloatingAdminButton() {
 
         {/* Admin Dashboard Link with Tooltip */}
         <div className="group relative">
-          <Link href="/dashboard" passHref legacyBehavior>
-            <motion.a
-              whileHover={{ scale: 1.05, rotate: 90 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-white flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
+          <motion.div
+            whileHover={{ scale: 1.05, rotate: 90 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-12 h-12 md:w-14 md:h-14 rounded-full"
+          >
+            <Link
+              href="/dashboard"
+              className="w-full h-full rounded-full bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-white flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
               aria-label="Admin Dashboard"
             >
               <motion.div
@@ -49,8 +52,8 @@ export default function FloatingAdminButton() {
               >
                 <Settings className="w-7 h-7 group-hover:drop-shadow-md" />
               </motion.div>
-            </motion.a>
-          </Link>
+            </Link>
+          </motion.div>
 
           {/* Tooltip */}
           <motion.div

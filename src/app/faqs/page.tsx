@@ -116,17 +116,17 @@ export default function FAQsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF3EC]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
-          <h1 className="font-playfair text-4xl font-bold text-[#3B2C23] mb-6">
+        <div className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 shadow-sm p-8 md:p-12 backdrop-blur-sm">
+          <h1 className="font-playfair text-4xl font-bold text-[#1A1512] mb-6">
             Frequently Asked Questions
           </h1>
 
-          <p className="font-inter text-[#7A6A5C] text-lg mb-12">
+          <p className="font-inter text-[#1A1512]/70 text-lg mb-12">
             Find answers to common questions about our Kalamkari art, products,
             and services. Can't find what you're looking for? Feel free to{" "}
-            <a href="/contact" className="text-[#B35E2E] hover:underline">
+            <a href="/contact" className="text-[#C19A5B] hover:underline font-semibold">
               contact us
             </a>
             .
@@ -135,7 +135,7 @@ export default function FAQsPage() {
           <div className="space-y-12">
             {faqs.map((category, categoryIndex) => (
               <section key={categoryIndex}>
-                <h2 className="font-playfair text-2xl font-semibold text-[#B35E2E] mb-6">
+                <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-6">
                   {category.category}
                 </h2>
 
@@ -143,12 +143,12 @@ export default function FAQsPage() {
                   {category.questions.map((faq, faqIndex) => (
                     <div
                       key={faqIndex}
-                      className="border-l-4 border-[#EAD6C3] pl-6"
+                      className="border-l-4 border-[#C19A5B]/30 pl-6"
                     >
-                      <h3 className="font-inter font-semibold text-[#3B2C23] text-lg mb-3">
+                      <h3 className="font-inter font-semibold text-[#1A1512] text-lg mb-3">
                         {faq.q}
                       </h3>
-                      <p className="font-inter text-[#3B2C23] leading-relaxed">
+                      <p className="font-inter text-[#1A1512]/80 leading-relaxed">
                         {faq.a}
                       </p>
                     </div>
@@ -158,24 +158,24 @@ export default function FAQsPage() {
             ))}
           </div>
 
-          <div className="mt-16 p-6 bg-[#FFF9F4] rounded-lg border border-[#EAD6C3]">
-            <h3 className="font-playfair text-xl font-semibold text-[#B35E2E] mb-4">
+          <div className="mt-16 p-6 bg-[#1A1512]/5 rounded-lg border border-[#C19A5B]/20">
+            <h3 className="font-playfair text-xl font-semibold text-[#C19A5B] mb-4">
               Still Have Questions?
             </h3>
-            <p className="font-inter text-[#3B2C23] mb-4">
+            <p className="font-inter text-[#1A1512]/80 mb-4">
               We're here to help! Whether you need more information about our
               products, want to discuss a custom order, or have any other
               questions, don't hesitate to reach out.
             </p>
-            <div className="space-y-2 font-inter text-sm">
+            <div className="space-y-2 font-inter text-sm text-[#1A1512]/70">
               <p>
-                <strong>Email:</strong> shrikalahastikalamkari@gmail.com
+                <strong className="text-[#1A1512]">Email:</strong> shrikalahastikalamkari@gmail.com
               </p>
               <p>
-                <strong>Phone:</strong> +91 72888 48881 / +91 72888 48882
+                <strong className="text-[#1A1512]">Phone:</strong> +91 72888 48881 / +91 72888 48882
               </p>
               <p>
-                <strong>Visit:</strong> # 17-68, Bharathi Nagar, Tirupati Main
+                <strong className="text-[#1A1512]">Visit:</strong> # 17-68, Bharathi Nagar, Tirupati Main
                 Road, Srikalahasti-517640
               </p>
             </div>

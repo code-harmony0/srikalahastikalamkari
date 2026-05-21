@@ -287,10 +287,43 @@ export default function ProductsPage() {
             </motion.button>
           </motion.div>
         </div>
+
+        {/* Ambient glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1A1512]/60 via-transparent to-[#1A1512]/90 z-[1]" />
+
+        {/* Luxury framing borders */}
+        <div className="absolute inset-4 z-[5] pointer-events-none border border-[#C19A5B]/15">
+          {/* Decorative Corner markers */}
+          <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-[#C19A5B]" />
+          <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-[#C19A5B]" />
+          <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-[#C19A5B]" />
+          <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-[#C19A5B]" />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
+        >
+          <span className="font-sans text-[10px] md:text-[11px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-3">
+            Heritage Collective
+          </span>
+
+          <h1 className="font-serif text-[32px] md:text-[44px] font-bold text-white tracking-wide leading-none mb-3 uppercase">
+            The Artisan's <span className="italic text-[#C19A5B] font-normal lowercase font-serif">gallery</span>
+          </h1>
+
+          <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mb-3" />
+
+          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
+            Explore hand-painted sarees and heritage textiles crafted with five centuries of Srikalahasti tradition.
+          </p>
+        </motion.div>
       </section>
 
       {/* Main Content */}
-      <div className="relative bg-[#FFF8F0]/30 min-h-screen">
+      <div className="relative bg-transparent min-h-screen">
         {/* Mobile Filter Drawer */}
         <AnimatePresence>
           {showFilters && (
@@ -300,14 +333,14 @@ export default function ProductsPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setShowFilters(false)}
-                className="fixed inset-0 bg-[#3B2C23]/40 backdrop-blur-sm z-[100] lg:hidden"
+                className="fixed inset-0 bg-[#1A1512]/60 backdrop-blur-sm z-[100] lg:hidden"
               />
               <motion.div
                 initial={{ x: "-100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed inset-y-0 left-0 w-[320px] max-w-[85vw] bg-[#FFF8F0] z-[110] lg:hidden shadow-2xl overflow-y-auto scrollbar-hide"
+                className="fixed inset-y-0 left-0 w-[320px] max-w-[85vw] bg-white z-[110] lg:hidden shadow-2xl overflow-y-auto scrollbar-hide border-r border-[#C19A5B]/20"
               >
                 <FilterSidebar
                   {...filterProps}
@@ -341,9 +374,9 @@ export default function ProductsPage() {
                   <div className="flex items-center gap-3 flex-wrap lg:hidden">
                     <div className="flex flex-wrap gap-1.5 flex-1">
                       {searchQuery && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#A4552A]/10 text-[#A4552A] text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold">
                           &ldquo;{searchQuery}&rdquo;
-                          <button onClick={() => setSearchQuery("")}>
+                          <button onClick={() => setSearchQuery("")} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
                           </button>
                         </span>
@@ -351,7 +384,7 @@ export default function ProductsPage() {
                       {selectedCategories.map((cat) => (
                         <span
                           key={cat}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#C19A5B]/15 text-[#3B2C23] text-[10px] font-semibold"
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold"
                         >
                           {cat}
                           <button
@@ -360,23 +393,24 @@ export default function ProductsPage() {
                                 selectedCategories.filter((c) => c !== cat),
                               )
                             }
+                            className="text-[#C19A5B] hover:text-[#1A1512] transition-colors"
                           >
                             <X className="w-3 h-3" />
                           </button>
                         </span>
                       ))}
                       {(priceRange[0] > 0 || priceRange[1] < 50000) && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#C19A5B]/15 text-[#3B2C23] text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold">
                           Price filtered
-                          <button onClick={() => setPriceRange([0, 50000])}>
+                          <button onClick={() => setPriceRange([0, 50000])} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
                           </button>
                         </span>
                       )}
                       {inStockOnly && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold">
                           In Stock
-                          <button onClick={() => setInStockOnly(false)}>
+                          <button onClick={() => setInStockOnly(false)} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
                           </button>
                         </span>
@@ -384,58 +418,58 @@ export default function ProductsPage() {
                     </div>
                     <button
                       onClick={clearAllFilters}
-                      className="text-[10px] font-semibold text-[#A4552A] hover:text-[#8B3F20] uppercase tracking-wider whitespace-nowrap"
+                      className="text-[10px] font-bold text-[#C19A5B] hover:text-[#1A1512] uppercase tracking-widest whitespace-nowrap transition-colors"
                     >
                       Clear all
                     </button>
                   </div>
                 )}
-
+ 
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                   {/* Left: Counts & Mobile Filter */}
                   <div className="flex items-center gap-5 w-full sm:w-auto">
                     <button
                       onClick={() => setShowFilters(true)}
-                      className="lg:hidden flex-1 sm:flex-none flex items-center justify-center gap-3 px-6 py-3 rounded-xl border border-[#C19A5B]/30 text-[11px] font-bold tracking-[0.15em] uppercase text-[#3B2C23] bg-white hover:bg-[#FFF4E8] transition-all shadow-sm"
+                      className="lg:hidden flex-1 sm:flex-none flex items-center justify-center gap-2.5 px-6 py-3 rounded-lg border border-[#C19A5B]/30 text-[10px] font-bold tracking-[0.2em] uppercase text-[#1A1512] bg-[#FFF8F0]/70 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
                     >
-                      <SlidersHorizontal className="w-4 h-4 text-[#A4552A]" />
+                      <SlidersHorizontal className="w-3.5 h-3.5 text-[#C19A5B]" />
                       Filters
                       {getActiveFiltersCount() > 0 && (
-                        <span className="w-5 h-5 flex items-center justify-center rounded-full bg-[#A4552A] text-white text-[9px] font-bold">
+                        <span className="w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#1A1512] text-[#C19A5B] text-[9px] font-bold px-1.5">
                           {getActiveFiltersCount()}
                         </span>
                       )}
                     </button>
                   </div>
-
+ 
                   {/* Right: Sort, View Toggle, Items per page */}
                   <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
                     {/* View Toggle */}
-                    <div className="hidden sm:flex items-center gap-1 bg-white p-1 rounded-lg border border-[#C19A5B]/20">
+                    <div className="hidden sm:flex items-center gap-1 bg-white/90 p-1 rounded-lg border border-[#C19A5B]/20 shadow-sm">
                       <button
                         onClick={() => setViewMode("grid")}
                         className={`p-2 rounded-md transition-all ${
                           viewMode === "grid"
-                            ? "bg-[#FFF4E8] text-[#A4552A] shadow-sm"
-                            : "text-[#3B2C23]/40 hover:bg-gray-50"
+                            ? "bg-[#1A1512] text-[#C19A5B] shadow-sm"
+                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[#C19A5B]"
                         }`}
                         title="Grid View"
                       >
-                        <LayoutGrid className="w-4 h-4" />
+                        <LayoutGrid className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => setViewMode("list")}
                         className={`p-2 rounded-md transition-all ${
                           viewMode === "list"
-                            ? "bg-[#FFF4E8] text-[#A4552A] shadow-sm"
-                            : "text-[#3B2C23]/40 hover:bg-gray-50"
+                            ? "bg-[#1A1512] text-[#C19A5B] shadow-sm"
+                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[#C19A5B]"
                         }`}
                         title="List View"
                       >
-                        <ListIcon className="w-4 h-4" />
+                        <ListIcon className="w-3.5 h-3.5" />
                       </button>
                     </div>
-
+ 
                     {/* Items per page */}
                     <div className="relative hidden sm:block">
                       <select
@@ -449,15 +483,15 @@ export default function ProductsPage() {
                         <option value={24}>24 / page</option>
                         <option value={48}>48 / page</option>
                       </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#C19A5B] pointer-events-none" />
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#C19A5B] pointer-events-none" />
                     </div>
-
+ 
                     {/* Sort */}
-                    <div className="relative w-full sm:w-[180px]">
+                    <div className="relative w-full sm:w-[190px]">
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="w-full appearance-none pl-4 pr-10 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white text-[11px] font-bold text-[#3B2C23] uppercase tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/30 transition-all cursor-pointer shadow-sm"
+                        className="w-full appearance-none pl-4 pr-10 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white/90 backdrop-blur-sm text-[10px] font-bold text-[#1A1512] uppercase tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-all cursor-pointer shadow-sm"
                       >
                         <option value="default">Sort: Recommended</option>
                         <option value="latest">Sort: Newest</option>
@@ -485,7 +519,7 @@ export default function ProductsPage() {
                     ) : (
                       <div
                         key={i}
-                        className="bg-white h-[180px] rounded-xl animate-pulse border border-[#C19A5B]/10 shadow-sm"
+                        className="bg-white/80 backdrop-blur-sm h-[180px] rounded-xl animate-pulse border border-[#C19A5B]/10 shadow-sm"
                       />
                     ),
                   )}
@@ -548,13 +582,14 @@ export default function ProductsPage() {
                       </span>{" "}
                       products
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <button
                         onClick={() => goToPage(Math.max(1, currentPage - 1))}
                         disabled={currentPage === 1 || isFetching}
-                        className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFF4E8] hover:border-[#C19A5B] transition-all"
+                        className="flex items-center gap-1 h-9 px-4 text-[10px] font-bold uppercase tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
                       >
-                        Previous
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                        <span>Prev</span>
                       </button>
                       <div className="flex items-center gap-1">
                         {Array.from(
@@ -594,9 +629,10 @@ export default function ProductsPage() {
                           goToPage(Math.min(totalPages, currentPage + 1))
                         }
                         disabled={currentPage >= totalPages || isFetching}
-                        className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#3B2C23] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFF4E8] hover:border-[#C19A5B] transition-all"
+                        className="flex items-center gap-1 h-9 px-4 text-[10px] font-bold uppercase tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
                       >
-                        Next
+                        <span>Next</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -606,22 +642,30 @@ export default function ProductsPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-24 bg-white rounded-2xl border border-[#C19A5B]/10 shadow-sm"
+                  className="relative text-center py-20 bg-[#FFF8F0]/30 backdrop-blur-sm rounded-xl border border-[#C19A5B]/20 shadow-sm overflow-hidden"
                 >
-                  <div className="max-w-md mx-auto px-6">
-                    <div className="w-16 h-16 bg-[#FFF8F0] rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/10">
+                  {/* Decorative corners */}
+                  <div className="absolute inset-3 pointer-events-none border border-[#C19A5B]/10">
+                    <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t border-l border-[#C19A5B]/40" />
+                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t border-r border-[#C19A5B]/40" />
+                    <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b border-l border-[#C19A5B]/40" />
+                    <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b border-r border-[#C19A5B]/40" />
+                  </div>
+                  
+                  <div className="max-w-md mx-auto px-6 relative z-10">
+                    <div className="w-16 h-16 bg-[#1A1512]/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/25">
                       <LucideSearch className="w-6 h-6 text-[#C19A5B]" />
                     </div>
-                    <h3 className="font-playfair text-xl text-[#3B2C23] font-bold mb-3 italic">
+                    <h3 className="font-serif text-2xl text-[#1A1512] font-semibold mb-3 tracking-wide">
                       No masterpieces found
                     </h3>
-                    <p className="font-sans text-[#3B2C23]/60 mb-8 leading-relaxed text-[14px]">
-                      Our curators couldn't find artifacts matching these
-                      refinements.
+                    <div className="h-px w-16 bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mx-auto mb-4" />
+                    <p className="font-sans text-[#1A1512]/60 mb-8 leading-relaxed text-[13px] font-light max-w-sm mx-auto">
+                      Our curators couldn't find any Srikalahasti Kalamkari artwork matching these precise refinements.
                     </p>
                     <button
                       onClick={clearAllFilters}
-                      className="px-8 py-3 bg-[#A4552A] text-white rounded-full font-bold text-[11px] uppercase tracking-widest hover:bg-[#8B3F20] transition-all"
+                      className="px-8 py-3 bg-[#1A1512] text-white border border-[#C19A5B]/30 rounded-lg font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-[#C19A5B] hover:text-white transition-all duration-300 shadow-sm"
                     >
                       Clear All Filters
                     </button>

@@ -171,9 +171,9 @@ export const ProductCard = memo(
           {/* OUT OF STOCK - Subtle overlay + bottom strip */}
           {!product.in_stock && (
             <>
-              <div className="absolute inset-0 bg-[#3B2C23]/15 z-15 pointer-events-none" />
+              <div className="absolute inset-0 bg-[#1A1512]/15 z-15 pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-                <div className="bg-[#3B2C23]/80 backdrop-blur-[2px] py-1.5 px-3 flex items-center justify-center gap-1.5">
+                <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 px-3 flex items-center justify-center gap-1.5">
                   <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
                     Out of Stock
                   </span>
@@ -186,11 +186,11 @@ export const ProductCard = memo(
           {!isList && (
             <button
               onClick={toggleWishlist}
-              className="absolute top-2 right-2 z-30 w-7 h-7 rounded-full bg-white/90 text-[#3B2C23] hover:bg-[#A4552A] hover:text-white flex items-center justify-center shadow-sm transition-colors opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300"
+              className="absolute top-2 right-2 z-30 w-7 h-7 rounded-full bg-white/90 text-[#1A1512] hover:bg-[#C19A5B] hover:text-white flex items-center justify-center shadow-sm transition-colors opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300"
               title="Wishlist"
             >
               <Heart
-                className={`w-3.5 h-3.5 ${isWishlisted ? "fill-current" : ""}`}
+                className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#C19A5B] text-[#C19A5B]" : ""}`}
               />
             </button>
           )}
@@ -212,7 +212,7 @@ export const ProductCard = memo(
 
               <h3
                 className={cn(
-                  "font-inter font-bold text-[#3B2C23] leading-tight group-hover/text:text-[#A4552A] transition-colors",
+                  "font-inter font-bold text-[#1A1512] leading-tight group-hover/text:text-[#C19A5B] transition-colors",
                   isList
                     ? "text-[15px] line-clamp-1"
                     : "text-[14px] line-clamp-2",
@@ -223,7 +223,7 @@ export const ProductCard = memo(
 
               {/* Description: Only show in List view, limit to 2 lines */}
               {isList && (
-                <p className="font-inter text-[12px] text-[#3B2C23]/60 leading-relaxed mt-1.5 line-clamp-2 pr-4">
+                <p className="font-inter text-[12px] text-[#1A1512]/60 leading-relaxed mt-1.5 line-clamp-2 pr-4">
                   {productData.description || "Handcrafted with natural dyes."}
                 </p>
               )}
@@ -239,14 +239,14 @@ export const ProductCard = memo(
           >
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <p className="font-inter font-bold text-[15px] text-[#A4552A]">
+                <p className="font-inter font-bold text-[15px] text-[#1A1512]">
                   ₹{productData.price.toLocaleString()}
                 </p>
                 {product.original_price &&
                   productData.originalPrice &&
                   productData.originalPrice > productData.price && (
                     <>
-                      <span className="text-[11px] text-[#3B2C23]/40 line-through decoration-[#A4552A]/40">
+                      <span className="text-[11px] text-[#1A1512]/40 line-through decoration-[#C19A5B]/40">
                         ₹{product.original_price.toLocaleString()}
                       </span>
                       <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
@@ -262,7 +262,7 @@ export const ProductCard = memo(
                   )}
               </div>
               {product.stock_quantity && product.stock_quantity > 0 ? (
-                <span className="text-[11px] font-medium text-[#3B2C23]/70 mt-0.5">
+                <span className="text-[11px] font-medium text-[#1A1512]/70 mt-0.5">
                   {product.stock_quantity} in stock
                 </span>
               ) : null}
@@ -270,7 +270,7 @@ export const ProductCard = memo(
               {!isList && (
                 <div className="flex items-center gap-1 mt-0.5">
                   <Star className="w-2.5 h-2.5 fill-[#C19A5B] text-[#C19A5B]" />
-                  <span className="text-[11px] font-medium text-[#3B2C23]/70">
+                  <span className="text-[11px] font-medium text-[#1A1512]/70">
                     4.8
                   </span>
                 </div>
@@ -281,10 +281,10 @@ export const ProductCard = memo(
               {isList && (
                 <button
                   onClick={toggleWishlist}
-                  className="w-8 h-8 rounded-full border border-[#C19A5B]/20 text-[#3B2C23] hover:bg-[#FFF4E8] flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full border border-[#C19A5B]/20 text-[#1A1512] hover:bg-[#C19A5B]/10 flex items-center justify-center transition-colors"
                 >
                   <Heart
-                    className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#A4552A] text-[#A4552A]" : ""}`}
+                    className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#C19A5B] text-[#C19A5B]" : ""}`}
                   />
                 </button>
               )}
@@ -295,7 +295,7 @@ export const ProductCard = memo(
                 className={cn(
                   "transition-all shadow-sm flex items-center justify-center gap-2",
                   product.in_stock
-                    ? "bg-[#A4552A] text-white hover:shadow-md hover:bg-[#8B3F20]"
+                    ? "bg-[#1A1512] text-white hover:shadow-md hover:bg-[#C19A5B]"
                     : "bg-[#E8DDD0] text-[#9B8B7E] cursor-not-allowed",
                   // 🛠 Compact Button sizing
                   isList

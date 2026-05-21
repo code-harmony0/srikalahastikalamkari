@@ -51,20 +51,20 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
   }
 
   return (
-    <div className="py-12 border-t border-[#EAD6C3]">
+    <div className="py-12 border-t border-[#C19A5B]/20">
       {/* Header */}
       {totalReviews === 0 ? (
-        <div className="text-center py-16 bg-[#FFF8F0] rounded-2xl border border-[#EAD6C3] px-6">
-          <div className="w-16 h-16 bg-[#EAD6C3]/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#EAD6C3]">
-            <Star className="w-8 h-8 text-[#A4552A]" fill="currentColor" />
+        <div className="text-center py-16 bg-[#FFF8F0] rounded-2xl border border-[#C19A5B]/20 px-6">
+          <div className="w-16 h-16 bg-[#C19A5B]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#C19A5B]/20">
+            <Star className="w-8 h-8 text-[#C19A5B]" fill="currentColor" />
           </div>
-          <h3 className="font-playfair text-xl font-bold text-[#3B2C23] mb-2">
+          <h3 className="font-playfair text-xl font-bold text-[#1A1512] mb-2">
             Be the First to Own a Masterpiece
           </h3>
-          <p className="text-[#7A6A5C] max-w-md mx-auto mb-6 leading-relaxed">
+          <p className="text-[#1A1512]/60 max-w-md mx-auto mb-6 leading-relaxed">
             This authentic Kalamkari piece is waiting for its home. Purchase now and perform the first review to share your experience with the world.
           </p>
-          <div className="inline-flex items-center justify-center px-4 py-1.5 bg-[#FFF4E8] rounded-full border border-[#EAD6C3]/50 text-xs font-medium text-[#A4552A]">
+          <div className="inline-flex items-center justify-center px-4 py-1.5 bg-[#C19A5B]/10 rounded-full border border-[#C19A5B]/25 text-xs font-medium text-[#C19A5B]">
             <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
             Verified Purchase Required for Review
           </div>
@@ -78,7 +78,7 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
           {reviews.length > 3 && (
             <button
               onClick={() => setShowAll(!showAll)}
-              className="w-full py-3 text-[#A4552A] font-medium flex items-center justify-center gap-2 hover:bg-[#FFF8F0] rounded-lg transition-colors"
+              className="w-full py-3 text-[#1A1512] hover:text-[#C19A5B] font-medium flex items-center justify-center gap-2 hover:bg-[#C19A5B]/5 rounded-lg transition-colors"
             >
               {showAll ? "Show Less" : `Show All ${reviews.length} Reviews`}
               <ChevronDown
@@ -113,17 +113,17 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl border border-[#EAD6C3] p-5"
+      className="bg-white rounded-xl border border-[#C19A5B]/20 p-5"
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#FFF8F0] border border-[#EAD6C3] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-[#FFF8F0] border border-[#C19A5B]/30 flex items-center justify-center">
             <User className="w-5 h-5 text-[#C19A5B]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-[#3B2C23]">
+              <span className="font-medium text-[#1A1512]">
                 {review.customer_name}
               </span>
               {review.is_verified_purchase && (
@@ -133,7 +133,7 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
                 </span>
               )}
             </div>
-            <span className="text-xs text-[#3B2C23]/50">
+            <span className="text-xs text-[#1A1512]/50">
               {formatDistanceToNow(new Date(review.created_at), { addSuffix: true })}
             </span>
           </div>
@@ -143,22 +143,22 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
 
       {/* Content */}
       {review.title && (
-        <h4 className="font-semibold text-[#3B2C23] mb-1">{review.title}</h4>
+        <h4 className="font-semibold text-[#1A1512] mb-1">{review.title}</h4>
       )}
       {review.content && (
-        <p className="text-sm text-[#3B2C23]/70 leading-relaxed">{review.content}</p>
+        <p className="text-sm text-[#1A1512]/70 leading-relaxed">{review.content}</p>
       )}
 
       {/* Footer */}
-      <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[#EAD6C3]/50">
+      <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[#C19A5B]/25">
         <button
           onClick={handleHelpful}
           disabled={hasVoted}
           className={cn(
             "flex items-center gap-1.5 text-xs transition-colors",
             hasVoted
-              ? "text-[#A4552A] cursor-default"
-              : "text-[#3B2C23]/50 hover:text-[#A4552A]"
+              ? "text-[#C19A5B] cursor-default"
+              : "text-[#1A1512]/50 hover:text-[#C19A5B]"
           )}
         >
           <ThumbsUp className="w-3.5 h-3.5" />
