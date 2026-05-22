@@ -159,8 +159,8 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Prevent browsers from caching HTML pages so stale chunk hashes never cause 404s after deployment
-        source: "/((?!_next/|fonts/).*)?",
+        // Keep HTML/data pages fresh so Hostinger CDN does not serve stale build chunks after deploys.
+        source: "/((?!_next/|fonts/).*)",
         headers: [
           {
             key: "Cache-Control",
