@@ -126,23 +126,15 @@ jobs:
             -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-            "cd ${{ secrets.HOSTINGER_PATH }} && npm ci --omit=dev"
+            "bash -lc 'cd ${{ secrets.HOSTINGER_PATH }} && npm ci --omit=dev'"
 
       - name: Restart app on server
         run: |
           ssh -i ~/.ssh/deploy_key \
             -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
-            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" << 'ENDSSH'
-            cd ${{ secrets.HOSTINGER_PATH }}
-            # Try PM2 restart (rename your app "kalamkari" in PM2, or change below)
-            if command -v pm2 &> /dev/null; then
-              pm2 restart kalamkari --update-env 2>/dev/null || \
-              pm2 start server.js --name kalamkari --update-env
-            else
-              echo "PM2 not found. Restart your Node.js app manually via Hostinger hPanel."
-            fi
-          ENDSSH
+            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
+            "bash -lc 'cd ${{ secrets.HOSTINGER_PATH }} && (pm2 restart kalamkari --update-env 2>/dev/null || pm2 start server.js --name kalamkari --update-env) && pm2 save'"
 
       - name: Cleanup SSH key
         if: always()
