@@ -1,0 +1,146 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+
+# Only one deploy runs at a time; queued runs cancel the older one.
+concurrency:
+  group: hostinger-production
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    # ── Required GitHub repository secrets ───────────────────────────────────
+    # HOSTINGER_HOST        — your server IP or hostname (e.g. 123.45.67.89)
+    # HOSTINGER_USER        — SSH username (e.g. root or your account username)
+    # HOSTINGER_SSH_KEY     — contents of your SSH private key (~/.ssh/id_rsa)
+    # HOSTINGER_PATH        — absolute deployment path (e.g. /home/user/app)
+    #
+    # ── Required app env var secrets ─────────────────────────────────────────
+    # NEXT_PUBLIC_CF_IMAGES_HASH      — Cloudflare Images delivery hash
+    # NEXT_PUBLIC_SUPABASE_URL        — Supabase project URL
+    # NEXT_PUBLIC_SUPABASE_ANON_KEY   — Supabase anon/public key
+    # NEXT_PUBLIC_SITE_URL            — Production site URL
+    # SUPABASE_SERVICE_ROLE_KEY       — Supabase service role key (server only)
+    # CF_ACCOUNT_ID                   — Cloudflare account ID
+    # CF_IMAGES_TOKEN                 — Cloudflare Images API token
+    # ADMIN_EMAIL                     — Admin login email
+    # ADMIN_PASSWORD                  — Admin login password
+    # ─────────────────────────────────────────────────────────────────────────
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      # NEXT_PUBLIC_* vars are baked into the client bundle at build time.
+      # They MUST be present here, not only on the server.
+      - name: Build
+        env:
+          NEXT_PUBLIC_CF_IMAGES_HASH: ${{ secrets.NEXT_PUBLIC_CF_IMAGES_HASH }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          # Server-only vars (not baked into bundle, but needed during build for
+          # any server-side rendering or API route pre-generation)
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_IMAGES_TOKEN: ${{ secrets.CF_IMAGES_TOKEN }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        run: npm run build
+
+      # Write the .env.production file so the running server process has all
+      # vars at runtime (server-only vars like CF_IMAGES_TOKEN need this).
+      - name: Write runtime env file
+        run: |
+          cat > .env.production << 'EOF'
+          NEXT_PUBLIC_CF_IMAGES_HASH=${{ secrets.NEXT_PUBLIC_CF_IMAGES_HASH }}
+          NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CF_ACCOUNT_ID=${{ secrets.CF_ACCOUNT_ID }}
+          CF_IMAGES_TOKEN=${{ secrets.CF_IMAGES_TOKEN }}
+          ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+          NODE_ENV=production
+          EOF
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts
+
+      # Sync the built output and runtime files to the server.
+      # --delete removes files on the server that no longer exist locally.
+      # Excludes node_modules (installed fresh on server) and dev cache.
+      - name: Deploy files to Hostinger
+        run: |
+          rsync -avz --delete \
+            --exclude 'node_modules' \
+            --exclude '.next/cache' \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude '*.DS_Store' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            .next/ \
+            public/ \
+            src/ \
+            server.js \
+            package.json \
+            package-lock.json \
+            next.config.mjs \
+            tailwind.config.ts \
+            postcss.config.js \
+            tsconfig.json \
+            .env.production \
+            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/"
+
+      # Install only production dependencies on the server (sharp is now in
+      # dependencies, so it will be installed here).
+      - name: Install production dependencies on server
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
+            "cd ${{ secrets.HOSTINGER_PATH }} && npm ci --omit=dev"
+
+      # Restart the Node.js process. Tries PM2 first (most common on Hostinger
+      # VPS), then falls back to a plain node restart via the Hostinger panel
+      # signal file approach.
+      - name: Restart app on server
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" << 'ENDSSH'
+            cd ${{ secrets.HOSTINGER_PATH }}
+            # Try PM2 restart (rename your app "kalamkari" in PM2, or change below)
+            if command -v pm2 &> /dev/null; then
+              pm2 restart kalamkari --update-env 2>/dev/null || \
+              pm2 start server.js --name kalamkari --update-env
+            else
+              echo "PM2 not found. Restart your Node.js app manually via Hostinger hPanel."
+            fi
+          ENDSSH
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

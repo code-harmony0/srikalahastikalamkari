@@ -4,13 +4,22 @@ export const PRODUCT_IMAGE_PLACEHOLDER = "/images/products/product-placeholder.p
 
 const warned = new Set<string>()
 
-const isBrowserDev = () =>
-  process.env.NODE_ENV !== "production" && typeof window !== "undefined"
+const isProd = () => process.env.NODE_ENV === "production"
+const isBrowserDev = () => !isProd() && typeof window !== "undefined"
 
 const warnOnce = (key: string, message: string, meta?: unknown) => {
-  if (!isBrowserDev() || warned.has(key)) return
+  if (warned.has(key)) return
   warned.add(key)
-  console.warn(message, meta)
+  if (isBrowserDev()) {
+    console.warn(message, meta)
+  }
+}
+
+// Always logs — dev and prod. Use for critical misconfiguration only.
+const errorOnce = (key: string, message: string, meta?: unknown) => {
+  if (warned.has(key)) return
+  warned.add(key)
+  console.error(message, meta)
 }
 
 const CF_UUID_RE =
@@ -78,10 +87,10 @@ export function resolveCloudflareImageUrl(
 
   const accountHash = process.env.NEXT_PUBLIC_CF_IMAGES_HASH?.trim()
   if (!accountHash) {
-    warnOnce(
+    errorOnce(
       "cf_missing_hash",
-      "[cloudflare-images] Missing NEXT_PUBLIC_CF_IMAGES_HASH. Cloudflare image ids will render as the product placeholder.",
-      { imageId: trimmedId, variant },
+      "[cloudflare-images] NEXT_PUBLIC_CF_IMAGES_HASH is not set. All Cloudflare image IDs will render as placeholder. Set this env var and rebuild.",
+      { imageId: trimmedId, variant, env: process.env.NODE_ENV },
     )
     return PRODUCT_IMAGE_PLACEHOLDER
   }
@@ -126,10 +135,10 @@ export function resolveProductImageSrc(
     return trimmed
   }
 
-  warnOnce(
+  errorOnce(
     `unhandled_ref:${trimmed}`,
-    "[cloudflare-images] Unhandled product image ref. Rendering the product placeholder.",
-    { ref: trimmed, variant },
+    "[cloudflare-images] Unhandled product image ref — not a CF ID, URL, or local path. Rendering placeholder.",
+    { ref: trimmed, variant, env: process.env.NODE_ENV },
   )
   return PRODUCT_IMAGE_PLACEHOLDER
 }

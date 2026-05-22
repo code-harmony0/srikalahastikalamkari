@@ -28,5 +28,14 @@ jobs:
       - name: Run tests
         run: npm test
 
+      # NEXT_PUBLIC_* vars are baked into the client bundle at build time.
+      # Passing them here ensures the CI build matches what production will serve.
+      # If these secrets are not set, the build still runs but CF images will
+      # fall back to placeholder — matching the missing-env production failure.
       - name: Build
+        env:
+          NEXT_PUBLIC_CF_IMAGES_HASH: ${{ secrets.NEXT_PUBLIC_CF_IMAGES_HASH }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
         run: npm run build
