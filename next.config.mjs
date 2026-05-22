@@ -51,6 +51,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "imagedelivery.net",
+      },
+      {
+        protocol: "https",
         hostname: "vovbnbmfzehlgtkvhzzj.supabase.co",
       },
       {
@@ -154,6 +158,24 @@ const nextConfig = {
   // Security headers for production
   async headers() {
     return [
+      {
+        // Keep HTML/data pages fresh so Hostinger CDN does not serve stale build chunks after deploys.
+        source: "/((?!_next/|fonts/).*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+          {
+            key: "Pragma",
+            value: "no-cache",
+          },
+          {
+            key: "Expires",
+            value: "0",
+          },
+        ],
+      },
       {
         source: "/:all*(svg|jpg|png|webp|avif|gif|ico)",
         locale: false,

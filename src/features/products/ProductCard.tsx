@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { cn } from "@/shared/utils";
 import { useCategories } from "@/shared/hooks/use-categories";
 import { Product } from "@/shared/types";
-import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes, BLUR_DATA_URL } from "@/lib/image-utils";
+import { getOptimizedImageUrl, IMAGE_SIZES, getResponsiveSizes, BLUR_DATA_URL, PRODUCT_IMAGE_PLACEHOLDER } from "@/lib/image-utils";
 
 interface ProductCardProps {
   product: Product;
@@ -172,7 +172,7 @@ export const ProductCard = memo(
               loading={priority ? undefined : "lazy"}
               placeholder="blur"
               blurDataURL={BLUR_DATA_URL}
-              onError={() => setImgSrc("/images/placeholder.png")}
+              onError={() => setImgSrc(PRODUCT_IMAGE_PLACEHOLDER)}
             />
           </Link>
 

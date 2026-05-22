@@ -10,6 +10,7 @@ import { useCartStore } from "@/shared/cart-store";
 import { toast } from "sonner";
 import { cn } from "@/shared/utils";
 import { Product } from "@/shared/types";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 
 interface ProductCardCompactProps {
   product: Product;
@@ -81,7 +82,10 @@ export const ProductCardCompact = memo(
       toast.success("Added to cart");
     };
 
-    const mainImage = productData.image || "/images/placeholder.png";
+    const mainImage = getOptimizedImageUrl(
+      productData.image,
+      { width: 200, quality: 75 },
+    );
     const productUrl = `/products/${product.slug || product.id}`;
 
     const discountPercent =

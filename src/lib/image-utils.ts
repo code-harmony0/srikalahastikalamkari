@@ -12,6 +12,30 @@ export interface ImageOptimizationOptions {
   resize?: "cover" | "contain" | "fill"
 }
 
+export const PRODUCT_IMAGE_PLACEHOLDER = "/images/products/product-placeholder.png"
+
+const CF_IMAGES_HASH =
+  process.env.NEXT_PUBLIC_CF_IMAGES_HASH || "xGnXvGVZkNr8ZNcbFxAROQ"
+
+const CF_IMAGE_ID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+function isCloudflareImageId(url: string): boolean {
+  const trimmed = url.trim()
+  return Boolean(trimmed) && CF_IMAGE_ID_RE.test(trimmed)
+}
+
+function getCloudflareVariant(options?: ImageOptimizationOptions): "thumb" | "medium" {
+  return options?.width && options.width <= 400 ? "thumb" : "medium"
+}
+
+export function getCloudflareImageUrl(
+  imageId: string,
+  options?: ImageOptimizationOptions,
+): string {
+  return `https://imagedelivery.net/${CF_IMAGES_HASH}/${imageId.trim()}/${getCloudflareVariant(options)}`
+}
+
 /**
  * Generates an optimized image URL using Supabase Image Transformations.
  * Only applies transformations to Supabase-hosted images.
@@ -32,11 +56,21 @@ export function getOptimizedImageUrl(
   options?: ImageOptimizationOptions,
 ): string {
   // Return placeholder for missing URLs
-  if (!url) return "/images/placeholder.png"
+  if (!url) return PRODUCT_IMAGE_PLACEHOLDER
+
+  const trimmedUrl = url.trim()
+
+  if (isCloudflareImageId(trimmedUrl)) {
+    return getCloudflareImageUrl(trimmedUrl, options)
+  }
+
+  if (trimmedUrl.startsWith("https://imagedelivery.net/")) {
+    return trimmedUrl
+  }
 
   // Only transform Supabase-hosted images
-  if (!url.includes("supabase.co/storage")) {
-    return url
+  if (!trimmedUrl.includes("supabase.co/storage")) {
+    return trimmedUrl
   }
 
   // TEMPORARY FIX: Due to Supabase 403 errors with render endpoint,
@@ -45,7 +79,7 @@ export function getOptimizedImageUrl(
   console.warn(
     "Using original Supabase URL due to transformation endpoint issues",
   )
-  return url
+  return trimmedUrl
 
   // Build transformation URL (DISABLED FOR NOW)
   /*
