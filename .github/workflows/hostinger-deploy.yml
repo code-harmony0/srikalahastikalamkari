@@ -123,13 +123,14 @@ jobs:
             .env.production \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/"
 
+      # Hostinger Node.js apps restart when tmp/restart.txt is touched.
       - name: Restart app on server
         run: |
           ssh -i ~/.ssh/deploy_key \
             -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-            "bash -lc 'cd ${{ secrets.HOSTINGER_PATH }} && (pm2 restart kalamkari --update-env 2>/dev/null || pm2 start server.js --name kalamkari --update-env) && pm2 save || echo RESTART_MANUAL'"
+            "mkdir -p ${{ secrets.HOSTINGER_PATH }}/tmp && touch ${{ secrets.HOSTINGER_PATH }}/tmp/restart.txt && echo 'App restart triggered'"
 
       - name: Cleanup SSH key
         if: always()
