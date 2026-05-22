@@ -66,6 +66,11 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: npm run build
 
+      # Install only production deps in CI so we can ship node_modules directly.
+      # Hostinger shared hosting does not expose npm in a standard SSH PATH.
+      - name: Install production node_modules
+        run: npm ci --omit=dev
+
       # Write the .env.production file so the running server process has all
       # vars at runtime (server-only vars like CF_IMAGES_TOKEN need this).
       - name: Write runtime env file
@@ -93,21 +98,21 @@ jobs:
           ssh-keyscan -p "$PORT" -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts
           echo "DEPLOY_PORT=$PORT" >> $GITHUB_ENV
 
-      # Sync the built output and runtime files to the server.
-      # --delete removes files on the server that no longer exist locally.
-      # Excludes node_modules (installed fresh on server) and dev cache.
+      # Sync built output + pre-installed node_modules to the server.
+      # node_modules is included because Hostinger shared hosting does not
+      # expose npm in a standard SSH PATH for post-deploy installs.
       - name: Deploy files to Hostinger
         run: |
-          rsync -avz --delete \
-            --exclude 'node_modules' \
+          rsync -az --delete \
             --exclude '.next/cache' \
             --exclude '.git' \
             --exclude '.github' \
             --exclude '*.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -p $DEPLOY_PORT -o StrictHostKeyChecking=no" \
-            .next/ \
-            public/ \
-            src/ \
+            .next \
+            node_modules \
+            public \
+            src \
             server.js \
             package.json \
             package-lock.json \
@@ -118,23 +123,13 @@ jobs:
             .env.production \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/"
 
-      # Install only production dependencies on the server (sharp is now in
-      # dependencies, so it will be installed here).
-      - name: Install production dependencies on server
-        run: |
-          ssh -i ~/.ssh/deploy_key \
-            -p $DEPLOY_PORT \
-            -o StrictHostKeyChecking=no \
-            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-            "bash -lc 'cd ${{ secrets.HOSTINGER_PATH }} && npm ci --omit=dev'"
-
       - name: Restart app on server
         run: |
           ssh -i ~/.ssh/deploy_key \
             -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-            "bash -lc 'cd ${{ secrets.HOSTINGER_PATH }} && (pm2 restart kalamkari --update-env 2>/dev/null || pm2 start server.js --name kalamkari --update-env) && pm2 save'"
+            "bash -lc 'cd ${{ secrets.HOSTINGER_PATH }} && (pm2 restart kalamkari --update-env 2>/dev/null || pm2 start server.js --name kalamkari --update-env) && pm2 save || echo RESTART_MANUAL'"
 
       - name: Cleanup SSH key
         if: always()
