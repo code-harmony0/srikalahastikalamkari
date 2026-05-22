@@ -17,6 +17,7 @@ dist/
 
 # Production
 /build
+deploy.zip
 
 # Testing
 /coverage
