@@ -88,12 +88,10 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          # Hostinger shared hosting uses port 65002; VPS uses 22.
-          # Try 65002 first, fall back to 22.
-          PORT=${{ secrets.HOSTINGER_PORT || 65002 }}
-          ssh-keyscan -p "$PORT" -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts || \
-          ssh-keyscan -p 22 -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts
-          echo "HOSTINGER_PORT_RESOLVED=$PORT" >> $GITHUB_ENV
+          PORT="${{ secrets.HOSTINGER_PORT }}"
+          PORT="${PORT:-65002}"
+          ssh-keyscan -p "$PORT" -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts
+          echo "DEPLOY_PORT=$PORT" >> $GITHUB_ENV
 
       # Sync the built output and runtime files to the server.
       # --delete removes files on the server that no longer exist locally.
@@ -106,7 +104,7 @@ jobs:
             --exclude '.git' \
             --exclude '.github' \
             --exclude '*.DS_Store' \
-            -e "ssh -i ~/.ssh/deploy_key -p $HOSTINGER_PORT_RESOLVED -o StrictHostKeyChecking=no" \
+            -e "ssh -i ~/.ssh/deploy_key -p $DEPLOY_PORT -o StrictHostKeyChecking=no" \
             .next/ \
             public/ \
             src/ \
@@ -125,7 +123,7 @@ jobs:
       - name: Install production dependencies on server
         run: |
           ssh -i ~/.ssh/deploy_key \
-            -p $HOSTINGER_PORT_RESOLVED \
+            -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
             "cd ${{ secrets.HOSTINGER_PATH }} && npm ci --omit=dev"
@@ -133,7 +131,7 @@ jobs:
       - name: Restart app on server
         run: |
           ssh -i ~/.ssh/deploy_key \
-            -p $HOSTINGER_PORT_RESOLVED \
+            -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" << 'ENDSSH'
             cd ${{ secrets.HOSTINGER_PATH }}
