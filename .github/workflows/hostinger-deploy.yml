@@ -121,7 +121,7 @@ jobs:
             -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-            "/opt/alt/alt-nodejs22/root/usr/bin/npm ci --omit=dev --prefix ${{ secrets.HOSTINGER_PATH }}"
+            "export PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH && cd ${{ secrets.HOSTINGER_PATH }} && npm ci --omit=dev"
 
       # Hostinger Node.js apps restart when tmp/restart.txt is touched.
       - name: Restart app on server
