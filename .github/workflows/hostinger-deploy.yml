@@ -66,11 +66,6 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: npm run build
 
-      # Install only production deps in CI so we can ship node_modules directly.
-      # Hostinger shared hosting does not expose npm in a standard SSH PATH.
-      - name: Install production node_modules
-        run: npm ci --omit=dev
-
       # Write the .env.production file so the running server process has all
       # vars at runtime (server-only vars like CF_IMAGES_TOKEN need this).
       - name: Write runtime env file
@@ -98,19 +93,16 @@ jobs:
           ssh-keyscan -p "$PORT" -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts
           echo "DEPLOY_PORT=$PORT" >> $GITHUB_ENV
 
-      # Sync built output + pre-installed node_modules to the server.
-      # node_modules is included because Hostinger shared hosting does not
-      # expose npm in a standard SSH PATH for post-deploy installs.
       - name: Deploy files to Hostinger
         run: |
           rsync -az --delete \
+            --exclude 'node_modules' \
             --exclude '.next/cache' \
             --exclude '.git' \
             --exclude '.github' \
             --exclude '*.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -p $DEPLOY_PORT -o StrictHostKeyChecking=no" \
             .next \
-            node_modules \
             public \
             src \
             server.js \
@@ -122,6 +114,14 @@ jobs:
             tsconfig.json \
             .env.production \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/"
+
+      - name: Install production dependencies on server
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -p $DEPLOY_PORT \
+            -o StrictHostKeyChecking=no \
+            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
+            "/opt/alt/alt-nodejs22/root/usr/bin/npm ci --omit=dev --prefix ${{ secrets.HOSTINGER_PATH }}"
 
       # Hostinger Node.js apps restart when tmp/restart.txt is touched.
       - name: Restart app on server
