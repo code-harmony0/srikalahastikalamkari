@@ -150,9 +150,9 @@ jobs:
           pkill -f "node.*server.js" 2>/dev/null || true
           sleep 3
 
-          # Install a cron job that auto-restarts the app every minute if it's not running.
+          # Install a cron job that auto-restarts the app every 5 min if it's not running.
           # This survives reboots and handles crashes on shared hosting.
-          CRON_LINE="* * * * * PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH; APP=$APP; if ! pgrep -f 'node.*server.js' > /dev/null 2>&1; then cd \"\$APP\" && NODE_ENV=production nohup node server.js >> \"\$APP/console.log\" 2>> \"\$APP/stderr.log\" & fi"
+          CRON_LINE="*/5 * * * * PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH; APP=$APP; if ! pgrep -f 'node.*server.js' > /dev/null 2>&1; then cd \"\$APP\" && NODE_ENV=production nohup node server.js >> \"\$APP/console.log\" 2>> \"\$APP/stderr.log\" & fi"
           ( crontab -l 2>/dev/null | grep -v "server.js" ; echo "$CRON_LINE" ) | crontab -
           echo "Cron job installed for auto-restart"
 
