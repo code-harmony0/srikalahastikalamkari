@@ -17,57 +17,57 @@ jobs:
           ssh-keyscan -p "$PORT" -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts
           echo "DEPLOY_PORT=$PORT" >> $GITHUB_ENV
 
-      - name: Read app logs and check restart mechanism
+      - name: Deep server state check
         run: |
           ssh -i ~/.ssh/deploy_key \
             -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
             "
-          APP=~/domains/srikalahastikalamkari.in/nodejs
+          DOMAIN=~/domains/srikalahastikalamkari.in
+          NODE=\$DOMAIN/nodejs
+          PUB=\$DOMAIN/public_html
 
-          echo '=== Last 80 lines of console.log ==='
-          tail -80 \$APP/console.log 2>/dev/null || echo '(empty or not found)'
-
-          echo ''
-          echo '=== stderr.log ==='
-          cat \$APP/stderr.log 2>/dev/null || echo '(empty)'
+          echo '=== public_html BUILD_ID (is this the old build?) ==='
+          cat \$PUB/.next/BUILD_ID 2>/dev/null || echo '(not found)'
 
           echo ''
-          echo '=== tmp/ contents and restart.txt mtime ==='
-          ls -la \$APP/tmp/ 2>/dev/null || echo '(tmp/ not found)'
+          echo '=== console.log in public_html? ==='
+          ls -la \$PUB/console.log 2>/dev/null || echo '(no console.log in public_html)'
+          ls -la \$PUB/stderr.log 2>/dev/null || echo '(no stderr.log in public_html)'
+          ls -la \$PUB/tmp/ 2>/dev/null | head -10 || echo '(no tmp/ in public_html)'
 
           echo ''
-          echo '=== public_html server.js check ==='
-          ls -la ~/domains/srikalahastikalamkari.in/public_html/server.js 2>/dev/null || echo '(no server.js in public_html)'
-
-          echo ''
-          echo '=== Check Passenger/LiteSpeed .htaccess in domain root ==='
-          cat ~/domains/srikalahastikalamkari.in/.htaccess 2>/dev/null || echo '(no .htaccess at domain root)'
-
-          echo ''
-          echo '=== Check for passenger_wsgi.py or similar ==='
-          find ~/domains/srikalahastikalamkari.in/ -maxdepth 3 -name '*.htaccess' 2>/dev/null
-
-          echo ''
-          echo '=== Disk usage of nodejs/ ==='
-          du -sh \$APP/ 2>/dev/null
-
-          echo ''
-          echo '=== Start app in background, wait 5s, check port, then kill ==='
+          echo '=== Start app, wait 15s, check ALL sockets and ports ==='
           export PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH
-          cd \$APP
-          NODE_ENV=production node server.js >> \$APP/console.log 2>> \$APP/stderr.log &
+          cd \$NODE
+          NODE_ENV=production node server.js &
           APP_PID=\$!
-          echo \"Started with PID: \$APP_PID\"
-          sleep 5
-          ss -tlnp 2>/dev/null | grep 3000 && echo 'PORT 3000 IS LISTENING' || echo 'Port 3000 not listening after 5s'
-          ps -p \$APP_PID 2>/dev/null && echo 'Process still running' || echo 'Process already died'
+          echo \"PID: \$APP_PID\"
+          sleep 15
+          echo '--- All listening sockets ---'
+          ss -tlnp 2>/dev/null || netstat -tlnp 2>/dev/null
           echo ''
-          echo '=== stderr after start attempt ==='
-          tail -10 \$APP/stderr.log 2>/dev/null || echo '(empty)'
+          echo '--- Process still alive? ---'
+          ps -p \$APP_PID 2>/dev/null && echo 'YES' || echo 'Process died!'
+          echo '--- New console.log tail ---'
+          tail -5 \$NODE/console.log 2>/dev/null
+          echo '--- New stderr tail ---'
+          tail -5 \$NODE/stderr.log 2>/dev/null
           kill \$APP_PID 2>/dev/null
-          echo 'Killed test process'
+          wait \$APP_PID 2>/dev/null
+
+          echo ''
+          echo '=== Touch restart.txt in BOTH directories and note times ==='
+          mkdir -p \$PUB/tmp && touch \$PUB/tmp/restart.txt
+          echo \"public_html/tmp/restart.txt touched at: \$(stat -c %y \$PUB/tmp/restart.txt 2>/dev/null)\"
+          touch \$NODE/tmp/restart.txt
+          echo \"nodejs/tmp/restart.txt touched at: \$(stat -c %y \$NODE/tmp/restart.txt 2>/dev/null)\"
+          echo 'Both restart.txt files touched. Check site in 30-60s after this workflow finishes.'
+
+          echo ''
+          echo '=== public_html/server.js content ==='
+          cat \$PUB/server.js 2>/dev/null || echo '(not found)'
           "
 
       - name: Cleanup SSH key
