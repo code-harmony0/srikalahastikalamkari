@@ -1,0 +1,75 @@
+name: Diagnose Hostinger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          PORT="${{ secrets.HOSTINGER_PORT }}"
+          PORT="${PORT:-65002}"
+          ssh-keyscan -p "$PORT" -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts
+          echo "DEPLOY_PORT=$PORT" >> $GITHUB_ENV
+
+      - name: Server diagnostics
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -p $DEPLOY_PORT \
+            -o StrictHostKeyChecking=no \
+            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
+            "
+          echo '=== Node.js processes ==='
+          ps aux | grep -E 'node|next' | grep -v grep || echo '(none running)'
+
+          echo ''
+          echo '=== Port 3000 listener ==='
+          ss -tlnp 2>/dev/null | grep 3000 || netstat -tlnp 2>/dev/null | grep 3000 || echo '(port 3000 not listening)'
+
+          echo ''
+          echo '=== nodejs/ directory ==='
+          ls -la ~/domains/srikalahastikalamkari.in/nodejs/ 2>/dev/null | head -30 || echo '(directory not found)'
+
+          echo ''
+          echo '=== public_html/ contents ==='
+          ls -la ~/domains/srikalahastikalamkari.in/public_html/ 2>/dev/null | head -30 || echo '(not found)'
+
+          echo ''
+          echo '=== .htaccess in public_html ==='
+          cat ~/domains/srikalahastikalamkari.in/public_html/.htaccess 2>/dev/null || echo '(no .htaccess)'
+
+          echo ''
+          echo '=== nodejs/.env.production (first 15 lines, values masked) ==='
+          cat ~/domains/srikalahastikalamkari.in/nodejs/.env.production 2>/dev/null | sed 's/=.*/=***/' | head -15 || echo '(not found)'
+
+          echo ''
+          echo '=== nodejs/BUILD_ID ==='
+          cat ~/domains/srikalahastikalamkari.in/nodejs/.next/BUILD_ID 2>/dev/null || echo '(not found)'
+
+          echo ''
+          echo '=== node_modules exists? ==='
+          ls ~/domains/srikalahastikalamkari.in/nodejs/node_modules/.package-lock.json 2>/dev/null && echo 'YES - node_modules present' || echo 'NO - node_modules missing'
+
+          echo ''
+          echo '=== Node.js version at alt path ==='
+          export PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH
+          node --version 2>/dev/null || echo '(node not found at alt path)'
+
+          echo ''
+          echo '=== Try manual start (dry run - just check if server.js valid) ==='
+          export PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH
+          cd ~/domains/srikalahastikalamkari.in/nodejs
+          node -e 'require(\"./server.js\")' &
+          sleep 3
+          kill %1 2>/dev/null
+          ss -tlnp 2>/dev/null | grep 3000 && echo 'Port 3000 was listening!' || echo 'Port 3000 never started'
+          "
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
