@@ -123,14 +123,47 @@ jobs:
             "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
             "export PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH && cd ${{ secrets.HOSTINGER_PATH }} && npm ci --omit=dev"
 
-      # Hostinger Node.js apps restart when tmp/restart.txt is touched.
+      # Restart the Node.js app on the server.
+      # Strategy:
+      #   1. Touch tmp/restart.txt — Passenger/LiteSpeed picks this up if it's managing the process.
+      #   2. Kill any stale node process that may have been left behind.
+      #   3. Start the app via nohup as a fallback; LiteSpeed proxies to it on port 3000.
+      #   4. Wait up to 45 s for port 3000 to come up (cold start takes ~15-20 s on shared hosting).
       - name: Restart app on server
         run: |
           ssh -i ~/.ssh/deploy_key \
             -p $DEPLOY_PORT \
             -o StrictHostKeyChecking=no \
-            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-            "mkdir -p ${{ secrets.HOSTINGER_PATH }}/tmp && touch ${{ secrets.HOSTINGER_PATH }}/tmp/restart.txt && echo 'App restart triggered'"
+            "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" << 'ENDSSH'
+          export PATH=/opt/alt/alt-nodejs22/root/usr/bin:$PATH
+          APP=${{ secrets.HOSTINGER_PATH }}
+
+          # Signal Passenger (if managing the process)
+          mkdir -p "$APP/tmp"
+          touch "$APP/tmp/restart.txt"
+          echo "restart.txt touched"
+
+          # Kill any existing node process holding the port so nohup starts fresh
+          pkill -f "node.*server.js" 2>/dev/null || true
+          sleep 2
+
+          # Start the app in the background; output goes to app logs
+          cd "$APP"
+          NODE_ENV=production nohup node server.js >> "$APP/console.log" 2>> "$APP/stderr.log" &
+          echo "nohup started PID $!"
+
+          # Wait up to 45 s for port 3000
+          for i in $(seq 1 9); do
+            sleep 5
+            if ss -tlnp 2>/dev/null | grep -q :3000; then
+              echo "✓ Port 3000 is listening (attempt $i)"
+              break
+            fi
+            echo "  ... waiting for port 3000 (attempt $i/9)"
+          done
+
+          ss -tlnp 2>/dev/null | grep :3000 && echo "App is UP" || echo "WARNING: port 3000 still not listening — check console.log on server"
+          ENDSSH
 
       - name: Cleanup SSH key
         if: always()
