@@ -126,9 +126,10 @@ jobs:
       # Restart the Node.js app on the server.
       # Strategy:
       #   1. Touch tmp/restart.txt — Passenger/LiteSpeed picks this up if it's managing the process.
-      #   2. Kill any stale node process that may have been left behind.
-      #   3. Start the app via nohup as a fallback; LiteSpeed proxies to it on port 3000.
-      #   4. Wait up to 45 s for port 3000 to come up (cold start takes ~15-20 s on shared hosting).
+      #   2. Kill any stale node process so nohup starts fresh.
+      #   3. Start the app via nohup; LiteSpeed proxies to it on port 3000.
+      #   4. Install a per-minute cron job that auto-restarts the app if it ever stops.
+      #   5. Wait up to 90 s for port 3000 (cold start on a loaded shared host can take 1-2 min).
       - name: Restart app on server
         run: |
           ssh -i ~/.ssh/deploy_key \
@@ -138,31 +139,44 @@ jobs:
           export PATH=/opt/alt/alt-nodejs22/root/usr/bin:$PATH
           APP=${{ secrets.HOSTINGER_PATH }}
 
-          # Signal Passenger (if managing the process)
+          echo "Server load: $(uptime | awk -F'load average:' '{print $2}')"
+
+          # Signal Passenger (if it's still managing the process)
           mkdir -p "$APP/tmp"
           touch "$APP/tmp/restart.txt"
-          echo "restart.txt touched"
+          touch "$APP/tmp/always_restart.txt"
 
-          # Kill any existing node process holding the port so nohup starts fresh
+          # Kill any existing node process so we start clean
           pkill -f "node.*server.js" 2>/dev/null || true
-          sleep 2
+          sleep 3
 
-          # Start the app in the background; output goes to app logs
+          # Install a cron job that auto-restarts the app every minute if it's not running.
+          # This survives reboots and handles crashes on shared hosting.
+          CRON_LINE="* * * * * PATH=/opt/alt/alt-nodejs22/root/usr/bin:\$PATH; APP=$APP; if ! pgrep -f 'node.*server.js' > /dev/null 2>&1; then cd \"\$APP\" && NODE_ENV=production nohup node server.js >> \"\$APP/console.log\" 2>> \"\$APP/stderr.log\" & fi"
+          ( crontab -l 2>/dev/null | grep -v "server.js" ; echo "$CRON_LINE" ) | crontab -
+          echo "Cron job installed for auto-restart"
+
+          # Start the app now via nohup
           cd "$APP"
           NODE_ENV=production nohup node server.js >> "$APP/console.log" 2>> "$APP/stderr.log" &
           echo "nohup started PID $!"
 
-          # Wait up to 45 s for port 3000
-          for i in $(seq 1 9); do
+          # Wait up to 90 s for port 3000 (shared hosting cold start can be slow)
+          for i in $(seq 1 18); do
             sleep 5
             if ss -tlnp 2>/dev/null | grep -q :3000; then
               echo "✓ Port 3000 is listening (attempt $i)"
               break
             fi
-            echo "  ... waiting for port 3000 (attempt $i/9)"
+            echo "  ... waiting for port 3000 (attempt $i/18, $(( i * 5 ))s elapsed)"
           done
 
-          ss -tlnp 2>/dev/null | grep :3000 && echo "App is UP" || echo "WARNING: port 3000 still not listening — check console.log on server"
+          echo ""
+          echo "Final state:"
+          ss -tlnp 2>/dev/null | grep :3000 && echo "✓ App is UP on port 3000" || echo "⚠ Port 3000 not yet listening — cron will auto-start within 60 s"
+          echo ""
+          echo "Last 5 lines of stderr.log:"
+          tail -5 "$APP/stderr.log" 2>/dev/null || echo "(empty)"
           ENDSSH
 
       - name: Cleanup SSH key
