@@ -1333,10 +1333,10 @@ export default function HomePage() {
           </div>
         </section>
         {/* VOICES OF HERITAGE — Community & Trust Redesign (KDLS 2026) */}
-        <section className="w-full py-20 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FFF3E6]">
+        <section className="w-full py-20 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FFF3E6] dark:from-[#120905] dark:to-[#1b0e08]">
           {/* Subtle Fabric Texture Overlay */}
           <div
-            className="absolute inset-0 opacity-[0.03] mix-blend-multiply pointer-events-none"
+            className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none"
             style={{
               backgroundImage: `url('/patterns/kalamkari-pattern.svg')`,
               backgroundSize: "120px 120px",
@@ -1352,14 +1352,14 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <span className="font-sans text-xs font-semibold tracking-[0.25em] uppercase text-[#C19A5B] block mb-4">
+                <span className="font-sans text-xs font-semibold tracking-[0.25em] uppercase text-[#C19A5B] dark:text-[#E5B97C] block mb-4">
                   Authentic Voices
                 </span>
-                <h2 className="font-playfair text-4xl md:text-5xl text-[#3A2413] font-bold leading-tight mb-6">
+                <h2 className="font-playfair text-4xl md:text-5xl text-[#3A2413] dark:text-[#FAF3E8] font-bold leading-tight mb-6">
                   Voices of{" "}
-                  <span className="italic text-[#A4552A]">Heritage</span>
+                  <span className="italic text-[#A4552A] dark:text-[#E88A54]">Heritage</span>
                 </h2>
-                <p className="font-sans text-[16px] text-[#3A2413]/70 max-w-2xl mx-auto leading-relaxed">
+                <p className="font-sans text-[16px] text-[#3A2413]/70 dark:text-[#FAF3E8]/70 max-w-2xl mx-auto leading-relaxed">
                   Real stories from those who carry our legacy forward, woven
                   through threads of trust and timeless craftsmanship.
                 </p>
@@ -1374,9 +1374,9 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  className="relative p-10 md:p-14 bg-white/60 backdrop-blur-md rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] border border-[#C19A5B]/10 overflow-hidden text-center max-w-5xl mx-auto"
+                  className="relative p-10 md:p-14 bg-white/60 dark:bg-[#1a0f0a]/60 backdrop-blur-md rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.3)] border border-[#C19A5B]/10 dark:border-[#C19A5B]/20 overflow-hidden text-center max-w-5xl mx-auto"
                 >
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 opacity-[0.03] pointer-events-none">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 opacity-[0.03] dark:opacity-[0.06] pointer-events-none">
                     <svg viewBox="0 0 100 100" fill="none" stroke="#C19A5B">
                       <path
                         d="M50 10 L80 90 L20 40 L80 40 L20 90 Z"
@@ -1386,10 +1386,10 @@ export default function HomePage() {
                   </div>
 
                   <div className="relative z-10">
-                    <div className="text-[64px] font-playfair text-[#C19A5B] opacity-[0.15] leading-none mb-4 h-12">
+                    <div className="text-[64px] font-playfair text-[#C19A5B] dark:text-[#E5B97C] opacity-[0.15] leading-none mb-4 h-12">
                       ❝
                     </div>
-                    <p className="font-playfair text-[20px] md:text-[24px] leading-[1.7] text-[#3A2413]/85 mb-10 italic max-w-3xl mx-auto">
+                    <p className="font-playfair text-[20px] md:text-[24px] leading-[1.7] text-[#3A2413]/85 dark:text-[#FAF3E8]/90 mb-10 italic max-w-3xl mx-auto">
                       "Each piece tells a story that transcends time. Truly a
                       masterpiece of Srikalahasti art, hand-painted with a soul
                       that connects me to the divine heritage. The colors are
@@ -1398,7 +1398,7 @@ export default function HomePage() {
 
                     <div className="flex flex-col items-center gap-4">
                       <div className="relative">
-                        <div className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 border-[#C19A5B]/20">
+                        <div className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 border-[#C19A5B]/20 dark:border-[#C19A5B]/40">
                           <Image
                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&auto=format&fit=crop"
                             alt="Verified Customer"
@@ -1407,15 +1407,15 @@ export default function HomePage() {
                             className="object-cover"
                           />
                         </div>
-                        <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
-                          <CheckCircle2 className="w-4 h-4 text-[#C19A5B] fill-current" />
+                        <div className="absolute -bottom-1 -right-1 bg-white dark:bg-[#120905] rounded-full p-0.5 shadow-sm">
+                          <CheckCircle2 className="w-4 h-4 text-[#C19A5B] dark:text-[#E5B97C] fill-current" />
                         </div>
                       </div>
                       <div>
-                        <p className="font-playfair text-[18px] font-bold text-[#A4552A] leading-tight mb-1 uppercase tracking-wide">
+                        <p className="font-playfair text-[18px] font-bold text-[#A4552A] dark:text-[#E88A54] leading-tight mb-1 uppercase tracking-wide">
                           Priya Sharma
                         </p>
-                        <p className="font-sans text-[13px] text-[#3A2413]/60 italic font-medium">
+                        <p className="font-sans text-[13px] text-[#3A2413]/60 dark:text-[#FAF3E8]/60 italic font-medium">
                           Mumbai, Maharashtra
                         </p>
                       </div>
@@ -1469,34 +1469,33 @@ export default function HomePage() {
                   <motion.div
                     whileHover={{
                       y: -8,
-                      boxShadow: "0 12px 24px rgba(164, 85, 42, 0.08)",
                     }}
-                    className="group h-full p-8 md:p-10 bg-white/50 backdrop-blur-sm rounded-[16px] border border-[#C19A5B]/10 flex flex-col justify-between transition-all duration-300 hover:bg-white/80"
+                    className="group h-full p-8 md:p-10 bg-white/50 dark:bg-[#1a0f0a]/40 backdrop-blur-sm rounded-[16px] border border-[#C19A5B]/10 dark:border-[#C19A5B]/20 flex flex-col justify-between transition-all duration-500 hover:bg-white/80 dark:hover:bg-[#1a0f0a]/60 hover:border-[#C19A5B]/30 dark:hover:border-[#C19A5B]/40 shadow-sm dark:shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-2xl dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)]"
                   >
                     <div className="mb-6">
                       <div className="flex justify-between items-start mb-4">
-                        <div className="text-[40px] font-playfair text-[#C19A5B] opacity-[0.2] leading-none h-6">
+                        <div className="text-[40px] font-playfair text-[#C19A5B] dark:text-[#E5B97C] opacity-[0.2] leading-none h-6">
                           “
                         </div>
                         <div className="flex gap-0.5">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className="w-3 h-3 fill-[#C19A5B] text-[#C19A5B]"
+                              className="w-3 h-3 fill-[#C19A5B] dark:fill-[#E5B97C] text-[#C19A5B] dark:text-[#E5B97C]"
                             />
                           ))}
                         </div>
                       </div>
-                      <p className="font-sans text-[15px] leading-[1.7] text-[#3A2413]/80 italic">
+                      <p className="font-serif text-[16px] md:text-[17px] leading-[1.7] text-[#3A2413]/85 dark:text-[#FAF3E8]/90 italic">
                         {item.quote}
                       </p>
                     </div>
 
-                    <div className="pt-6 border-t border-[#C19A5B]/10">
-                      <p className="font-sans text-[14px] font-bold text-[#A4552A] uppercase tracking-wider mb-1">
+                    <div className="pt-6 border-t border-[#C19A5B]/10 dark:border-[#C19A5B]/20">
+                      <p className="font-sans text-[14px] font-bold text-[#A4552A] dark:text-[#E88A54] uppercase tracking-wider mb-1">
                         {item.name}
                       </p>
-                      <p className="font-sans text-[12px] text-[#3A2413]/50 font-medium">
+                      <p className="font-sans text-[12px] text-[#3A2413]/50 dark:text-[#FAF3E8]/50 font-medium">
                         {item.city}
                       </p>
                     </div>
@@ -1506,41 +1505,38 @@ export default function HomePage() {
             </div>
 
             {/* Trust Anchors Footer */}
-            <div className="mt-24 md:mt-32 border-t border-[#C19A5B]/20 pt-16 md:pt-20">
+            <div className="mt-24 md:mt-32 border-t border-[#C19A5B]/20 dark:border-[#C19A5B]/30 pt-16 md:pt-20">
               <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
                 {[
                   {
                     icon: Star,
                     value: "4.9/5",
                     label: "Customer Rating",
-                    prefix: "⭐ ",
                   },
                   {
                     icon: Scissors,
                     value: "100%",
                     label: "Handcrafted",
-                    prefix: "🪡 ",
                   },
                   {
                     icon: Users,
                     value: "10K+",
                     label: "Happy Customers",
-                    prefix: "❤️ ",
                   },
                 ].map((anchor, idx) => (
                   <AnimatedElement key={idx} delay={idx * 150}>
                     <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      className="flex items-center gap-4 bg-[#FFF8F0] px-8 py-5 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-[#C19A5B]/15 min-w-[240px] justify-center group"
+                      whileHover={{ scale: 1.03, y: -4 }}
+                      className="flex items-center gap-5 bg-white/70 dark:bg-[#1a0f0a]/50 backdrop-blur-md px-8 py-5 rounded-2xl shadow-[0_4px_18px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.15)] border border-[#C19A5B]/15 dark:border-[#C19A5B]/25 min-w-[260px] justify-center group transition-all duration-300 hover:border-[#C19A5B]/40 dark:hover:border-[#C19A5B]/50"
                     >
-                      <div className="flex flex-col items-center">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-lg">{anchor.prefix}</span>
-                          <span className="font-playfair text-[22px] font-bold text-[#3A2413]">
-                            {anchor.value}
-                          </span>
-                        </div>
-                        <span className="font-sans text-[12px] font-bold text-[#A4552A] uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">
+                      <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-[#A4552A]/8 dark:bg-[#E88A54]/10 border border-[#A4552A]/20 dark:border-[#E88A54]/30 text-[#A4552A] dark:text-[#E88A54] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#A4552A]/15 group-hover:border-[#A4552A]/40 dark:group-hover:border-[#E88A54]/50">
+                        <anchor.icon className="w-5 h-5 stroke-[1.5]" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-playfair text-[22px] font-bold text-[#3A2413] dark:text-[#FAF3E8] leading-tight mb-0.5">
+                          {anchor.value}
+                        </span>
+                        <span className="font-sans text-[11px] font-bold text-[#A4552A] dark:text-[#E88A54] uppercase tracking-[0.1em] opacity-80 group-hover:opacity-100 transition-opacity">
                           {anchor.label}
                         </span>
                       </div>

@@ -106,27 +106,35 @@
 
   /* Dark mode - Mainly for Dashboard if Website doesn't use it, or Global Dark */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    /* ... (Keep existing dark mode values if needed, or adjust to match scope) */
-    /* Updating generic dark mode to standard Shadcn dark for now */
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* SRIKALAHASTI WARM HERITAGE DARK THEME */
+    --background: 20 30% 6.5%; /* Warm Dark Espresso #160e0a */
+    --foreground: 36 30% 90%; /* Warm Ivory Cream #f4ece1 */
+
+    --card: 20 25% 10%; /* Slightly lighter Warm Dark Espresso #1e110a */
+    --card-foreground: 36 30% 90%;
+
+    --popover: 20 30% 6.5%;
+    --popover-foreground: 36 30% 90%;
+
+    /* Primary: Golden #D49217 */
+    --primary: 42 85% 46%;
+    --primary-foreground: 22 25% 19%;
+
+    --secondary: 20 18% 16%; /* Muted Espresso #2f211b */
+    --secondary-foreground: 36 30% 90%;
+
+    --muted: 20 12% 20%; /* Muted Brown #3a312d */
+    --muted-foreground: 36 15% 65%; /* Muted Cream #bab1a4 */
+
+    --accent: 42 85% 46%; /* Golden */
+    --accent-foreground: 22 25% 19%;
+
+    --destructive: 348 83% 47%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 20 15% 18%; /* Lighter Warm Brown #352923 */
+    --input: 20 15% 18%;
+    --ring: 42 85% 46%;
   }
 }
 
@@ -196,6 +204,11 @@
   background-position: 0 0;
   background-repeat: repeat;
   background-attachment: scroll; /* iOS Safari: fixed breaks rendering */
+}
+
+.dark .kalamkari-static-background {
+  background-color: #120905; /* Deep rich espresso chocolate */
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C19A5B' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round' opacity='0.08'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23C19A5B' fill-opacity='0.04'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%23A4552A' fill-opacity='0.03'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23C19A5B' fill-opacity='0.03'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%23A4552A' fill-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* Desktop only: parallax fixed background */
