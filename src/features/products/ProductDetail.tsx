@@ -490,7 +490,7 @@ export default function ProductDetail() {
                     className={cn(
                       "flex-1 rounded-[6px] font-inter font-medium text-sm flex items-center justify-center gap-2 transition-all",
                       inStock
-                        ? "bg-[#A4552A] hover:bg-[#8B3F20] text-white shadow-sm active:scale-[0.98]"
+                        ? "bg-[#C19A5B] hover:bg-[#A07840] text-white shadow-sm active:scale-[0.98]"
                         : "bg-gray-200 text-gray-500 cursor-not-allowed",
                     )}
                   >

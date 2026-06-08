@@ -114,8 +114,8 @@ export function SubCategoryPopup({
                       className={cn(
                         "flex items-center gap-3 p-2.5 sm:p-3 rounded-lg border transition-all text-left group hover:shadow-md",
                         isSelected
-                            ? "border-[#A4552A] bg-[#FFF4E8] shadow-sm ring-1 ring-[#A4552A]/20"
-                            : "border-[#C19A5B]/20 bg-white hover:border-[#C19A5B] hover:bg-[#FFF4E8]/30"
+                            ? "border-[#C19A5B] bg-[#C19A5B]/5 shadow-sm ring-1 ring-[#C19A5B]/20"
+                            : "border-[#C19A5B]/20 bg-white/60 hover:border-[#C19A5B] hover:bg-[#C19A5B]/10"
                       )}
                     >
                       {/* Thumbnail */}
@@ -141,7 +141,7 @@ export function SubCategoryPopup({
                         {/* Overlay on image */}
                         <div className={cn(
                             "absolute inset-0 transition-opacity duration-300",
-                            isSelected ? "bg-[#A4552A]/15" : "bg-black/0 group-hover:bg-black/5"
+                            isSelected ? "bg-[#C19A5B]/15" : "bg-black/0 group-hover:bg-black/5"
                         )} />
                       </div>
 

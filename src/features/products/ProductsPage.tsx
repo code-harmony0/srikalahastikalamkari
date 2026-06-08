@@ -229,70 +229,23 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512] overflow-hidden">
       {/* Hero Overview */}
-      <section className="relative w-full flex flex-col items-center justify-center bg-gradient-to-b from-[#FFF8F0] to-[#FFF4E8] overflow-hidden">
+      <section className="relative w-full h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-[#1A1512] px-6">
+        {/* Subtle background motif */}
         <div
-          className="absolute inset-0 opacity-[0.4] pointer-events-none"
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
           style={{
-            backgroundImage: `radial-gradient(#C19A5B 0.5px, transparent 0.5px)`,
-            backgroundSize: "24px 24px",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C19A5B' stroke-width='0.5'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundSize: "200px 200px",
           }}
         />
-        <div className="max-w-[1100px] mx-auto px-6 relative z-10 text-center pt-20 pb-10">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="flex flex-col items-center"
-          >
-            <span className="font-sans text-[12px] font-medium tracking-[0.25em] uppercase text-[#C19A5B] mb-2 leading-none">
-              Heritage Collective
-            </span>
-            <h1 className="font-playfair text-[3rem] text-[#3B2C23] font-bold leading-tight mb-2.5">
-              The Artisan's{" "}
-              <span className="italic text-[#A4552A]">Gallery</span>
-            </h1>
-            <p className="font-sans text-[15px] text-[#3B2C23]/70 max-w-[700px] leading-relaxed mb-5">
-              Hand-painted sarees and textiles crafted with five centuries of
-              Srikalahasti tradition.
-            </p>
-
-            <motion.button
-              onClick={() =>
-                gridRef.current?.scrollIntoView({ behavior: "smooth" })
-              }
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2, duration: 0.8 }}
-              className="group flex flex-col items-center gap-3 mt-4"
-            >
-              <span className="text-[11px] font-semibold text-[#C19A5B] tracking-[0.2em] uppercase transition-colors duration-500 group-hover:text-[#A4552A] leading-none">
-                Explore Collection
-              </span>
-              <div className="relative w-[1px] h-12 overflow-hidden">
-                <div className="absolute inset-0 bg-[#C19A5B]/30 group-hover:bg-[#A4552A]/30 transition-colors duration-500" />
-                <motion.div
-                  animate={{
-                    y: [-48, 48],
-                    backgroundColor: ["#C19A5B", "#C19A5B", "#A4552A"],
-                  }}
-                  transition={{
-                    y: { duration: 2.5, repeat: Infinity, ease: "linear" },
-                    backgroundColor: { duration: 0.5 },
-                  }}
-                  className="absolute top-0 left-0 w-full h-1/2 bg-[#C19A5B] transition-colors duration-500 group-hover:bg-[#A4552A]"
-                />
-              </div>
-            </motion.button>
-          </motion.div>
-        </div>
 
         {/* Ambient glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1A1512]/60 via-transparent to-[#1A1512]/90 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1A1512]/60 via-transparent to-[#1A1512]/95 z-[1]" />
 
         {/* Luxury framing borders */}
-        <div className="absolute inset-4 z-[5] pointer-events-none border border-[#C19A5B]/15">
+        <div className="absolute inset-6 z-[5] pointer-events-none border border-[#C19A5B]/15">
           {/* Decorative Corner markers */}
           <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-[#C19A5B]" />
           <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-[#C19A5B]" />
@@ -304,7 +257,7 @@ export default function ProductsPage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
+          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto text-center"
         >
           <span className="font-sans text-[10px] md:text-[11px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-3">
             Heritage Collective
@@ -316,9 +269,37 @@ export default function ProductsPage() {
 
           <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mb-3" />
 
-          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
+          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed mb-6">
             Explore hand-painted sarees and heritage textiles crafted with five centuries of Srikalahasti tradition.
           </p>
+
+          <motion.button
+            onClick={() =>
+              gridRef.current?.scrollIntoView({ behavior: "smooth" })
+            }
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="group flex flex-col items-center gap-3 mt-2"
+          >
+            <span className="text-[10px] font-bold text-[#C19A5B] tracking-[0.2em] uppercase transition-colors duration-500 group-hover:text-[#FAFAF8] leading-none">
+              Explore Collection
+            </span>
+            <div className="relative w-[1px] h-10 overflow-hidden">
+              <div className="absolute inset-0 bg-[#C19A5B]/30 group-hover:bg-[#FAFAF8]/30 transition-colors duration-500" />
+              <motion.div
+                animate={{
+                  y: [-40, 40],
+                  backgroundColor: ["#C19A5B", "#C19A5B", "#FAFAF8"],
+                }}
+                transition={{
+                  y: { duration: 2.5, repeat: Infinity, ease: "linear" },
+                  backgroundColor: { duration: 0.5 },
+                }}
+                className="absolute top-0 left-0 w-full h-1/2 bg-[#C19A5B] transition-colors duration-500 group-hover:bg-[#FAFAF8]"
+              />
+            </div>
+          </motion.button>
         </motion.div>
       </section>
 
@@ -614,8 +595,8 @@ export default function ProductsPage() {
                                 disabled={isFetching}
                                 className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
                                   currentPage === pNum
-                                    ? "bg-[#A4552A] text-white shadow-md shadow-[#A4552A]/20"
-                                    : "text-[#3B2C23]/60 hover:bg-[#FFF4E8] hover:text-[#A4552A]"
+                                    ? "bg-[#C19A5B] text-white shadow-md shadow-[#C19A5B]/20"
+                                    : "text-[#1A1512]/60 hover:bg-[#C19A5B]/10 hover:text-[#C19A5B]"
                                 }`}
                               >
                                 {pNum}

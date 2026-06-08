@@ -482,34 +482,37 @@ export default function HomePage() {
                 />
               </motion.div>
             </AnimatePresence>
+          </motion.div>
 
-          </div>
+          {/* Dark Premium Overlay for Text Readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 z-[1]" />
+          
+          {/* Fabric Grain Texture */}
+          <div
+            className="absolute inset-0 opacity-[0.08] mix-blend-overlay z-[2]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            }}
+          />
 
-          {/* RIGHT COLUMN: Visual & Parallax */}
-          <div className="relative order-1 lg:order-2 h-[60vh] lg:h-auto overflow-hidden">
+          {/* Gold floating particles */}
+          <GoldParticles />
+
+          {/* Centered Content Narrative with animations */}
+          <div className="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center justify-center">
             <motion.div
-              style={{ y: heroY, scale: heroScale }}
-              className="absolute inset-0 w-full h-[120%]"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    staggerChildren: 0.15,
+                  },
+                },
+              }}
+              className="flex flex-col items-center text-center"
             >
-              {heroBackgroundImages.map((image, index) => {
-                const isActive = index === currentImageIndex
-                const isNext =
-                  index === (currentImageIndex + 1) % heroBackgroundImages.length
-                // Only render current + next slide — browser won't download the others
-                if (!isActive && !isNext && index !== 0) return null
-                return (
-                  <Image
-                    key={index}
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className={`object-cover object-top transition-opacity ease-in-out ${isActive ? "opacity-100" : "opacity-0"}`}
-                    style={{ transitionDuration: "2000ms" }}
-                    priority={index === 0}
-                  />
-                )
-              })}
-
               {/* Est. Badge */}
               <motion.div
                 variants={{
@@ -643,8 +646,8 @@ export default function HomePage() {
                   </motion.div>
                 ))}
               </motion.div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* ── Scroll Cue — mouse icon with animated scroll wheel ── */}
           <motion.div
