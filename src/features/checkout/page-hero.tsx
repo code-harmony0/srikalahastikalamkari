@@ -46,19 +46,19 @@ export function PageHero({
       >
         {/* Icon */}
         {Icon && (
-          <div className="mb-4 p-3 rounded-full bg-[#FFF8F0]/10 border border-[#FFF8F0]/20 backdrop-blur-sm shadow-sm">
+          <div className="mb-4 p-3 rounded-full bg-[#FAFAF8]/10 border border-[#FAFAF8]/20 backdrop-blur-sm shadow-sm">
             <Icon className="w-6 h-6 text-[#C19A5B]" strokeWidth={1.5} />
           </div>
         )}
 
         {/* Title */}
-        <h1 className="font-playfair text-3xl md:text-[40px] font-bold text-[#FFF8F0] tracking-wide leading-tight mb-3 drop-shadow-sm">
+        <h1 className="font-playfair text-3xl md:text-[40px] font-bold text-[#FAFAF8] tracking-wide leading-tight mb-3 drop-shadow-sm">
           {title}
         </h1>
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="font-inter text-[#FFF8F0]/80 text-sm md:text-[16px] font-light tracking-wide leading-relaxed max-w-xl">
+          <p className="font-inter text-[#FAFAF8]/80 text-sm md:text-[16px] font-light tracking-wide leading-relaxed max-w-xl">
             {subtitle}
           </p>
         )}

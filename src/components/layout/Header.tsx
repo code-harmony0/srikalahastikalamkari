@@ -35,7 +35,7 @@ const ActionIcon = ({
   return (
     <Link
       href={href}
-      className="relative group p-2.5 rounded-full hover:bg-[#FFF8F0]/10 transition-all duration-300"
+      className="relative group p-2.5 rounded-full hover:bg-[#FAFAF8]/10 transition-all duration-300"
       aria-label={label}
     >
       <Icon
@@ -73,9 +73,9 @@ const ActionIcon = ({
       </AnimatePresence>
 
       {/* Tooltip */}
-      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-wide bg-[#1A1512] text-[#FFF8F0] px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-[#FFF8F0]/10 z-50">
+      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-wide bg-[#1A1512] text-[#FAFAF8] px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-[#FAFAF8]/10 z-50">
         {label}
-        <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1A1512] rotate-45 border-t border-l border-[#FFF8F0]/10"></span>
+        <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1A1512] rotate-45 border-t border-l border-[#FAFAF8]/10"></span>
       </span>
     </Link>
   );
@@ -245,7 +245,7 @@ export default function Header() {
               animate={{ y: 0 }}
               exit={{ y: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-[56px] left-0 right-0 bg-[#FFF8F0] z-40 md:hidden overflow-hidden rounded-b-2xl shadow-2xl border-b border-[#C19A5B]/20"
+              className="fixed top-[56px] left-0 right-0 bg-background kalamkari-static-background silk-fabric-texture z-40 md:hidden overflow-hidden rounded-b-2xl shadow-2xl border-b border-[#C19A5B]/20"
             >
               <div className="flex flex-col p-6 gap-2">
                 {navLinks.map((link) => (

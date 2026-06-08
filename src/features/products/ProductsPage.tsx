@@ -411,7 +411,7 @@ export default function ProductsPage() {
                   <div className="flex items-center gap-5 w-full sm:w-auto">
                     <button
                       onClick={() => setShowFilters(true)}
-                      className="lg:hidden flex-1 sm:flex-none flex items-center justify-center gap-2.5 px-6 py-3 rounded-lg border border-[#C19A5B]/30 text-[10px] font-bold tracking-[0.2em] uppercase text-[#1A1512] bg-[#FFF8F0]/70 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
+                      className="lg:hidden flex-1 sm:flex-none flex items-center justify-center gap-2.5 px-6 py-3 rounded-lg border border-[#C19A5B]/30 text-[10px] font-bold tracking-[0.2em] uppercase text-[#1A1512] bg-white/90 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
                     >
                       <SlidersHorizontal className="w-3.5 h-3.5 text-[#C19A5B]" />
                       Filters
@@ -547,10 +547,10 @@ export default function ProductsPage() {
                   </motion.div>
 
                   {/* Pagination Footer - Dashboard Style */}
-                  <div className="mt-12 px-6 py-4 border-t border-[#C19A5B]/10 bg-[#FFF8F0]/30 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="text-sm text-[#3B2C23]/60">
+                  <div className="mt-12 px-6 py-4 border-t border-[#C19A5B]/10 bg-[#1A1512]/5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="text-sm text-[#1A1512]/60">
                       Showing{" "}
-                      <span className="font-semibold text-[#A4552A]">
+                      <span className="font-semibold text-[#C19A5B]">
                         {Math.min(
                           (currentPage - 1) * itemsPerPage + 1,
                           totalCount,
@@ -558,7 +558,7 @@ export default function ProductsPage() {
                         -{Math.min(currentPage * itemsPerPage, totalCount)}
                       </span>{" "}
                       of{" "}
-                      <span className="font-semibold text-[#3B2C23]">
+                      <span className="font-semibold text-[#1A1512]">
                         {totalCount}
                       </span>{" "}
                       products
@@ -623,7 +623,7 @@ export default function ProductsPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="relative text-center py-20 bg-[#FFF8F0]/30 backdrop-blur-sm rounded-xl border border-[#C19A5B]/20 shadow-sm overflow-hidden"
+                  className="relative text-center py-20 bg-white/40 backdrop-blur-sm rounded-xl border border-[#C19A5B]/20 shadow-sm overflow-hidden"
                 >
                   {/* Decorative corners */}
                   <div className="absolute inset-3 pointer-events-none border border-[#C19A5B]/10">

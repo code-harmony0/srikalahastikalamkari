@@ -1024,7 +1024,7 @@ export const productsService = {
   },
   // Efficient featured query — fetches ONLY featured products, no full-table scan
   async getFeaturedEfficient(limit = 6): Promise<Product[]> {
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from("products")
       .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, category_id, categories:category_id(id, name)")
       .eq("is_featured", true)
@@ -1032,9 +1032,33 @@ export const productsService = {
       .order("created_at", { ascending: false });
     if (error) {
       console.warn("getFeaturedEfficient error:", error.message);
-      return [];
+      data = [];
     }
-    return ((data || []) as any[]).map((p) => ({
+
+    let products = (data || []) as any[];
+
+    // Pad with latest active products if count is less than limit
+    if (products.length < limit) {
+      const needed = limit - products.length;
+      const existingIds = products.map((p) => p.id);
+
+      let query = supabase
+        .from("products")
+        .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, category_id, categories:category_id(id, name)")
+        .limit(needed)
+        .order("created_at", { ascending: false });
+
+      if (existingIds.length > 0) {
+        query = query.not("id", "in", `(${existingIds.join(",")})`);
+      }
+
+      const { data: fallbackData, error: fallbackError } = await query;
+      if (!fallbackError && fallbackData) {
+        products = [...products, ...fallbackData];
+      }
+    }
+
+    return products.map((p) => ({
       ...p,
       in_stock: (p.stock_quantity ?? 0) > 0,
       inStock: (p.stock_quantity ?? 0) > 0,

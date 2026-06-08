@@ -89,7 +89,7 @@ export function ReviewSubmissionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-[#FFF8F0] border border-[#C19A5B]/20">
+      <DialogContent className="sm:max-w-[500px] bg-white border border-[#C19A5B]/20">
         <DialogHeader>
           <DialogTitle className="font-playfair text-2xl font-bold text-[#1A1512]">
             Write a Review

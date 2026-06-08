@@ -17,7 +17,7 @@ export default function AboutPage() {
     {
       name: "Shaik Saleem Basha",
       role: "Founder",
-      image: "/images/about/shaik-saleem-basha.jpg",
+      image: "/images/about/shaik-saleem-basha.png",
     },
     {
       name: "Shaik Abdul Vajid",
@@ -27,7 +27,7 @@ export default function AboutPage() {
     {
       name: "Yalasiri Anitha",
       role: "Master Artisan",
-      image: "/images/about/anitha.jpg",
+      image: "/images/about/anitha.png",
     },
     {
       name: "Muni Krishna Reddy",
@@ -218,7 +218,7 @@ export default function AboutPage() {
       {/* ─────────────────────────────────────────────
           3. CORE VALUES
       ────────────────────────────────────────────── */}
-      <section className="py-20 bg-[#FAFAF8] border-y border-[#1A1512]/5">
+      <section className="py-20 bg-[#1A1512]/5 border-y border-[#1A1512]/5">
         <div className="container mx-auto px-6 max-w-[1200px]">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[#C19A5B] mb-2 block">
@@ -245,7 +245,7 @@ export default function AboutPage() {
                 variants={fadeInUp}
                 className="bg-white p-8 rounded-[12px] border border-[#C19A5B]/20 shadow-[0_1px_3px_rgba(26,21,18,0.02)] hover:shadow-[0_12px_30px_rgba(26,21,18,0.06)] hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="w-12 h-12 rounded-full bg-[#FFF8F0] flex items-center justify-center mb-6 group-hover:bg-[#C19A5B] border border-[#C19A5B]/30 transition-colors duration-300">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mb-6 group-hover:bg-[#C19A5B] border border-[#C19A5B]/30 transition-colors duration-300">
                   <val.icon
                     className="w-6 h-6 text-[#C19A5B] group-hover:text-white transition-colors duration-300"
                     strokeWidth={1.5}
@@ -319,7 +319,7 @@ export default function AboutPage() {
       {/* ─────────────────────────────────────────────
           5. WHY CHOOSE US
       ────────────────────────────────────────────── */}
-      <section className="py-20 md:py-28 bg-[#FFF8F0]/50 border-t border-[#1A1512]/5">
+      <section className="py-20 md:py-28 bg-transparent border-t border-[#1A1512]/5">
         <div className="container mx-auto px-6 max-w-[1080px]">
           <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
             {/* Text Content */}
@@ -348,7 +348,7 @@ export default function AboutPage() {
                   "Exceptional customer service",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-[#FAFAF8] border border-[#C19A5B]/30 flex items-center justify-center">
+                    <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-white border border-[#C19A5B]/30 flex items-center justify-center">
                       <Check
                         className="w-3 h-3 text-[#C19A5B]"
                         strokeWidth={3}

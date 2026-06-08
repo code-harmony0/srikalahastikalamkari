@@ -147,12 +147,12 @@ export default function EditProfilePage() {
           </div>
 
           {/* Title */}
-          <h1 className="font-playfair text-[32px] md:text-[40px] font-bold text-[#FFF8F0] tracking-wide leading-tight mb-2">
+          <h1 className="font-playfair text-[32px] md:text-[40px] font-bold text-[#FAFAF8] tracking-wide leading-tight mb-2">
             Edit Profile
           </h1>
 
           {/* Subtitle */}
-          <p className="font-inter text-[#FFF8F0]/80 text-[14px] md:text-[16px] font-normal tracking-wide leading-relaxed max-w-[640px]">
+          <p className="font-inter text-[#FAFAF8]/80 text-[14px] md:text-[16px] font-normal tracking-wide leading-relaxed max-w-[640px]">
             Update your personal and delivery details.
           </p>
 

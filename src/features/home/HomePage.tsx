@@ -30,12 +30,10 @@ import {
   Shield,
   Gem,
   Clock,
-  Mail,
   Droplets,
   Paintbrush,
   Waves,
   Crown,
-  Send,
 } from "lucide-react"
 import {
   KanjeevaramPattern,
@@ -58,32 +56,16 @@ const AnimatedElement: React.FC<AnimatedElementProps> = ({
   className,
   delay = 0,
 }) => {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            element.classList.add("is-visible")
-          }, delay)
-          observer.unobserve(element)
-        }
-      },
-      { threshold: 0.1 },
-    )
-
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [delay])
-
   return (
-    <div ref={ref} className={`${className || ""} animate-reveal`}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: delay / 1000, ease: "easeOut" }}
+      className={className}
+    >
       {children}
-    </div>
+    </motion.div>
   )
 }
 
@@ -674,7 +656,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* SHOP BY CATEGORY — Visual Category Navigator                  */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="w-full py-20 md:py-28 relative overflow-hidden bg-[#FAFAF8]">
+        <section className="w-full py-12 md:py-16 relative overflow-hidden bg-transparent">
           <div className="max-w-[1300px] mx-auto px-6 relative z-10">
             {/* Header */}
             <motion.div
@@ -764,7 +746,7 @@ export default function HomePage() {
         </section>
 
         {/* SECTION 2: Masterpieces of Heritage - Curated Editorial Layout */}
-        <section className="relative w-full py-24 md:py-32 overflow-hidden">
+        <section className="relative w-full pt-6 pb-14 md:pt-8 md:pb-18 overflow-hidden">
           <div className="max-w-[1200px] mx-auto px-6 relative z-10">
             {/* Header Block - Editorial, balanced */}
             <div className="text-center mb-16 md:mb-20">
@@ -820,7 +802,7 @@ export default function HomePage() {
         </section>
 
         {/* The Soul of the Artisan Section - Refined Polish (Section 3) */}
-        <section className="w-full py-24 md:py-32 relative overflow-hidden bg-white">
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-white/40 backdrop-blur-[2px] border-y border-[#C19A5B]/10">
           <div className="max-w-[1200px] mx-auto px-6 lg:px-12 relative z-20">
             <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
               {/* Image Block - Editorial Framing */}
@@ -846,7 +828,7 @@ export default function HomePage() {
 
                 {/* Stat Card: Minimalist Floating */}
                 <motion.div
-                  className="absolute -bottom-6 -right-6 bg-white p-8 shadow-lg border border-[#1A1512]/5"
+                  className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-md p-8 shadow-lg border border-[#C19A5B]/15"
                 >
                   <CountUpNumber
                     end={500}
@@ -941,7 +923,7 @@ export default function HomePage() {
 
         {/* Seasonal Offerings Section - Modern Tactile Cards with Editorial Feel */}
         {promotions.length > 0 && (
-          <section className="w-full pt-16 pb-24 md:pb-32 relative overflow-hidden">
+          <section className="w-full pt-10 pb-16 md:pb-22 relative overflow-hidden">
             <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
               <div className="h-px w-full bg-gradient-to-r from-transparent via-[#E5B97C]/50 to-transparent" />
             </div>
@@ -1345,7 +1327,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* THE KALAMKARI PROCESS — Visual Storytelling Steps              */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="w-full py-24 md:py-32 relative overflow-hidden bg-white">
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-transparent">
           <div className="max-w-[1200px] mx-auto px-6 relative z-10">
             {/* Header */}
             <motion.div
@@ -1402,7 +1384,7 @@ export default function HomePage() {
                       {/* Outer ring */}
                       <div className="absolute inset-0 rounded-full border-2 border-[#C19A5B]/20 group-hover:border-[#C19A5B]/50 transition-colors duration-500" />
                       {/* Inner circle */}
-                      <div className="absolute inset-2 rounded-full bg-gradient-to-br from-[#FFF8F0] to-[#F5E8D4] group-hover:from-[#C19A5B]/10 group-hover:to-[#C19A5B]/20 transition-all duration-500 flex items-center justify-center shadow-sm">
+                      <div className="absolute inset-2 rounded-full bg-gradient-to-br from-white to-neutral-200/40 group-hover:from-[#C19A5B]/10 group-hover:to-[#C19A5B]/20 transition-all duration-500 flex items-center justify-center shadow-sm">
                         <step.icon className="w-7 h-7 text-[#C19A5B] group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       {/* Step number */}
@@ -1425,7 +1407,7 @@ export default function HomePage() {
         </section>
 
         {/* Our Promise Section - Precision Polish 2026 */}
-        <section className="w-full py-10 md:py-12 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-white">
+        <section className="w-full py-10 md:py-12 relative overflow-hidden bg-gradient-to-b from-white/50 to-transparent">
           {/* Faint Kalamkari Motif Background */}
           <div
             className="absolute inset-0 opacity-[0.05] pointer-events-none"
@@ -1474,7 +1456,7 @@ export default function HomePage() {
                     <div className="absolute -inset-1 bg-[#C19A5B]/0 group-hover:bg-[#C19A5B]/15 rounded-[16px] blur-lg transition-all duration-500" />
 
                     {/* Card with Darker Gradient */}
-                    <div className="relative h-full bg-gradient-to-b from-white to-[#FFF8F0]/40 rounded-xl py-8 px-6 shadow-[0_6px_18px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_28px_rgba(193,154,91,0.12)] transition-all duration-500 border border-[#C19A5B]/20 group-hover:border-[#C19A5B]/50 overflow-hidden">
+                    <div className="relative h-full bg-gradient-to-b from-white to-white/40 rounded-xl py-8 px-6 shadow-[0_6px_18px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_28px_rgba(193,154,91,0.12)] transition-all duration-500 border border-[#C19A5B]/20 group-hover:border-[#C19A5B]/50 overflow-hidden">
                       {/* Icon - Smaller with Gold Gradient */}
                       <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#C19A5B] to-[#C19A5B]/80 shadow-md">
                         <item.icon className="w-5 h-5 text-white" />
@@ -1506,7 +1488,7 @@ export default function HomePage() {
         </section>
 
         {/* VISUAL GALLERY - Organic Editorial Mosaic (2026 Crafted) */}
-        <section className="w-full py-24 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#F9EBD8]">
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-white/60 to-transparent">
           {/* Parallax Background Pattern - 5% Gold Motif */}
           <motion.div
             className="absolute inset-0 opacity-[0.05] pointer-events-none"
@@ -1657,7 +1639,7 @@ export default function HomePage() {
           </div>
         </section>
         {/* VOICES OF HERITAGE — Community & Trust Redesign (KDLS 2026) */}
-        <section className="w-full py-20 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FFF3E6]">
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-[#1A1512]/[0.015]">
           {/* Subtle Fabric Texture Overlay */}
           <div
             className="absolute inset-0 opacity-[0.03] mix-blend-multiply pointer-events-none"
@@ -1697,8 +1679,11 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  className="relative p-10 md:p-14 bg-white/60 backdrop-blur-md rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] border border-[#C19A5B]/10 overflow-hidden text-center max-w-5xl mx-auto"
+                  className="relative p-10 md:p-14 bg-white rounded-[20px] shadow-[0_12px_40px_rgba(26,21,18,0.03)] border border-[#C19A5B]/20 overflow-hidden text-center max-w-5xl mx-auto"
                 >
+                  {/* Decorative Heritage Corner Frames */}
+                  <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-[#C19A5B]/30" />
+                  <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-[#C19A5B]/30" />
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 opacity-[0.03] pointer-events-none">
                     <svg viewBox="0 0 100 100" fill="none" stroke="#C19A5B">
                       <path
@@ -1792,10 +1777,13 @@ export default function HomePage() {
                   <motion.div
                     whileHover={{
                       y: -8,
-                      boxShadow: "0 12px 24px rgba(164, 85, 42, 0.08)",
+                      boxShadow: "0 16px 40px rgba(193, 154, 91, 0.08)",
                     }}
-                    className="group h-full p-8 md:p-10 bg-white/50 backdrop-blur-sm rounded-[16px] border border-[#C19A5B]/10 flex flex-col justify-between transition-all duration-300 hover:bg-white/80"
+                    className="group relative h-full p-8 md:p-10 bg-white rounded-[16px] border border-[#C19A5B]/20 flex flex-col justify-between transition-all duration-300 hover:bg-white/95 hover:border-[#C19A5B]/45 shadow-[0_8px_30px_rgba(0,0,0,0.02)]"
                   >
+                    {/* Decorative Heritage Corner Frames */}
+                    <div className="absolute top-3 left-3 w-4 h-4 border-l border-t border-[#C19A5B]/30 group-hover:border-[#C19A5B]/60 transition-all duration-300" />
+                    <div className="absolute bottom-3 right-3 w-4 h-4 border-r border-b border-[#C19A5B]/30 group-hover:border-[#C19A5B]/60 transition-all duration-300" />
                     <div className="mb-6">
                       <div className="flex justify-between items-start mb-4">
                         <div className="text-[40px] font-playfair text-[#C19A5B] opacity-[0.2] leading-none h-6">
@@ -1854,7 +1842,7 @@ export default function HomePage() {
                   <AnimatedElement key={idx} delay={idx * 150}>
                     <motion.div
                       whileHover={{ scale: 1.05 }}
-                      className="flex items-center gap-4 bg-[#FFF8F0] px-8 py-5 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-[#C19A5B]/15 min-w-[240px] justify-center group"
+                      className="flex items-center gap-4 bg-white/90 backdrop-blur-sm px-8 py-5 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-[#C19A5B]/20 hover:bg-white transition-all duration-300 min-w-[240px] justify-center group"
                     >
                       <div className="flex flex-col items-center">
                         <div className="flex items-center gap-2 mb-1">
@@ -1875,92 +1863,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        {/* NEWSLETTER — Premium Email Signup                             */}
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="w-full py-20 md:py-28 relative overflow-hidden bg-[#1A1512]">
-          {/* Kalamkari pattern bg */}
-          <div
-            className="absolute inset-0 opacity-[0.04] pointer-events-none"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C19A5B' stroke-width='0.5'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "200px 200px",
-            }}
-          />
 
-          {/* Gold line top */}
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
-
-          <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              {/* Icon */}
-              <motion.div
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                className="w-14 h-14 mx-auto mb-8 rounded-full bg-[#C19A5B]/10 border border-[#C19A5B]/20 flex items-center justify-center"
-              >
-                <Mail className="w-6 h-6 text-[#C19A5B]" />
-              </motion.div>
-
-              <h2 className="font-serif text-3xl md:text-4xl text-white mb-4 leading-tight">
-                Join Our Heritage <span className="italic text-[#C19A5B]">Community</span>
-              </h2>
-              <p className="font-sans text-base text-white/60 mb-10 max-w-lg mx-auto leading-relaxed font-light">
-                Be the first to discover new collections, exclusive artisan stories,
-                and members-only offers delivered to your inbox.
-              </p>
-
-              {/* Email Form */}
-              <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto mb-8">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="flex-1 h-13 px-5 py-3 bg-white/5 border border-white/15 text-white placeholder:text-white/30 font-sans text-sm tracking-wide focus:outline-none newsletter-input-glow transition-all duration-300 rounded-none"
-                />
-                <Button className="h-13 px-8 rounded-none bg-[#C19A5B] text-white hover:bg-[#A07840] text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-300 whitespace-nowrap">
-                  <Send className="w-4 h-4 mr-2" />
-                  Subscribe
-                </Button>
-              </div>
-
-              {/* Trust note */}
-              <p className="text-[11px] text-white/30 font-sans">
-                No spam, ever. Unsubscribe anytime. Join 5,000+ heritage enthusiasts.
-              </p>
-            </motion.div>
-
-            {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="flex justify-center gap-10 md:gap-16 mt-14 pt-10 border-t border-white/10"
-            >
-              {[
-                { value: "500+", label: "Years of Heritage" },
-                { value: "10K+", label: "Happy Customers" },
-                { value: "200+", label: "Artisan Families" },
-              ].map((stat, i) => (
-                <div key={i} className="text-center">
-                  <span className="font-serif text-2xl md:text-3xl font-bold text-[#C19A5B] block mb-1">
-                    {stat.value}
-                  </span>
-                  <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.15em]">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
       </main>
     </>
   )

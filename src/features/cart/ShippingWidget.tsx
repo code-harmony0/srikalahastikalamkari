@@ -29,7 +29,7 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
   const isUnlocked = remaining === 0
 
   return (
-    <div className="w-full bg-[#FFF8F0] rounded-[14px] border border-[#C19A5B]/20 shadow-[0_2px_10px_rgba(26,21,18,0.03)] overflow-hidden">
+    <div className="w-full bg-card rounded-[14px] border border-[#C19A5B]/20 shadow-[0_2px_10px_rgba(26,21,18,0.03)] overflow-hidden">
       {/* 1️⃣ Header & Free Shipping Banner */}
       <div className="p-5 border-b border-[#C19A5B]/20 bg-[#C19A5B]/5">
         <h3 className="font-playfair font-bold text-[#1A1512] text-lg mb-1 flex items-center gap-2">

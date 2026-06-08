@@ -36,7 +36,7 @@ export function SubCategoryPopup({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed z-[9999] bg-[#FFF8F0]/95 backdrop-blur-md border-[#C19A5B]/20 p-0 overflow-hidden shadow-2xl
+      <DialogContent className="fixed z-[9999] bg-white/95 backdrop-blur-md border-[#C19A5B]/20 p-0 overflow-hidden shadow-2xl
         /* Mobile: Full Screen */
         inset-0 w-screen h-screen max-w-none rounded-none translate-x-0 translate-y-0
         data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-bottom-full

@@ -236,7 +236,7 @@ export default function OrdersPage() {
             My Orders
           </h1>
 
-          <p className="font-inter text-[#FFF8F0]/70 text-[12px] md:text-[14px] font-normal tracking-wide leading-relaxed">
+          <p className="font-inter text-[#FAFAF8]/70 text-[12px] md:text-[14px] font-normal tracking-wide leading-relaxed">
             Track your current and previous purchases
           </p>
         </motion.div>
@@ -287,7 +287,7 @@ export default function OrdersPage() {
                   {/* Order List Item - Always Visible */}
                   <button
                     onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
-                    className="w-full p-4 flex items-center gap-4 text-left hover:bg-[#FFF8F0]/80 transition-colors"
+                    className="w-full p-4 flex items-center gap-4 text-left hover:bg-[#FAFAF8]/80 transition-colors"
                   >
                     {/* Product Images Preview */}
                     <div className="flex -space-x-2">
@@ -425,7 +425,7 @@ export default function OrdersPage() {
                             </h4>
                             <div className="space-y-2">
                               {order.order_items?.map((item) => (
-                                <div key={item.id} className="flex gap-3 p-2 rounded-lg hover:bg-[#FFF8F0]/80">
+                                <div key={item.id} className="flex gap-3 p-2 rounded-lg hover:bg-[#FAFAF8]/80">
                                   <div className="relative w-14 h-14 bg-[#1A1512]/5 rounded-lg border border-[#C19A5B]/20 flex-shrink-0 overflow-hidden">
                                     {item.products?.images?.[0] ? (
                                       <OptimizedImage

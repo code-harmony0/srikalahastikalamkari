@@ -116,7 +116,7 @@ export const ProductCard = memo(
         animate="visible"
         variants={cardVariants}
         className={cn(
-          "group relative bg-[#FFF8F0] border border-[#C19A5B]/20 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#C19A5B]/40",
+          "group relative bg-card border border-[#C19A5B]/20 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[#C19A5B]/40",
           // 🛠 Compact List View: Fixed height 180px, Flex Row
           isList
             ? "rounded-lg flex flex-row h-[180px]"
@@ -126,7 +126,7 @@ export const ProductCard = memo(
         {/* 1️⃣ IMAGE SECTION */}
         <div
           className={cn(
-            "relative overflow-hidden bg-[#FDFBF7]",
+            "relative overflow-hidden bg-[#1A1512]/5",
             // 🛠 Compact List View: Width 180px
             isList ? "w-[180px] h-full shrink-0" : "w-full aspect-[4/5]",
           )}

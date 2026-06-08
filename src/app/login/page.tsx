@@ -199,7 +199,7 @@ export default function UserLoginPage() {
                         const val = e.target.value.replace(/\D/g, "")
                         if (val.length <= 10) setPhoneNumber(val)
                       }}
-                      className="w-full pl-24 pr-4 py-3.5 bg-[#FFF8F0]/30 border border-[#C19A5B]/20 rounded-[8px] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all font-inter text-lg text-[#1A1512] tracking-wide placeholder:text-[#1A1512]/20"
+                      className="w-full pl-24 pr-4 py-3.5 bg-[#FAFAF8]/30 border border-[#C19A5B]/20 rounded-[8px] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all font-inter text-lg text-[#1A1512] tracking-wide placeholder:text-[#1A1512]/20"
                       placeholder="98765 43210"
                       autoFocus
                     />
@@ -233,7 +233,7 @@ export default function UserLoginPage() {
                       renderInput={(props) => (
                         <input
                           {...props}
-                          className="!w-10 !h-12 sm:!w-12 sm:!h-14 border border-[#C19A5B]/20 rounded-[8px] text-center text-xl font-bold bg-[#FFF8F0]/30 focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 outline-none transition-all text-[#1A1512]"
+                          className="!w-10 !h-12 sm:!w-12 sm:!h-14 border border-[#C19A5B]/20 rounded-[8px] text-center text-xl font-bold bg-[#FAFAF8]/30 focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 outline-none transition-all text-[#1A1512]"
                         />
                       )}
                       shouldAutoFocus

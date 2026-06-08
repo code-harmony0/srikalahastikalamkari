@@ -76,7 +76,7 @@ export const CuratedProductCard = memo(
           "group relative flex flex-col",
           // CARD CONTAINER - Solid background, subtle border, rounded corners
           "w-full max-w-[280px]",
-          "bg-[#FFF8F0] border border-[#C19A5B]/20",
+          "bg-card border border-[#C19A5B]/20",
           "rounded-xl overflow-hidden",
           "shadow-[0_2px_8px_rgba(26,21,18,0.06)]",
           "transition-shadow duration-300"
@@ -116,7 +116,7 @@ export const CuratedProductCard = memo(
             {/* Badges - top-left (only when in stock) */}
             {badge && product.in_stock !== false && (
               <div className="absolute top-3 left-3 z-10">
-                <span className="bg-[#1A1512]/80 text-[#FFF8F0] text-[10px] font-medium px-2.5 py-1 rounded-full tracking-wide">
+                <span className="bg-[#1A1512] text-white text-[9px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase shadow-sm border border-white/10">
                   {badge}
                 </span>
               </div>
@@ -185,7 +185,7 @@ CuratedProductCard.displayName = "CuratedProductCard";
 
 // Skeleton Loader - Matches card structure
 export const CuratedProductCardSkeleton = () => (
-  <div className="flex flex-col w-full max-w-[280px] bg-[#FFFCF8] border border-[#E8DDD0] rounded-xl overflow-hidden animate-pulse">
+  <div className="flex flex-col w-full max-w-[280px] bg-card border border-[#E8DDD0] rounded-xl overflow-hidden animate-pulse">
     <div className="aspect-[4/5] max-h-[200px] bg-[#E8DDD0]/40" />
     <div className="p-4 space-y-3">
       <div className="h-5 bg-[#E8DDD0]/50 rounded w-full" />

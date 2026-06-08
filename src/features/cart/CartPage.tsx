@@ -226,7 +226,7 @@ export default function CartPage() {
                       {/* Controls Row */}
                       <div className="flex items-center justify-between w-full sm:w-auto gap-6">
                         {/* Quantity */}
-                        <div className="flex items-center bg-[#FFF8F0] rounded-[4px] border border-[#C19A5B]/30 h-9">
+                        <div className="flex items-center bg-white rounded-[4px] border border-[#C19A5B]/30 h-9">
                           <button
                             onClick={() =>
                               handleUpdateQuantity(

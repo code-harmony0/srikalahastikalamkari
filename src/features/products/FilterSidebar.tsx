@@ -186,7 +186,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="px-5 pt-3 pb-1 overflow-hidden border-b border-[#C19A5B]/10 bg-[#FFF8F0]/30"
+            className="px-5 pt-3 pb-1 overflow-hidden border-b border-[#C19A5B]/10 bg-[#1A1512]/5"
           >
             <div className="flex flex-wrap gap-1.5">
               {searchQuery && (
@@ -246,7 +246,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               placeholder="Search masterpieces..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-8 py-2.5 text-[13px] bg-white border border-[#C19A5B]/20 rounded-lg focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 text-[#1A1512] placeholder:text-[#1A1512]/35 transition-all"
+              className="w-full pl-10 pr-8 py-2.5 text-[13px] bg-[#1A1512]/5 border border-[#C19A5B]/20 rounded-lg focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 text-[#1A1512] placeholder:text-[#1A1512]/35 transition-all"
             />
             {searchQuery && (
               <button
@@ -290,7 +290,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         flex items-center justify-between w-full p-2.5 rounded-lg transition-all group/cat border
                         ${isSelected || hasSubSelected 
                           ? "bg-[#C19A5B]/5 border-[#C19A5B]/40 shadow-sm" 
-                          : "hover:bg-[#C19A5B]/5 bg-white/40 border-[#C19A5B]/10"}
+                          : "hover:bg-[#C19A5B]/5 bg-[#1A1512]/5 border-[#C19A5B]/10"}
                       `}
                     >
                       <div className="text-left flex items-center gap-2">
@@ -330,14 +330,14 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           <div className="space-y-4">
             {/* Price Display */}
             <div className="flex items-center gap-3">
-              <div className="flex-1 bg-white/60 border border-[#C19A5B]/20 rounded-lg px-3 py-2 text-center">
+              <div className="flex-1 bg-[#1A1512]/5 border border-[#C19A5B]/20 rounded-lg px-3 py-2 text-center">
                 <span className="text-[10px] text-[#1A1512]/50 block leading-none mb-0.5 uppercase tracking-wider">Min</span>
                 <span className="text-[13px] font-bold text-[#1A1512]">
                   {formatPrice(priceRange[0])}
                 </span>
               </div>
               <div className="w-4 h-px bg-[#C19A5B]/30" />
-              <div className="flex-1 bg-white/60 border border-[#C19A5B]/20 rounded-lg px-3 py-2 text-center">
+              <div className="flex-1 bg-[#1A1512]/5 border border-[#C19A5B]/20 rounded-lg px-3 py-2 text-center">
                 <span className="text-[10px] text-[#1A1512]/50 block leading-none mb-0.5 uppercase tracking-wider">Max</span>
                 <span className="text-[13px] font-bold text-[#C19A5B]">
                   {formatPrice(priceRange[1])}
@@ -376,7 +376,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       ${
                         isActive
                           ? "bg-[#1A1512] text-[#C19A5B] border-[#C19A5B]/30 shadow-sm"
-                          : "bg-white/40 border-[#C19A5B]/20 text-[#1A1512]/70 hover:bg-[#C19A5B]/10 hover:text-[#1A1512] hover:border-[#C19A5B]/40"
+                          : "bg-[#1A1512]/5 border-[#C19A5B]/20 text-[#1A1512]/70 hover:bg-[#C19A5B]/10 hover:text-[#1A1512] hover:border-[#C19A5B]/40"
                       }
                     `}
                   >
@@ -399,7 +399,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               flex items-center gap-3 w-full py-2.5 px-3 rounded-lg transition-all border
               ${inStockOnly 
                 ? "bg-[#C19A5B]/5 border-[#C19A5B]/40 shadow-sm" 
-                : "bg-white/40 border-[#C19A5B]/20 hover:border-[#C19A5B]/40"}
+                : "bg-[#1A1512]/5 border-[#C19A5B]/20 hover:border-[#C19A5B]/40"}
             `}
           >
             {/* Toggle */}

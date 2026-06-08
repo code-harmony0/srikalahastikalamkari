@@ -86,7 +86,7 @@ const FormInput = ({
       onChange={onChange}
       maxLength={maxLength}
       className={cn(
-        "w-full px-4 py-3 rounded-[10px] border bg-[#FFF8F0]/30 focus:outline-none transition-all placeholder:text-[#1A1512]/40",
+        "w-full px-4 py-3 rounded-[10px] border bg-[#1A1512]/5 focus:outline-none transition-all placeholder:text-[#1A1512]/40",
         error
           ? "border-red-400 focus:border-red-500 focus:ring-1 focus:ring-red-200"
           : "border-[#C19A5B]/30 focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40",
@@ -448,7 +448,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 Payment Method
               </h2>
 
-              <div className="rounded-[10px] border border-[#C19A5B]/30 bg-[#FFF8F0]/20 p-4 flex items-start gap-4">
+              <div className="rounded-[10px] border border-[#C19A5B]/30 bg-[#1A1512]/5 p-4 flex items-start gap-4">
                 <div className="w-5 h-5 mt-0.5 rounded-full border-2 border-[#C19A5B] flex items-center justify-center">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#C19A5B]" />
                 </div>

@@ -142,7 +142,7 @@ export default function SignUpPage() {
                       placeholder="Enter your full name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FFF8F0]/30 text-[#1A1512]"
+                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FAFAF8]/30 text-[#1A1512]"
                       required
                     />
                   </div>
@@ -160,7 +160,7 @@ export default function SignUpPage() {
                       placeholder="your@email.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FFF8F0]/30 text-[#1A1512]"
+                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FAFAF8]/30 text-[#1A1512]"
                       required
                     />
                   </div>
@@ -178,7 +178,7 @@ export default function SignUpPage() {
                       placeholder="+91 98765 43210"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FFF8F0]/30 text-[#1A1512]"
+                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FAFAF8]/30 text-[#1A1512]"
                       required
                     />
                   </div>
@@ -215,7 +215,7 @@ export default function SignUpPage() {
                     placeholder="000000"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="w-full px-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all text-center text-2xl tracking-widest font-mono text-[#1A1512] bg-[#FFF8F0]/30"
+                    className="w-full px-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all text-center text-2xl tracking-widest font-mono text-[#1A1512] bg-[#FAFAF8]/30"
                     maxLength={6}
                     required
                   />

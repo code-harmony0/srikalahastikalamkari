@@ -54,7 +54,7 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
     <div className="py-12 border-t border-[#C19A5B]/20">
       {/* Header */}
       {totalReviews === 0 ? (
-        <div className="text-center py-16 bg-[#FFF8F0] rounded-2xl border border-[#C19A5B]/20 px-6">
+        <div className="text-center py-16 bg-white rounded-2xl border border-[#C19A5B]/20 px-6">
           <div className="w-16 h-16 bg-[#C19A5B]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#C19A5B]/20">
             <Star className="w-8 h-8 text-[#C19A5B]" fill="currentColor" />
           </div>
@@ -118,7 +118,7 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#FFF8F0] border border-[#C19A5B]/30 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-white border border-[#C19A5B]/30 flex items-center justify-center">
             <User className="w-5 h-5 text-[#C19A5B]" />
           </div>
           <div>
