@@ -10,36 +10,36 @@
   :root {
     /* SRIKALAHASTI THEME */
 
-    /* Base: Warm Ivory (#FFF8F0 -> 36 67% 97%) */
-    --background: 36 67% 97%;
-    /* Text: Deep Espresso (#3B2C23 -> 22 25% 19%) */
-    --foreground: 22 25% 19%;
+    /* Base: Pristine Ivory (#FAFAF8) */
+    --background: 60 14% 98%;
+    /* Text: Deep Charcoal / Espresso (#1A1512) */
+    --foreground: 22 18% 9%;
 
-    /* Card: Slightly lighter Warm Ivory (#FFFDF9 -> 40 50% 99%) */
-    --card: 40 50% 99%;
-    --card-foreground: 22 25% 19%;
+    /* Card: Pure White for product contrast */
+    --card: 0 0% 100%;
+    --card-foreground: 22 18% 9%;
 
-    --popover: 36 67% 97%;
-    --popover-foreground: 22 25% 19%;
+    --popover: 60 14% 98%;
+    --popover-foreground: 22 18% 9%;
 
-    /* Primary: Golden (#D49217 -> 42 85% 46%) */
-    --primary: 42 85% 46%;
+    /* Primary: Soft Muted Gold (#C19A5B) */
+    --primary: 42 43% 55%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Muted Espresso/Brown (#4A3528 -> 22 30% 22%) */
-    --secondary: 22 30% 22%;
-    --secondary-foreground: 36 67% 97%;
+    /* Secondary: Charcoal (#2E2623) */
+    --secondary: 22 13% 16%;
+    --secondary-foreground: 60 14% 98%;
 
-    /* Muted: Lighter Beige for subtle backgrounds */
-    --muted: 36 30% 94%;
+    /* Muted: Soft gallery gray/beige */
+    --muted: 60 10% 95%;
     --muted-foreground: 22 10% 40%;
 
-    /* Accent: Slate Gray (#64748B -> 215 20% 65%) */
-    --accent: 215 20% 65%;
+    /* Accent: Deep Slate */
+    --accent: 215 15% 35%;
     --accent-foreground: 0 0% 100%;
 
-    /* Secondary Accent: Dark Slate (#475569 -> 215 25% 35%) */
-    --accent-secondary: 215 25% 35%;
+    /* Secondary Accent: Lighter Slate */
+    --accent-secondary: 215 15% 55%;
 
     /* Text Tokens */
     --text-heading: 22 25% 19%; /* Espresso */
@@ -196,10 +196,10 @@
 }
 
 /* Homepage Custom Styles - Moved from inline <style> to fix hydration error */
-/* Single Static Kalamkari Motif Background - Premium & Unified */
+/* Single Static Kalamkari Motif Background - Subdued for Gallery feel */
 .kalamkari-static-background {
-  background-color: #fdf8f2; /* Ivory base */
-  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23A0522D' stroke-width='0.6' stroke-linecap='round' stroke-linejoin='round' opacity='0.06'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%23A0522D' fill-opacity='0.04'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%23B8860B' fill-opacity='0.03'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%23A0522D' fill-opacity='0.03'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%23B8860B' fill-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: #FAFAF8; /* Pristine Ivory base */
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231A1512' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.03'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%231A1512' fill-opacity='0.01'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%231A1512' fill-opacity='0.01'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%231A1512' fill-opacity='0.01'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%231A1512' fill-opacity='0.01'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 200px 200px;
   background-position: 0 0;
   background-repeat: repeat;
@@ -318,65 +318,37 @@
 
 /* Enhanced Button Styles with Better Accessibility */
 .luxury-primary-button {
-  @apply bg-primary text-white border-white/10 shadow-lg;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  @apply bg-[#1A1512] text-[#FAFAF8] shadow-sm;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-}
-
-.luxury-primary-button::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(212, 160, 90, 0.2) 50%,
-    transparent 100%
-  );
-  transition: none;
-}
-
-.luxury-primary-button:hover::after {
-  animation: shimmer 1.5s infinite;
+  border: 1px solid #1A1512;
 }
 
 .luxury-primary-button:hover {
-  @apply bg-primary/90 -translate-y-1;
-  box-shadow: 0 0 20px rgba(212, 160, 90, 0.4);
-}
-
-@keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
+  @apply bg-[#FAFAF8] text-[#1A1512];
+  border-color: #1A1512;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(26, 21, 18, 0.08);
 }
 
 .luxury-primary-button:focus {
-  outline: 2px solid #ffffff;
+  outline: 2px solid #C19A5B;
   outline-offset: 2px;
 }
 
 .luxury-secondary-button {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  @apply border border-accent/40 text-accent;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  @apply bg-transparent text-[#1A1512] border border-[#1A1512]/20;
+  transition: all 0.3s ease;
 }
 
 .luxury-secondary-button:hover {
-  @apply bg-white/10 border-accent -translate-y-1;
-  box-shadow: 0 4px 15px rgba(212, 160, 90, 0.2);
+  @apply bg-[#1A1512]/5 border-[#1A1512];
+  transform: translateY(-1px);
 }
 
 .luxury-secondary-button:focus {
-  outline: 2px solid #ffffff;
+  outline: 2px solid #C19A5B;
   outline-offset: 2px;
 }
 
@@ -440,7 +412,7 @@
   opacity: 0;
 }
 
-/* Soft warm gradient overlay (dark brown top 25-35%, golden-brown mid 15-20%, cream bottom 8-10%) */
+/* Soft subtle gradient overlay for readability */
 .cinematic-overlay {
   position: absolute;
   top: 0;
@@ -449,11 +421,9 @@
   height: 100%;
   background: linear-gradient(
     180deg,
-    rgba(101, 67, 33, 0.3) 0%,
-    rgba(101, 67, 33, 0.25) 30%,
-    rgba(160, 82, 45, 0.18) 60%,
-    rgba(184, 134, 11, 0.15) 80%,
-    rgba(245, 245, 220, 0.08) 100%
+    rgba(26, 21, 18, 0.6) 0%,
+    rgba(26, 21, 18, 0.3) 50%,
+    rgba(26, 21, 18, 0.7) 100%
   );
   z-index: 1;
 }
@@ -516,9 +486,9 @@
   text-align: center;
 }
 
-/* Gold-brown button styling */
+/* Gold button styling */
 .cinematic-button-primary {
-  background: linear-gradient(135deg, #b8860b 0%, #a0522d 50%, #8b4513 100%);
+  background: linear-gradient(135deg, #E5C07B 0%, #C19A5B 50%, #8C6A30 100%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   transition: all 0.3s ease;
@@ -526,7 +496,7 @@
 }
 
 .cinematic-button-primary:hover {
-  background: linear-gradient(135deg, #daa520 0%, #b8860b 50%, #a0522d 100%);
+  background: linear-gradient(135deg, #F0D59D 0%, #E5C07B 50%, #C19A5B 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
@@ -545,4 +515,144 @@
   border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== PREMIUM HOMEPAGE ANIMATIONS (2026) ===== */
+
+/* Ken Burns zoom+drift for hero background images */
+@keyframes kenBurns1 {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-1.5%, -1%); }
+}
+@keyframes kenBurns2 {
+  0% { transform: scale(1.05) translate(1%, 0); }
+  100% { transform: scale(1.15) translate(-1%, -1.5%); }
+}
+@keyframes kenBurns3 {
+  0% { transform: scale(1) translate(-1%, 1%); }
+  100% { transform: scale(1.1) translate(1%, -0.5%); }
+}
+@keyframes kenBurns4 {
+  0% { transform: scale(1.08) translate(0.5%, 0.5%); }
+  100% { transform: scale(1.18) translate(-0.5%, -1%); }
+}
+
+.ken-burns-0 { animation: kenBurns1 12s ease-in-out infinite alternate; }
+.ken-burns-1 { animation: kenBurns2 14s ease-in-out infinite alternate; }
+.ken-burns-2 { animation: kenBurns3 11s ease-in-out infinite alternate; }
+.ken-burns-3 { animation: kenBurns4 13s ease-in-out infinite alternate; }
+
+/* Floating gold particles */
+@keyframes floatParticle {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+.gold-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: radial-gradient(circle, #C19A5B 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatParticle linear infinite;
+}
+
+/* Shimmer effect for badges */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.badge-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(193, 154, 91, 0.15) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+
+/* Gold line draw animation for process section */
+@keyframes drawLine {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.draw-line {
+  animation: drawLine 1.5s ease-out forwards;
+}
+
+/* Countdown timer pulse */
+@keyframes countdownPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.countdown-pulse {
+  animation: countdownPulse 2s ease-in-out infinite;
+}
+
+/* CTA glow pulse */
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 154, 91, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(193, 154, 91, 0.25); }
+}
+
+.cta-glow {
+  animation: ctaGlow 3s ease-in-out infinite;
+}
+
+/* Text stagger reveal blur */
+@keyframes textRevealBlur {
+  0% { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* Category card hover lift */
+.category-card-hover {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s ease;
+}
+.category-card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(26, 21, 18, 0.12);
+}
+
+/* Process step connector */
+@keyframes processLineGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Newsletter input focus glow */
+.newsletter-input-glow:focus {
+  box-shadow: 0 0 0 3px rgba(193, 154, 91, 0.15), 0 0 20px rgba(193, 154, 91, 0.1);
+  border-color: #C19A5B;
+}
+
+/* Marquee / infinite scroll for trust badges */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+/* Elegant divider line expand */
+@keyframes expandLine {
+  from { width: 0; opacity: 0; }
+  to { width: 100%; opacity: 1; }
+}
+
+/* Step number glow */
+@keyframes stepGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 154, 91, 0.2); }
+  50% { box-shadow: 0 0 0 12px rgba(193, 154, 91, 0); }
 }

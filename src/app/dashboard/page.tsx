@@ -50,7 +50,7 @@ import { OptimizedImage } from "@/components/shared/OptimizedImage";
 function ChartSkeleton() {
   return (
     <div className="w-full h-full animate-pulse bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-slate-300 border-t-[#8B4513] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-slate-300 border-t-[#C19A5B] rounded-full animate-spin" />
     </div>
   );
 }

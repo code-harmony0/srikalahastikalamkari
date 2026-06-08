@@ -78,7 +78,7 @@ export default function AboutPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#FAF3EC] text-[#3B2C23]">
+    <div className="w-full min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* ─────────────────────────────────────────────
           1. HERO SECTION — OUR STORY
       ────────────────────────────────────────────── */}
@@ -92,33 +92,43 @@ export default function AboutPage() {
             className="object-cover object-center scale-125"
             priority
           />
-          <div className="absolute inset-0 bg-[#28140A]/55" />{" "}
-          {/* Darker Overlay for readability */}
+          <div className="absolute inset-0 bg-[#1A1512]/65" />{" "}
         </div>
 
-        <div className="relative z-10 container mx-auto px-6 text-center text-[#FFF8F0]">
+        {/* Corner borders for premium touch */}
+        <div className="absolute inset-0 z-[6] pointer-events-none">
+          <div className="absolute top-8 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/40 to-transparent" />
+          <div className="absolute bottom-8 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/40 to-transparent" />
+          <div className="absolute top-8 bottom-8 left-8 w-px bg-gradient-to-b from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="absolute top-8 bottom-8 right-8 w-px bg-gradient-to-b from-transparent via-[#C19A5B]/30 to-transparent" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-6 text-center text-white">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
             className="space-y-6"
           >
-            <h1 className="font-playfair font-bold text-4xl md:text-[54px] leading-tight">
-              Our Story
+            <span className="font-sans text-[11px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] leading-none mb-2 block">
+              Heritage & Craft
+            </span>
+            <h1 className="font-serif font-bold text-4xl md:text-[54px] leading-tight uppercase tracking-wide">
+              Our <span className="italic text-[#C19A5B] font-normal lowercase">Story</span>
             </h1>
-            <p className="font-inter text-base md:text-lg text-[#F3DEC8] max-w-[680px] mx-auto leading-relaxed">
+            <p className="font-sans text-base md:text-lg text-white/80 max-w-[680px] mx-auto leading-relaxed font-light">
               Celebrating the timeless art of Kalamkari and the master artisans
               who keep this ancient heritage alive through every brushstroke.
             </p>
 
             <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/products">
-                <button className="h-[48px] px-8 bg-[#B35E2E] text-white font-inter font-medium text-sm rounded-[6px] hover:bg-[#964B22] transition-colors shadow-lg shadow-[#B35E2E]/20 flex items-center gap-2">
+                <button className="h-[48px] px-8 bg-white text-[#1A1512] hover:bg-[#C19A5B] hover:text-white font-sans font-bold text-[12px] uppercase tracking-wider transition-all duration-300 shadow-md flex items-center gap-2">
                   Shop Collection <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
               <Link href="#mission">
-                <button className="h-[48px] px-8 border border-[#FFF8F0]/30 text-[#FFF8F0] font-inter font-medium text-sm rounded-[6px] hover:bg-[#FFF8F0]/10 transition-colors">
+                <button className="h-[48px] px-8 border border-white/30 text-white font-sans font-bold text-[12px] uppercase tracking-wider hover:bg-white/10 transition-colors">
                   Our Mission
                 </button>
               </Link>
@@ -130,7 +140,7 @@ export default function AboutPage() {
       {/* ─────────────────────────────────────────────
           2. OUR MISSION — PRESERVING TRADITION
       ────────────────────────────────────────────── */}
-      <section id="mission" className="py-20 md:py-24">
+      <section id="mission" className="py-20 md:py-28 relative">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center max-w-[1080px] mx-auto">
             {/* Image Block */}
@@ -141,7 +151,7 @@ export default function AboutPage() {
               variants={fadeInUp}
               className="relative mx-auto md:mx-0 max-w-[480px] w-full"
             >
-              <div className="aspect-[4/5] relative rounded-[12px] overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+              <div className="aspect-[4/5] relative rounded-[12px] overflow-hidden shadow-[0_8px_30px_rgba(26,21,18,0.06)] border border-[#C19A5B]/20">
                 <Image
                   src="/images/gallery/gallery-3.jpg"
                   alt="Elderly master artisan painting fine Kalamkari artwork"
@@ -159,15 +169,15 @@ export default function AboutPage() {
               variants={fadeInUp}
               className="space-y-6"
             >
-              <span className="font-inter font-bold text-[#B35E2E] text-sm tracking-widest uppercase">
+              <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[#C19A5B]">
                 Our Mission
               </span>
-              <h2 className="font-playfair font-bold text-3xl md:text-[42px] leading-[1.2] text-[#3B2C23]">
+              <h2 className="font-serif text-3xl md:text-[42px] leading-[1.2] text-[#1A1512] mb-4">
                 Preserving Tradition, <br className="hidden md:block" />{" "}
-                Creating Beauty
+                <span className="italic text-[#C19A5B]">Creating Beauty</span>
               </h2>
 
-              <div className="font-inter text-[#3B2C23]/80 space-y-4 leading-relaxed text-base">
+              <div className="font-sans text-[#1A1512]/80 space-y-4 leading-relaxed text-base font-light">
                 <p>
                   Kalamkari is more than just a textile art form—it is a living
                   narrative of centuries-old craftsmanship. At Srikalahasti
@@ -184,17 +194,17 @@ export default function AboutPage() {
               </div>
 
               {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-4 pt-8 border-t border-[#3B2C23]/10">
+              <div className="grid grid-cols-3 gap-4 pt-8 border-t border-[#1A1512]/10">
                 {[
                   { number: "200+", label: "Master Artisans" },
                   { number: "GSTIN", label: "37EVOPS6191D1ZX" },
                   { number: "EST.", label: "1999" },
                 ].map((stat, i) => (
                   <div key={i} className="text-center">
-                    <div className="font-playfair font-bold text-xl md:text-2xl text-[#B35E2E] mb-1">
+                    <div className="font-serif font-bold text-xl md:text-2xl text-[#C19A5B] mb-1">
                       {stat.number}
                     </div>
-                    <div className="font-inter text-[10px] md:text-xs text-[#7A6A5C] font-bold uppercase tracking-wider">
+                    <div className="font-sans text-[9px] text-[#1A1512]/50 font-bold uppercase tracking-widest">
                       {stat.label}
                     </div>
                   </div>
@@ -208,13 +218,16 @@ export default function AboutPage() {
       {/* ─────────────────────────────────────────────
           3. CORE VALUES
       ────────────────────────────────────────────── */}
-      <section className="py-20 bg-[#FDFBF7] border-y border-[#3B2C23]/5">
+      <section className="py-20 bg-[#FAFAF8] border-y border-[#1A1512]/5">
         <div className="container mx-auto px-6 max-w-[1200px]">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="font-playfair font-bold text-3xl md:text-[42px] text-[#3B2C23] mb-4">
-              Our Core Values
+            <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[#C19A5B] mb-2 block">
+              Our Foundations
+            </span>
+            <h2 className="font-serif text-3xl md:text-[42px] text-[#1A1512] mb-4">
+              Our Core <span className="italic text-[#C19A5B]">Values</span>
             </h2>
-            <p className="font-inter text-[#7A6A5C] text-base">
+            <p className="font-sans text-[#1A1512]/60 text-base font-light">
               Principles that guide our craftsmanship and community.
             </p>
           </div>
@@ -230,18 +243,18 @@ export default function AboutPage() {
               <motion.div
                 key={i}
                 variants={fadeInUp}
-                className="bg-white p-8 rounded-[12px] border border-[#EAD6C3]/40 shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group"
+                className="bg-white p-8 rounded-[12px] border border-[#C19A5B]/20 shadow-[0_1px_3px_rgba(26,21,18,0.02)] hover:shadow-[0_12px_30px_rgba(26,21,18,0.06)] hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="w-12 h-12 rounded-full bg-[#FFF4E8] flex items-center justify-center mb-6 group-hover:bg-[#B35E2E] transition-colors duration-300">
+                <div className="w-12 h-12 rounded-full bg-[#FFF8F0] flex items-center justify-center mb-6 group-hover:bg-[#C19A5B] border border-[#C19A5B]/30 transition-colors duration-300">
                   <val.icon
-                    className="w-6 h-6 text-[#B35E2E] group-hover:text-white transition-colors duration-300"
+                    className="w-6 h-6 text-[#C19A5B] group-hover:text-white transition-colors duration-300"
                     strokeWidth={1.5}
                   />
                 </div>
-                <h3 className="font-playfair font-bold text-xl text-[#3B2C23] mb-3">
+                <h3 className="font-serif font-bold text-xl text-[#1A1512] mb-3">
                   {val.title}
                 </h3>
-                <p className="font-inter text-[#7A6A5C] text-sm leading-relaxed">
+                <p className="font-sans text-[#1A1512]/60 text-sm leading-relaxed font-light">
                   {val.description}
                 </p>
               </motion.div>
@@ -253,13 +266,16 @@ export default function AboutPage() {
       {/* ─────────────────────────────────────────────
           4. MEET OUR TEAM
       ────────────────────────────────────────────── */}
-      <section className="py-20 md:py-24">
+      <section className="py-20 md:py-28">
         <div className="container mx-auto px-6 max-w-[1080px]">
           <div className="text-center mb-16">
-            <h2 className="font-playfair font-bold text-3xl md:text-[42px] text-[#3B2C23] mb-4">
-              Meet Our Team
+            <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[#C19A5B] mb-2 block">
+              The Creators
+            </span>
+            <h2 className="font-serif text-3xl md:text-[42px] text-[#1A1512] mb-4">
+              Meet Our <span className="italic text-[#C19A5B]">Team</span>
             </h2>
-            <p className="font-inter text-[#7A6A5C] text-base">
+            <p className="font-sans text-[#1A1512]/60 text-base font-light">
               The passionate individuals behind Srikalahasti Kalamkari.
             </p>
           </div>
@@ -277,7 +293,7 @@ export default function AboutPage() {
                 variants={fadeInUp}
                 className="group text-center"
               >
-                <div className="relative mb-6 overflow-hidden rounded-[12px] shadow-sm max-w-[340px] mx-auto aspect-[3/4]">
+                <div className="relative mb-6 overflow-hidden rounded-[12px] shadow-sm max-w-[340px] mx-auto aspect-[3/4] border border-[#C19A5B]/20">
                   <Image
                     src={member.image}
                     alt={member.name}
@@ -287,13 +303,13 @@ export default function AboutPage() {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <h3 className="font-playfair font-bold text-xl text-[#3B2C23] mb-1">
+                <h3 className="font-serif font-bold text-xl text-[#1A1512] mb-1">
                   {member.name}
                 </h3>
-                <p className="font-inter text-sm text-[#7A6A5C] font-medium mb-3">
+                <p className="font-sans text-xs text-[#1A1512]/60 tracking-wider uppercase mb-3 font-semibold">
                   {member.role}
                 </p>
-                <div className="w-8 h-[2px] bg-[#E6B162] mx-auto opacity-60 group-hover:w-16 transition-all duration-300" />
+                <div className="w-8 h-[2px] bg-[#C19A5B]/40 mx-auto group-hover:w-16 group-hover:bg-[#C19A5B] transition-all duration-300" />
               </motion.div>
             ))}
           </motion.div>
@@ -303,7 +319,7 @@ export default function AboutPage() {
       {/* ─────────────────────────────────────────────
           5. WHY CHOOSE US
       ────────────────────────────────────────────── */}
-      <section className="py-20 bg-[#FFF9F3]">
+      <section className="py-20 md:py-28 bg-[#FFF8F0]/50 border-t border-[#1A1512]/5">
         <div className="container mx-auto px-6 max-w-[1080px]">
           <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
             {/* Text Content */}
@@ -314,9 +330,12 @@ export default function AboutPage() {
               variants={fadeInUp}
               className="md:w-[55%] space-y-8"
             >
-              <h2 className="font-playfair font-bold text-3xl md:text-[42px] text-[#3B2C23] leading-tight">
+              <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[#C19A5B] block">
+                Heritage Advantage
+              </span>
+              <h2 className="font-serif text-3xl md:text-[42px] text-[#1A1512] leading-tight">
                 Why Choose <br />
-                <span className="text-[#B35E2E]">Srikalahasti Kalamkari?</span>
+                <span className="italic text-[#C19A5B]">Srikalahasti Kalamkari?</span>
               </h2>
 
               <ul className="space-y-4">
@@ -329,13 +348,13 @@ export default function AboutPage() {
                   "Exceptional customer service",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-[#FFF4E8] flex items-center justify-center">
+                    <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-[#FAFAF8] border border-[#C19A5B]/30 flex items-center justify-center">
                       <Check
-                        className="w-3 h-3 text-[#E6B162]"
+                        className="w-3 h-3 text-[#C19A5B]"
                         strokeWidth={3}
                       />
                     </div>
-                    <span className="font-inter text-[#3B2C23]/80 text-base leading-relaxed">
+                    <span className="font-sans text-[#1A1512]/80 text-base leading-relaxed font-light">
                       {item}
                     </span>
                   </li>
@@ -351,7 +370,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="md:w-[45%] relative"
             >
-              <div className="aspect-[3/4] rounded-[12px] overflow-hidden shadow-lg rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="aspect-[3/4] rounded-[12px] overflow-hidden shadow-lg border border-[#C19A5B]/20 rotate-1 hover:rotate-0 transition-transform duration-500 bg-white">
                 <Image
                   src="https://static.wixstatic.com/media/07221c_34372093ed9d4c35aa96a263080fe962~mv2.png"
                   alt="Kalamkari Saree Collection"
@@ -365,10 +384,18 @@ export default function AboutPage() {
       </section>
 
       {/* ─────────────────────────────────────────────
-          6. CTA SECTION
+          6. CTA SECTION — Premium Dark Charcoal Box
       ────────────────────────────────────────────── */}
-      <section className="py-24 text-center bg-[#FAF3EC]">
-        <div className="container mx-auto px-6">
+      <section className="py-24 text-center bg-[#1A1512] relative overflow-hidden">
+        {/* Decorative corner accents & border */}
+        <div className="absolute inset-0 z-[6] pointer-events-none">
+          <div className="absolute top-8 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="absolute bottom-8 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="absolute top-8 bottom-8 left-8 w-px bg-gradient-to-b from-transparent via-[#C19A5B]/20 to-transparent" />
+          <div className="absolute top-8 bottom-8 right-8 w-px bg-gradient-to-b from-transparent via-[#C19A5B]/20 to-transparent" />
+        </div>
+
+        <div className="container mx-auto px-6 relative z-10">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -376,11 +403,14 @@ export default function AboutPage() {
             variants={fadeInUp}
             className="max-w-[640px] mx-auto space-y-6"
           >
-            <h2 className="font-playfair font-bold text-3xl md:text-[42px] text-[#3B2C23] leading-tight">
+            <span className="font-sans text-[10px] font-bold tracking-[0.4em] uppercase text-[#C19A5B]">
+              Discover Heritage
+            </span>
+            <h2 className="font-serif text-3xl md:text-[42px] text-white leading-tight">
               Experience the{" "}
-              <span className="text-[#B35E2E]">Kalamkari Difference</span>
+              <span className="italic text-[#C19A5B] font-normal lowercase">Kalamkari</span> Difference
             </h2>
-            <p className="font-inter text-lg text-[#3B2C23]/80 leading-relaxed">
+            <p className="font-sans text-lg text-white/70 leading-relaxed font-light">
               Explore our collection and discover the beauty of handcrafted
               sarees that tell stories of tradition, artistry, and timeless
               elegance.
@@ -388,7 +418,7 @@ export default function AboutPage() {
 
             <div className="pt-4">
               <Link href="/products">
-                <button className="h-[52px] px-10 bg-[#B35E2E] text-white font-inter font-semibold text-base rounded-[6px] hover:bg-[#964B22] hover:scale-105 transition-all shadow-lg shadow-[#B35E2E]/25">
+                <button className="h-[52px] px-10 bg-[#C19A5B] text-white font-sans font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-[#1A1512] hover:scale-102 transition-all duration-300 shadow-md">
                   Shop Our Collection
                 </button>
               </Link>

@@ -21,7 +21,7 @@ const FormSection = ({
   children: React.ReactNode
 }) => (
   <div className="mb-10">
-    <h3 className="font-playfair text-xl font-bold text-[#3B2C23] mb-6 border-b border-[#EAD6C3]/40 pb-2">
+    <h3 className="font-playfair text-xl font-bold text-[#1A1512] mb-6 border-b border-[#C19A5B]/30 pb-2">
       {title}
     </h3>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">{children}</div>
@@ -48,8 +48,8 @@ const InputField = ({
   fullWidth?: boolean
 }) => (
   <div className={cn("space-y-1.5", fullWidth && "md:col-span-2")}>
-    <label className="block text-[13px] font-inter font-semibold text-[#3B2C23]/80 uppercase tracking-wider">
-      {label} {required && <span className="text-[#B35E2E]">*</span>}
+    <label className="block text-[13px] font-inter font-semibold text-[#1A1512]/80 uppercase tracking-wider">
+      {label} {required && <span className="text-[#C19A5B]">*</span>}
     </label>
     <input
       type={type}
@@ -59,12 +59,12 @@ const InputField = ({
       required={required}
       disabled={disabled}
       className={cn(
-        "w-full h-[48px] px-4 rounded-[6px] border bg-white font-inter text-[15px] transition-all",
-        "text-[#3B2C23] placeholder:text-[#B7AFA7]",
-        "focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20",
+        "w-full h-[48px] px-4 rounded-[6px] border bg-white/70 font-inter text-[15px] transition-all",
+        "text-[#1A1512] placeholder:text-[#1A1512]/40",
+        "focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20",
         disabled
-          ? "bg-[#F5F5F5] border-[#E0E0E0] text-[#7A6A5C] cursor-not-allowed"
-          : "border-[#E7E0D8]",
+          ? "bg-[#1A1512]/5 border-[#1A1512]/10 text-[#1A1512]/60 cursor-not-allowed"
+          : "border-[#C19A5B]/20",
       )}
     />
   </div>
@@ -126,14 +126,11 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF3EC]">
-      {/* ─────────────────────────────────────────────
-          1. HERO SECTION (Clean Ivory Standard)
-          Matches Cart & Profile Headers
-      ────────────────────────────────────────────── */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[160px] md:h-[220px] bg-[#FAF3EC] border-b border-[#EAD6C3]/60 shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
+      {/* 🏛 Page Hero */}
+      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[160px] md:h-[220px] bg-[#1A1512] border-b border-[#C19A5B]/20 shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)]">
         {/* Subtle Warmth Hint */}
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#E8C3A2]/10 to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#C19A5B]/10 to-transparent pointer-events-none" />
 
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -144,18 +141,18 @@ export default function EditProfilePage() {
           {/* Icon */}
           <div className="mb-4">
             <UserCog
-              className="w-8 h-8 md:w-9 md:h-9 text-[#B35E2E]"
+              className="w-8 h-8 md:w-9 md:h-9 text-[#C19A5B]"
               strokeWidth={1.5}
             />
           </div>
 
           {/* Title */}
-          <h1 className="font-playfair text-[32px] md:text-[40px] font-bold text-[#3B2C23] tracking-wide leading-tight mb-2">
+          <h1 className="font-playfair text-[32px] md:text-[40px] font-bold text-[#FFF8F0] tracking-wide leading-tight mb-2">
             Edit Profile
           </h1>
 
           {/* Subtitle */}
-          <p className="font-inter text-[#7A6A5C] text-[14px] md:text-[16px] font-normal tracking-wide leading-relaxed max-w-[640px]">
+          <p className="font-inter text-[#FFF8F0]/80 text-[14px] md:text-[16px] font-normal tracking-wide leading-relaxed max-w-[640px]">
             Update your personal and delivery details.
           </p>
 
@@ -164,7 +161,7 @@ export default function EditProfilePage() {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 40, opacity: 0.9 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="h-[2px] bg-[#C46C3B] mt-4 rounded-full"
+            className="h-[2px] bg-[#C19A5B] mt-4 rounded-full"
           />
         </motion.div>
       </section>
@@ -255,11 +252,11 @@ export default function EditProfilePage() {
               </FormSection>
 
               {/* ACTIONS */}
-              <div className="pt-6 border-t border-[#EAD6C3]/40 flex flex-col-reverse sm:flex-row items-center justify-end gap-4">
+              <div className="pt-6 border-t border-[#C19A5B]/20 flex flex-col-reverse sm:flex-row items-center justify-end gap-4">
                 <Link href="/profile" className="w-full sm:w-auto">
                   <button
                     type="button"
-                    className="w-full sm:w-auto px-6 h-[48px] rounded-[6px] border border-[#EAD6C3] text-[#7A6A5C] font-inter font-medium text-[15px] hover:bg-white hover:text-[#3B2C23] hover:border-[#3B2C23]/30 transition-all"
+                    className="w-full sm:w-auto px-6 h-[48px] rounded-[6px] border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] font-inter font-medium text-[15px] hover:bg-white hover:text-[#C19A5B] hover:border-[#C19A5B]/50 transition-all"
                   >
                     Cancel
                   </button>
@@ -268,7 +265,7 @@ export default function EditProfilePage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="w-full sm:w-auto px-8 h-[48px] bg-[#B35E2E] text-white rounded-[6px] font-inter font-medium text-[15px] hover:bg-[#964B22] shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-8 h-[48px] bg-[#1A1512] text-white rounded-[6px] font-inter font-medium text-[15px] hover:bg-[#C19A5B] hover:text-[#1A1512] border border-[#C19A5B]/20 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSaving ? (
                     <>
@@ -283,7 +280,7 @@ export default function EditProfilePage() {
               </div>
 
               {/* TRUST SIGNAL */}
-              <div className="mt-8 flex items-center justify-center gap-2 text-[#7A6A5C]/60">
+              <div className="mt-8 flex items-center justify-center gap-2 text-[#1A1512]/60">
                 <Lock className="w-3 h-3" />
                 <span className="text-[12px] font-inter">
                   Your information is securely stored and never shared.

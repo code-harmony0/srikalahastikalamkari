@@ -76,7 +76,7 @@ const FormInput = ({
   maxLength?: number;
 }) => (
   <div className="w-full">
-    <label className="block text-sm font-inter font-medium text-[#3B2C23]/80 mb-1.5">
+    <label className="block text-sm font-inter font-medium text-[#1A1512]/80 mb-1.5">
       {label} {required && <span className="text-red-500">*</span>}
     </label>
     <input
@@ -86,10 +86,10 @@ const FormInput = ({
       onChange={onChange}
       maxLength={maxLength}
       className={cn(
-        "w-full px-4 py-3 rounded-[10px] border bg-[#FFF8F0]/30 focus:outline-none transition-all placeholder:text-[#3B2C23]/30",
+        "w-full px-4 py-3 rounded-[10px] border bg-[#FFF8F0]/30 focus:outline-none transition-all placeholder:text-[#1A1512]/40",
         error
           ? "border-red-400 focus:border-red-500 focus:ring-1 focus:ring-red-200"
-          : "border-[#EAD6C3] focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40",
+          : "border-[#C19A5B]/30 focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40",
       )}
       placeholder={placeholder}
     />
@@ -238,7 +238,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           email: formData.email,
           contact: formData.phone,
         },
-        theme: { color: "#A4552A" },
+        theme: { color: "#C19A5B" },
         handler: async (response: {
           razorpay_payment_id: string
           razorpay_order_id: string
@@ -292,18 +292,18 @@ const handleSubmit = async (e: React.FormEvent) => {
   // --- Empty State ---
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-[#FFF8F0] flex flex-col items-center justify-center px-6 text-center">
-        <div className="w-16 h-16 bg-[#FFF4E8] rounded-full flex items-center justify-center mb-4 border border-[#C19A5B]/30">
+      <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex flex-col items-center justify-center px-6 text-center text-[#1A1512]">
+        <div className="w-16 h-16 bg-[#C19A5B]/10 rounded-full flex items-center justify-center mb-4 border border-[#C19A5B]/30">
           <Wallet className="w-8 h-8 text-[#C19A5B]" />
         </div>
-        <h1 className="font-playfair text-3xl font-bold text-[#3B2C23] mb-4">
+        <h1 className="font-playfair text-3xl font-bold text-[#1A1512] mb-4">
           Your cart is empty
         </h1>
-        <p className="font-inter text-[#3B2C23]/60 mb-8">
+        <p className="font-inter text-[#1A1512]/60 mb-8">
           Please add items to your cart before checking out.
         </p>
         <Link href="/products">
-          <button className="px-8 py-3 bg-[#A4552A] text-[#FFF8F0] rounded-lg font-bold tracking-wide uppercase text-xs hover:bg-[#8B3F20] transition-colors shadow-lg shadow-[#A4552A]/20">
+          <button className="px-8 py-3 bg-[#1A1512] text-white hover:bg-[#C19A5B] hover:text-[#1A1512] transition-colors rounded-lg font-bold tracking-wide uppercase text-xs shadow-md border border-[#C19A5B]/20">
             Return to Shop
           </button>
         </Link>
@@ -312,7 +312,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF8F0]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* 🏛 Page Hero */}
       <PageHero
         icon={Wallet}
@@ -332,9 +332,9 @@ const handleSubmit = async (e: React.FormEvent) => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-[14px] border border-[#EAD6C3] p-6 md:p-8 shadow-sm"
+              className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 p-6 md:p-8 shadow-sm backdrop-blur-sm"
             >
-              <h2 className="font-playfair text-xl md:text-2xl font-bold text-[#3B2C23] mb-6 pb-4 border-b border-[#EAD6C3]/50">
+              <h2 className="font-playfair text-xl md:text-2xl font-bold text-[#1A1512] mb-6 pb-4 border-b border-[#C19A5B]/20">
                 Customer Information
               </h2>
               <div className="space-y-5">
@@ -387,9 +387,9 @@ const handleSubmit = async (e: React.FormEvent) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-[14px] border border-[#EAD6C3] p-6 md:p-8 shadow-sm"
+              className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 p-6 md:p-8 shadow-sm backdrop-blur-sm"
             >
-              <h2 className="font-playfair text-xl md:text-2xl font-bold text-[#3B2C23] mb-6 pb-4 border-b border-[#EAD6C3]/50">
+              <h2 className="font-playfair text-xl md:text-2xl font-bold text-[#1A1512] mb-6 pb-4 border-b border-[#C19A5B]/20">
                 Shipping Address
               </h2>
               <div className="space-y-5">
@@ -430,7 +430,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     maxLength={6}
                   />
                 </div>
-                <p className="text-xs text-[#3B2C23]/50 italic mt-2 flex items-center gap-1">
+                <p className="text-xs text-[#1A1512]/50 italic mt-2 flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3" /> We currently deliver
                   across India and selected international regions.
                 </p>
@@ -442,41 +442,41 @@ const handleSubmit = async (e: React.FormEvent) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white rounded-[14px] border border-[#EAD6C3] p-6 md:p-8 shadow-sm"
+              className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 p-6 md:p-8 shadow-sm backdrop-blur-sm"
             >
-              <h2 className="font-playfair text-xl md:text-2xl font-bold text-[#3B2C23] mb-6 pb-4 border-b border-[#EAD6C3]/50">
+              <h2 className="font-playfair text-xl md:text-2xl font-bold text-[#1A1512] mb-6 pb-4 border-b border-[#C19A5B]/20">
                 Payment Method
               </h2>
 
               <div className="rounded-[10px] border border-[#C19A5B]/30 bg-[#FFF8F0]/20 p-4 flex items-start gap-4">
-                <div className="w-5 h-5 mt-0.5 rounded-full border-2 border-[#A4552A] flex items-center justify-center">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#A4552A]" />
+                <div className="w-5 h-5 mt-0.5 rounded-full border-2 border-[#C19A5B] flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#C19A5B]" />
                 </div>
                 <div>
-                  <h3 className="font-inter font-bold text-[#3B2C23] text-sm flex items-center gap-2">
+                  <h3 className="font-inter font-bold text-[#1A1512] text-sm flex items-center gap-2">
                     Online Payment
-                    <span className="text-[10px] bg-[#3B2C23] text-white px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] bg-[#1A1512] text-white px-2 py-0.5 rounded-full">
                       Secure
                     </span>
                   </h3>
-                  <p className="text-xs text-[#3B2C23]/60 mt-1 mb-3">
+                  <p className="text-xs text-[#1A1512]/60 mt-1 mb-3">
                     Cards, UPI, Netbanking, Wallets (via Razorpay)
                   </p>
 
                   {/* Trust Badges */}
                   <div className="flex items-center gap-3 opacity-70 grayscale hover:grayscale-0 transition-all">
                     <div className="flex gap-2">
-                      <CreditCard className="w-6 h-6 text-[#3B2C23]" />
-                      <Wallet className="w-6 h-6 text-[#3B2C23]" />
+                      <CreditCard className="w-6 h-6 text-[#1A1512]" />
+                      <Wallet className="w-6 h-6 text-[#1A1512]" />
                     </div>
-                    <span className="text-[10px] text-[#3B2C23]/50 border-l border-[#C19A5B] pl-3">
+                    <span className="text-[10px] text-[#1A1512]/50 border-l border-[#C19A5B] pl-3">
                       Powered by Razorpay
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#3B2C23]/50 bg-[#F9FAFB] py-2 rounded-md border border-[#EAD6C3]/30">
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#1A1512]/60 bg-[#1A1512]/5 py-2 rounded-md border border-[#C19A5B]/10">
                 <Lock className="w-3 h-3" />
                 <span>
                   Payments are encrypted and secured with 256-bit SSL.
@@ -494,19 +494,19 @@ const handleSubmit = async (e: React.FormEvent) => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="bg-white rounded-[14px] border border-[#EAD6C3] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
+                className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 p-6 shadow-[0_4px_20px_rgba(26,21,18,0.04)] backdrop-blur-sm"
               >
-                <h3 className="font-playfair text-xl font-bold text-[#3B2C23] mb-6">
+                <h3 className="font-playfair text-xl font-bold text-[#1A1512] mb-6">
                   Order Summary
                 </h3>
 
                 {/* Product List */}
-                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 mb-6 scrollbar-thin scrollbar-thumb-[#EAD6C3]">
+                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 mb-6 scrollbar-thin scrollbar-thumb-[#C19A5B]/20">
                   {cartItems.map(({ product, quantity }) =>
                     product ? (
                       <div
                         key={product.id}
-                        className="flex gap-3 py-3 border-b border-[#EAD6C3]/30 last:border-0"
+                        className="flex gap-3 py-3 border-b border-[#C19A5B]/10 last:border-0"
                       >
                         {/* Tiny Image */}
                         <div className="w-12 h-16 bg-[#FDFBF7] rounded border border-[#EAD6C3]/50 shrink-0 overflow-hidden relative">
@@ -526,14 +526,14 @@ const handleSubmit = async (e: React.FormEvent) => {
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-inter font-semibold text-[#3B2C23] text-xs line-clamp-2 leading-relaxed">
+                          <p className="font-inter font-semibold text-[#1A1512] text-xs line-clamp-2 leading-relaxed">
                             {product.title || product.name}
                           </p>
-                          <p className="text-[10px] text-[#3B2C23]/60 mt-1">
+                          <p className="text-[10px] text-[#1A1512]/60 mt-1">
                             Qty: {quantity}
                           </p>
                         </div>
-                        <p className="font-inter font-medium text-[#A4552A] text-xs">
+                        <p className="font-inter font-semibold text-[#C19A5B] text-xs">
                           {formatPrice((product.price || 0) * quantity)}
                         </p>
                       </div>
@@ -542,10 +542,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </div>
 
                 {/* Coupon Section */}
-                <div className="pt-4 border-t border-[#EAD6C3]">
+                <div className="pt-4 border-t border-[#C19A5B]/20">
                   <div className="flex items-center gap-2 mb-3">
                     <Tag className="w-4 h-4 text-[#C19A5B]" />
-                    <span className="text-sm font-medium text-[#3B2C23]">Have a coupon?</span>
+                    <span className="text-sm font-medium text-[#1A1512]">Have a coupon?</span>
                   </div>
                   
                   {appliedCoupon ? (
@@ -574,13 +574,13 @@ const handleSubmit = async (e: React.FormEvent) => {
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                         placeholder="Enter code"
-                        className="flex-1 px-3 py-2 text-sm border border-[#EAD6C3] rounded-lg bg-[#FFF8F0]/30 focus:outline-none focus:border-[#C19A5B] uppercase"
+                        className="flex-1 px-3 py-2 text-sm border border-[#C19A5B]/30 rounded-lg bg-[#1A1512]/5 focus:outline-none focus:border-[#C19A5B] uppercase"
                       />
                       <button
                         type="button"
                         onClick={handleApplyCoupon}
                         disabled={couponLoading || !couponCode.trim()}
-                        className="px-4 py-2 bg-[#3B2C23] text-white text-sm font-medium rounded-lg hover:bg-[#3B2C23]/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        className="px-4 py-2 bg-[#1A1512] text-white text-sm font-medium rounded-lg hover:bg-[#C19A5B] hover:text-[#1A1512] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors duration-300"
                       >
                         {couponLoading ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -597,12 +597,12 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </div>
 
                 {/* Price Breakdown */}
-                <div className="space-y-3 pt-4 border-t border-[#EAD6C3]">
+                <div className="space-y-3 pt-4 border-t border-[#C19A5B]/20">
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#3B2C23]/70 font-inter">
+                    <span className="text-[#1A1512]/70 font-inter">
                       Subtotal
                     </span>
-                    <span className="font-medium text-[#3B2C23]">
+                    <span className="font-medium text-[#1A1512]">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
@@ -621,13 +621,13 @@ const handleSubmit = async (e: React.FormEvent) => {
                   )}
                   
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#3B2C23]/70 font-inter">
+                    <span className="text-[#1A1512]/70 font-inter">
                       Shipping
                     </span>
                     <span
                       className={cn(
                         "font-medium",
-                        shipping === 0 ? "text-green-600" : "text-[#3B2C23]",
+                        shipping === 0 ? "text-green-600" : "text-[#1A1512]",
                       )}
                     >
                       {shipping === 0 ? "Free" : formatPrice(shipping)}
@@ -635,11 +635,11 @@ const handleSubmit = async (e: React.FormEvent) => {
                   </div>
 
 
-                  <div className="flex justify-between items-center pt-4 border-t border-[#EAD6C3] mt-2">
-                    <span className="font-playfair font-bold text-lg text-[#3B2C23]">
+                  <div className="flex justify-between items-center pt-4 border-t border-[#C19A5B]/20 mt-2">
+                    <span className="font-playfair font-bold text-lg text-[#1A1512]">
                       Total
                     </span>
-                    <span className="font-playfair font-bold text-2xl text-[#A4552A]">
+                    <span className="font-playfair font-bold text-2xl text-[#C19A5B]">
                       {formatPrice(total)}
                     </span>
                   </div>
@@ -649,7 +649,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full mt-8 bg-[#A4552A] text-[#FFF8F0] py-3.5 rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest shadow-[0_4px_12px_rgba(164,85,42,0.25)] hover:bg-[#8B3F20] hover:shadow-[0_6px_16px_rgba(164,85,42,0.35)] transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full mt-8 bg-[#1A1512] text-white py-3.5 rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest shadow-md hover:bg-[#C19A5B] hover:text-[#1A1512] hover:shadow-lg transition-all duration-300 border border-[#C19A5B]/20 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isProcessing ? (
                     <>
@@ -663,7 +663,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   )}
                 </button>
 
-                <p className="text-[10px] text-[#3B2C23]/40 text-center mt-3 leading-tight">
+                <p className="text-[10px] text-[#1A1512]/40 text-center mt-3 leading-tight">
                   By placing this order, you agree to our Terms & Conditions.
                 </p>
               </motion.div>
@@ -678,17 +678,17 @@ const handleSubmit = async (e: React.FormEvent) => {
       </div>
 
       {/* Mobile Sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-[#EAD6C3] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[#C19A5B]/20 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40">
         <div className="flex justify-between items-center mb-3 px-1">
-          <span className="font-playfair font-bold text-[#3B2C23]">Total</span>
-          <span className="font-playfair font-bold text-xl text-[#A4552A]">
+          <span className="font-playfair font-bold text-[#1A1512]">Total</span>
+          <span className="font-playfair font-bold text-xl text-[#C19A5B]">
             {formatPrice(total)}
           </span>
         </div>
         <button
           onClick={handleSubmit}
           disabled={isProcessing}
-          className="w-full bg-[#A4552A] text-[#FFF8F0] py-3 rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest shadow-lg flex justify-center items-center gap-2"
+          className="w-full bg-[#1A1512] text-white py-3 rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest shadow-lg hover:bg-[#C19A5B] hover:text-[#1A1512] transition-colors border border-[#C19A5B]/20 flex justify-center items-center gap-2"
         >
           {isProcessing ? "Processing..." : "Proceed to Pay"}
         </button>

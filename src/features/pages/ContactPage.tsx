@@ -71,46 +71,47 @@ export default function ContactPage() {
     <motion.div
       whileHover={{ y: -2 }}
       className={cn(
-        "flex gap-4 p-6 rounded-[12px] border border-transparent shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-300 group h-full",
+        "flex gap-4 p-6 rounded-[12px] transition-all duration-300 group h-full",
         whatsapp
-          ? "bg-[#F0FDF4] hover:border-green-200 hover:shadow-[0_4px_12px_rgba(22,163,74,0.08)]"
-          : "bg-[#FFF9F4] hover:border-[#EAD6C3] hover:shadow-[0_4px_12px_rgba(179,94,46,0.08)]"
+          ? "bg-[#F0FDF4] border border-green-200/50 hover:border-green-300 hover:shadow-[0_4px_12px_rgba(22,163,74,0.06)]"
+          : "bg-white border border-[#C19A5B]/20 hover:border-[#C19A5B]/50 hover:shadow-[0_4px_12px_rgba(193,154,91,0.06)]"
       )}
     >
       <div className="shrink-0 mt-1">
         <Icon
           className={cn(
             "w-6 h-6 group-hover:scale-110 transition-transform duration-300",
-            whatsapp ? "text-[#25D366]" : "text-[#B35E2E]"
+            whatsapp ? "text-[#25D366]" : "text-[#C19A5B]"
           )}
           strokeWidth={1.5}
         />
       </div>
       <div>
-        <h3 className="font-playfair font-bold text-[#3B2C23] text-[17px] mb-1 leading-tight">
+        <h3 className="font-serif font-bold text-[#1A1512] text-[17px] mb-1 leading-tight">
           {title}
         </h3>
-        <p className="font-inter text-[#3B2C23] text-[15px] font-medium leading-snug">
+        <div className="font-sans text-[#1A1512] text-[15px] font-medium leading-snug">
           {content}
-        </p>
+        </div>
         {subContent && (
-          <p className="font-inter text-[#7A6A5C] text-[13px] mt-1.5 leading-relaxed">
+          <div className="font-sans text-[#1A1512]/60 text-[13px] mt-1.5 leading-relaxed">
             {subContent}
-          </p>
+          </div>
         )}
       </div>
     </motion.div>
   )
 
   return (
-    <div className="min-h-screen bg-[#FAF3EC]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* ─────────────────────────────────────────────
-          1. HERO SECTION (Clean Ivory Standard)
-          Matches Cart & Profile Headers
+          1. HERO SECTION (Premium Dark Charcoal Hero)
       ────────────────────────────────────────────── */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[160px] md:h-[220px] bg-[#FAF3EC] border-b border-[#EAD6C3]/60 shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)]">
-        {/* Subtle Warmth Hint */}
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#E8C3A2]/10 to-transparent pointer-events-none" />
+      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[180px] md:h-[220px] bg-[#1A1512]">
+        <div className="absolute inset-0 z-[6] pointer-events-none">
+          <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -118,32 +119,17 @@ export default function ContactPage() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
         >
-          {/* Icon - Clean Terracotta */}
-          <div className="mb-4">
-            <MessageSquare
-              className="w-8 h-8 md:w-9 md:h-9 text-[#B35E2E]"
-              strokeWidth={1.5}
-            />
-          </div>
+          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-2">
+            Connect With Us
+          </span>
 
-          {/* Title - Dark Brown Playfair */}
-          <h1 className="font-playfair text-[32px] md:text-[48px] font-bold text-[#3B2C23] tracking-wide leading-tight mb-2">
-            Get in Touch
+          <h1 className="font-serif text-[32px] md:text-[40px] font-bold text-white tracking-wide leading-tight mb-2 uppercase">
+            Get in <span className="italic text-[#C19A5B] font-normal lowercase">touch</span>
           </h1>
 
-          {/* Subtitle - Muted Inter */}
-          <p className="font-inter text-[#7A6A5C] text-[14px] md:text-[16px] font-normal tracking-wide leading-relaxed max-w-[640px]">
-            We’d love to hear from you. Send us a message and we'll respond
-            within 24 hours.
+          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
+            We’d love to hear from you. Send us a message and we'll respond within 24 hours.
           </p>
-
-          {/* Minimal Accent Underline */}
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 40, opacity: 0.9 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="h-[2px] bg-[#C46C3B] mt-4 rounded-full"
-          />
         </motion.div>
       </section>
 
@@ -182,7 +168,7 @@ export default function ContactPage() {
                     href="https://maps.app.goo.gl/tABoSwfoUcmEQjgJA"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[12px] font-bold uppercase text-[#B35E2E] hover:text-[#3B2C23] transition-colors mt-1"
+                    className="inline-flex items-center gap-1.5 text-[12px] font-bold uppercase text-[#C19A5B] hover:text-[#1A1512] transition-colors mt-1"
                   >
                     Get Directions
                   </a>
@@ -216,39 +202,39 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-3 bg-white rounded-[12px] shadow-[0_2px_6px_rgba(0,0,0,0.06)] p-8 md:p-12 border border-[#E7E0D8]"
+            className="lg:col-span-3 bg-white rounded-[12px] shadow-[0_2px_6px_rgba(0,0,0,0.03)] p-8 md:p-12 border border-[#C19A5B]/20"
           >
-            <div className="mb-8 pb-4 border-b border-[#E7E0D8]/60">
-              <h2 className="font-playfair text-2xl font-bold text-[#3B2C23] mb-1">
+            <div className="mb-8 pb-4 border-b border-[#C19A5B]/20">
+              <h2 className="font-serif text-2xl font-bold text-[#1A1512] mb-1">
                 Send us a Message
               </h2>
-              <div className="h-[2px] w-12 bg-[#B35E2E]/20 mt-2 rounded-full" />
+              <div className="h-[2px] w-12 bg-[#C19A5B]/30 mt-2 rounded-full" />
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Row 1 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
-                  <label className="text-[13px] font-inter font-semibold text-[#3B2C23]/80 uppercase tracking-wider">
+                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
                     Name
                   </label>
                   <input
                     required
                     type="text"
                     name="name"
-                    className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
+                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
                     placeholder="Your Full Name"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[13px] font-inter font-semibold text-[#3B2C23]/80 uppercase tracking-wider">
+                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
                     Email
                   </label>
                   <input
                     required
                     type="email"
                     name="email"
-                    className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
+                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -257,24 +243,24 @@ export default function ContactPage() {
               {/* Row 2 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
-                  <label className="text-[13px] font-inter font-semibold text-[#3B2C23]/80 uppercase tracking-wider">
+                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
                     Phone
                   </label>
                   <input
                     type="tel"
                     name="phone"
-                    className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
+                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
                     placeholder="+91 98765 43210"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[13px] font-inter font-semibold text-[#3B2C23]/80 uppercase tracking-wider">
+                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
                     Subject
                   </label>
                   <input
                     type="text"
                     name="subject"
-                    className="w-full px-3.5 h-[48px] rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px]"
+                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
                     placeholder="Order Inquiry / Custom Request"
                   />
                 </div>
@@ -282,14 +268,14 @@ export default function ContactPage() {
 
               {/* Message */}
               <div className="space-y-1.5">
-                <label className="text-[13px] font-inter font-semibold text-[#3B2C23]/80 uppercase tracking-wider">
+                <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
                   Message
                 </label>
                 <textarea
                   name="message"
                   required
                   rows={5}
-                  className="w-full p-3.5 rounded-[6px] border border-[#E7E0D8] text-[#3B2C23] focus:outline-none focus:border-[#B35E2E] focus:ring-1 focus:ring-[#B35E2E]/20 transition-all placeholder:text-[#B7AFA7] font-inter text-[15px] resize-none min-h-[140px]"
+                  className="w-full p-3.5 rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px] resize-none min-h-[140px]"
                   placeholder="How can we help you today?"
                 />
               </div>
@@ -299,7 +285,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full md:w-auto px-8 h-[48px] bg-[#B35E2E] text-white rounded-[6px] font-inter font-medium text-[16px] hover:bg-[#964B22] shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full md:w-auto px-8 h-[48px] bg-[#1A1512] text-white hover:bg-[#C19A5B] rounded-[4px] font-sans font-bold text-[12px] uppercase tracking-wider transition-all duration-300 shadow-md flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
                   {!isSubmitting && (

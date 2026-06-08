@@ -207,7 +207,7 @@ export default function ProductDetail() {
   if (isLoading) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center bg-[#FDFBF7]">
-        <div className="w-10 h-10 border-2 border-[#A4552A] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-[#C19A5B] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -216,11 +216,11 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center px-4">
         <Package className="h-12 w-12 text-[#C19A5B] mb-3" />
-        <h1 className="font-playfair text-xl font-bold text-[#3B2C23] mb-2">
+        <h1 className="font-playfair text-xl font-bold text-[#1A1512] mb-2">
           Product Not Found
         </h1>
         <Link href="/products">
-          <button className="text-[#A4552A] font-medium text-sm hover:underline underline-offset-4">
+          <button className="text-[#C19A5B] font-medium text-sm hover:underline underline-offset-4">
             Return to Shop
           </button>
         </Link>
@@ -229,27 +229,27 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* ─────────────────────────────────────────────
           BREADCRUMB
       ────────────────────────────────────────────── */}
-      <div className="border-b border-[#EAD6C3]/20 bg-white/50">
+      <div className="border-b border-[#C19A5B]/10 bg-white/50">
         <div className="max-w-[1380px] mx-auto px-4 md:px-6 py-3">
           {" "}
           {/* Increased width */}
-          <div className="flex items-center gap-2 text-[11px] text-[#7A6A5C] font-inter uppercase tracking-wide">
-            <Link href="/" className="hover:text-[#A4552A] transition-colors">
+          <div className="flex items-center gap-2 text-[11px] text-[#1A1512]/60 font-inter uppercase tracking-wide">
+            <Link href="/" className="hover:text-[#C19A5B] transition-colors">
               Home
             </Link>
             <span className="opacity-40">/</span>
             <Link
               href="/products"
-              className="hover:text-[#A4552A] transition-colors"
+              className="hover:text-[#C19A5B] transition-colors"
             >
               Shop
             </Link>
             <span className="opacity-40">/</span>
-            <span className="text-[#3B2C23] font-semibold truncate max-w-[200px]">
+            <span className="text-[#1A1512] font-semibold truncate max-w-[200px]">
               {product.name || product.title}
             </span>
           </div>
@@ -280,8 +280,8 @@ export default function ProductDetail() {
                     className={cn(
                       "relative w-16 h-20 lg:w-20 lg:h-24 rounded-[6px] overflow-hidden border transition-all shrink-0",
                       selectedImageIndex === idx
-                        ? "border-[#A4552A] ring-1 ring-[#A4552A]/20"
-                        : "border-[#EAD6C3]/30 hover:border-[#C19A5B]",
+                        ? "border-[#C19A5B] ring-1 ring-[#C19A5B]/20"
+                        : "border-[#C19A5B]/20 hover:border-[#C19A5B]",
                     )}
                   >
                     <OptimizedImage
@@ -338,7 +338,7 @@ export default function ProductDetail() {
             <div className="sticky top-24 space-y-6">
               {/* Header Group */}
               <div className="space-y-2">
-                <h1 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-bold text-[#3B2C23] leading-[1.2]">
+                <h1 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-bold text-[#1A1512] leading-[1.2]">
                   {product.name || product.title}
                 </h1>
 
@@ -347,13 +347,13 @@ export default function ProductDetail() {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-3.5 h-3.5 ${i < Math.round(averageRating) ? "fill-[#D4AF37] text-[#D4AF37]" : "text-[#C19A5B]/30"}`}
+                        className={`w-3.5 h-3.5 ${i < Math.round(averageRating) ? "fill-[#C19A5B] text-[#C19A5B]" : "text-[#C19A5B]/30"}`}
                       />
                     ))}
                   </div>
                   <a
                     href="#reviews"
-                    className="text-xs text-[#7A6A5C] hover:text-[#A4552A] underline underline-offset-2"
+                    className="text-xs text-[#1A1512]/60 hover:text-[#C19A5B] underline underline-offset-2"
                   >
                     {averageRating.toFixed(1)} ({totalReviews} reviews)
                   </a>
@@ -361,14 +361,14 @@ export default function ProductDetail() {
               </div>
 
               {/* Price & Stock */}
-              <div className="flex items-center justify-between border-b border-[#EAD6C3]/30 pb-4">
+              <div className="flex items-center justify-between border-b border-[#C19A5B]/20 pb-4">
                 <div className="flex items-baseline gap-3">
-                  <span className="font-inter text-2xl md:text-3xl font-bold text-[#A4552A]">
+                  <span className="font-inter text-2xl md:text-3xl font-bold text-[#1A1512]">
                     {formatPrice(product.price || 0)}
                   </span>
                   {product.original_price &&
                     product.original_price > product.price && (
-                      <span className="font-inter text-sm text-[#7A6A5C]/60 line-through decoration-[#7A6A5C]/40">
+                      <span className="font-inter text-sm text-[#1A1512]/40 line-through decoration-[#C19A5B]/30">
                         {formatPrice(product.original_price)}
                       </span>
                     )}
@@ -413,22 +413,22 @@ export default function ProductDetail() {
 
               {/* Trust Strip */}
               <div className="flex items-center gap-6 py-2">
-                <div className="flex items-center gap-2 text-[11px] font-medium text-[#5C4A3D]">
-                  <Truck className="w-3.5 h-3.5 text-[#A4552A]" />
+                <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
+                  <Truck className="w-3.5 h-3.5 text-[#C19A5B]" />
                   <span>Free shipping {">"} ₹2000</span>
                 </div>
-                <div className="flex items-center gap-2 text-[11px] font-medium text-[#5C4A3D]">
-                  <Package className="w-3.5 h-3.5 text-[#A4552A]" />
+                <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
+                  <Package className="w-3.5 h-3.5 text-[#C19A5B]" />
                   <span>5-7 Day Delivery</span>
                 </div>
-                <div className="flex items-center gap-2 text-[11px] font-medium text-[#5C4A3D]">
-                  <Shield className="w-3.5 h-3.5 text-[#A4552A]" />
+                <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
+                  <Shield className="w-3.5 h-3.5 text-[#C19A5B]" />
                   <span>Secure Checkout</span>
                 </div>
               </div>
 
               {/* Essence */}
-              <p className="text-sm text-[#3B2C23]/80 font-inter leading-relaxed">
+              <p className="text-sm text-[#1A1512]/80 font-inter leading-relaxed">
                 {product.description?.slice(0, 180) ||
                   "Handcrafted with traditional Kalamkari techniques, showcasing authentic artisan craftsmanship. Each piece tells a story of heritage and skilled artistry."}
                 ...
@@ -466,7 +466,7 @@ export default function ProductDetail() {
                   >
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-9 h-full flex items-center justify-center hover:bg-[#C19A5B]/10 text-[#1A1512] disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={quantity <= 1 || !inStock}
                     >
                       <Minus className="w-3.5 h-3.5" />
@@ -476,7 +476,7 @@ export default function ProductDetail() {
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="w-9 h-full flex items-center justify-center hover:bg-[#FFF4E8] text-[#3B2C23] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-9 h-full flex items-center justify-center hover:bg-[#C19A5B]/10 text-[#1A1512] disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={!inStock}
                     >
                       <Plus className="w-3.5 h-3.5" />
@@ -490,7 +490,7 @@ export default function ProductDetail() {
                     className={cn(
                       "flex-1 rounded-[6px] font-inter font-medium text-sm flex items-center justify-center gap-2 transition-all",
                       inStock
-                        ? "bg-[#A4552A] hover:bg-[#8B3F20] text-white shadow-sm active:scale-[0.98]"
+                        ? "bg-[#C19A5B] hover:bg-[#A07840] text-white shadow-sm active:scale-[0.98]"
                         : "bg-gray-200 text-gray-500 cursor-not-allowed",
                     )}
                   >
@@ -504,21 +504,21 @@ export default function ProductDetail() {
                     className={cn(
                       "flex-1 h-[40px] border rounded-[6px] flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-wide transition-all",
                       isInWishlist
-                        ? "border-[#A4552A] text-[#A4552A] bg-[#FFF4E8]"
-                        : "border-[#EAD6C3] text-[#7A6A5C] hover:border-[#A4552A] hover:text-[#A4552A]",
+                        ? "border-[#1A1512] text-[#1A1512] bg-[#C19A5B]/10"
+                        : "border-[#C19A5B]/30 text-[#1A1512]/70 hover:border-[#1A1512] hover:text-[#1A1512]",
                     )}
                   >
                     <Heart
                       className={cn(
                         "w-3.5 h-3.5",
-                        isInWishlist && "fill-current",
+                        isInWishlist && "fill-[#C19A5B] text-[#C19A5B]",
                       )}
                     />
                     Wishlist
                   </button>
                   <button
                     onClick={handleShare}
-                    className="flex-1 h-[40px] border border-[#EAD6C3] text-[#7A6A5C] rounded-[6px] flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-wide hover:border-[#A4552A] hover:text-[#A4552A] transition-all"
+                    className="flex-1 h-[40px] border border-[#C19A5B]/30 text-[#1A1512]/70 rounded-[6px] flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-wide hover:border-[#1A1512] hover:text-[#1A1512] transition-all"
                   >
                     <Share2 className="w-3.5 h-3.5" />
                     Share
@@ -536,22 +536,22 @@ export default function ProductDetail() {
           {/* Offset to align with content column (7 cols space) */}
           <div className="hidden lg:block lg:col-span-7" />
 
-          <div className="lg:col-span-5 bg-white rounded-[10px] border border-[#EAD6C3]/30 overflow-hidden shadow-sm">
+          <div className="lg:col-span-5 bg-white rounded-[10px] border border-[#C19A5B]/20 overflow-hidden shadow-sm">
             <Accordion type="single" collapsible defaultValue="details">
               <AccordionItem
                 value="details"
-                className="border-b border-[#EAD6C3]/20 px-6"
+                className="border-b border-[#C19A5B]/10 px-6"
               >
-                <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#3B2C23] hover:no-underline">
+                <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#1A1512] hover:no-underline">
                   Product Details
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-sm text-[#3B2C23]/70 font-inter leading-relaxed">
+                <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
                   {product.specifications ? (
-                    <ul className="space-y-2 list-disc pl-4 marker:text-[#EAD6C3]">
+                    <ul className="space-y-2 list-disc pl-4 marker:text-[#C19A5B]/45">
                       {Object.entries(product.specifications).map(
                         ([key, value]) => (
                           <li key={key}>
-                            <span className="font-medium text-[#3B2C23]">
+                            <span className="font-medium text-[#1A1512]">
                               {key}:
                             </span>{" "}
                             {String(value)}
@@ -567,18 +567,18 @@ export default function ProductDetail() {
 
               <AccordionItem
                 value="craft"
-                className="border-b border-[#EAD6C3]/20 px-6"
+                className="border-b border-[#C19A5B]/10 px-6"
               >
-                <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#3B2C23] hover:no-underline">
+                <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#1A1512] hover:no-underline">
                   Material & Craft
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-sm text-[#3B2C23]/70 font-inter leading-relaxed">
+                <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
                   <p className="mb-2">
-                    <strong className="text-[#3B2C23]">Fabric:</strong> Pure
+                    <strong className="text-[#1A1512]">Fabric:</strong> Pure
                     cotton with natural dyes.
                   </p>
                   <p>
-                    <strong className="text-[#3B2C23]">Technique:</strong>{" "}
+                    <strong className="text-[#1A1512]">Technique:</strong>{" "}
                     Traditional hand-painted Kalamkari using organic colors
                     derived from roots, leaves, and minerals.
                   </p>
@@ -586,10 +586,10 @@ export default function ProductDetail() {
               </AccordionItem>
 
               <AccordionItem value="shipping" className="px-6 border-b-0">
-                <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#3B2C23] hover:no-underline">
+                <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#1A1512] hover:no-underline">
                   Shipping
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-sm text-[#3B2C23]/70 font-inter leading-relaxed">
+                <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
                   <p className="mb-1">• Free shipping on orders over ₹2000</p>
                   <p className="mb-1">• Delivery: 5-7 business days</p>
                 </AccordionContent>
@@ -606,8 +606,8 @@ export default function ProductDetail() {
             SECTION 4: RELATED PRODUCTS (Curated)
         ────────────────────────────────────────────── */}
         {relatedProducts.length > 0 && (
-          <div className="mt-16 pt-12 border-t border-[#EAD6C3]/30">
-            <h2 className="font-playfair text-2xl font-bold text-[#3B2C23] mb-8 text-center">
+          <div className="mt-16 pt-12 border-t border-[#C19A5B]/20">
+            <h2 className="font-playfair text-2xl font-bold text-[#1A1512] mb-8 text-center">
               You May Also Love
             </h2>
 
@@ -633,15 +633,15 @@ export default function ProductDetail() {
                       loading="lazy"
                     />
                     {relProduct.isFeatured && (
-                      <span className="absolute top-2 left-2 bg-white/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#A4552A] rounded-[2px] backdrop-blur-sm">
+                      <span className="absolute top-2 left-2 bg-white/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#1A1512] rounded-[2px] backdrop-blur-sm">
                         Artisan
                       </span>
                     )}
                   </div>
-                  <h3 className="font-inter text-sm font-medium text-[#3B2C23] line-clamp-1 group-hover:text-[#A4552A] transition-colors">
+                  <h3 className="font-inter text-sm font-medium text-[#1A1512] line-clamp-1 group-hover:text-[#C19A5B] transition-colors">
                     {relProduct.name || relProduct.title}
                   </h3>
-                  <p className="font-playfair text-base font-bold text-[#A4552A] mt-1">
+                  <p className="font-playfair text-base font-bold text-[#1A1512] mt-1">
                     {formatPrice(relProduct.price || 0)}
                   </p>
                 </Link>
