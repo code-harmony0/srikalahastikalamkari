@@ -575,9 +575,9 @@
     "semantic_hash": "8941fb3119094f342bc0bbcd30832150"
   },
   "/Users/codeaura/Projects/freelance/shri_kalahsti_kalamkari/src/features/products/ProductsPage.tsx": {
-    "mtime": 1780900908.091049,
-    "ast_hash": "12c3d8216523b46e8dff488aab514050",
-    "semantic_hash": "12c3d8216523b46e8dff488aab514050"
+    "mtime": 1780905550.3665488,
+    "ast_hash": "8eaa2e50c25afe15bb0eef1e66090b4e",
+    "semantic_hash": ""
   },
   "/Users/codeaura/Projects/freelance/shri_kalahsti_kalamkari/src/features/products/ProductReviews.tsx": {
     "mtime": 1780900829.802324,
@@ -605,14 +605,14 @@
     "semantic_hash": "2c800fa04aaa18b93d704068414c9af6"
   },
   "/Users/codeaura/Projects/freelance/shri_kalahsti_kalamkari/src/features/products/ProductDetail.tsx": {
-    "mtime": 1780900908.6339383,
-    "ast_hash": "406892f5a025539130d77fe64f0d38b3",
-    "semantic_hash": "406892f5a025539130d77fe64f0d38b3"
+    "mtime": 1780905557.663741,
+    "ast_hash": "abd658c0e2c1521438826dfd17471f0a",
+    "semantic_hash": ""
   },
   "/Users/codeaura/Projects/freelance/shri_kalahsti_kalamkari/src/features/products/SubCategoryPopup.tsx": {
-    "mtime": 1780900905.5120566,
-    "ast_hash": "3c23b121aa52b2c6a4a9d8e3e55508c1",
-    "semantic_hash": "3c23b121aa52b2c6a4a9d8e3e55508c1"
+    "mtime": 1780905563.3288977,
+    "ast_hash": "a0618925380a155aae3306d208453099",
+    "semantic_hash": ""
   },
   "/Users/codeaura/Projects/freelance/shri_kalahsti_kalamkari/src/features/checkout/CheckoutPage.tsx": {
     "mtime": 1780900843.9654198,

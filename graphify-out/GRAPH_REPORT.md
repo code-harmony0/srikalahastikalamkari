@@ -1,16 +1,16 @@
 # Graph Report - shri_kalahsti_kalamkari  (2026-06-08)
 
 ## Corpus Check
-- 243 files · ~508,877 words
+- 243 files · ~508,893 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1564 nodes · 2492 edges · 191 communities (115 shown, 76 thin omitted)
+- 1564 nodes · 2495 edges · 189 communities (113 shown, 76 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 97 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d936b1aa`
+- Built from commit: `1e83aac3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -34,7 +34,6 @@
 - [[_COMMUNITY_Home Page & Metadata|Home Page & Metadata]]
 - [[_COMMUNITY_TypeScript & Compiler Config|TypeScript & Compiler Config]]
 - [[_COMMUNITY_Decorative Art Patterns|Decorative Art Patterns]]
-- [[_COMMUNITY_Dashboard Layout & Sidebar|Dashboard Layout & Sidebar]]
 - [[_COMMUNITY_Community 20|Community 20]]
 - [[_COMMUNITY_Community 21|Community 21]]
 - [[_COMMUNITY_Community 22|Community 22]]
@@ -101,7 +100,6 @@
 - [[_COMMUNITY_Community 83|Community 83]]
 - [[_COMMUNITY_Community 84|Community 84]]
 - [[_COMMUNITY_Community 85|Community 85]]
-- [[_COMMUNITY_Community 86|Community 86]]
 - [[_COMMUNITY_Community 87|Community 87]]
 - [[_COMMUNITY_Community 88|Community 88]]
 - [[_COMMUNITY_Community 89|Community 89]]
@@ -196,7 +194,7 @@
 - [[_COMMUNITY_Community 189|Community 189]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 107 edges
+1. `cn()` - 109 edges
 2. `Button` - 28 edges
 3. `OptimizedImage` - 24 edges
 4. `useAuth()` - 22 edges
@@ -216,22 +214,22 @@
   src/shared/types/index.ts → src/shared/types/supabase.ts
 - `dependencies` --implements--> `Mock Supabase Client`  [EXTRACTED]
   package.json → tests/__mocks__/services.ts
-- `Next.js Image Optimization` --conceptually_related_to--> `Performance Testing Thresholds`  [INFERRED]
-  next.config.mjs → tests/unit/products/TC-PERF-001.test.tsx
+- `ShippingWidget()` --semantically_similar_to--> `ShippingWidget()`  [INFERRED] [semantically similar]
+  src/features/checkout/ShippingWidget.tsx → src/features/cart/ShippingWidget.tsx
 
-## Communities (191 total, 76 thin omitted)
+## Communities (189 total, 76 thin omitted)
 
 ### Community 0 - "Shared Dependencies & Testing Mocks"
 Cohesion: 0.03
 Nodes (72): Mock Supabase Client, dependencies, browser-image-compression, class-variance-authority, clsx, cmdk, cross-env, date-fns (+64 more)
 
 ### Community 1 - "Dashboard KPI & Alert Components"
-Cohesion: 0.14
-Nodes (16): useCategories(), getAllImageTiers(), getImageTier(), hasImageTiers(), getResponsiveSizes(), CuratedProductCardProps, metadata, ProductCard (+8 more)
+Cohesion: 0.17
+Nodes (16): useCategories(), Header(), getAllImageTiers(), getImageTier(), hasImageTiers(), CuratedProductCardProps, ProductCardProps, ProductCardCompactProps (+8 more)
 
 ### Community 2 - "Cloudflare & Image Utility Config"
-Cohesion: 0.18
-Nodes (14): InventoryProvider(), SignUpPage(), Toast, ToastAction, ToastActionElement, ToastClose, ToastDescription, ToastProps (+6 more)
+Cohesion: 0.10
+Nodes (20): inter, jsonLd, metadata, playfair, InventoryProvider(), ThemeProvider(), Providers(), SignUpPage() (+12 more)
 
 ### Community 3 - "Migration & Reporting Logic"
 Cohesion: 0.06
@@ -239,7 +237,7 @@ Nodes (39): DashboardAlerts(), DashboardAlertsProps, ChartCard(), DataTable(), T
 
 ### Community 4 - "Cart & Shipping Page Components"
 Cohesion: 0.06
-Nodes (34): sitemap(), Order Status Lifecycle, Cloudflare Image Utilities, Image Tier Management, Image Optimization Utils, Image Reference Validation, validateImageRefArray(), Categories Service (+26 more)
+Nodes (36): sitemap(), Category, Subcategory, useFilterCategories(), UseFilterCategoriesResult, validateImageRefArray(), FilterSidebar(), FilterSidebarProps (+28 more)
 
 ### Community 5 - "Form Formatting & Image Validation"
 Cohesion: 0.12
@@ -259,23 +257,23 @@ Nodes (24): devDependencies, autoprefixer, eslint, eslint-config-next, eslint-co
 
 ### Community 9 - "Admin Dashboard Pages"
 Cohesion: 0.17
-Nodes (13): SaleCountdownProps, SavingsBadge(), SavingsBadgeProps, StockAlert(), StockAlertProps, useProduct(), useProductBySlug(), useProducts() (+5 more)
+Nodes (14): SaleCountdownProps, SavingsBadge(), SavingsBadgeProps, StockAlert(), StockAlertProps, useProduct(), useProductBySlug(), useProducts() (+6 more)
 
 ### Community 10 - "Footer & Dialog UI"
-Cohesion: 0.17
-Nodes (15): Categories Admin Page, createCategory(), createSubCategory(), deleteCategory(), deleteSubCategory(), getCategories(), getExistingCategoryImageRef(), getSubCategories() (+7 more)
+Cohesion: 0.20
+Nodes (14): Categories Admin Page, createCategory(), createSubCategory(), deleteCategory(), deleteSubCategory(), getCategories(), getExistingCategoryImageRef(), getSubCategories() (+6 more)
 
 ### Community 11 - "Order & Admin Details"
-Cohesion: 0.29
-Nodes (6): DialogContent, DialogDescription, DialogFooter(), DialogHeader(), DialogOverlay, DialogTitle
+Cohesion: 0.50
+Nodes (3): HoverCard, HoverCardContent, HoverCardTrigger
 
 ### Community 12 - "Checkout & Payment Flow"
 Cohesion: 0.10
 Nodes (20): compilerOptions, allowJs, esModuleInterop, forceConsistentCasingInFileNames, incremental, isolatedModules, jsx, lib (+12 more)
 
 ### Community 13 - "Shared UI (Avatar, Collapsible)"
-Cohesion: 0.11
-Nodes (19): CartPage(), metadata, ShippingWidget(), ShippingWidgetProps, CheckoutPage(), FormData, FormErrors, FormInput() (+11 more)
+Cohesion: 0.13
+Nodes (14): CheckoutPage(), FormData, FormErrors, FormInput(), PageHero(), PageHeroProps, ShippingWidget(), ShippingWidgetProps (+6 more)
 
 ### Community 14 - "Order Status & Contact Inquiries"
 Cohesion: 0.18
@@ -286,8 +284,8 @@ Cohesion: 0.11
 Nodes (19): scripts, build, build:analyze, build:profile, deploy, dev, dev:full, export (+11 more)
 
 ### Community 16 - "Home Page & Metadata"
-Cohesion: 0.08
-Nodes (32): Order, OrderItem, PackingModeProps, PackingStats, ScanMode, ScanStatus, Order Details Admin Page, cancelOrder() (+24 more)
+Cohesion: 0.09
+Nodes (28): Order, OrderItem, PackingModeProps, PackingStats, ScanMode, ScanStatus, cancelOrder(), cancelPackingSession() (+20 more)
 
 ### Community 17 - "TypeScript & Compiler Config"
 Cohesion: 0.05
@@ -295,15 +293,11 @@ Nodes (42): code:bash (cd scripts), code:block10 (❌ Verification failures: 1),
 
 ### Community 18 - "Decorative Art Patterns"
 Cohesion: 0.06
-Nodes (34): Footer(), ActionIcon(), ProductReviews(), ProductReviewsProps, ReviewCard(), ReviewCardProps, DialogContent, DialogDescription (+26 more)
-
-### Community 19 - "Dashboard Layout & Sidebar"
-Cohesion: 0.19
-Nodes (9): Category, Subcategory, useFilterCategories(), UseFilterCategoriesResult, FilterSidebar(), FilterSidebarProps, SubCategoryPopup(), SubCategoryPopupProps (+1 more)
+Nodes (34): AppWrapper(), WhatsAppButton(), WhatsAppButtonProps, Footer(), ActionIcon(), DialogContent, DialogDescription, DialogFooter() (+26 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.18
-Nodes (10): AddToCartButton, DarkOutlineButton, DestructiveButton, GhostButton, HeroButton, HeroOutlineButton, IconButton, OutlineButton (+2 more)
+Cohesion: 0.12
+Nodes (13): Button, ButtonProps, buttonVariants, AddToCartButton, DarkOutlineButton, DestructiveButton, GhostButton, HeroButton (+5 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.10
@@ -314,12 +308,12 @@ Cohesion: 0.14
 Nodes (12): Menubar, MenubarCheckboxItem, MenubarContent, MenubarItem, MenubarLabel, MenubarMenu(), MenubarRadioItem, MenubarSeparator (+4 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.17
-Nodes (17): OrderPreview, TopProduct, getOrderStatistics(), Order, Database, supabase, Badge(), BadgeProps (+9 more)
+Cohesion: 0.16
+Nodes (18): OrderPreview, TopProduct, getOrderStatistics(), OrderStats, Order, Database, supabase, Badge() (+10 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.12
-Nodes (16): FeaturedManager(), FilterState, InventoryContext, InventoryContextType, useInventory(), FeaturedPage(), ProductDetails(), AlertDialogAction (+8 more)
+Cohesion: 0.15
+Nodes (12): FilterState, InventoryContext, InventoryContextType, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter() (+4 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.20
@@ -330,16 +324,16 @@ Cohesion: 0.13
 Nodes (11): Label, labelVariants, FormControl, FormDescription, FormFieldContext, FormFieldContextValue, FormItem, FormItemContext (+3 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.10
-Nodes (21): AddProduct(), PhoneLoginForm(), PackingMode(), ProductList(), InquiriesPage(), Orders(), Products Page, Label (+13 more)
+Cohesion: 0.15
+Nodes (18): AddProduct(), PhoneLoginForm(), FeaturedManager(), PackingMode(), ProductList(), useInventory(), FeaturedPage(), InquiryDetailsPage() (+10 more)
 
 ### Community 28 - "Community 28"
 Cohesion: 0.22
 Nodes (12): Sheet, SheetClose, SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetHeader(), SheetOverlay (+4 more)
 
 ### Community 29 - "Community 29"
-Cohesion: 0.17
-Nodes (16): Order, OrderDetailsAdmin(), OrderDetailsAdminProps, OrderItem, ChartCardProps, DataTableProps, InquiryDetailsPage(), Card (+8 more)
+Cohesion: 0.19
+Nodes (15): Order, OrderDetailsAdmin(), OrderDetailsAdminProps, OrderItem, ChartCardProps, DataTableProps, Card, CardContent (+7 more)
 
 ### Community 30 - "Community 30"
 Cohesion: 0.17
@@ -362,8 +356,8 @@ Cohesion: 0.18
 Nodes (10): CompositeTypes, Constants, Database, DatabaseWithoutInternals, DefaultSchema, Enums, Json, Tables (+2 more)
 
 ### Community 35 - "Community 35"
-Cohesion: 0.17
-Nodes (6): Button, ButtonProps, buttonVariants, Input, Checkbox, CheckboxWithText
+Cohesion: 0.20
+Nodes (5): Button, ButtonProps, buttonVariants, Checkbox, CheckboxWithText
 
 ### Community 36 - "Community 36"
 Cohesion: 0.13
@@ -382,8 +376,8 @@ Cohesion: 0.38
 Nodes (9): Command, CommandDialog(), CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator (+1 more)
 
 ### Community 40 - "Community 40"
-Cohesion: 0.06
-Nodes (20): inter, jsonLd, metadata, playfair, Checkout Flow Page, Checkout Page Hero, WhatsAppButton(), WhatsAppButtonProps (+12 more)
+Cohesion: 0.07
+Nodes (21): Checkout Flow Page, Checkout Page Hero, Order Status Lifecycle, environmentDevelopment, environmentProduction, POST(), Cloudflare Image Utilities, Image Tier Management (+13 more)
 
 ### Community 41 - "Community 41"
 Cohesion: 0.12
@@ -422,12 +416,12 @@ Cohesion: 0.25
 Nodes (7): SelectContent, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger
 
 ### Community 50 - "Community 50"
-Cohesion: 0.25
-Nodes (7): SelectContent, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger
+Cohesion: 0.09
+Nodes (17): Order Details Admin Page, getOrderById(), shipOrder(), Input, Label, labelVariants, SelectContent, SelectItem (+9 more)
 
 ### Community 51 - "Community 51"
-Cohesion: 0.27
-Nodes (9): LoginForm(), useAuth(), useReviews(), UserLoginPage(), OrdersPage(), ReviewSubmissionDialog(), ReviewSubmissionDialogProps, OptimizedImage (+1 more)
+Cohesion: 0.14
+Nodes (17): LoginForm(), useAuth(), useReviews(), UserLoginPage(), OrdersPage(), ReviewSubmissionDialog(), ReviewSubmissionDialogProps, ProductReviews() (+9 more)
 
 ### Community 52 - "Community 52"
 Cohesion: 0.25
@@ -438,8 +432,8 @@ Cohesion: 0.29
 Nodes (6): engines, node, npm, name, private, version
 
 ### Community 55 - "Community 55"
-Cohesion: 0.20
-Nodes (12): AuthContext, AuthContextType, Header(), WishlistPage(), CartState, useCartStore, useCartStore, useWishlistStore (+4 more)
+Cohesion: 0.24
+Nodes (8): CartPage(), metadata, ShippingWidget(), ShippingWidgetProps, useAllProducts(), WishlistPage(), useCartStore, useWishlistStore
 
 ### Community 56 - "Community 56"
 Cohesion: 0.33
@@ -549,10 +543,6 @@ Nodes (4): Srikalahasti Kalamkari Logo, Shri Symbol, Srikalahasti Kalamkari Bran
 Cohesion: 0.50
 Nodes (3): createJestConfig, customJestConfig, nextJest
 
-### Community 86 - "Community 86"
-Cohesion: 0.83
-Nodes (3): Avatar, AvatarFallback, AvatarImage
-
 ### Community 87 - "Community 87"
 Cohesion: 0.29
 Nodes (6): CouponResponse, maliciousInputs, mockApplyCoupon, mockValidateCoupon, trimmed, xssInputs
@@ -582,8 +572,8 @@ Cohesion: 0.67
 Nodes (3): Curated Product Card, Standard Product Card, Compact Product Card
 
 ### Community 96 - "Community 96"
-Cohesion: 0.19
-Nodes (8): EditProfilePage(), InputField(), ProfilePage(), metadata, UserProfile, UserProfileStore, useUserProfileStore, useUserProfileStore
+Cohesion: 0.12
+Nodes (15): app, auth, firebaseConfig, initAppCheckOnDemand(), AuthContext, AuthContextType, AuthProvider(), EditProfilePage() (+7 more)
 
 ### Community 97 - "Community 97"
 Cohesion: 0.67
@@ -641,17 +631,17 @@ Nodes (3): LineChartData, LineChartProps, LineConfig
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `Decorative Art Patterns` to `Dashboard KPI & Alert Components`, `Cloudflare & Image Utility Config`, `Migration & Reporting Logic`, `Form Formatting & Image Validation`, `Product & Image Ref Validation`, `Admin Dashboard Pages`, `Footer & Dialog UI`, `Order & Admin Details`, `Shared UI (Avatar, Collapsible)`, `Order Status & Contact Inquiries`, `Home Page & Metadata`, `Dashboard Layout & Sidebar`, `Community 20`, `Community 22`, `Community 23`, `Community 24`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 35`, `Community 37`, `Community 38`, `Community 39`, `Community 43`, `Community 49`, `Community 50`, `Community 51`, `Community 55`, `Community 57`, `Community 73`, `Community 75`, `Community 86`, `Community 96`?**
+- **Why does `cn()` connect `Decorative Art Patterns` to `Dashboard KPI & Alert Components`, `Cloudflare & Image Utility Config`, `Migration & Reporting Logic`, `Cart & Shipping Page Components`, `Form Formatting & Image Validation`, `Product & Image Ref Validation`, `Admin Dashboard Pages`, `Order & Admin Details`, `Shared UI (Avatar, Collapsible)`, `Order Status & Contact Inquiries`, `Home Page & Metadata`, `Community 20`, `Community 22`, `Community 23`, `Community 24`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 35`, `Community 37`, `Community 38`, `Community 39`, `Community 43`, `Community 49`, `Community 50`, `Community 51`, `Community 55`, `Community 57`, `Community 73`, `Community 75`, `Community 96`?**
   _High betweenness centrality (0.071) - this node is a cross-community bridge._
-- **Why does `OptimizedImage` connect `Community 51` to `Dashboard KPI & Alert Components`, `Migration & Reporting Logic`, `Cart & Shipping Page Components`, `Form Formatting & Image Validation`, `Admin Dashboard Pages`, `Footer & Dialog UI`, `Shared UI (Avatar, Collapsible)`, `Home Page & Metadata`, `Dashboard Layout & Sidebar`, `Community 55`, `Community 23`, `Community 24`, `Community 29`?**
+- **Why does `OptimizedImage` connect `Dashboard KPI & Alert Components` to `Migration & Reporting Logic`, `Cart & Shipping Page Components`, `Form Formatting & Image Validation`, `Community 40`, `Admin Dashboard Pages`, `Footer & Dialog UI`, `Shared UI (Avatar, Collapsible)`, `Home Page & Metadata`, `Community 51`, `Community 55`, `Community 23`, `Community 24`, `Community 27`, `Community 29`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `Button` connect `Community 27` to `Community 35`, `Community 36`, `Footer & Dialog UI`, `Home Page & Metadata`, `Community 20`, `Community 23`, `Community 24`, `Community 29`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `Button` connect `Community 27` to `Community 35`, `Community 36`, `Footer & Dialog UI`, `Home Page & Metadata`, `Community 50`, `Community 20`, `Community 23`, `Community 24`, `Community 29`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `{ createServer }`, `{ parse }`, `next` to the rest of the system?**
   _738 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Shared Dependencies & Testing Mocks` be split into smaller, more focused modules?**
   _Cohesion score 0.027777777777777776 - nodes in this community are weakly interconnected._
-- **Should `Dashboard KPI & Alert Components` be split into smaller, more focused modules?**
-  _Cohesion score 0.13768115942028986 - nodes in this community are weakly interconnected._
+- **Should `Cloudflare & Image Utility Config` be split into smaller, more focused modules?**
+  _Cohesion score 0.10317460317460317 - nodes in this community are weakly interconnected._
 - **Should `Migration & Reporting Logic` be split into smaller, more focused modules?**
   _Cohesion score 0.05925925925925926 - nodes in this community are weakly interconnected._
