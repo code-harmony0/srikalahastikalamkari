@@ -140,6 +140,10 @@
     position: relative; /* Fix for framer-motion useScroll warning */
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   /* Website styles - warm beige theme */
   body {
     @apply bg-background text-foreground;
@@ -173,6 +177,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @layer utilities {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
@@ -195,14 +205,7 @@
   background-size: 200px 200px;
   background-position: 0 0;
   background-repeat: repeat;
-  background-attachment: scroll; /* iOS Safari: fixed breaks rendering */
-}
-
-/* Desktop only: parallax fixed background */
-@media (min-width: 1024px) {
-  .kalamkari-static-background {
-    background-attachment: fixed;
-  }
+  background-attachment: scroll;
 }
 
 /* Silk Fabric Texture Overlay */

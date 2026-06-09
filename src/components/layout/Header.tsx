@@ -3,12 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
 import { Menu, X, Heart, ShoppingBag, User, LogIn } from "lucide-react"; // Switched to 'User'
 import { useCartStore } from "@/shared/cart-store";
 import { useWishlistStore } from "@/shared/wishlist-store";
@@ -56,21 +50,16 @@ const ActionIcon = ({
       />
 
       {/* Badge */}
-      <AnimatePresence>
-        {count > 0 && (
-          <motion.span
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            className={cn(
-              "absolute top-0.5 right-0.5 flex items-center justify-center min-w-[16px] h-[16px] text-[9px] font-bold rounded-full shadow-sm",
-              "bg-[#1A1512] text-[#FAFAF8]", // Charcoal badge
-            )}
-          >
-            {count}
-          </motion.span>
-        )}
-      </AnimatePresence>
+      {count > 0 && (
+        <span
+          className={cn(
+            "absolute top-0.5 right-0.5 flex min-w-[16px] h-[16px] items-center justify-center rounded-full text-[9px] font-bold shadow-sm transition-transform duration-200",
+            "bg-[#1A1512] text-[#FAFAF8]", // Charcoal badge
+          )}
+        >
+          {count}
+        </span>
+      )}
 
       {/* Tooltip */}
       <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-wide bg-[#1A1512] text-[#FAFAF8] px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-[#FAFAF8]/10 z-50">
@@ -95,14 +84,6 @@ export default function Header() {
     setMounted(true);
   }, []);
 
-  // 📜 Scroll Effects
-  const { scrollY } = useScroll();
-
-  const headerHeight = useTransform(scrollY, [0, 50], ["72px", "64px"]);
-  const mobileHeaderHeight = useTransform(scrollY, [0, 50], ["56px", "56px"]);
-  const bgOpacity = useTransform(scrollY, [0, 50], [0.98, 1]);
-  const shadowOpacity = useTransform(scrollY, [0, 50], [0, 0.08]);
-
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Shop", href: "/products" },
@@ -114,17 +95,8 @@ export default function Header() {
 
   return (
     <>
-      <motion.header
-        style={{
-          height:
-            typeof window !== "undefined" && window.innerWidth < 768
-              ? mobileHeaderHeight
-              : headerHeight,
-          backgroundColor: `rgba(250, 250, 248, ${bgOpacity.get()})`,
-          backdropFilter: "blur(12px)",
-          boxShadow: `0 1px 3px rgba(26,21,18,${shadowOpacity.get()})`,
-        }}
-        className="sticky top-0 z-50 w-full transition-all duration-300 border-b border-[#1A1512]/5 flex items-center"
+      <header
+        className="sticky top-0 z-50 flex h-14 w-full items-center border-b border-[#1A1512]/5 bg-[#FAFAF8]/[0.98] shadow-[0_1px_3px_rgba(26,21,18,0.04)] backdrop-blur-md md:h-[72px]"
       >
         <div className="max-w-[1280px] w-full mx-auto px-4 md:px-6 flex items-center justify-between h-full">
           {/* 1️⃣ LOGO BLOCK */}
@@ -167,13 +139,7 @@ export default function Header() {
               >
                 {link.label}
                 {isActive(link.href) && (
-                  <motion.div
-                    layoutId="activeNavUnderline"
-                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#C19A5B] rounded-full"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
-                  />
+                  <div className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full bg-[#C19A5B]" />
                 )}
                 {!isActive(link.href) && (
                   <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#C19A5B] transition-all duration-200 group-hover:w-full" />
@@ -226,66 +192,55 @@ export default function Header() {
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* 📱 MOBILE MENU */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-[#1A1512]/60 backdrop-blur-sm z-40 md:hidden"
-            />
+      {isMobileMenuOpen && (
+        <>
+          <div
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="fixed inset-0 z-40 bg-[#1A1512]/60 backdrop-blur-sm md:hidden"
+          />
 
-            <motion.div
-              initial={{ y: "-100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "-100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-[56px] left-0 right-0 bg-background kalamkari-static-background silk-fabric-texture z-40 md:hidden overflow-hidden rounded-b-2xl shadow-2xl border-b border-[#C19A5B]/20"
-            >
-              <div className="flex flex-col p-6 gap-2">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "text-lg font-medium py-3 px-4 rounded-lg transition-all duration-200 flex justify-between items-center",
-                      isActive(link.href)
-                        ? "text-[#1A1512] bg-[#1A1512]/5 font-bold"
-                        : "text-[#1A1512]/70 hover:bg-[#1A1512]/5 hover:text-[#1A1512]",
-                    )}
-                  >
-                    {link.label}
-                    {isActive(link.href) && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#C19A5B]" />
-                    )}
-                  </Link>
-                ))}
-
-                <div className="h-px bg-[#1A1512]/10 my-3" />
-
+          <div className="fixed top-[56px] left-0 right-0 bg-background kalamkari-static-background silk-fabric-texture z-40 md:hidden overflow-hidden rounded-b-2xl shadow-2xl border-b border-[#C19A5B]/20 animate-in slide-in-from-top-4 duration-200">
+            <div className="flex flex-col p-6 gap-2">
+              {navLinks.map((link) => (
                 <Link
-                  href={user ? "/profile" : "/login"}
+                  key={link.href}
+                  href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 py-3 px-4 text-[#1A1512]/70 hover:text-[#1A1512] transition-colors rounded-lg hover:bg-[#1A1512]/5 font-medium"
-                >
-                  {user ? (
-                    <User className="w-5 h-5" />
-                  ) : (
-                    <LogIn className="w-5 h-5" />
+                  className={cn(
+                    "text-lg font-medium py-3 px-4 rounded-lg transition-all duration-200 flex justify-between items-center",
+                    isActive(link.href)
+                      ? "text-[#1A1512] bg-[#1A1512]/5 font-bold"
+                      : "text-[#1A1512]/70 hover:bg-[#1A1512]/5 hover:text-[#1A1512]",
                   )}
-                  <span>{user ? "My Profile" : "Sign In / Join"}</span>
+                >
+                  {link.label}
+                  {isActive(link.href) && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#C19A5B]" />
+                  )}
                 </Link>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              ))}
+
+              <div className="h-px bg-[#1A1512]/10 my-3" />
+
+              <Link
+                href={user ? "/profile" : "/login"}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-3 py-3 px-4 text-[#1A1512]/70 hover:text-[#1A1512] transition-colors rounded-lg hover:bg-[#1A1512]/5 font-medium"
+              >
+                {user ? (
+                  <User className="w-5 h-5" />
+                ) : (
+                  <LogIn className="w-5 h-5" />
+                )}
+                <span>{user ? "My Profile" : "Sign In / Join"}</span>
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

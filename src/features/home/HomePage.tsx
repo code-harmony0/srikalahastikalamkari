@@ -257,12 +257,7 @@ export default function HomePage() {
   const heroScale = isMobile ? 1 : _heroScale
 
   const { scrollYProgress: galleryScrollProgress } = useScroll()
-  const galleryBgY = useTransform(galleryScrollProgress, [0, 1], [0, -150])
-  
-
-  // Parallax for gallery background pattern — must be at component level (Rules of Hooks)
-  const { scrollYProgress: pageScrollY } = useScroll()
-  const galleryPatternY = useTransform(pageScrollY, [0, 1], [0, -150])
+  const galleryBgY = useTransform(galleryScrollProgress, [0, 1], [0, -80])
 
   // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns (LOCAL)
   const heroBackgroundImages = [
@@ -1379,7 +1374,7 @@ export default function HomePage() {
                     {/* Step Number Circle */}
                     <motion.div
                       whileHover={{ scale: 1.1 }}
-                      className="relative w-20 h-20 mb-6"
+                      className="relative z-10 w-20 h-20 mb-6 rounded-full bg-white"
                     >
                       {/* Outer ring */}
                       <div className="absolute inset-0 rounded-full border-2 border-[#C19A5B]/20 group-hover:border-[#C19A5B]/50 transition-colors duration-500" />
