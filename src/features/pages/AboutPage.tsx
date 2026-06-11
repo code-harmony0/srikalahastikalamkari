@@ -372,10 +372,10 @@ export default function AboutPage() {
             >
               <div className="aspect-[3/4] rounded-[12px] overflow-hidden shadow-lg border border-[#C19A5B]/20 rotate-1 hover:rotate-0 transition-transform duration-500 bg-white">
                 <Image
-                  src="https://static.wixstatic.com/media/07221c_34372093ed9d4c35aa96a263080fe962~mv2.png"
-                  alt="Kalamkari Saree Collection"
+                  src="/images/brand-models/model-saree-01.jpeg"
+                  alt="Model wearing a purple Srikalahasti Kalamkari saree"
                   fill
-                  className="object-cover"
+                  className="object-cover object-[center_36%]"
                 />
               </div>
             </motion.div>
@@ -408,7 +408,7 @@ export default function AboutPage() {
             </span>
             <h2 className="font-serif text-3xl md:text-[42px] text-white leading-tight">
               Experience the{" "}
-              <span className="italic text-[#C19A5B] font-normal lowercase">Kalamkari</span> Difference
+              <span className="italic text-[#C19A5B] font-normal">Srikalahasti Kalamkari</span> Difference
             </h2>
             <p className="font-sans text-lg text-white/70 leading-relaxed font-light">
               Explore our collection and discover the beauty of handcrafted

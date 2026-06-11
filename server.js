@@ -1,5 +1,7 @@
 const { createServer } = require('http');
 const { parse } = require('url');
+require('dotenv').config({ path: '.env.local', quiet: true });
+require('dotenv').config({ quiet: true });
 const next = require('next');
 
 const port = parseInt(process.env.PORT, 10) || 3000;

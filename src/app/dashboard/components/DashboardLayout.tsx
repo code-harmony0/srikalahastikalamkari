@@ -35,7 +35,7 @@ function DashboardLayoutContent({ children }: DashboardLayoutProps) {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <span className="font-bold text-slate-900">Kalamkari Admin</span>
+          <span className="font-bold text-slate-900">Srikalahasti Kalamkari Admin</span>
         </div>
       </div>
 

@@ -7,9 +7,9 @@ import { Promotion } from "@/shared/types";
 const mockPromotions: Promotion[] = [
   {
     id: "1",
-    title: "Summer Sale",
-    description: "Get 20% off on all Kalamkari products",
-    bannerImage: "/images/promotions/promo-1.png",
+    title: "Model Saree Collection",
+    description: "Explore new Kalamkari sarees styled on models",
+    bannerImage: "/images/brand-models/model-saree-02.jpeg",
     callToActionUrl: "/products",
     startDate: new Date("2025-01-01"),
     endDate: new Date("2025-12-31"),
@@ -19,9 +19,9 @@ const mockPromotions: Promotion[] = [
   },
   {
     id: "2",
-    title: "New Collection",
-    description: "Discover our latest handcrafted Kalamkari sarees",
-    bannerImage: "/images/promotions/promo-2.png",
+    title: "Heritage Drapes",
+    description: "Discover fresh handcrafted sarees with story-rich motifs",
+    bannerImage: "/images/brand-models/model-saree-11.jpeg",
     callToActionUrl: "/products",
     startDate: new Date("2025-01-01"),
     endDate: new Date("2025-12-31"),

@@ -38,6 +38,42 @@ export interface OrderStats {
   recent_orders: Order[]
 }
 
+async function reduceDeliveredOrderStock(orderId: string) {
+  const { data: items, error } = await supabaseAdmin
+    .from("order_items")
+    .select("product_id, quantity")
+    .eq("order_id", orderId)
+
+  if (error) throw error
+  if (!items?.length) return
+
+  for (const item of items) {
+    if (!item.product_id || !item.quantity) continue
+
+    const { data: product, error: productError } = await supabaseAdmin
+      .from("products")
+      .select("stock_quantity")
+      .eq("id", item.product_id)
+      .single()
+
+    if (productError) throw productError
+
+    const currentStock = Math.max(0, product?.stock_quantity ?? 0)
+    const nextStock = Math.max(0, currentStock - item.quantity)
+
+    const { error: updateError } = await supabaseAdmin
+      .from("products")
+      .update({
+        stock_quantity: nextStock,
+        in_stock: nextStock > 0,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", item.product_id)
+
+    if (updateError) throw updateError
+  }
+}
+
 export async function getOrderStatistics(): Promise<OrderStats> {
   try {
     // Get total orders count
@@ -191,15 +227,32 @@ export async function updateOrderStatus(
   },
 ): Promise<boolean> {
   try {
+    const { data: existingOrder, error: fetchError } = await supabaseAdmin
+      .from("orders")
+      .select("status")
+      .eq("id", orderId)
+      .single()
+
+    if (fetchError) throw fetchError
+
+    const updatePayload = {
+      status,
+      updated_at: new Date().toISOString(),
+      ...(status === "delivered" && { delivered_at: new Date().toISOString() }),
+      ...metadata,
+    }
+
     // Update order status directly via Supabase
     const { error } = await supabaseAdmin
       .from("orders")
-      .update({
-        status,
-        updated_at: new Date().toISOString(),
-        ...metadata,
-      })
+      .update(updatePayload)
       .eq("id", orderId)
+
+    if (error) return false
+
+    if (status === "delivered" && existingOrder?.status !== "delivered") {
+      await reduceDeliveredOrderStock(orderId)
+    }
 
     return !error
   } catch (error) {

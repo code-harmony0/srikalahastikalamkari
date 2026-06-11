@@ -13,6 +13,12 @@ import { Product } from "@/shared/types"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { getResponsiveSizes } from "@/lib/image-utils"
 import { getImageTier } from "@/lib/image-tiers"
+import {
+  MADE_TO_ORDER_DAYS,
+  getPurchasableQuantityLimit,
+  getStockQuantity,
+  isMadeToOrder,
+} from "@/shared/lib/inventory"
 
 interface ProductCardProps {
   product: Product
@@ -58,6 +64,9 @@ export const ProductCard = memo(
     const wishlist = useWishlistStore()
     const cart = useCartStore()
     const isWishlisted = wishlist.items.includes(product.id)
+    const stockQuantity = getStockQuantity(product)
+    const madeToOrder = isMadeToOrder(product)
+    const purchasableLimit = getPurchasableQuantityLimit(product)
 
     const toggleWishlist = (e: React.MouseEvent) => {
       e.preventDefault()
@@ -75,22 +84,24 @@ export const ProductCard = memo(
       e.preventDefault()
       e.stopPropagation()
 
-      if (!product.in_stock) {
-        toast.error("Out of stock")
-        return
-      }
-
-      const maxStock = product.stock_quantity ?? product.quantity ?? 0
       const existingItem = cart.items.find((i) => i.productId === product.id)
       const currentQty = existingItem?.quantity ?? 0
 
-      if (currentQty >= maxStock) {
-        toast.error(`Only ${maxStock} in stock`)
+      if (currentQty >= purchasableLimit) {
+        toast.error(
+          madeToOrder
+            ? `Made-to-order quantity is limited to ${purchasableLimit}`
+            : `Only ${stockQuantity} in stock`,
+        )
         return
       }
 
       cart.addItem(product, 1)
-      toast.success("Added to cart")
+      toast.success("Added to cart", {
+        description: madeToOrder
+          ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
+          : undefined,
+      })
     }
 
     const isList = viewMode === "list"
@@ -159,7 +170,7 @@ export const ProductCard = memo(
                 productData.images && productData.images.length > 1
                   ? "group-hover:opacity-0"
                   : "",
-                !product.in_stock && "grayscale-[30%] brightness-95",
+                madeToOrder && "grayscale-[30%] brightness-95",
               )}
               sizes={imageSizes}
               imageType={isList ? "productCardCompact" : "productCard"}
@@ -168,14 +179,14 @@ export const ProductCard = memo(
             />
           </Link>
 
-          {/* OUT OF STOCK - Subtle overlay + bottom strip */}
-          {!product.in_stock && (
+          {/* Made-to-order indicator */}
+          {madeToOrder && (
             <>
               <div className="absolute inset-0 bg-[#1A1512]/15 z-15 pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
                 <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 px-3 flex items-center justify-center gap-1.5">
                   <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
-                    Out of Stock
+                    Made to Order · {MADE_TO_ORDER_DAYS}
                   </span>
                 </div>
               </div>
@@ -261,11 +272,15 @@ export const ProductCard = memo(
                     </>
                   )}
               </div>
-              {product.stock_quantity && product.stock_quantity > 0 ? (
+              {stockQuantity > 0 ? (
                 <span className="text-[11px] font-medium text-[#1A1512]/70 mt-0.5">
-                  {product.stock_quantity} in stock
+                  {stockQuantity} in stock
                 </span>
-              ) : null}
+              ) : (
+                <span className="text-[11px] font-medium text-[#A07840] mt-0.5">
+                  Recreated in {MADE_TO_ORDER_DAYS}
+                </span>
+              )}
 
               {!isList && (
                 <div className="flex items-center gap-1 mt-0.5">
@@ -291,21 +306,20 @@ export const ProductCard = memo(
 
               <button
                 onClick={handleAddToCart}
-                disabled={!product.in_stock}
                 className={cn(
                   "transition-all shadow-sm flex items-center justify-center gap-2",
-                  product.in_stock
+                  !madeToOrder
                     ? "bg-[#1A1512] text-white hover:shadow-md hover:bg-[#C19A5B]"
-                    : "bg-[#E8DDD0] text-[#9B8B7E] cursor-not-allowed",
+                    : "bg-[#A07840] text-white hover:shadow-md hover:bg-[#1A1512]",
                   // 🛠 Compact Button sizing
                   isList
                     ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide"
                     : "w-8 h-8 rounded-full",
                 )}
-                title={product.in_stock ? "Add to Cart" : "Out of Stock"}
+                title={!madeToOrder ? "Add to Cart" : `Made to order: ${MADE_TO_ORDER_DAYS}`}
               >
                 {isList ? (
-                  <>{product.in_stock ? "Add" : "Unavailable"}</>
+                  <>{!madeToOrder ? "Add" : "Preorder"}</>
                 ) : (
                   <ShoppingBag className="w-3.5 h-3.5" />
                 )}

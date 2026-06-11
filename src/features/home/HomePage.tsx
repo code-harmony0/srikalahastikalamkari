@@ -34,6 +34,7 @@ import {
   Paintbrush,
   Waves,
   Crown,
+  MessageCircle,
 } from "lucide-react"
 import {
   KanjeevaramPattern,
@@ -212,11 +213,11 @@ const GoldParticles = () => (
 
 // Category data
 const categories = [
-  { name: "Sarees", image: "/images/hero/kalamkari_saree_one.png", count: "50+" },
-  { name: "Dupattas", image: "/images/hero/kalamkari_saree_two.png", count: "30+" },
-  { name: "Dress Materials", image: "/images/hero/kalamkari_saree_three.png", count: "40+" },
-  { name: "Wall Art", image: "/images/hero/kalamkari_saree_four.png", count: "25+" },
-  { name: "Canvas Art", image: "/images/hero/kalamkari_saree_three.png", count: "20+" },
+  { name: "Sarees", filterName: "Sarees", image: "/images/brand-models/model-saree-01.jpeg", count: "50+" },
+  { name: "Dupattas", filterName: "Dupattas", image: "/images/brand-models/model-saree-05.jpeg", count: "30+" },
+  { name: "Dress Materials", filterName: "Fabrics", image: "/images/brand-models/model-saree-08.jpeg", count: "40+" },
+  { name: "Wall Art", filterName: "Wall Paintings", image: "/images/wall-art/wall-art-01.jpeg", count: "25+" },
+  { name: "Canvas Art", filterName: "Canvas Paintings", image: "/images/wall-art/wall-art-04.jpeg", count: "20+" },
 ]
 
 // Process steps
@@ -227,6 +228,9 @@ const processSteps = [
   { icon: Gem, title: "Washing & Setting", desc: "Multiple washes to fix colors permanently into fabric" },
   { icon: Crown, title: "Final Masterpiece", desc: "Quality inspected and ready for your collection" },
 ]
+
+const customDesignWhatsAppUrl =
+  "https://wa.me/917288848881?text=Hello%2C%20I%20need%20to%20create%20my%20custom%20Srikalahasti%20Kalamkari%20design.%20Please%20guide%20me%20with%20fabric%2C%20colors%2C%20motifs%2C%20price%20and%20timeline."
 
 
 
@@ -259,26 +263,26 @@ export default function HomePage() {
   const { scrollYProgress: galleryScrollProgress } = useScroll()
   const galleryBgY = useTransform(galleryScrollProgress, [0, 1], [0, -80])
 
-  // High-quality REAL Kalamkari saree fabric photographs with handcrafted patterns (LOCAL)
+  // High-quality Kalamkari saree model photographs.
   const heroBackgroundImages = [
     {
-      src: "/images/hero/kalamkari_saree_one.png",
-      alt: "Elegant Kalamkari silk saree featuring hand-painted peacock and floral motifs in organic dyes",
+      src: "/images/brand-models/model-saree-01.jpeg",
+      alt: "Model wearing a purple Srikalahasti Kalamkari saree with narrative pallu artwork",
       brightness: "medium",
     },
     {
-      src: "/images/hero/kalamkari_saree_two.png",
-      alt: "Traditional Srikalahasti Kalamkari saree fabric with intricate tree of life design",
+      src: "/images/brand-models/model-saree-03.jpeg",
+      alt: "Model wearing a cream floral Kalamkari saree with hand-painted story border",
       brightness: "medium",
     },
     {
-      src: "/images/hero/kalamkari_saree_three.png",
-      alt: "Handcrafted maroon and gold cotton silk Kalamkari saree with traditional deity motifs",
+      src: "/images/brand-models/model-saree-07.jpeg",
+      alt: "Model wearing a blue Kalamkari saree with traditional painted motifs and woven border",
       brightness: "medium",
     },
     {
-      src: "/images/hero/kalamkari_saree_four.png",
-      alt: "Model wearing beautiful blue Kalamkari saree with elaborate borders and traditional hand paintings",
+      src: "/images/brand-models/model-saree-10.jpeg",
+      alt: "Model posing in a black and gold Kalamkari saree with dramatic hand-painted motifs",
       brightness: "medium",
     },
   ]
@@ -386,40 +390,40 @@ export default function HomePage() {
 
   const galleryImages = [
     {
-      src: "/images/gallery/gallery-1.jpg",
-      alt: "Artisan hands painting intricate Kalamkari motifs with natural pigments in traditional copper bowls",
-      category: "Craft Process",
-      tone: "Warm",
-    },
-    {
-      src: "/images/gallery/gallery-2.jpg",
-      alt: "Close-up of dark navy Kalamkari silk saree featuring colourful deity and bird motifs",
-      category: "Hero Textile",
-      tone: "Rich",
-    },
-    {
-      src: "/images/gallery/gallery-3.jpg",
-      alt: "Elderly master artisan painting fine Kalamkari artwork with a bamboo pen in his Srikalahasti studio",
-      category: "Heritage",
-      tone: "Artisan",
-    },
-    {
-      src: "/images/gallery/gallery-4.jpg",
-      alt: "Pink Kalamkari fabric scroll depicting Lord Vishnu and Krishna in traditional hand-painted style",
-      category: "Cultural Detail",
+      src: "/images/wall-art/wall-art-01.jpeg",
+      alt: "Hand-painted green Kalamkari wall art depicting a deity beneath a sacred tree",
+      category: "Wall Art",
       tone: "Vibrant",
     },
     {
-      src: "/images/gallery/gallery-5.jpg",
-      alt: "Two artisans collaborating to paint Kalamkari patterns on stretched fabric over a wooden loom",
-      category: "Craft Process",
-      tone: "Warm",
+      src: "/images/wall-art/wall-art-02.jpeg",
+      alt: "Kalamkari wall painting showing divine figures arranged around a central deity",
+      category: "Temple Story",
+      tone: "Rich",
     },
     {
-      src: "/images/gallery/gallery-6.jpg",
-      alt: "Woman artisan seated on the floor hand-painting a large Kalamkari piece with traditional ink",
-      category: "Heritage",
+      src: "/images/wall-art/wall-art-03.jpeg",
+      alt: "Kalamkari canvas artwork with a traditional figure framed by floral borders",
+      category: "Canvas Art",
       tone: "Earthy",
+    },
+    {
+      src: "/images/wall-art/wall-art-04.jpeg",
+      alt: "Hand-painted Kalamkari horse procession wall artwork on natural fabric",
+      category: "Horse Motif",
+      tone: "Heritage",
+    },
+    {
+      src: "/images/wall-art/wall-art-05.jpeg",
+      alt: "Kalamkari wall art showing a seated woman beside a deer with ornamental border work",
+      category: "Folk Story",
+      tone: "Earthy",
+    },
+    {
+      src: "/images/gallery/gallery-4.jpg",
+      alt: "Traditional Kalamkari story scroll with hand-painted mythological figures",
+      category: "Story Scroll",
+      tone: "Vibrant",
     },
   ]
 
@@ -453,7 +457,8 @@ export default function HomePage() {
                   src={heroBackgroundImages[currentImageIndex].src}
                   alt={heroBackgroundImages[currentImageIndex].alt}
                   fill
-                  className="object-cover object-top"
+                  unoptimized
+                  className="object-cover object-[center_42%]"
                   priority={currentImageIndex === 0}
                   sizes="100vw"
                 />
@@ -490,6 +495,26 @@ export default function HomePage() {
               }}
               className="flex flex-col items-center text-center"
             >
+              {/* Hero Logo */}
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 18, scale: 0.96, filter: "blur(8px)" },
+                  visible: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
+                    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                className="mb-6 flex justify-center"
+              >
+                <Image
+                  src="/images/logo-transparent.png"
+                  alt="Srikalahasti Kalamkari Logo"
+                  width={180}
+                  height={185}
+                  priority
+                  unoptimized
+                  className="h-28 w-auto object-contain drop-shadow-[0_18px_35px_rgba(0,0,0,0.55)] sm:h-32 md:h-40 lg:h-44"
+                />
+              </motion.div>
+
               {/* Est. Badge */}
               <motion.div
                 variants={{
@@ -519,16 +544,16 @@ export default function HomePage() {
               </motion.div>
 
               {/* Main Heading */}
-              <h1 className="font-heading leading-[0.85] text-white mb-6 tracking-tighter drop-shadow-xl">
+              <h1 className="font-heading leading-[0.9] text-white mb-6 tracking-tight drop-shadow-xl">
                 <motion.span
                   variants={{
                     hidden: { opacity: 0, y: 30, filter: "blur(14px)" },
                     visible: { opacity: 0.9, y: 0, filter: "blur(0px)",
                       transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
                   }}
-                  className="block font-serif italic text-[#C19A5B] text-3xl md:text-4xl lg:text-5xl mb-4 tracking-[0.2em]"
+                  className="block font-serif italic text-[#C19A5B] text-2xl md:text-3xl lg:text-4xl mb-4 tracking-[0.16em]"
                 >
-                  Srikalahasti
+                  Authentic Handcrafted
                 </motion.span>
                 <motion.span
                   variants={{
@@ -536,9 +561,9 @@ export default function HomePage() {
                     visible: { opacity: 1, y: 0, filter: "blur(0px)",
                       transition: { duration: 1.3, ease: [0.22, 1, 0.36, 1] } },
                   }}
-                  className="block font-serif font-bold uppercase tracking-tight text-6xl md:text-8xl lg:text-[120px]"
+                  className="block whitespace-nowrap font-serif font-bold uppercase text-4xl sm:text-5xl md:text-7xl lg:text-[96px]"
                 >
-                  Kalamkari
+                  Srikalahasti Kalamkari
                 </motion.span>
               </h1>
 
@@ -649,6 +674,87 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* CUSTOM DESIGN CTA — Immediate WhatsApp Inquiry                 */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        <section className="relative w-full overflow-hidden bg-[#F8F1E6] border-y border-[#C19A5B]/20">
+          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
+            <DecorativePattern className="absolute inset-0 text-[#1A1512]" />
+          </div>
+          <div className="max-w-[1300px] mx-auto px-6 lg:px-12 py-8 md:py-10 relative z-10">
+            <div className="grid lg:grid-cols-[1fr_auto] gap-7 lg:gap-10 items-center">
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.65, ease: "easeOut" }}
+                className="flex flex-col md:flex-row md:items-center gap-5 md:gap-7"
+              >
+                <div className="w-14 h-14 shrink-0 rounded-full bg-[#1A1512] text-[#C19A5B] flex items-center justify-center shadow-[0_14px_35px_rgba(26,21,18,0.16)]">
+                  <Palette className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="h-px w-8 bg-[#C19A5B]" />
+                    <span className="font-sans text-[10px] font-bold uppercase tracking-[0.24em] text-[#A07840]">
+                      Custom Kalamkari Studio
+                    </span>
+                  </div>
+                  <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-[#1A1512] leading-tight">
+                    Create your own saree, dupatta, wall art or canvas design.
+                  </h2>
+                  <p className="mt-3 max-w-3xl text-sm md:text-base leading-relaxed text-[#1A1512]/68 font-light">
+                    Share your idea, size, fabric, colors, motif or reference. Our artisans can recreate heritage stories or paint a fully personal Kalamkari piece for you.
+                  </p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.65, delay: 0.1, ease: "easeOut" }}
+                className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-3 lg:items-stretch"
+              >
+                <a
+                  href={customDesignWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-12 min-w-[210px] items-center justify-center gap-3 bg-[#1A1512] px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[#A07840]"
+                >
+                  <MessageCircle className="w-4 h-4 text-[#C19A5B]" />
+                  WhatsApp Design
+                </a>
+                <Link
+                  href="/contact"
+                  className="inline-flex h-12 min-w-[180px] items-center justify-center gap-3 border border-[#1A1512]/20 bg-white/45 px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-[#1A1512] transition-all duration-300 hover:border-[#1A1512] hover:bg-white"
+                >
+                  Contact Studio
+                  <ArrowRight className="w-4 h-4 text-[#C19A5B]" />
+                </Link>
+              </motion.div>
+            </div>
+
+            <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-[#C19A5B]/20 pt-5">
+              {[
+                { icon: Scissors, text: "Sarees, dupattas and fabric panels" },
+                { icon: Paintbrush, text: "Wall art, canvas and story motifs" },
+                { icon: Clock, text: "Timeline shared before confirmation" },
+              ].map((item) => (
+                <div
+                  key={item.text}
+                  className="flex items-center gap-3 text-[#1A1512]/70"
+                >
+                  <item.icon className="w-4 h-4 text-[#A07840] shrink-0" />
+                  <span className="text-[12px] font-semibold uppercase tracking-[0.08em]">
+                    {item.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
         {/* SHOP BY CATEGORY — Visual Category Navigator                  */}
         {/* ═══════════════════════════════════════════════════════════════ */}
         <section className="w-full py-12 md:py-16 relative overflow-hidden bg-transparent">
@@ -698,12 +804,13 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                 >
-                  <Link href={`/products?category=${cat.name.toLowerCase().replace(/ /g, '-')}`}>
+                  <Link href={`/products?category=${encodeURIComponent(cat.filterName)}`}>
                     <div className="group relative aspect-[3/4] rounded-xl overflow-hidden category-card-hover cursor-pointer">
                       <Image
                         src={cat.image}
                         alt={cat.name}
                         fill
+                        unoptimized
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                         sizes="(max-width: 768px) 50vw, 20vw"
                       />
@@ -810,10 +917,11 @@ export default function HomePage() {
               >
                 <div className="relative aspect-[3/4] overflow-hidden shadow-xl">
                   <Image
-                    src="/images/products/artisan.png"
-                    alt="Master artisan carefully painting traditional Kalamkari designs"
+                    src="/images/brand-models/model-saree-06.jpeg"
+                    alt="Model wearing a cream Kalamkari saree with peacock and floral hand-painted motifs"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                     fill
+                    unoptimized
                     sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
                   />
@@ -890,7 +998,7 @@ export default function HomePage() {
                   
                   {/* Whatsapp CTA directly here */}
                   <a
-                    href="https://wa.me/917288848881?text=Hello%2C%20I%20would%20love%20to%20create%20a%20custom%20handcrafted%20saree"
+                    href={customDesignWhatsAppUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group inline-flex items-center justify-center gap-3 px-8 h-[52px] border border-[#1A1512]/20 hover:border-[#1A1512] text-[#1A1512] text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-300"
@@ -1219,9 +1327,10 @@ export default function HomePage() {
             {/* Parallax BG Image */}
             <div className="absolute inset-0">
               <Image
-                src="/images/hero/kalamkari_saree_three.png"
-                alt="Exclusive Hand-painted Kalamkari Saree Collection"
+                src="/images/brand-models/model-saree-04.jpeg"
+                alt="Exclusive hand-painted purple Kalamkari saree collection"
                 fill
+                unoptimized
                 className="object-cover opacity-40"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-[#1A1512]/90 via-[#1A1512]/70 to-[#1A1512]/50" />
@@ -1599,6 +1708,7 @@ export default function HomePage() {
                         src={image.src}
                         alt={image.alt}
                         fill
+                        unoptimized
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />

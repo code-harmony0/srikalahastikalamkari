@@ -20,6 +20,12 @@ import { toast } from "sonner";
 import { cn, formatPrice } from "@/shared/utils";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
+import {
+  MADE_TO_ORDER_DAYS,
+  getPurchasableQuantityLimit,
+  getStockQuantity,
+  isMadeToOrder,
+} from "@/shared/lib/inventory";
 
 export default function WishlistPage() {
   const router = useRouter()
@@ -67,24 +73,27 @@ export default function WishlistPage() {
   };
 
   const handleAddToCart = (product: any) => {
+    const madeToOrder = isMadeToOrder(product);
     cart.addItem(product, 1);
     wishlist.removeItem(product.id);
-    toast.success("Moved to cart 👜");
+    toast.success("Moved to cart", {
+      description: madeToOrder
+        ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
+        : undefined,
+    });
   };
 
   const handleAddAll = () => {
     let count = 0;
     wishlistItems.forEach((p) => {
-      if ((p.stock_quantity || 0) > 0) {
-        cart.addItem(p, 1);
-        count++;
-      }
+      cart.addItem(p, 1);
+      count++;
     });
     wishlist.clearWishlist();
     if (count > 0) {
-      toast.success(`Moved ${count} items to cart 🛍️`);
+      toast.success(`Moved ${count} items to cart`);
     } else {
-      toast.error("No items available to move");
+      toast.error("No items to move");
     }
   };
 
@@ -201,7 +210,11 @@ export default function WishlistPage() {
         >
           <AnimatePresence mode="popLayout">
             {wishlistItems.map((product) => {
-              const inStock = (product.stock_quantity || 0) > 0;
+              const stockQuantity = getStockQuantity(product);
+              const madeToOrder = isMadeToOrder(product);
+              const purchasableLimit = getPurchasableQuantityLimit(product);
+              const cartItem = cart.items.find((item) => item.productId === product.id);
+              const atLimit = (cartItem?.quantity ?? 0) >= purchasableLimit;
 
               return (
                 <motion.div
@@ -278,22 +291,32 @@ export default function WishlistPage() {
                         <span
                           className={cn(
                             "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm border",
-                            inStock
+                            !madeToOrder
                               ? "bg-green-50 text-green-700 border-green-200"
-                              : "bg-gray-50 text-gray-500 border-gray-200",
+                              : "bg-[#FFF7E8] text-[#A07840] border-[#C19A5B]/30",
                           )}
                         >
-                          {inStock ? "In Stock" : "Sold Out"}
+                          {!madeToOrder ? `${stockQuantity} In Stock` : "Made to Order"}
                         </span>
                       </div>
+                      {madeToOrder && (
+                        <p className="text-[11px] font-semibold text-[#A07840]">
+                          Recreated and delivered in {MADE_TO_ORDER_DAYS}
+                        </p>
+                      )}
 
                       <button
                         onClick={() => handleAddToCart(product)}
-                        disabled={!inStock}
-                        className="w-full h-10 bg-[#1A1512] text-white hover:bg-[#C19A5B] rounded-[4px] font-sans text-[11px] font-bold uppercase tracking-wider transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 flex items-center justify-center gap-2 shadow-sm"
+                        disabled={atLimit}
+                        className={cn(
+                          "w-full h-10 rounded-[4px] font-sans text-[11px] font-bold uppercase tracking-wider transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm",
+                          madeToOrder
+                            ? "bg-[#A07840] text-white hover:bg-[#1A1512]"
+                            : "bg-[#1A1512] text-white hover:bg-[#C19A5B]",
+                        )}
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
-                        {inStock ? "Add to Cart" : "Unavailable"}
+                        {atLimit ? "Limit Reached" : madeToOrder ? "Preorder" : "Add to Cart"}
                       </button>
                     </div>
                   </div>

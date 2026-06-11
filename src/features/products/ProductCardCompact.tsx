@@ -11,6 +11,12 @@ import { cn } from "@/shared/utils";
 import { Product } from "@/shared/types";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
+import {
+  MADE_TO_ORDER_DAYS,
+  getPurchasableQuantityLimit,
+  getStockQuantity,
+  isMadeToOrder,
+} from "@/shared/lib/inventory";
 
 interface ProductCardCompactProps {
   product: Product;
@@ -51,6 +57,9 @@ export const ProductCardCompact = memo(
     const wishlist = useWishlistStore();
     const cart = useCartStore();
     const isWishlisted = wishlist.items.includes(product.id);
+    const stockQuantity = getStockQuantity(product);
+    const madeToOrder = isMadeToOrder(product);
+    const purchasableLimit = getPurchasableQuantityLimit(product);
 
     const toggleWishlist = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -68,21 +77,23 @@ export const ProductCardCompact = memo(
       e.preventDefault();
       e.stopPropagation();
 
-      if (!product.in_stock) {
-        toast.error("Out of stock");
-        return;
-      }
-
-      const maxStock = product.stock_quantity ?? product.quantity ?? 0;
       const existingItem = cart.items.find((i) => i.productId === product.id);
       const currentQty = existingItem?.quantity ?? 0;
-      if (currentQty >= maxStock) {
-        toast.error(`Only ${maxStock} in stock`);
+      if (currentQty >= purchasableLimit) {
+        toast.error(
+          madeToOrder
+            ? `Made-to-order quantity is limited to ${purchasableLimit}`
+            : `Only ${stockQuantity} in stock`,
+        );
         return;
       }
 
       cart.addItem(product, 1);
-      toast.success("Added to cart");
+      toast.success("Added to cart", {
+        description: madeToOrder
+          ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
+          : undefined,
+      });
     };
 
     const mainImage = productData.image || "/images/products/product-placeholder.png";
@@ -123,7 +134,7 @@ export const ProductCardCompact = memo(
               fill
               className={cn(
                 "object-cover transition-transform duration-500 ease-out group-hover:scale-105",
-                !product.in_stock && "grayscale-[30%] brightness-95"
+                madeToOrder && "grayscale-[30%] brightness-95"
               )}
               imageType="productCardCompact"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -131,14 +142,14 @@ export const ProductCardCompact = memo(
               loading={priority ? undefined : "lazy"}
             />
 
-            {/* OUT OF STOCK - Bottom strip indicator */}
-            {!product.in_stock && (
+            {/* Made-to-order strip indicator */}
+            {madeToOrder && (
               <>
                 <div className="absolute inset-0 bg-black/10 z-15 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-                  <div className="bg-red-600 py-1 flex items-center justify-center">
+                  <div className="bg-[#1A1512]/85 py-1 flex items-center justify-center">
                     <span className="text-white text-[9px] font-bold tracking-wider uppercase">
-                      Out of Stock
+                      Made to Order · {MADE_TO_ORDER_DAYS}
                     </span>
                   </div>
                 </div>
@@ -222,11 +233,15 @@ export const ProductCardCompact = memo(
                 </div>
 
                 {/* Stock indicator */}
-                {product.stock_quantity !== undefined && product.stock_quantity > 0 && (
+                {stockQuantity > 0 ? (
                   <span className="text-[10px] text-muted-foreground">
-                    {product.stock_quantity <= 5
-                      ? `Only ${product.stock_quantity} left`
+                    {stockQuantity <= 5
+                      ? `Only ${stockQuantity} left`
                       : "In stock"}
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-medium text-[#A07840]">
+                    Recreated in {MADE_TO_ORDER_DAYS}
                   </span>
                 )}
               </div>
@@ -234,15 +249,14 @@ export const ProductCardCompact = memo(
               {/* Add to Cart - Compact icon button */}
               <button
                 onClick={handleAddToCart}
-                disabled={!product.in_stock}
                 className={cn(
                   "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
                   "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1",
-                  product.in_stock
+                  !madeToOrder
                     ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-[#A07840] text-white shadow-sm hover:bg-[#1A1512] hover:shadow-md"
                 )}
-                aria-label={product.in_stock ? "Add to cart" : "Out of stock"}
+                aria-label={!madeToOrder ? "Add to cart" : "Preorder made-to-order item"}
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
               </button>

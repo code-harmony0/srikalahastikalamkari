@@ -6,6 +6,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartItem, Product } from '@/shared/types';
+import { getPurchasableQuantityLimit } from '@/shared/lib/inventory';
 
 interface CartState {
   items: CartItem[];
@@ -27,7 +28,7 @@ export const useCartStore = create<CartState>()(
           console.error('Cannot add product to cart: Missing product.id');
           return;
         }
-        const maxStock = (product as any).stock_quantity ?? (product as any).quantity ?? Infinity;
+        const maxStock = getPurchasableQuantityLimit(product);
         set((state) => {
           const variantId = (product as any).selectedVariant?.id;
           const existingItem = state.items.find(

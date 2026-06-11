@@ -21,30 +21,41 @@ export default function Footer() {
 
   return (
     <footer
-      className="bg-[#1A1512] text-[#FAFAF8] border-t border-[#FAFAF8]/10 font-sans"
+      className="relative overflow-hidden bg-[#1A1512] text-[#FAFAF8] border-t border-[#FAFAF8]/10 font-sans"
       aria-label="Site Footer"
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <Image
+          src="/images/logo-transparent.png"
+          alt=""
+          width={520}
+          height={534}
+          aria-hidden="true"
+          className="h-[260px] w-auto object-contain opacity-[0.055] saturate-0 md:h-[360px] lg:h-[430px]"
+        />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
         {/* 1️⃣ TOP ROW: Identity (Left) & Newsletter (Right) */}
         <div className="py-12 border-b border-[#FAFAF8]/10 flex flex-col md:flex-row md:items-end justify-between gap-10">
           {/* Brand Essence */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center bg-white overflow-hidden shadow-sm">
+              <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-[#050302] overflow-hidden shadow-md ring-1 ring-[#C19A5B]/25">
                 <Image
-                  src="/images/logo.jpg"
+                  src="/images/logo-transparent.png"
                   alt="Srikalahasti Kalamkari Logo"
                   width={64}
                   height={64}
-                  className="w-full h-full object-cover mix-blend-multiply"
+                  className="w-full h-full object-contain"
                 />
               </div>
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-xl tracking-wide text-[#FAFAF8] uppercase">
-                  SRIKALAHASTI
+                <span className="font-serif font-bold text-lg md:text-xl tracking-wide text-[#FAFAF8] uppercase">
+                  SRIKALAHASTI KALAMKARI
                 </span>
-                <span className="font-serif italic text-xl tracking-[0.2em] text-[#FAFAF8]/60 mt-0.5">
-                  KALAMKARI
+                <span className="font-serif italic text-base tracking-[0.2em] text-[#FAFAF8]/60 mt-0.5">
+                  HERITAGE ART
                 </span>
                 <span className="text-[10px] font-bold text-[#C19A5B] tracking-[0.2em] uppercase mt-2">
                   GSTIN: 37EVOPS6191D1ZX

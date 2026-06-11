@@ -39,13 +39,33 @@ const Sidebar = () => {
   const role = (user as any)?.metadata?.role
 
   const handleLogout = async () => {
-    await logout()
-    localStorage.removeItem("isLoggedIn")
-    localStorage.removeItem("userRole")
-    localStorage.removeItem("rememberMe")
-    // Clear cookie
-    document.cookie = "isLoggedIn=; path=/; max-age=0"
-    router.push("/admin/login")
+    try {
+      const response = await fetch("/api/admin/logout", {
+        method: "POST",
+        credentials: "same-origin",
+        cache: "no-store",
+      })
+
+      if (!response.ok) {
+        throw new Error("Logout request failed")
+      }
+
+      try {
+        await logout()
+      } catch {
+        // Admin auth is cookie-based here; Firebase logout should not block it.
+      }
+
+      localStorage.removeItem("isLoggedIn")
+      localStorage.removeItem("userRole")
+      localStorage.removeItem("rememberMe")
+      sessionStorage.removeItem("isLoggedIn")
+      sessionStorage.removeItem("userRole")
+      document.cookie = "isLoggedIn=; path=/; max-age=0"
+      window.location.href = "/admin/login"
+    } catch {
+      toast.error("Could not log out. Please try again.")
+    }
   }
 
   const [pendingOrders, setPendingOrders] = useState(0)

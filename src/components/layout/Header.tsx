@@ -104,22 +104,22 @@ export default function Header() {
             href="/"
             className="flex items-center gap-3 group z-50 relative"
           >
-            <div className="relative w-10 h-10 md:w-11 md:h-11 rounded-full overflow-hidden shadow-sm group-hover:-translate-y-[1px] transition-all duration-300 ease-out bg-white">
+            <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden shadow-md ring-1 ring-[#C19A5B]/25 group-hover:-translate-y-[1px] transition-all duration-300 ease-out bg-[#050302]">
               <Image
-                src="/images/logo.jpg"
+                src="/images/logo-transparent.png"
                 alt="Srikalahasti Kalamkari Logo"
-                width={44}
-                height={44}
-                className="w-full h-full object-cover mix-blend-multiply"
+                width={64}
+                height={64}
+                className="w-full h-full object-contain"
               />
               <div className="absolute inset-0 bg-[#C19A5B]/10 opacity-0 group-hover:opacity-1 transition-opacity duration-300" />
             </div>
             <div className="hidden md:flex flex-col">
-              <span className="font-serif font-bold text-[16px] md:text-[18px] text-[#1A1512] leading-none tracking-wide uppercase group-hover:text-[#C19A5B] transition-colors">
-                SRIKALAHASTI
+              <span className="font-serif font-bold text-[13px] md:text-[15px] text-[#1A1512] leading-none tracking-wide uppercase group-hover:text-[#C19A5B] transition-colors">
+                SRIKALAHASTI KALAMKARI
               </span>
-              <span className="font-serif italic text-[14px] md:text-[15px] text-[#1A1512]/60 leading-none tracking-[0.2em] mt-1.5">
-                KALAMKARI
+              <span className="font-serif italic text-[12px] md:text-[13px] text-[#1A1512]/60 leading-none tracking-[0.2em] mt-1.5">
+                HERITAGE ART
               </span>
             </div>
           </Link>

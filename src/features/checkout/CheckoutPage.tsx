@@ -25,6 +25,7 @@ import { ShippingWidget } from "./ShippingWidget";
 import environment from "@/shared/config/environment";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
+import { MADE_TO_ORDER_DAYS, isMadeToOrder } from "@/shared/lib/inventory";
 // --- Razorpay Script Loader ---
 function loadRazorpayScript(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -139,6 +140,7 @@ export default function CheckoutPage() {
   const discount = appliedCoupon?.discountAmount || 0;
   const shipping = 0;
   const total = subtotal - discount + shipping;
+  const hasMadeToOrderItems = cartItems.some(({ product }) => isMadeToOrder(product));
 
   // Handle coupon apply
   const handleApplyCoupon = async () => {
@@ -532,6 +534,11 @@ const handleSubmit = async (e: React.FormEvent) => {
                           <p className="text-[10px] text-[#1A1512]/60 mt-1">
                             Qty: {quantity}
                           </p>
+                          {isMadeToOrder(product) && (
+                            <p className="text-[10px] font-semibold text-[#A07840] mt-1">
+                              Made to order · {MADE_TO_ORDER_DAYS}
+                            </p>
+                          )}
                         </div>
                         <p className="font-inter font-semibold text-[#C19A5B] text-xs">
                           {formatPrice((product.price || 0) * quantity)}
@@ -595,6 +602,17 @@ const handleSubmit = async (e: React.FormEvent) => {
                     <p className="text-xs text-red-500 mt-2">{couponError}</p>
                   )}
                 </div>
+
+                {hasMadeToOrderItems && (
+                  <div className="mt-4 rounded-lg border border-[#C19A5B]/30 bg-[#FFF7E8] p-3">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#A07840]">
+                      Made-to-order timeline
+                    </p>
+                    <p className="text-xs text-[#1A1512]/70 mt-1 leading-relaxed">
+                      One or more pieces are currently sold out. We will recreate the same design and deliver it in {MADE_TO_ORDER_DAYS}.
+                    </p>
+                  </div>
+                )}
 
                 {/* Price Breakdown */}
                 <div className="space-y-3 pt-4 border-t border-[#C19A5B]/20">

@@ -71,11 +71,20 @@ Required in `.env.local`:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
 SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_CF_IMAGES_HASH=
 CF_ACCOUNT_ID=
 CF_IMAGES_TOKEN=
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+NEXT_PUBLIC_ADMIN_EMAILS=
 ```
+
+For Hostinger Node.js deployments, add the same variables in hPanel
+environment settings. For zip deployments, `server.js` also loads `.env.local`
+from the deployed app folder before starting Next.js.
 
 ## WhatsApp Number
 

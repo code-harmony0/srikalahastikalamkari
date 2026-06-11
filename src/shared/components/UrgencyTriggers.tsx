@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { AlertCircle, Clock, Flame } from "lucide-react";
+import { Clock, Flame } from "lucide-react";
 import { cn } from "@/shared/utils";
+import { MADE_TO_ORDER_DAYS } from "@/shared/lib/inventory";
 
 interface StockAlertProps {
   stock: number;
@@ -12,9 +13,11 @@ interface StockAlertProps {
 export function StockAlert({ stock, lowStockThreshold = 5 }: StockAlertProps) {
   if (stock <= 0) {
     return (
-      <div className="flex items-center gap-2 text-red-600 bg-red-50 px-3 py-2 rounded-lg">
-        <AlertCircle className="w-4 h-4" />
-        <span className="text-sm font-medium">Out of Stock</span>
+      <div className="flex items-center gap-2 text-[#A07840] bg-[#FFF7E8] px-3 py-2 rounded-lg">
+        <Clock className="w-4 h-4" />
+        <span className="text-sm font-medium">
+          Made to order · {MADE_TO_ORDER_DAYS}
+        </span>
       </div>
     );
   }

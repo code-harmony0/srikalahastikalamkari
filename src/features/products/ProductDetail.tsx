@@ -32,7 +32,7 @@ import {
   Package,
   Minus,
   Plus,
-  Check,
+  Clock,
   X,
 } from "lucide-react"
 import { toast } from "sonner"
@@ -44,6 +44,12 @@ import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { ProductReviews } from "./ProductReviews"
 import { useReviews } from "@/shared/hooks/use-reviews"
 import { StockAlert, SavingsBadge } from "@/shared/components/UrgencyTriggers"
+import {
+  MADE_TO_ORDER_DAYS,
+  getPurchasableQuantityLimit,
+  getStockQuantity,
+  isMadeToOrder,
+} from "@/shared/lib/inventory"
 
 export default function ProductDetail() {
   const params = useParams()
@@ -169,21 +175,31 @@ export default function ProductDetail() {
     .slice(0, 4)
 
   const isInWishlist = product ? wishlist.isInWishlist(product.id) : false
-  const inStock = (product?.stock_quantity || 0) > 0
+  const stockQuantity = getStockQuantity(product)
+  const inStock = stockQuantity > 0
+  const madeToOrder = isMadeToOrder(product)
+  const purchasableLimit = getPurchasableQuantityLimit(product)
 
   // Handlers
   const handleAddToCart = () => {
     if (!product) return
-    const maxStock = product.stock_quantity ?? 0
     const existingItem = cart.items.find((i) => i.productId === product.id)
     const currentQty = existingItem?.quantity ?? 0
-    const addable = Math.min(quantity, maxStock - currentQty)
+    const addable = Math.min(quantity, purchasableLimit - currentQty)
     if (addable <= 0) {
-      toast.error(`Only ${maxStock} in stock`)
+      toast.error(
+        madeToOrder
+          ? `Made-to-order quantity is limited to ${purchasableLimit}`
+          : `Only ${stockQuantity} in stock`,
+      )
       return
     }
     cart.addItem(product, addable)
-    toast.success(`Added ${addable} item(s) to cart`)
+    toast.success(`Added ${addable} item(s) to cart`, {
+      description: madeToOrder
+        ? `This piece will be recreated and delivered in ${MADE_TO_ORDER_DAYS}.`
+        : undefined,
+    })
   }
 
   const handleToggleWishlist = () => {
@@ -313,19 +329,19 @@ export default function ProductDetail() {
                 fill
                 className={cn(
                   "object-cover transition-transform duration-700 group-hover:scale-105",
-                  !inStock && "grayscale-[20%]",
+                  madeToOrder && "grayscale-[20%]",
                 )}
                 sizes={getResponsiveSizes("detail")}
                 imageType="productDetail"
                 priority={false} // Remove priority - only for above-fold hero images
                 loading="lazy"
               />
-              {/* Out of Stock Indicator */}
-              {!inStock && (
+              {/* Made-to-order Indicator */}
+              {madeToOrder && (
                 <div className="absolute top-4 left-4 z-10">
-                  <div className="bg-red-600 px-3 py-1.5 rounded-sm shadow-md">
+                  <div className="bg-[#1A1512] px-3 py-1.5 rounded-sm shadow-md border border-[#C19A5B]/40">
                     <span className="text-white text-xs font-bold tracking-wide uppercase">
-                      Out of Stock
+                      Made to Order
                     </span>
                   </div>
                 </div>
@@ -379,22 +395,22 @@ export default function ProductDetail() {
                     "flex items-center gap-1.5 px-2.5 py-1 rounded-full border",
                     inStock
                       ? "bg-[#EBF7EF] border-[#3FAF6C]/20"
-                      : "bg-red-50 border-red-200",
+                      : "bg-[#FFF7E8] border-[#C19A5B]/35",
                   )}
                 >
                   <div
                     className={cn(
                       "w-1.5 h-1.5 rounded-full",
-                      inStock ? "bg-[#2E7D4D]" : "bg-red-500 animate-pulse",
+                      inStock ? "bg-[#2E7D4D]" : "bg-[#A07840] animate-pulse",
                     )}
                   />
                   <span
                     className={cn(
                       "text-[10px] font-bold uppercase tracking-wide",
-                      inStock ? "text-[#2E7D4D]" : "text-red-600",
+                      inStock ? "text-[#2E7D4D]" : "text-[#A07840]",
                     )}
                   >
-                    {inStock ? "In Stock" : "Out of Stock"}
+                    {inStock ? "In Stock" : "Made to Order"}
                   </span>
                 </div>
                 {product.original_price &&
@@ -407,7 +423,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Low Stock Alert */}
-              {product.stock_quantity !== undefined && (
+              {inStock && product.stock_quantity !== undefined && (
                 <StockAlert stock={product.stock_quantity} />
               )}
 
@@ -419,7 +435,7 @@ export default function ProductDetail() {
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
                   <Package className="w-3.5 h-3.5 text-[#C19A5B]" />
-                  <span>5-7 Day Delivery</span>
+                  <span>{madeToOrder ? `${MADE_TO_ORDER_DAYS} Delivery` : "5-7 Day Delivery"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
                   <Shield className="w-3.5 h-3.5 text-[#C19A5B]" />
@@ -436,19 +452,18 @@ export default function ProductDetail() {
 
               {/* Actions */}
               <div className="space-y-3 pt-2">
-                {/* Out of Stock Banner - Prominent warning */}
-                {!inStock && (
-                  <div className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-red-100 border border-red-200 flex items-center justify-center flex-shrink-0">
-                      <X className="w-5 h-5 text-red-600" />
+                {/* Made-to-order Banner - Prominent warning */}
+                {madeToOrder && (
+                  <div className="bg-gradient-to-r from-[#FFF7E8] to-[#F8E6C8] border border-[#C19A5B]/35 rounded-lg p-4 flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-white border border-[#C19A5B]/35 flex items-center justify-center flex-shrink-0">
+                      <Clock className="w-5 h-5 text-[#A07840]" />
                     </div>
                     <div>
-                      <p className="text-red-800 font-semibold text-sm">
-                        Currently Unavailable
+                      <p className="text-[#1A1512] font-semibold text-sm">
+                        Made to order
                       </p>
-                      <p className="text-red-600 text-xs mt-0.5">
-                        This item is out of stock. Add to wishlist to be
-                        notified when available.
+                      <p className="text-[#1A1512]/70 text-xs mt-0.5 leading-relaxed">
+                        This exact piece is not in ready stock. You can still order it, and our artisans will recreate it for delivery in {MADE_TO_ORDER_DAYS}.
                       </p>
                     </div>
                   </div>
@@ -459,15 +474,13 @@ export default function ProductDetail() {
                   <div
                     className={cn(
                       "flex items-center border rounded-[6px] w-28 shrink-0",
-                      inStock
-                        ? "border-[#EAD6C3] bg-white"
-                        : "border-gray-200 bg-gray-50 opacity-50",
+                      "border-[#EAD6C3] bg-white",
                     )}
                   >
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="w-9 h-full flex items-center justify-center hover:bg-[#C19A5B]/10 text-[#1A1512] disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={quantity <= 1 || !inStock}
+                      disabled={quantity <= 1}
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
@@ -475,26 +488,25 @@ export default function ProductDetail() {
                       {quantity}
                     </span>
                     <button
-                      onClick={() => setQuantity(quantity + 1)}
+                      onClick={() => setQuantity(Math.min(purchasableLimit, quantity + 1))}
                       className="w-9 h-full flex items-center justify-center hover:bg-[#C19A5B]/10 text-[#1A1512] disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={!inStock}
+                      disabled={quantity >= purchasableLimit}
                     >
                       <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  {/* Add to Cart - Prominent disabled state */}
+                  {/* Add to Cart */}
                   <button
                     onClick={handleAddToCart}
-                    disabled={!inStock}
                     className={cn(
                       "flex-1 rounded-[6px] font-inter font-medium text-sm flex items-center justify-center gap-2 transition-all",
-                      inStock
-                        ? "bg-[#C19A5B] hover:bg-[#A07840] text-white shadow-sm active:scale-[0.98]"
-                        : "bg-gray-200 text-gray-500 cursor-not-allowed",
+                      madeToOrder
+                        ? "bg-[#1A1512] hover:bg-[#A07840] text-white shadow-sm active:scale-[0.98]"
+                        : "bg-[#C19A5B] hover:bg-[#A07840] text-white shadow-sm active:scale-[0.98]",
                     )}
                   >
-                    {inStock ? "Add to Cart" : "Out of Stock"}
+                    {madeToOrder ? "Order in 14-15 Days" : "Add to Cart"}
                   </button>
                 </div>
 
@@ -591,7 +603,9 @@ export default function ProductDetail() {
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
                   <p className="mb-1">• Free shipping on orders over ₹2000</p>
-                  <p className="mb-1">• Delivery: 5-7 business days</p>
+                  <p className="mb-1">
+                    • Delivery: {madeToOrder ? `${MADE_TO_ORDER_DAYS} for recreated made-to-order pieces` : "5-7 business days"}
+                  </p>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

@@ -412,7 +412,7 @@ export default function AdminLoginPage() {
                 color: "#C19A5B",
                 marginBottom: 14,
               }}>
-                Est. 1999 · Srikalahasti
+                Est. 1999 · Heritage Artisans
               </div>
               <h1 style={{
                 fontFamily: "'Cormorant Garamond', serif",
@@ -423,7 +423,7 @@ export default function AdminLoginPage() {
                 letterSpacing: "-0.01em",
                 margin: 0,
               }}>
-                Kalamkari<br />
+                Srikalahasti Kalamkari<br />
                 <em style={{ color: "#C19A5B", fontStyle: "italic" }}>Heritage</em>
               </h1>
               <div style={{

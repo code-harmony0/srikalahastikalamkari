@@ -19,6 +19,12 @@ import { cn } from "@/shared/utils";
 import { ShippingWidget } from "./ShippingWidget";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
+import {
+  MADE_TO_ORDER_DAYS,
+  getPurchasableQuantityLimit,
+  getStockQuantity,
+  isMadeToOrder,
+} from "@/shared/lib/inventory";
 
 export default function CartPage() {
   const { data: products = [] } = useAllProducts();
@@ -69,11 +75,16 @@ export default function CartPage() {
   const handleUpdateQuantity = (
     productId: string,
     newQuantity: number,
-    maxStock: number,
+    maxQuantity: number,
+    madeToOrder = false,
   ) => {
     if (newQuantity < 1) return;
-    if (newQuantity > maxStock) {
-      toast.error(`Only ${maxStock} items available in stock`);
+    if (newQuantity > maxQuantity) {
+      toast.error(
+        madeToOrder
+          ? `Made-to-order quantity is limited to ${maxQuantity}`
+          : `Only ${maxQuantity} items available in stock`,
+      );
       return;
     }
     cart.updateQuantity(productId, newQuantity);
@@ -168,7 +179,9 @@ export default function CartPage() {
                   product.mainImage ||
                   null;
                 const productName = product.name || "Unknown Product";
-                const stock = product.stock_quantity || 0;
+                const stock = getStockQuantity(product);
+                const madeToOrder = isMadeToOrder(product);
+                const purchasableLimit = getPurchasableQuantityLimit(product);
                 const productLink = `/products/${product.slug || product.id}`;
                 const originalPrice = product.original_price;
 
@@ -209,6 +222,11 @@ export default function CartPage() {
                         <p className="font-sans text-[#1A1512]/60 text-xs line-clamp-1 max-w-[200px]">
                           {product.description || "Hand-painted Srikalahasti Kalamkari"}
                         </p>
+                        {madeToOrder && (
+                          <p className="text-[11px] font-semibold text-[#A07840] mt-1">
+                            Made to order · delivery in {MADE_TO_ORDER_DAYS}
+                          </p>
+                        )}
 
                         <div className="flex items-center gap-2 pt-1">
                           <p className="font-sans text-[#1A1512] font-bold text-[15px]">
@@ -232,7 +250,8 @@ export default function CartPage() {
                               handleUpdateQuantity(
                                 productId,
                                 quantity - 1,
-                                stock,
+                                purchasableLimit,
+                                madeToOrder,
                               )
                             }
                             disabled={quantity <= 1}
@@ -248,10 +267,11 @@ export default function CartPage() {
                               handleUpdateQuantity(
                                 productId,
                                 quantity + 1,
-                                stock,
+                                purchasableLimit,
+                                madeToOrder,
                               )
                             }
-                            disabled={quantity >= stock}
+                            disabled={quantity >= purchasableLimit}
                             className="w-8 h-full flex items-center justify-center text-[#1A1512] hover:bg-[#C19A5B]/10 disabled:opacity-30 rounded-r-[4px] transition-colors"
                           >
                             <Plus className="w-3.5 h-3.5" />
@@ -331,6 +351,17 @@ export default function CartPage() {
                   <span className="text-xs font-semibold">
                     Free shipping unlocked!
                   </span>
+                </div>
+              )}
+
+              {cartItems.some(({ product }) => isMadeToOrder(product)) && (
+                <div className="bg-[#FFF7E8] border border-[#C19A5B]/30 rounded-[4px] p-3 mb-6 text-[#1A1512]">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#A07840]">
+                    Made-to-order item included
+                  </p>
+                  <p className="text-xs text-[#1A1512]/70 mt-1 leading-relaxed">
+                    Sold-out pieces can still be ordered. They will be recreated and delivered in {MADE_TO_ORDER_DAYS}.
+                  </p>
                 </div>
               )}
 

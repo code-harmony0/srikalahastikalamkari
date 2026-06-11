@@ -8,15 +8,21 @@ type CloudflareImagesResponse = {
     id?: string
   }
   errors?: Array<{
+    code?: number
     message?: string
   }>
 }
 
-const cfErrorMessage = (data: CloudflareImagesResponse) =>
-  data.errors
+const cfErrorMessage = (data: CloudflareImagesResponse) => {
+  if (data.errors?.some((error) => error.code === 5403)) {
+    return "Cloudflare Images rejected the upload. Use a token for this account with Account > Cloudflare Images > Edit permission, and confirm Cloudflare Images is enabled on that account."
+  }
+
+  return data.errors
     ?.map((error) => error.message)
     .filter(Boolean)
     .join(", ") || "Cloudflare Images upload failed"
+}
 
 async function cloudflareFetch(input: string, init: RequestInit) {
   const controller = new AbortController()

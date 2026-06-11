@@ -10,6 +10,12 @@ import { Product } from "@/shared/types";
 import { cn } from "@/shared/utils";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
+import {
+  MADE_TO_ORDER_DAYS,
+  getPurchasableQuantityLimit,
+  getStockQuantity,
+  isMadeToOrder,
+} from "@/shared/lib/inventory";
 
 interface CuratedProductCardProps {
   product: Product;
@@ -36,23 +42,29 @@ export const CuratedProductCard = memo(
     );
 
     const productUrl = `/products/${product.slug || product.id}`;
+    const stockQuantity = getStockQuantity(product);
+    const madeToOrder = isMadeToOrder(product);
+    const purchasableLimit = getPurchasableQuantityLimit(product);
 
     const handleAddToCart = (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (!product.in_stock) {
-        toast.error("Out of stock");
-        return;
-      }
-      const maxStock = product.stock_quantity ?? product.quantity ?? 0;
       const existingItem = cart.items.find((i) => i.productId === product.id);
       const currentQty = existingItem?.quantity ?? 0;
-      if (currentQty >= maxStock) {
-        toast.error(`Only ${maxStock} in stock`);
+      if (currentQty >= purchasableLimit) {
+        toast.error(
+          madeToOrder
+            ? `Made-to-order quantity is limited to ${purchasableLimit}`
+            : `Only ${stockQuantity} in stock`,
+        );
         return;
       }
       cart.addItem(product, 1);
-      toast.success("Added to cart");
+      toast.success("Added to cart", {
+        description: madeToOrder
+          ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
+          : undefined,
+      });
     };
 
     // Determine badge type
@@ -92,21 +104,21 @@ export const CuratedProductCard = memo(
               fill
               className={cn(
                 "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]",
-                !product.in_stock && "grayscale-[30%] brightness-95"
+                madeToOrder && "grayscale-[30%] brightness-95"
               )}
               imageType="productHero"
               sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
               loading="lazy"
             />
 
-            {/* OUT OF STOCK - Bottom strip indicator */}
-            {!product.in_stock && (
+            {/* Made-to-order indicator */}
+            {madeToOrder && (
               <>
                 <div className="absolute inset-0 bg-[#1A1512]/15 z-15 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
                   <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 flex items-center justify-center">
                     <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
-                      Out of Stock
+                      Made to Order · {MADE_TO_ORDER_DAYS}
                     </span>
                   </div>
                 </div>
@@ -114,7 +126,7 @@ export const CuratedProductCard = memo(
             )}
 
             {/* Badges - top-left (only when in stock) */}
-            {badge && product.in_stock !== false && (
+            {badge && !madeToOrder && (
               <div className="absolute top-3 left-3 z-10">
                 <span className="bg-[#1A1512] text-white text-[9px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase shadow-sm border border-white/10">
                   {badge}
@@ -122,22 +134,19 @@ export const CuratedProductCard = memo(
               </div>
             )}
 
-            {/* Quick Add - Corner icon (hidden when out of stock) */}
-            {product.in_stock && (
-              <button
-                onClick={handleAddToCart}
-                className={cn(
-                  "absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center",
-                  "bg-white text-[#1A1512] shadow-md",
-                  "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
-                  "transition-all duration-300",
-                  "hover:bg-[#C19A5B] hover:text-white"
-                )}
-                aria-label="Add to cart"
-              >
-                <ShoppingBag className="w-4 h-4" />
-              </button>
-            )}
+            <button
+              onClick={handleAddToCart}
+              className={cn(
+                "absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center",
+                "bg-white text-[#1A1512] shadow-md",
+                "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
+                "transition-all duration-300",
+                "hover:bg-[#C19A5B] hover:text-white"
+              )}
+              aria-label={madeToOrder ? "Preorder made-to-order item" : "Add to cart"}
+            >
+              <ShoppingBag className="w-4 h-4" />
+            </button>
           </div>
 
           {/* CONTENT AREA - Padded, structured */}
@@ -164,6 +173,11 @@ export const CuratedProductCard = memo(
                   </>
                 )}
             </div>
+            {madeToOrder && (
+              <p className="text-[11px] font-medium text-[#A07840] mb-2">
+                Recreated in {MADE_TO_ORDER_DAYS}
+              </p>
+            )}
 
             {/* TRUST SIGNAL - Single, subtle, at bottom */}
             <div className="mt-auto pt-2 border-t border-[#C19A5B]/20">
