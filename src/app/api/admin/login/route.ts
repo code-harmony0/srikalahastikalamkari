@@ -32,14 +32,18 @@ export async function POST(request: NextRequest) {
     // Credentials valid — set the auth cookie server-side
     const response = NextResponse.json({ success: true })
 
-    const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60
-    response.cookies.set("isLoggedIn", "true", {
+    const cookieOptions: any = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge,
       path: "/",
-    })
+    }
+
+    if (rememberMe) {
+      cookieOptions.maxAge = 30 * 24 * 60 * 60 // 30 days
+    }
+
+    response.cookies.set("isLoggedIn", "true", cookieOptions)
 
     return response
   } catch {

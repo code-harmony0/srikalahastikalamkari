@@ -19,10 +19,6 @@ export function middleware(request: NextRequest) {
 
   // Handle /admin and /admin/login
   if (pathname === '/admin' || pathname === '/admin/login') {
-    const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true'
-    if (isLoggedIn) {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
-    }
     // /admin → /admin/login
     if (pathname === '/admin') {
       return NextResponse.redirect(new URL('/admin/login', request.url))
