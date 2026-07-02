@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabase/client"
+import { supabase, supabaseAdmin } from "@/lib/supabase/client"
 import { ContactInquiry } from "@/lib/supabase/enhanced-types"
 import {
   Table,
@@ -59,7 +59,7 @@ export default function InquiriesPage() {
       const from = (page - 1) * itemsPerPage
       const to = from + itemsPerPage - 1
 
-      let query = (supabase as any)
+      let query = supabaseAdmin
         .from("contact_inquiries")
         .select("*", { count: 'exact' })
         .order("created_at", { ascending: false })
@@ -92,7 +92,7 @@ export default function InquiriesPage() {
 
   const updateStatus = async (id: string, newStatus: 'solved' | 'ignored' | 'new') => {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabaseAdmin
         .from("contact_inquiries")
         .update({ status: newStatus })
         .eq("id", id)

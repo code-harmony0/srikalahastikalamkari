@@ -12,6 +12,8 @@ export async function POST(req: NextRequest) {
       formData,
       cartItems,
       totalAmount,
+      userId,
+      customerPhone,
     } = await req.json();
 
     // Verify signature
@@ -43,7 +45,8 @@ export async function POST(req: NextRequest) {
         total_amount: totalAmount, // already in rupees
         shipping_address: shippingAddress,
         customer_email: formData.email,
-        user_id: null,
+        customer_phone: customerPhone || formData.phone || null,
+        user_id: userId || null,
         razorpay_order_id,
         razorpay_payment_id,
       })

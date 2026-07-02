@@ -151,16 +151,30 @@ const KalamkariHeroBackground = ({
 
 // Countdown Timer Component
 const CountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState({ days: 3, hours: 14, minutes: 27, seconds: 45 })
+  const [timeLeft, setTimeLeft] = useState({
+    days: 3,
+    hours: 14,
+    minutes: 27,
+    seconds: 45,
+  })
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         let { days, hours, minutes, seconds } = prev
         seconds--
-        if (seconds < 0) { seconds = 59; minutes-- }
-        if (minutes < 0) { minutes = 59; hours-- }
-        if (hours < 0) { hours = 23; days-- }
+        if (seconds < 0) {
+          seconds = 59
+          minutes--
+        }
+        if (minutes < 0) {
+          minutes = 59
+          hours--
+        }
+        if (hours < 0) {
+          hours = 23
+          days--
+        }
         if (days < 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
         return { days, hours, minutes, seconds }
       })
@@ -184,7 +198,9 @@ const CountdownTimer = () => {
               {String(block.value).padStart(2, "0")}
             </span>
           </div>
-          <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.15em] mt-2">{block.label}</span>
+          <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.15em] mt-2">
+            {block.label}
+          </span>
         </div>
       ))}
     </div>
@@ -213,26 +229,74 @@ const GoldParticles = () => (
 
 // Category data
 const categories = [
-  { name: "Sarees", filterName: "Sarees", image: "/images/brand-models/model-saree-01.jpeg", count: "50+" },
-  { name: "Dupattas", filterName: "Dupattas", image: "/images/brand-models/model-saree-05.jpeg", count: "30+" },
-  { name: "Dress Materials", filterName: "Fabrics", image: "/images/brand-models/model-saree-08.jpeg", count: "40+" },
-  { name: "Wall Art", filterName: "Wall Paintings", image: "/images/wall-art/wall-art-01.jpeg", count: "25+" },
-  { name: "Canvas Art", filterName: "Canvas Paintings", image: "/images/wall-art/wall-art-04.jpeg", count: "20+" },
+  {
+    name: "Sarees",
+    filterName: "Sarees",
+    image: "/images/brand-models/model-saree-01.jpeg",
+    alt: "Hand-painted Srikalahasti Kalamkari Sarees",
+    count: "50+",
+  },
+  {
+    name: "Dupattas",
+    filterName: "Dupattas",
+    image: "/images/brand-models/model-saree-05.jpeg",
+    alt: "Authentic Kalamkari Dupattas from Srikalahasti",
+    count: "30+",
+  },
+  {
+    name: "Dress Materials",
+    filterName: "Fabrics",
+    image: "/images/brand-models/model-saree-08.jpeg",
+    alt: "Kalamkari Dress Materials and Fabrics",
+    count: "40+",
+  },
+  {
+    name: "Wall Art",
+    filterName: "canvas-paintings",
+    image: "/images/wall-art/wall-art-04.jpeg",
+    alt: "Traditional Srikalahasti Kalamkari Wall Art",
+    count: "25+",
+  },
+  {
+    name: "Canvas Art",
+    filterName: "wall-paintings",
+    image: "/images/wall-art/wall-art-01.jpeg",
+    alt: "Shri Kalahasti Kalamkari Canvas Paintings",
+    count: "20+",
+  },
 ]
 
 // Process steps
 const processSteps = [
-  { icon: Waves, title: "Fabric Selection", desc: "Finest cotton and silk sourced from traditional weavers" },
-  { icon: Droplets, title: "Natural Dye Prep", desc: "Organic dyes extracted from plants, bark, and minerals" },
-  { icon: Paintbrush, title: "Hand Painting", desc: "Master artisans paint each motif with bamboo pens" },
-  { icon: Gem, title: "Washing & Setting", desc: "Multiple washes to fix colors permanently into fabric" },
-  { icon: Crown, title: "Final Masterpiece", desc: "Quality inspected and ready for your collection" },
+  {
+    icon: Waves,
+    title: "Fabric Selection",
+    desc: "Finest cotton and silk sourced from traditional weavers",
+  },
+  {
+    icon: Droplets,
+    title: "Natural Dye Prep",
+    desc: "Organic dyes extracted from plants, bark, and minerals",
+  },
+  {
+    icon: Paintbrush,
+    title: "Hand Painting",
+    desc: "Master artisans paint each motif with bamboo pens",
+  },
+  {
+    icon: Gem,
+    title: "Washing & Setting",
+    desc: "Multiple washes to fix colors permanently into fabric",
+  },
+  {
+    icon: Crown,
+    title: "Final Masterpiece",
+    desc: "Quality inspected and ready for your collection",
+  },
 ]
 
 const customDesignWhatsAppUrl =
-  "https://wa.me/917288848881?text=Hello%2C%20I%20need%20to%20create%20my%20custom%20Srikalahasti%20Kalamkari%20design.%20Please%20guide%20me%20with%20fabric%2C%20colors%2C%20motifs%2C%20price%20and%20timeline."
-
-
+  "https://wa.me/917288848881?text=Hello%2C%20I%20need%20help%20with%20a%20custom%20Srikalahasti%20Kalamkari%20design.%20Please%20share%20fabric%2C%20motif%2C%20price%20and%20timeline%20details."
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
@@ -253,14 +317,18 @@ export default function HomePage() {
 
   const _heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"])
   const _heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
-  const _heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
+  const _heroScale = useTransform(scrollYProgress, [0, 1], [1, 1])
 
   // Mobile: static values — same visual result but no scroll listener overhead
   const heroY = isMobile ? "0%" : _heroY
   const heroOpacity = isMobile ? 1 : _heroOpacity
   const heroScale = isMobile ? 1 : _heroScale
 
-  const { scrollYProgress: galleryScrollProgress } = useScroll()
+  const gallerySectionRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress: galleryScrollProgress } = useScroll({
+    target: gallerySectionRef,
+    offset: ["start end", "end start"],
+  })
   const galleryBgY = useTransform(galleryScrollProgress, [0, 1], [0, -80])
 
   // High-quality Kalamkari saree model photographs.
@@ -273,6 +341,11 @@ export default function HomePage() {
     {
       src: "/images/brand-models/model-saree-03.jpeg",
       alt: "Model wearing a cream floral Kalamkari saree with hand-painted story border",
+      brightness: "medium",
+    },
+    {
+      src: "/images/brand-models/model-saree-12.jpeg",
+      alt: "Model wearing a cream Srikalahasti Kalamkari saree with gold border and mythological hand-painted motifs",
       brightness: "medium",
     },
     {
@@ -350,8 +423,12 @@ export default function HomePage() {
       scrollPosition = scrollContainer.scrollLeft
     }
 
-    scrollContainer.addEventListener("wheel", handleUserInteraction, { passive: true })
-    scrollContainer.addEventListener("touchstart", handleUserInteraction, { passive: true })
+    scrollContainer.addEventListener("wheel", handleUserInteraction, {
+      passive: true,
+    })
+    scrollContainer.addEventListener("touchstart", handleUserInteraction, {
+      passive: true,
+    })
     scrollContainer.addEventListener("mousedown", handleUserInteraction)
 
     rafId = requestAnimationFrame(autoScroll)
@@ -435,13 +512,13 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         <section
           ref={heroRef}
-          className="relative w-full h-[100vh] min-h-[700px] flex items-center justify-center overflow-hidden bg-[#1A1512]"
+          className="relative w-full min-h-[calc(100svh-56px)] py-6 sm:h-[100vh] sm:min-h-[700px] sm:py-0 flex items-center justify-center overflow-hidden bg-[#1A1512]"
           role="banner"
           aria-label="Srikalahasti Kalamkari - Premium Heritage Collection"
         >
           {/* ── Background: Parallax wrapper + AnimatePresence crossfade ── */}
           <motion.div
-            style={{ y: heroY, scale: heroScale }}
+            style={{ y: heroY, scale: heroScale, willChange: "transform" }}
             className="absolute inset-0 w-full h-[120%] z-0"
           >
             <AnimatePresence mode="sync">
@@ -457,9 +534,9 @@ export default function HomePage() {
                   src={heroBackgroundImages[currentImageIndex].src}
                   alt={heroBackgroundImages[currentImageIndex].alt}
                   fill
-                  unoptimized
                   className="object-cover object-[center_42%]"
                   priority={currentImageIndex === 0}
+                  loading={currentImageIndex === 0 ? undefined : "eager"}
                   sizes="100vw"
                 />
               </motion.div>
@@ -468,7 +545,7 @@ export default function HomePage() {
 
           {/* Dark Premium Overlay for Text Readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 z-[1]" />
-          
+
           {/* Fabric Grain Texture */}
           <div
             className="absolute inset-0 opacity-[0.08] mix-blend-overlay z-[2]"
@@ -481,7 +558,7 @@ export default function HomePage() {
           <GoldParticles />
 
           {/* Centered Content Narrative with animations */}
-          <div className="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center justify-center">
+          <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-6 text-center flex flex-col items-center justify-center">
             <motion.div
               initial="hidden"
               animate="visible"
@@ -498,20 +575,29 @@ export default function HomePage() {
               {/* Hero Logo */}
               <motion.div
                 variants={{
-                  hidden: { opacity: 0, y: 18, scale: 0.96, filter: "blur(8px)" },
-                  visible: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
-                    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } },
+                  hidden: {
+                    opacity: 0,
+                    y: 18,
+                    scale: 0.96,
+                    filter: "blur(8px)",
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    filter: "blur(0px)",
+                    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] },
+                  },
                 }}
-                className="mb-6 flex justify-center"
+                className="mb-3 sm:mb-6 flex justify-center"
               >
                 <Image
                   src="/images/logo-transparent.png"
                   alt="Srikalahasti Kalamkari Logo"
-                  width={180}
-                  height={185}
+                  width={300}
+                  height={320}
                   priority
-                  unoptimized
-                  className="h-28 w-auto object-contain drop-shadow-[0_18px_35px_rgba(0,0,0,0.55)] sm:h-32 md:h-40 lg:h-44"
+                  className="h-20 w-auto object-contain drop-shadow-[0_18px_35px_rgba(0,0,0,0.55)] sm:h-40 md:h-48 lg:h-56"
                 />
               </motion.div>
 
@@ -519,51 +605,73 @@ export default function HomePage() {
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: 12, filter: "blur(6px)" },
-                  visible: { opacity: 1, y: 0, filter: "blur(0px)",
-                    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+                  },
                 }}
-                className="flex items-center gap-4 mb-8"
+                className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-8 max-w-full"
               >
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
-                  transition={{ duration: 1.2, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{
+                    duration: 1.2,
+                    delay: 0.7,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                   style={{ originX: 1 }}
-                  className="w-12 h-px bg-[#C19A5B]/60"
+                  className="hidden h-px w-8 bg-[#C19A5B]/60 sm:block md:w-12"
                 />
-                <span className="text-[10px] font-bold text-[#C19A5B] uppercase tracking-[0.5em]">
-                  Est. 1999 · Heritage Artisans
-                </span>
+
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
-                  transition={{ duration: 1.2, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{
+                    duration: 1.2,
+                    delay: 0.7,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                   style={{ originX: 0 }}
-                  className="w-12 h-px bg-[#C19A5B]/60"
+                  className="hidden h-px w-8 bg-[#C19A5B]/60 sm:block md:w-12"
                 />
               </motion.div>
 
               {/* Main Heading */}
-              <h1 className="font-heading leading-[0.9] text-white mb-6 tracking-tight drop-shadow-xl">
-                <motion.span
-                  variants={{
-                    hidden: { opacity: 0, y: 30, filter: "blur(14px)" },
-                    visible: { opacity: 0.9, y: 0, filter: "blur(0px)",
-                      transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } },
-                  }}
-                  className="block font-serif italic text-[#C19A5B] text-2xl md:text-3xl lg:text-4xl mb-4 tracking-[0.16em]"
-                >
-                  Authentic Handcrafted
-                </motion.span>
+              <h1 className="font-heading w-full max-w-full sm:max-w-none leading-[0.95] sm:leading-[0.9] text-white mb-4 sm:mb-6 tracking-tight drop-shadow-xl">
                 <motion.span
                   variants={{
                     hidden: { opacity: 0, y: 50, filter: "blur(18px)" },
-                    visible: { opacity: 1, y: 0, filter: "blur(0px)",
-                      transition: { duration: 1.3, ease: [0.22, 1, 0.36, 1] } },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: { duration: 1.3, ease: [0.22, 1, 0.36, 1] },
+                    },
                   }}
-                  className="block whitespace-nowrap font-serif font-bold uppercase text-4xl sm:text-5xl md:text-7xl lg:text-[96px]"
+                  className="block whitespace-nowrap font-serif font-bold uppercase text-[clamp(1.35rem,6.2vw,2.45rem)] sm:text-5xl md:text-7xl lg:text-[88px]"
                 >
-                  Srikalahasti Kalamkari
+                  Authentic Srikalahasti Kalamkari
+                </motion.span>
+                <motion.span
+                  variants={{
+                    hidden: { opacity: 0, y: 24, filter: "blur(10px)" },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: {
+                        duration: 1,
+                        delay: 0.12,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                    },
+                  }}
+                  className="mt-3 block font-sans text-[0.78rem] font-medium uppercase leading-snug tracking-[0.22em] text-[#F9E8CF]/90 sm:mt-5 sm:text-base md:text-xl"
+                >
+                  Hand-Painted Sarees & Fabrics
                 </motion.span>
               </h1>
 
@@ -571,47 +679,66 @@ export default function HomePage() {
               <motion.div
                 variants={{
                   hidden: { scaleX: 0, opacity: 0 },
-                  visible: { scaleX: 1, opacity: 1,
-                    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } },
+                  visible: {
+                    scaleX: 1,
+                    opacity: 1,
+                    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] },
+                  },
                 }}
-                className="w-20 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/60 to-transparent mb-8"
+                className="w-16 sm:w-20 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/60 to-transparent mb-4 sm:mb-8"
               />
 
               {/* Subheadline */}
               <motion.p
                 variants={{
                   hidden: { opacity: 0, y: 18, filter: "blur(8px)" },
-                  visible: { opacity: 1, y: 0, filter: "blur(0px)",
-                    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] },
+                  },
                 }}
-                className="font-sans text-lg md:text-xl text-white/75 mb-10 max-w-2xl mx-auto leading-relaxed font-light tracking-wide"
+                className="font-sans text-sm md:text-xl text-white/75 mb-6 sm:mb-10 max-w-[20rem] sm:max-w-2xl mx-auto leading-relaxed font-light tracking-wide"
               >
-                Where every thread tells a timeless story. Authentic hand-painted
-                heritage directly from the master artisans of Andhra Pradesh.
+                Where every thread tells a timeless story. Authentic
+                hand-painted heritage directly from the master artisans of
+                Andhra Pradesh.
               </motion.p>
 
               {/* Action Buttons */}
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: 16 },
-                  visible: { opacity: 1, y: 0,
-                    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+                  },
                 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-lg mx-auto mb-12"
+                className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 justify-center w-full max-w-[21rem] sm:max-w-lg mx-auto mb-5 sm:mb-12"
               >
                 <Link href="/products" className="w-full sm:w-auto">
-                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ duration: 0.2 }}>
-                    <Button className="w-full sm:w-[220px] h-14 rounded-none bg-white text-[#1A1512] hover:bg-[#C19A5B] hover:text-white text-[13px] font-bold tracking-[0.15em] uppercase transition-colors duration-400 cta-glow">
-                      <ShoppingBag className="w-4 h-4 mr-2" />
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Button className="w-full sm:w-[220px] h-11 sm:h-14 rounded-none bg-white text-[#1A1512] hover:bg-[#C19A5B] hover:text-white text-[10px] sm:text-[13px] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase transition-colors duration-400 cta-glow">
+                      <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
                       Shop Collection
                     </Button>
                   </motion.div>
                 </Link>
                 <Link href="/about" className="w-full sm:w-auto">
-                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ duration: 0.2 }}>
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <Button
                       variant="outline"
-                      className="w-full sm:w-[220px] h-14 rounded-none border-[#C19A5B]/50 text-white hover:bg-[#C19A5B]/15 hover:border-[#C19A5B] text-[13px] font-bold tracking-[0.15em] uppercase transition-all duration-400 bg-transparent backdrop-blur-sm"
+                      className="w-full sm:w-[220px] h-11 sm:h-14 rounded-none border-[#C19A5B]/50 text-white hover:bg-[#C19A5B]/15 hover:border-[#C19A5B] text-[10px] sm:text-[13px] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase transition-all duration-400 bg-transparent backdrop-blur-sm"
                     >
                       Discover Our Story
                     </Button>
@@ -625,7 +752,7 @@ export default function HomePage() {
                   hidden: {},
                   visible: { transition: { staggerChildren: 0.1 } },
                 }}
-                className="flex flex-wrap justify-center gap-6 md:gap-10"
+                className="grid w-full max-w-[20rem] grid-cols-2 gap-x-3 gap-y-2 sm:flex sm:max-w-none sm:flex-wrap sm:justify-center sm:gap-6 md:gap-10"
               >
                 {[
                   { icon: Truck, text: "Free Shipping" },
@@ -637,14 +764,19 @@ export default function HomePage() {
                     key={i}
                     variants={{
                       hidden: { opacity: 0, y: 8 },
-                      visible: { opacity: 1, y: 0,
-                        transition: { duration: 0.5, ease: "easeOut" } },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: { duration: 0.5, ease: "easeOut" },
+                      },
                     }}
                     whileHover={{ scale: 1.08, color: "#C19A5B" }}
-                    className="flex items-center gap-2 text-white/55 cursor-default"
+                    className="flex min-w-0 items-center justify-center gap-1.5 sm:gap-2 text-white/55 cursor-default"
                   >
-                    <badge.icon className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-bold uppercase tracking-[0.15em]">{badge.text}</span>
+                    <badge.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <span className="truncate text-[7.5px] sm:text-[10px] font-bold uppercase tracking-[0.08em] sm:tracking-[0.15em]">
+                      {badge.text}
+                    </span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -656,7 +788,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.8, duration: 1, ease: "easeOut" }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+            className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2"
           >
             <span className="font-sans text-[9px] font-bold tracking-[0.4em] text-white/40 uppercase mb-1">
               Scroll
@@ -666,7 +798,11 @@ export default function HomePage() {
               {/* Scroll wheel dot */}
               <motion.div
                 animate={{ y: [0, 10, 0], opacity: [1, 0.2, 1] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="w-[3px] h-[6px] rounded-full bg-[#C19A5B]/70"
               />
             </div>
@@ -703,7 +839,9 @@ export default function HomePage() {
                     Create your own saree, dupatta, wall art or canvas design.
                   </h2>
                   <p className="mt-3 max-w-3xl text-sm md:text-base leading-relaxed text-[#1A1512]/68 font-light">
-                    Share your idea, size, fabric, colors, motif or reference. Our artisans can recreate heritage stories or paint a fully personal Kalamkari piece for you.
+                    Share your idea, size, fabric, colors, motif or reference.
+                    Our artisans can adapt heritage stories or paint a fully
+                    personal Kalamkari piece for you.
                   </p>
                 </div>
               </motion.div>
@@ -722,13 +860,13 @@ export default function HomePage() {
                   className="inline-flex h-12 min-w-[210px] items-center justify-center gap-3 bg-[#1A1512] px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[#A07840]"
                 >
                   <MessageCircle className="w-4 h-4 text-[#C19A5B]" />
-                  WhatsApp Design
+                  WhatsApp Message
                 </a>
                 <Link
-                  href="/contact"
-                  className="inline-flex h-12 min-w-[180px] items-center justify-center gap-3 border border-[#1A1512]/20 bg-white/45 px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-[#1A1512] transition-all duration-300 hover:border-[#1A1512] hover:bg-white"
+                  href="/custom-design"
+                  className="inline-flex h-12 min-w-[230px] items-center justify-center gap-3 border border-[#1A1512]/20 bg-white/55 px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-[#1A1512] transition-all duration-300 hover:border-[#1A1512] hover:bg-white"
                 >
-                  Contact Studio
+                  View Custom Designs
                   <ArrowRight className="w-4 h-4 text-[#C19A5B]" />
                 </Link>
               </motion.div>
@@ -790,7 +928,8 @@ export default function HomePage() {
                 Shop by <span className="italic text-[#C19A5B]">Category</span>
               </h2>
               <p className="font-sans text-base text-[#1A1512]/60 max-w-xl mx-auto leading-relaxed font-light">
-                Explore our curated collections, each piece handcrafted with centuries of tradition
+                Explore our curated collections, each piece handcrafted with
+                centuries of tradition
               </p>
             </motion.div>
 
@@ -804,22 +943,24 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                 >
-                  <Link href={`/products?category=${encodeURIComponent(cat.filterName)}`}>
+                  <Link
+                    href={`/products?category=${encodeURIComponent(cat.filterName)}`}
+                  >
                     <div className="group relative aspect-[3/4] rounded-xl overflow-hidden category-card-hover cursor-pointer">
                       <Image
                         src={cat.image}
-                        alt={cat.name}
+                        alt={cat.alt}
                         fill
-                        unoptimized
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                         sizes="(max-width: 768px) 50vw, 20vw"
+                        loading="eager"
                       />
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-all duration-500 group-hover:from-black/80" />
-                      
+
                       {/* Gold border on hover */}
                       <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#C19A5B]/40 rounded-xl transition-all duration-500" />
-                      
+
                       {/* Content */}
                       <div className="absolute bottom-0 left-0 right-0 p-5">
                         <h3 className="font-serif text-lg md:text-xl font-bold text-white mb-1 group-hover:text-[#C19A5B] transition-colors duration-300">
@@ -832,7 +973,7 @@ export default function HomePage() {
                           <ArrowRight className="w-3 h-3 text-white/40 group-hover:text-[#C19A5B] group-hover:translate-x-1 transition-all duration-300" />
                         </div>
                       </div>
-                      
+
                       {/* Shimmer badge */}
                       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <span className="text-[9px] font-bold text-[#C19A5B] uppercase tracking-widest bg-white/90 px-2 py-1 rounded-full">
@@ -917,11 +1058,10 @@ export default function HomePage() {
               >
                 <div className="relative aspect-[3/4] overflow-hidden shadow-xl">
                   <Image
-                    src="/images/brand-models/model-saree-06.jpeg"
-                    alt="Model wearing a cream Kalamkari saree with peacock and floral hand-painted motifs"
+                    src="/images/brand-models/model-saree-12.jpeg"
+                    alt="Model wearing a cream Srikalahasti Kalamkari saree with gold border and mythological motifs"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                     fill
-                    unoptimized
                     sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
                   />
@@ -930,9 +1070,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Stat Card: Minimalist Floating */}
-                <motion.div
-                  className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-md p-8 shadow-lg border border-[#C19A5B]/15"
-                >
+                <motion.div className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-md p-8 shadow-lg border border-[#C19A5B]/15">
                   <CountUpNumber
                     end={500}
                     duration={2000}
@@ -969,22 +1107,27 @@ export default function HomePage() {
 
                 {/* Content */}
                 <div className="space-y-6 mb-12 max-w-xl">
-                  <p className="font-sans text-base text-[#1A1512]/70 leading-relaxed font-light">
+                  <p className="font-sans text-base text-[#1A1512]/70 leading-relaxed font-light mb-4">
                     Srikalahasti Kalamkari is more than an art form; it is a
                     living narrative whispered through generations. Specializing
                     in authentic hand-painted textiles, from elegant Sarees and
                     Duppatas to exquisite Wall Paintings and Canvas art.
                   </p>
+                  <p className="font-sans text-sm text-[#1A1512]/60 leading-relaxed font-light">
+                    Also recognized worldwide as <strong>Shri Kalahasti Kalamkari</strong>, our artisans preserve the authentic pen Kalamkari technique, creating some of the finest Indian handloom sarees and fabrics available today.
+                  </p>
 
                   <div className="flex flex-wrap gap-3 mb-8">
-                    {["Sarees", "Duppatas", "Dress Materials", "Wall Art"].map((item) => (
-                      <span
-                        key={item}
-                        className="text-[11px] font-bold text-[#1A1512]/60 uppercase tracking-widest border-b border-[#1A1512]/20 pb-1"
-                      >
-                        {item}
-                      </span>
-                    ))}
+                    {["Sarees", "Duppatas", "Dress Materials", "Wall Art"].map(
+                      (item) => (
+                        <span
+                          key={item}
+                          className="text-[11px] font-bold text-[#1A1512]/60 uppercase tracking-widest border-b border-[#1A1512]/20 pb-1"
+                        >
+                          {item}
+                        </span>
+                      ),
+                    )}
                   </div>
                 </div>
 
@@ -995,17 +1138,14 @@ export default function HomePage() {
                       Discover the Craft
                     </Button>
                   </Link>
-                  
-                  {/* Whatsapp CTA directly here */}
-                  <a
-                    href={customDesignWhatsAppUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+
+                  <Link
+                    href="/custom-design"
                     className="group inline-flex items-center justify-center gap-3 px-8 h-[52px] border border-[#1A1512]/20 hover:border-[#1A1512] text-[#1A1512] text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-300"
                   >
                     <Palette className="w-4 h-4 text-[#C19A5B] group-hover:scale-110 transition-transform" />
-                    Bespoke Design
-                  </a>
+                    Custom Designs
+                  </Link>
                 </div>
               </motion.div>
             </div>
@@ -1330,7 +1470,6 @@ export default function HomePage() {
                 src="/images/brand-models/model-saree-04.jpeg"
                 alt="Exclusive hand-painted purple Kalamkari saree collection"
                 fill
-                unoptimized
                 className="object-cover opacity-40"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-[#1A1512]/90 via-[#1A1512]/70 to-[#1A1512]/50" />
@@ -1381,8 +1520,8 @@ export default function HomePage() {
                   </h2>
 
                   <p className="font-sans text-lg text-white/70 mb-8 max-w-lg leading-relaxed font-light">
-                    Enjoy up to 30% off on selected handcrafted Kalamkari pieces.
-                    Each artwork is a one-of-a-kind masterpiece.
+                    Enjoy up to 30% off on selected handcrafted Kalamkari
+                    pieces. Each artwork is a one-of-a-kind masterpiece.
                   </p>
 
                   {/* Discount badge */}
@@ -1393,10 +1532,16 @@ export default function HomePage() {
                     transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
                     className="inline-flex items-center gap-3 bg-gradient-to-r from-[#C19A5B] to-[#A07840] px-6 py-3 rounded-lg mb-8"
                   >
-                    <span className="font-serif text-3xl font-bold text-white">30%</span>
+                    <span className="font-serif text-3xl font-bold text-white">
+                      30%
+                    </span>
                     <div>
-                      <span className="block text-[10px] font-bold text-white/80 uppercase tracking-widest">Off on</span>
-                      <span className="block text-[12px] font-bold text-white uppercase tracking-wider">Select Pieces</span>
+                      <span className="block text-[10px] font-bold text-white/80 uppercase tracking-widest">
+                        Off on
+                      </span>
+                      <span className="block text-[12px] font-bold text-white uppercase tracking-wider">
+                        Select Pieces
+                      </span>
                     </div>
                   </motion.div>
 
@@ -1449,11 +1594,13 @@ export default function HomePage() {
                 <div className="w-10 h-px bg-[#C19A5B]/50" />
               </div>
               <h2 className="font-serif text-4xl md:text-5xl text-[#1A1512] dark:text-[#FAF3E8] mb-4 leading-tight">
-                The Kalamkari <span className="italic text-[#C19A5B]">Process</span>
+                The Kalamkari{" "}
+                <span className="italic text-[#C19A5B]">Process</span>
               </h2>
               <p className="font-sans text-base text-[#1A1512]/60 dark:text-[#FAF3E8]/70 max-w-2xl mx-auto leading-relaxed font-light">
-                Every masterpiece passes through five meticulous stages of artisan craftsmanship,
-                each step guided by centuries of inherited wisdom.
+                Every masterpiece passes through five meticulous stages of
+                artisan craftsmanship, each step guided by centuries of
+                inherited wisdom.
               </p>
             </motion.div>
 
@@ -1493,7 +1640,9 @@ export default function HomePage() {
                       </div>
                       {/* Step number */}
                       <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#1A1512] dark:bg-[#C19A5B] flex items-center justify-center">
-                        <span className="text-[10px] font-bold text-white dark:text-[#1A1512]">{i + 1}</span>
+                        <span className="text-[10px] font-bold text-white dark:text-[#1A1512]">
+                          {i + 1}
+                        </span>
                       </div>
                     </motion.div>
 
@@ -1539,7 +1688,8 @@ export default function HomePage() {
               </div>
 
               <h2 className="font-serif text-3xl md:text-4xl text-[#1A1512] mb-3 leading-tight">
-                The Srikalahasti <span className="text-[#C19A5B] italic">Promise</span>
+                The Srikalahasti{" "}
+                <span className="text-[#C19A5B] italic">Promise</span>
               </h2>
 
               <p className="font-sans text-base text-[#1A1512]/90 leading-relaxed max-w-2xl mx-auto">
@@ -1592,7 +1742,7 @@ export default function HomePage() {
         </section>
 
         {/* VISUAL GALLERY - Organic Editorial Mosaic (2026 Crafted) */}
-        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-white/60 to-transparent">
+        <section ref={gallerySectionRef} className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-white/60 to-transparent">
           {/* Parallax Background Pattern - 5% Gold Motif */}
           <motion.div
             className="absolute inset-0 opacity-[0.05] pointer-events-none"
@@ -1605,50 +1755,50 @@ export default function HomePage() {
 
           {/* Advanced Luxury: Looping Gold Thread Animation */}
           {!isMobile && (
-          <div className="absolute inset-0 pointer-events-none opacity-[0.05]">
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 1200 800"
-              preserveAspectRatio="none"
-            >
-              <motion.path
-                d="M-50,200 C200,150 400,250 600,200 C800,150 1000,250 1250,200"
-                fill="none"
-                stroke="#C19A5B"
-                strokeWidth="1.5"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{
-                  pathLength: [0, 1],
-                  opacity: [0, 1, 1, 0],
-                  x: [0, 50, 0],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              <motion.path
-                d="M-50,600 C200,550 400,650 600,600 C800,550 1000,650 1250,600"
-                fill="none"
-                stroke="#C19A5B"
-                strokeWidth="1.5"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{
-                  pathLength: [0, 1],
-                  opacity: [0, 1, 1, 0],
-                  x: [0, -40, 0],
-                }}
-                transition={{
-                  duration: 12,
-                  delay: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            </svg>
-          </div>
+            <div className="absolute inset-0 pointer-events-none opacity-[0.05]">
+              <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 1200 800"
+                preserveAspectRatio="none"
+              >
+                <motion.path
+                  d="M-50,200 C200,150 400,250 600,200 C800,150 1000,250 1250,200"
+                  fill="none"
+                  stroke="#C19A5B"
+                  strokeWidth="1.5"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{
+                    pathLength: [0, 1],
+                    opacity: [0, 1, 1, 0],
+                    x: [0, 50, 0],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+                <motion.path
+                  d="M-50,600 C200,550 400,650 600,600 C800,550 1000,650 1250,600"
+                  fill="none"
+                  stroke="#C19A5B"
+                  strokeWidth="1.5"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{
+                    pathLength: [0, 1],
+                    opacity: [0, 1, 1, 0],
+                    x: [0, -40, 0],
+                  }}
+                  transition={{
+                    duration: 12,
+                    delay: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              </svg>
+            </div>
           )}
 
           <div className="max-w-[120rem] mx-auto px-6 md:px-12 relative z-10">
@@ -1708,7 +1858,6 @@ export default function HomePage() {
                         src={image.src}
                         alt={image.alt}
                         fill
-                        unoptimized
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
@@ -1767,7 +1916,9 @@ export default function HomePage() {
                 </span>
                 <h2 className="font-playfair text-4xl md:text-5xl text-[#3A2413] dark:text-[#FAF3E8] font-bold leading-tight mb-6">
                   Voices of{" "}
-                  <span className="italic text-[#A4552A] dark:text-[#E88A54]">Heritage</span>
+                  <span className="italic text-[#A4552A] dark:text-[#E88A54]">
+                    Heritage
+                  </span>
                 </h2>
                 <p className="font-sans text-[16px] text-[#3A2413]/70 dark:text-[#FAF3E8]/70 max-w-2xl mx-auto leading-relaxed">
                   Real stories from those who carry our legacy forward, woven
@@ -1963,8 +2114,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-
       </main>
     </>
   )

@@ -40,6 +40,7 @@ export interface Product {
   slug?: string
   category_id?: string
   categoryName?: string
+  subCategoryName?: string
   specifications?: Record<string, string>
   material?: string
   barcode?: string

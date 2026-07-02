@@ -70,10 +70,12 @@ export default function ProductDetail() {
   const { data: relatedProductsData } = useProducts({
     category_id: product?.category_id,
     limit: 5,
+    is_visible: true,
   })
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
+  const [selectedColor, setSelectedColor] = useState<string | null>(null)
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [fullImage, setFullImage] = useState<string | null>(null)
   const [zoomMagnifier, setZoomMagnifier] = useState({
@@ -197,7 +199,7 @@ export default function ProductDetail() {
     cart.addItem(product, addable)
     toast.success(`Added ${addable} item(s) to cart`, {
       description: madeToOrder
-        ? `This piece will be recreated and delivered in ${MADE_TO_ORDER_DAYS}.`
+        ? `This custom request will be prepared and delivered in ${MADE_TO_ORDER_DAYS}.`
         : undefined,
     })
   }
@@ -452,6 +454,31 @@ export default function ProductDetail() {
 
               {/* Actions */}
               <div className="space-y-3 pt-2">
+                
+                {/* Colors */}
+                {product.colors && Array.isArray(product.colors) && product.colors.length > 0 && (
+                  <div className="mb-4 space-y-2">
+                    <p className="text-sm font-medium text-[#1A1512]">
+                      Color: <span className="text-[#1A1512]/60 font-normal">{selectedColor || 'Select color'}</span>
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {product.colors.map((color: string) => (
+                        <button
+                          key={color}
+                          onClick={() => setSelectedColor(color)}
+                          className={cn(
+                            "px-3 py-1.5 text-xs font-medium rounded border transition-all",
+                            selectedColor === color
+                              ? "border-[#C19A5B] bg-[#C19A5B]/10 text-[#1A1512]"
+                              : "border-slate-200 text-slate-600 hover:border-slate-300"
+                          )}
+                        >
+                          {color}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {/* Made-to-order Banner - Prominent warning */}
                 {madeToOrder && (
                   <div className="bg-gradient-to-r from-[#FFF7E8] to-[#F8E6C8] border border-[#C19A5B]/35 rounded-lg p-4 flex items-start gap-3">
@@ -463,7 +490,7 @@ export default function ProductDetail() {
                         Made to order
                       </p>
                       <p className="text-[#1A1512]/70 text-xs mt-0.5 leading-relaxed">
-                        This exact piece is not in ready stock. You can still order it, and our artisans will recreate it for delivery in {MADE_TO_ORDER_DAYS}.
+                        This design is available as a custom request. Our artisans will prepare it for delivery in {MADE_TO_ORDER_DAYS}.
                       </p>
                     </div>
                   </div>
@@ -550,15 +577,15 @@ export default function ProductDetail() {
 
           <div className="lg:col-span-5 bg-white rounded-[10px] border border-[#C19A5B]/20 overflow-hidden shadow-sm">
             <Accordion type="single" collapsible defaultValue="details">
-              <AccordionItem
-                value="details"
-                className="border-b border-[#C19A5B]/10 px-6"
-              >
-                <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#1A1512] hover:no-underline">
-                  Product Details
-                </AccordionTrigger>
-                <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
-                  {product.specifications ? (
+              {product.specifications && Object.keys(product.specifications).length > 0 && (
+                <AccordionItem
+                  value="details"
+                  className="border-b border-[#C19A5B]/10 px-6"
+                >
+                  <AccordionTrigger className="py-4 font-playfair text-base font-bold text-[#1A1512] hover:no-underline">
+                    Product Details
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
                     <ul className="space-y-2 list-disc pl-4 marker:text-[#C19A5B]/45">
                       {Object.entries(product.specifications).map(
                         ([key, value]) => (
@@ -571,11 +598,9 @@ export default function ProductDetail() {
                         ),
                       )}
                     </ul>
-                  ) : (
-                    <p>Dimensions: 6.5 meters. Occasion: Festive, Wedding.</p>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
 
               <AccordionItem
                 value="craft"
@@ -604,7 +629,7 @@ export default function ProductDetail() {
                 <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
                   <p className="mb-1">• Free shipping on orders over ₹2000</p>
                   <p className="mb-1">
-                    • Delivery: {madeToOrder ? `${MADE_TO_ORDER_DAYS} for recreated made-to-order pieces` : "5-7 business days"}
+                    • Delivery: {madeToOrder ? `${MADE_TO_ORDER_DAYS} for custom-request pieces` : "5-7 business days"}
                   </p>
                 </AccordionContent>
               </AccordionItem>

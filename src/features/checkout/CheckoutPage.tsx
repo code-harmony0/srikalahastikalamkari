@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useProducts } from "@/shared/hooks/use-products";
 import { useCartStore } from "@/shared/cart-store";
 import { useCoupon, incrementCouponUsage } from "@/shared/hooks/use-coupon";
+import { useAuth } from "@/shared/contexts/AuthContext";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -100,6 +101,7 @@ const FormInput = ({
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { user: firebaseUser } = useAuth();
   const { data: productsData } = useProducts();
   const products = productsData?.data || [];
   const cart = useCartStore();
@@ -257,6 +259,8 @@ const handleSubmit = async (e: React.FormEvent) => {
               formData,
               cartItems: cartPayload,
               totalAmount: total,
+              userId: firebaseUser?.uid || null,
+              customerPhone: firebaseUser?.phoneNumber || null,
             }),
           })
 
@@ -609,7 +613,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       Made-to-order timeline
                     </p>
                     <p className="text-xs text-[#1A1512]/70 mt-1 leading-relaxed">
-                      One or more pieces are currently sold out. We will recreate the same design and deliver it in {MADE_TO_ORDER_DAYS}.
+                      One or more pieces are custom requests. We will prepare the selected design and deliver it in {MADE_TO_ORDER_DAYS}.
                     </p>
                   </div>
                 )}

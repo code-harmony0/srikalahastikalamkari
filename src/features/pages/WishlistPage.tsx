@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,6 +34,7 @@ export default function WishlistPage() {
   const { data: products = [], isLoading } = useAllProducts();
   const wishlist = useWishlistStore();
   const cart = useCartStore();
+  const hasHydrated = useWishlistStore((s) => s._hasHydrated);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -97,8 +99,8 @@ export default function WishlistPage() {
     }
   };
 
-  // 🌀 LOADING STATE
-  if (isLoading) {
+  // 🌀 LOADING STATE — wait for Zustand to rehydrate from localStorage
+  if (!hasHydrated || isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center bg-background kalamkari-static-background silk-fabric-texture">
         <div className="flex flex-col items-center gap-4">

@@ -1,9 +1,9 @@
 "use client"
 
-import React, { memo, useMemo } from "react"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Star, Heart, ShoppingBag } from "lucide-react"
+import { Star, Heart, MessageCircle, ShoppingBag } from "lucide-react"
 import { useWishlistStore } from "@/shared/wishlist-store"
 import { useCartStore } from "@/shared/cart-store"
 import { toast } from "sonner"
@@ -19,12 +19,14 @@ import {
   getStockQuantity,
   isMadeToOrder,
 } from "@/shared/lib/inventory"
+import { getProductInquiryWhatsAppUrl } from "@/shared/lib/whatsapp"
 
 interface ProductCardProps {
   product: Product
   index?: number
   viewMode?: "grid" | "list"
   priority?: boolean
+  actionMode?: "commerce" | "whatsapp-inquiry"
 }
 
 export const ProductCard = memo(
@@ -33,6 +35,7 @@ export const ProductCard = memo(
     index = 0,
     viewMode = "grid",
     priority = false,
+    actionMode = "commerce",
   }: ProductCardProps) => {
     // Memoized field mapping for better performance and type safety
     const productData = useMemo(
@@ -54,12 +57,14 @@ export const ProductCard = memo(
 
     const { data: categories } = useCategories()
     const categoryName = useMemo(() => {
+      if (product.categoryName) return product.categoryName
       if (!categories?.data || !product.category_id) return "Uncategorized"
       const category = categories.data.find(
         (c: any) => c.id === product.category_id,
       )
       return category?.name || "Uncategorized"
-    }, [categories, product.category_id])
+    }, [categories, product.categoryName, product.category_id])
+    const subCategoryName = product.subCategoryName || undefined
 
     const wishlist = useWishlistStore()
     const cart = useCartStore()
@@ -67,6 +72,16 @@ export const ProductCard = memo(
     const stockQuantity = getStockQuantity(product)
     const madeToOrder = isMadeToOrder(product)
     const purchasableLimit = getPurchasableQuantityLimit(product)
+    const inquiryOnly = actionMode === "whatsapp-inquiry"
+    const [siteOrigin, setSiteOrigin] = useState(
+      process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "",
+    )
+
+    useEffect(() => {
+      if (!siteOrigin && typeof window !== "undefined") {
+        setSiteOrigin(window.location.origin)
+      }
+    }, [siteOrigin])
 
     const toggleWishlist = (e: React.MouseEvent) => {
       e.preventDefault()
@@ -107,6 +122,15 @@ export const ProductCard = memo(
     const isList = viewMode === "list"
 
     const productUrl = `/products/${product.slug || product.id}`
+    const inquiryUrl = getProductInquiryWhatsAppUrl(
+      {
+        ...product,
+        name: productData.name,
+        categoryName,
+        subCategoryName,
+      },
+      { siteOrigin },
+    )
 
     // Responsive sizes for different layouts
     const imageSizes = isList ? "180px" : getResponsiveSizes("grid")
@@ -142,42 +166,81 @@ export const ProductCard = memo(
             isList ? "w-[180px] h-full shrink-0" : "w-full aspect-[4/5]",
           )}
         >
-          <Link href={productUrl} className="block w-full h-full">
-            {/* Secondary Image (Hover) */}
-            {productData.images && productData.images.length > 1 && (
+          {inquiryOnly ? (
+            <Link href={productUrl} className="block w-full h-full">
+              {/* Secondary Image (Hover) */}
+              {productData.images && productData.images.length > 1 && (
+                <OptimizedImage
+                  src={
+                    getImageTier(product?.images, "thumb", 1) ||
+                    "/images/products/product-placeholder.png"
+                  }
+                  alt={`${productData.name} alternate`}
+                  fill
+                  className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+                  sizes={imageSizes}
+                  imageType={isList ? "productCardCompact" : "productCard"}
+                  priority={false}
+                  loading="lazy"
+                />
+              )}
+
+              {/* Main Image */}
               <OptimizedImage
-                src={
-                  getImageTier(product?.images, "thumb", 1) ||
-                  "/images/products/product-placeholder.png"
-                }
-                alt={`${productData.name} alternate`}
+                src={productData.image}
+                alt={productData.name}
                 fill
-                className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+                className={cn(
+                  "object-cover transition-all duration-700 ease-out group-hover:scale-105",
+                  productData.images && productData.images.length > 1
+                    ? "group-hover:opacity-0"
+                    : "",
+                  madeToOrder && "grayscale-[30%] brightness-95",
+                )}
                 sizes={imageSizes}
                 imageType={isList ? "productCardCompact" : "productCard"}
-                priority={false}
-                loading="lazy"
+                priority={priority}
+                loading={priority ? undefined : "lazy"}
               />
-            )}
-
-            {/* Main Image */}
-            <OptimizedImage
-              src={productData.image}
-              alt={productData.name}
-              fill
-              className={cn(
-                "object-cover transition-all duration-700 ease-out group-hover:scale-105",
-                productData.images && productData.images.length > 1
-                  ? "group-hover:opacity-0"
-                  : "",
-                madeToOrder && "grayscale-[30%] brightness-95",
+            </Link>
+          ) : (
+            <Link href={productUrl} className="block w-full h-full">
+              {/* Secondary Image (Hover) */}
+              {productData.images && productData.images.length > 1 && (
+                <OptimizedImage
+                  src={
+                    getImageTier(product?.images, "thumb", 1) ||
+                    "/images/products/product-placeholder.png"
+                  }
+                  alt={`${productData.name} alternate`}
+                  fill
+                  className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+                  sizes={imageSizes}
+                  imageType={isList ? "productCardCompact" : "productCard"}
+                  priority={false}
+                  loading="lazy"
+                />
               )}
-              sizes={imageSizes}
-              imageType={isList ? "productCardCompact" : "productCard"}
-              priority={priority}
-              loading={priority ? undefined : "lazy"}
-            />
-          </Link>
+
+              {/* Main Image */}
+              <OptimizedImage
+                src={productData.image}
+                alt={productData.name}
+                fill
+                className={cn(
+                  "object-cover transition-all duration-700 ease-out group-hover:scale-105",
+                  productData.images && productData.images.length > 1
+                    ? "group-hover:opacity-0"
+                    : "",
+                  madeToOrder && "grayscale-[30%] brightness-95",
+                )}
+                sizes={imageSizes}
+                imageType={isList ? "productCardCompact" : "productCard"}
+                priority={priority}
+                loading={priority ? undefined : "lazy"}
+              />
+            </Link>
+          )}
 
           {/* Made-to-order indicator */}
           {madeToOrder && (
@@ -186,7 +249,7 @@ export const ProductCard = memo(
               <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
                 <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 px-3 flex items-center justify-center gap-1.5">
                   <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
-                    Made to Order · {MADE_TO_ORDER_DAYS}
+                    {inquiryOnly ? "Custom request" : `Made to Order · ${MADE_TO_ORDER_DAYS}`}
                   </span>
                 </div>
               </div>
@@ -194,7 +257,7 @@ export const ProductCard = memo(
           )}
 
           {/* Wishlist Button (Grid View Only - List view has it in content) */}
-          {!isList && (
+          {!isList && !inquiryOnly && (
             <button
               onClick={toggleWishlist}
               className="absolute top-2 right-2 z-30 w-7 h-7 rounded-full bg-white/90 text-[#1A1512] hover:bg-[#C19A5B] hover:text-white flex items-center justify-center shadow-sm transition-colors opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300"
@@ -216,7 +279,32 @@ export const ProductCard = memo(
           )}
         >
           <div>
-            <Link href={productUrl} className="space-y-1 block group/text">
+            {inquiryOnly ? (
+              <Link href={productUrl} className="space-y-1 block group/text">
+                <span className="font-playfair italic text-[#C19A5B] text-[11px] block">
+                  {categoryName}
+                </span>
+
+                <h3
+                  className={cn(
+                    "font-inter font-bold text-[#1A1512] leading-tight group-hover/text:text-[#C19A5B] transition-colors",
+                    isList
+                      ? "text-[15px] line-clamp-1"
+                      : "text-[14px] line-clamp-2",
+                  )}
+                >
+                  {productData.name}
+                </h3>
+
+                {/* Description: Only show in List view, limit to 2 lines */}
+                {isList && (
+                  <p className="font-inter text-[12px] text-[#1A1512]/60 leading-relaxed mt-1.5 line-clamp-2 pr-4">
+                    {productData.description || "Handcrafted with natural dyes."}
+                  </p>
+                )}
+              </Link>
+            ) : (
+              <Link href={productUrl} className="space-y-1 block group/text">
               <span className="font-playfair italic text-[#C19A5B] text-[11px] block">
                 {categoryName}
               </span>
@@ -238,7 +326,8 @@ export const ProductCard = memo(
                   {productData.description || "Handcrafted with natural dyes."}
                 </p>
               )}
-            </Link>
+              </Link>
+            )}
           </div>
 
           {/* Price & Actions */}
@@ -278,7 +367,7 @@ export const ProductCard = memo(
                 </span>
               ) : (
                 <span className="text-[11px] font-medium text-[#A07840] mt-0.5">
-                  Recreated in {MADE_TO_ORDER_DAYS}
+                  {inquiryOnly ? "Custom request" : `Made to order in ${MADE_TO_ORDER_DAYS}`}
                 </span>
               )}
 
@@ -293,7 +382,7 @@ export const ProductCard = memo(
             </div>
 
             <div className="flex items-center gap-2 relative z-10">
-              {isList && (
+              {isList && !inquiryOnly && (
                 <button
                   onClick={toggleWishlist}
                   className="w-8 h-8 rounded-full border border-[#C19A5B]/20 text-[#1A1512] hover:bg-[#C19A5B]/10 flex items-center justify-center transition-colors"
@@ -304,26 +393,47 @@ export const ProductCard = memo(
                 </button>
               )}
 
-              <button
-                onClick={handleAddToCart}
-                className={cn(
-                  "transition-all shadow-sm flex items-center justify-center gap-2",
-                  !madeToOrder
-                    ? "bg-[#1A1512] text-white hover:shadow-md hover:bg-[#C19A5B]"
-                    : "bg-[#A07840] text-white hover:shadow-md hover:bg-[#1A1512]",
-                  // 🛠 Compact Button sizing
-                  isList
-                    ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide"
-                    : "w-8 h-8 rounded-full",
-                )}
-                title={!madeToOrder ? "Add to Cart" : `Made to order: ${MADE_TO_ORDER_DAYS}`}
-              >
-                {isList ? (
-                  <>{!madeToOrder ? "Add" : "Preorder"}</>
-                ) : (
-                  <ShoppingBag className="w-3.5 h-3.5" />
-                )}
-              </button>
+              {inquiryOnly ? (
+                <a
+                  href={inquiryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "transition-all shadow-sm flex items-center justify-center gap-2 bg-[#25D366] text-white hover:shadow-md hover:bg-[#1A1512]",
+                    isList
+                      ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide"
+                      : "w-8 h-8 rounded-full",
+                  )}
+                  title="Ask on WhatsApp"
+                >
+                  {isList ? (
+                    <>WhatsApp</>
+                  ) : (
+                    <MessageCircle className="w-3.5 h-3.5" />
+                  )}
+                </a>
+              ) : (
+                <button
+                  onClick={handleAddToCart}
+                  className={cn(
+                    "transition-all shadow-sm flex items-center justify-center gap-2",
+                    !madeToOrder
+                      ? "bg-[#1A1512] text-white hover:shadow-md hover:bg-[#C19A5B]"
+                      : "bg-[#A07840] text-white hover:shadow-md hover:bg-[#1A1512]",
+                    // 🛠 Compact Button sizing
+                    isList
+                      ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide"
+                      : "w-8 h-8 rounded-full",
+                  )}
+                  title={!madeToOrder ? "Add to Cart" : `Made to order: ${MADE_TO_ORDER_DAYS}`}
+                >
+                  {isList ? (
+                    <>{!madeToOrder ? "Add" : "Preorder"}</>
+                  ) : (
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>

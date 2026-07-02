@@ -22,14 +22,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees & Fabrics",
+    default: "Srikalahasti Kalamkari (Shri Kalahasti) - Authentic Handcrafted Sarees & Fabrics",
     template: "%s | Srikalahasti Kalamkari",
   },
   description:
-    "Buy authentic Srikalahasti Kalamkari sarees, dupattas and fabrics handcrafted using traditional pen-work techniques. Direct from Srikalahasti artisans.",
+    "Buy authentic Srikalahasti Kalamkari sarees, dupattas and fabrics handcrafted using traditional pen-work techniques. Direct from Srikalahasti artisans. Also known as Shri Kalahasti Kalamkari.",
   keywords: [
     "srikalahasti kalamkari",
     "srikalahastikalamkari",
+    "shri kalahasti kalamkari",
+    "shri kalahsti kalamkari",
     "kalamkari sarees",
     "kalamkari fabric",
     "handcrafted sarees",
@@ -39,9 +41,16 @@ export const metadata: Metadata = {
     "indian handloom sarees",
     "buy kalamkari sarees online",
     "srikalahasti",
+    "kalahasti kalamkari",
+    "kalamkari dupatta",
+    "hand painted sarees",
   ],
   authors: [{ name: "Srikalahasti Kalamkari" }],
   creator: "Srikalahasti Kalamkari",
+  publisher: "Srikalahasti Kalamkari",
+  verification: {
+    google: "VLnIw9z4KukPOPuIIDpZD4sG30cu2GsnPd6v6-cpnrE",
+  },
   metadataBase: new URL("https://srikalahastikalamkari.in"),
   alternates: {
     canonical: "https://srikalahastikalamkari.in",
@@ -51,12 +60,12 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://srikalahastikalamkari.in",
     siteName: "Srikalahasti Kalamkari",
-    title: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees & Fabrics",
+    title: "Srikalahasti Kalamkari (Shri Kalahasti) - Authentic Handcrafted Sarees",
     description:
-      "Buy authentic Srikalahasti Kalamkari sarees, dupattas and fabrics handcrafted using traditional pen-work techniques. Direct from Srikalahasti artisans.",
+      "Buy authentic Srikalahasti Kalamkari sarees, dupattas and fabrics handcrafted using traditional pen-work techniques. Direct from Srikalahasti artisans. Also known as Shri Kalahasti Kalamkari.",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/images/logo.jpg",
         width: 1200,
         height: 630,
         alt: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees",
@@ -68,7 +77,7 @@ export const metadata: Metadata = {
     title: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees & Fabrics",
     description:
       "Buy authentic Srikalahasti Kalamkari sarees handcrafted using traditional pen-work techniques.",
-    images: ["/images/og-image.jpg"],
+    images: ["/images/logo.jpg"],
   },
   robots: {
     index: true,
@@ -78,6 +87,7 @@ export const metadata: Metadata = {
       follow: true,
       "max-image-preview": "large",
       "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
   manifest: "/manifest.json",
@@ -93,17 +103,45 @@ export const metadata: Metadata = {
     ],
     shortcut: "/favicon.ico",
   },
+  category: "shopping",
 }
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebSite",
+      "@id": "https://srikalahastikalamkari.in/#website",
+      url: "https://srikalahastikalamkari.in",
+      name: "Srikalahasti Kalamkari",
+      alternateName: ["Shri Kalahasti Kalamkari", "Kalahasti Kalamkari", "SrikalahastI Kalamkari"],
+      description: "Authentic Srikalahasti Kalamkari sarees and fabrics handcrafted using traditional pen-work techniques.",
+      publisher: {
+        "@id": "https://srikalahastikalamkari.in/#organization",
+      },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://srikalahastikalamkari.in/products?search={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+      inLanguage: "en-IN",
+    },
+    {
       "@type": "Organization",
       "@id": "https://srikalahastikalamkari.in/#organization",
       name: "Srikalahasti Kalamkari",
+      alternateName: ["Shri Kalahasti Kalamkari", "Kalahasti Kalamkari"],
       url: "https://srikalahastikalamkari.in",
-      logo: "https://srikalahastikalamkari.in/images/logo.jpg",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://srikalahastikalamkari.in/images/logo.jpg",
+        width: 512,
+        height: 512,
+      },
+      image: "https://srikalahastikalamkari.in/images/logo.jpg",
       contactPoint: {
         "@type": "ContactPoint",
         telephone: "+91-72888-48881",
@@ -113,11 +151,12 @@ const jsonLd = {
       sameAs: [],
     },
     {
-      "@type": "LocalBusiness",
-      "@id": "https://srikalahastikalamkari.in/#localbusiness",
+      "@type": "Store",
+      "@id": "https://srikalahastikalamkari.in/#store",
       name: "Srikalahasti Kalamkari",
+      alternateName: ["Shri Kalahasti Kalamkari", "Kalahasti Kalamkari"],
       description:
-        "Authentic Srikalahasti Kalamkari sarees and fabrics handcrafted using traditional pen-work techniques by skilled artisans.",
+        "Authentic Srikalahasti Kalamkari sarees and fabrics handcrafted using traditional pen-work techniques by skilled artisans. Also known as Shri Kalahasti Kalamkari.",
       url: "https://srikalahastikalamkari.in",
       telephone: "+91-72888-48881",
       address: {
@@ -133,6 +172,19 @@ const jsonLd = {
       },
       priceRange: "₹₹",
       image: "https://srikalahastikalamkari.in/images/logo.jpg",
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Kalamkari Sarees & Fabrics",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Product",
+              name: "Srikalahasti Kalamkari Sarees",
+            },
+          },
+        ],
+      },
     },
   ],
 }

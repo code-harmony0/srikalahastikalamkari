@@ -139,6 +139,12 @@
   white-space: nowrap;
 }
 
+.sidebar-nav ul li a span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .sidebar-toggle-btn {
   position: absolute;
   top: 50%;

@@ -2664,17 +2664,17 @@ aria-hidden@^1.2.4:
   dependencies:
     tslib "^2.0.0"
 
-aria-query@^5.0.0, aria-query@^5.3.2:
-  version "5.3.2"
-  resolved "https://registry.npmjs.org/aria-query/-/aria-query-5.3.2.tgz"
-  integrity sha512-COROpnaoap1E2F000S62r6A60uHZnmlvomhfyT2DlTcrY1OrBKn2UhH7qn5wTC9zMvD0AY7csdPSNwKP+7WiQw==
-
-aria-query@5.3.0:
+aria-query@^5.0.0, aria-query@5.3.0:
   version "5.3.0"
   resolved "https://registry.npmjs.org/aria-query/-/aria-query-5.3.0.tgz"
   integrity sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A==
   dependencies:
     dequal "^2.0.3"
+
+aria-query@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.npmjs.org/aria-query/-/aria-query-5.3.2.tgz"
+  integrity sha512-COROpnaoap1E2F000S62r6A60uHZnmlvomhfyT2DlTcrY1OrBKn2UhH7qn5wTC9zMvD0AY7csdPSNwKP+7WiQw==
 
 array-buffer-byte-length@^1.0.1, array-buffer-byte-length@^1.0.2:
   version "1.0.2"
@@ -2900,9 +2900,9 @@ balanced-match@^1.0.0:
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
 baseline-browser-mapping@^2.9.0, baseline-browser-mapping@^2.9.19:
-  version "2.10.31"
-  resolved "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.31.tgz"
-  integrity sha512-MujYO3eP72uvmSE0i4wltsodRfIpZATP3jvzRNRGGxgzId7aVocVJJV3nf01qnzzKFGxQVC9bpWxl5cjxTr/7Q==
+  version "2.10.40"
+  resolved "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.40.tgz"
+  integrity sha512-BSSLZ9/Cjjv7Gtj5B68ZzXcXUg8iOf3fme+FCuh8rC/Go+Kmh8cox7M3A8dolou16s64QjLPOSdngh7GxXvkSw==
 
 binary-extensions@^2.0.0:
   version "2.3.0"
@@ -3008,9 +3008,9 @@ camelcase@^6.3.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001579, caniuse-lite@^1.0.30001759, caniuse-lite@^1.0.30001760:
-  version "1.0.30001762"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001762.tgz"
-  integrity sha512-PxZwGNvH7Ak8WX5iXzoK1KPZttBXNPuaOvI2ZYU7NrlM+d9Ov+TUvlLOBNGzVXAntMSMMlJPd+jY6ovrVjSmUw==
+  version "1.0.30001800"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001800.tgz"
+  integrity sha512-MMHtuAz9Ys840zAY5F4k6fV5GaivZ9sPk+nz0mY+GYVzRBnYkN0mpqkSR92oWRQ19yQWo4HvBV/FnC16AJX8MA==
 
 chalk@^4.0.0, chalk@^4.1.2:
   version "4.1.2"
@@ -5759,22 +5759,17 @@ picocolors@^1.0.0, picocolors@^1.1.1, picocolors@1.1.1:
   resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz"
   integrity sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==
 
-picomatch@^2.0.4:
+picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   version "2.3.2"
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.2.tgz"
   integrity sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA==
 
-picomatch@^2.2.1:
-  version "2.3.2"
-  resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.2.tgz"
-  integrity sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA==
+"picomatch@^3 || ^4", picomatch@^4.0.3:
+  version "4.0.4"
+  resolved "https://registry.npmjs.org/picomatch/-/picomatch-4.0.4.tgz"
+  integrity sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==
 
-picomatch@^2.3.1:
-  version "2.3.2"
-  resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.2.tgz"
-  integrity sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA==
-
-"picomatch@^3 || ^4", picomatch@^4.0.2, picomatch@^4.0.3:
+picomatch@^4.0.2:
   version "4.0.4"
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-4.0.4.tgz"
   integrity sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==
@@ -7253,7 +7248,7 @@ yallist@^3.0.2:
   resolved "https://registry.npmjs.org/yallist/-/yallist-3.1.1.tgz"
   integrity sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==
 
-yaml@^1.10.0:
+yaml@^1.10.0, yaml@^2.4.2:
   version "1.10.3"
   resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.3.tgz"
   integrity sha512-vIYeF1u3CjlhAFekPPAk2h/Kv4T3mAkMox5OymRiJQB0spDP10LHvt+K7G9Ny6NuuMAb25/6n1qyUjAcGNf/AA==

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { memo, useMemo } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, MessageCircle, ShoppingBag, Star } from "lucide-react";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
 import { toast } from "sonner";
@@ -17,11 +17,13 @@ import {
   getStockQuantity,
   isMadeToOrder,
 } from "@/shared/lib/inventory";
+import { getProductInquiryWhatsAppUrl } from "@/shared/lib/whatsapp";
 
 interface ProductCardCompactProps {
   product: Product;
   index?: number;
   priority?: boolean;
+  actionMode?: "commerce" | "whatsapp-inquiry";
 }
 
 /**
@@ -34,7 +36,12 @@ interface ProductCardCompactProps {
  * 5. Actions (accessible)
  */
 export const ProductCardCompact = memo(
-  ({ product, index = 0, priority = false }: ProductCardCompactProps) => {
+  ({
+    product,
+    index = 0,
+    priority = false,
+    actionMode = "commerce",
+  }: ProductCardCompactProps) => {
     // Memoized field mapping
     const productData = useMemo(
       () => ({
@@ -53,6 +60,16 @@ export const ProductCardCompact = memo(
 
     const categoryName = (product as any).categoryName || null;
     const subCategoryName = (product as any).subCategoryName || null;
+    const inquiryOnly = actionMode === "whatsapp-inquiry";
+    const [siteOrigin, setSiteOrigin] = useState(
+      process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || ""
+    );
+
+    useEffect(() => {
+      if (!siteOrigin && typeof window !== "undefined") {
+        setSiteOrigin(window.location.origin);
+      }
+    }, [siteOrigin]);
 
     const wishlist = useWishlistStore();
     const cart = useCartStore();
@@ -98,6 +115,15 @@ export const ProductCardCompact = memo(
 
     const mainImage = productData.image || "/images/products/product-placeholder.png";
     const productUrl = `/products/${product.slug || product.id}`;
+    const inquiryUrl = getProductInquiryWhatsAppUrl(
+      {
+        ...product,
+        name: productData.name,
+        categoryName: categoryName || undefined,
+        subCategoryName: subCategoryName || undefined,
+      },
+      { siteOrigin }
+    );
 
     const discountPercent =
       productData.originalPrice && productData.originalPrice > productData.price
@@ -117,50 +143,44 @@ export const ProductCardCompact = memo(
       },
     };
 
-    return (
-      <motion.article
-        layout
-        initial="hidden"
-        animate="visible"
-        variants={cardVariants}
-        className="group relative bg-card rounded-lg border border-accent/15 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-accent/30 hover:-translate-y-0.5"
-      >
-        <Link href={productUrl} className="block">
-          {/* IMAGE SECTION - Fixed 4:5 aspect ratio */}
-          <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-            <OptimizedImage
-              src={mainImage}
-              alt={productData.name}
-              fill
-              className={cn(
-                "object-cover transition-transform duration-500 ease-out group-hover:scale-105",
-                madeToOrder && "grayscale-[30%] brightness-95"
-              )}
-              imageType="productCardCompact"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              priority={priority}
-              loading={priority ? undefined : "lazy"}
-            />
-
-            {/* Made-to-order strip indicator */}
-            {madeToOrder && (
-              <>
-                <div className="absolute inset-0 bg-black/10 z-15 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-                  <div className="bg-[#1A1512]/85 py-1 flex items-center justify-center">
-                    <span className="text-white text-[9px] font-bold tracking-wider uppercase">
-                      Made to Order · {MADE_TO_ORDER_DAYS}
-                    </span>
-                  </div>
-                </div>
-              </>
+    const cardContent = (
+      <>
+        {/* IMAGE SECTION - Fixed 4:5 aspect ratio */}
+        <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+          <OptimizedImage
+            src={mainImage}
+            alt={productData.name}
+            fill
+            className={cn(
+              "object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+              madeToOrder && "grayscale-[30%] brightness-95"
             )}
+            imageType="productCardCompact"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            priority={priority}
+            loading={priority ? undefined : "lazy"}
+          />
 
-            {/* Wishlist Button - Top Right, always visible on mobile */}
+          {/* Made-to-order strip indicator */}
+          {madeToOrder && (
+            <>
+              <div className="absolute inset-0 bg-black/10 z-15 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+                <div className="bg-[#1A1512]/85 py-1 flex items-center justify-center">
+                  <span className="text-white text-[8px] sm:text-[9px] font-bold tracking-wider uppercase">
+                    {inquiryOnly ? "Custom request" : `Made to Order · ${MADE_TO_ORDER_DAYS}`}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Wishlist Button - Top Right, always visible on mobile */}
+          {!inquiryOnly && (
             <button
               onClick={toggleWishlist}
               className={cn(
-                "absolute top-2 right-2 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
+                "absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200",
                 "bg-background/90 backdrop-blur-sm shadow-sm",
                 "md:opacity-0 md:translate-y-1 md:group-hover:opacity-100 md:group-hover:translate-y-0",
                 isWishlisted
@@ -170,87 +190,94 @@ export const ProductCardCompact = memo(
               aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             >
               <Heart
-                className={cn("w-4 h-4", isWishlisted && "fill-current")}
+                className={cn("w-3.5 h-3.5 sm:w-4 sm:h-4", isWishlisted && "fill-current")}
               />
             </button>
+          )}
+        </div>
+
+        {/* META SECTION - Compact info */}
+        <div className="p-2.5 sm:p-3 space-y-1 sm:space-y-1.5">
+          {/* Category / Subcategory */}
+          {(categoryName || subCategoryName) && (
+            <div className="flex items-center gap-1 flex-wrap">
+              {categoryName && (
+                <span className="font-playfair italic text-accent text-[9px] sm:text-[10px] leading-none">
+                  {categoryName}
+                </span>
+              )}
+              {categoryName && subCategoryName && (
+                <span className="text-accent/40 text-[9px] sm:text-[10px] leading-none">›</span>
+              )}
+              {subCategoryName && (
+                <span className="font-playfair italic text-accent/80 text-[9px] sm:text-[10px] leading-none">
+                  {subCategoryName}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Product Name - Primary visual anchor, max 2 lines */}
+          <h3 className="font-inter font-semibold text-foreground text-[11.5px] sm:text-[13px] leading-[1.15] sm:leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+            {productData.name}
+          </h3>
+
+          {/* Price Row */}
+          <div className="flex items-baseline gap-1.5 sm:gap-2 pt-0.5">
+            <span className="font-inter font-bold text-primary text-[13px] sm:text-[15px] leading-none">
+              ₹{productData.price.toLocaleString()}
+            </span>
+            {productData.originalPrice &&
+              productData.originalPrice > productData.price && (
+                <>
+                  <span className="text-[9.5px] sm:text-[11px] text-muted-foreground line-through">
+                    ₹{productData.originalPrice.toLocaleString()}
+                  </span>
+                  {discountPercent > 0 && (
+                    <span className="text-[8.5px] sm:text-[10px] font-bold text-green-600 bg-green-50 px-1 sm:px-1.5 py-0.5 rounded">
+                      -{discountPercent}%
+                    </span>
+                  )}
+                </>
+              )}
           </div>
 
-          {/* META SECTION - Compact info */}
-          <div className="p-3 space-y-1.5">
-            {/* Category / Subcategory */}
-            {(categoryName || subCategoryName) && (
-              <div className="flex items-center gap-1 flex-wrap">
-                {categoryName && (
-                  <span className="font-playfair italic text-accent text-[10px] leading-none">
-                    {categoryName}
-                  </span>
-                )}
-                {categoryName && subCategoryName && (
-                  <span className="text-accent/40 text-[10px] leading-none">›</span>
-                )}
-                {subCategoryName && (
-                  <span className="font-playfair italic text-accent/80 text-[10px] leading-none">
-                    {subCategoryName}
-                  </span>
-                )}
+          {/* Stock & Rating Row */}
+          <div className="flex items-center justify-between pt-0.5 sm:pt-1">
+            <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+              {/* Rating */}
+              <div className="flex items-center gap-0.5">
+                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-accent text-accent" />
+                <span className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">
+                  4.8
+                </span>
               </div>
-            )}
 
-            {/* Product Name - Primary visual anchor, max 2 lines */}
-            <h3 className="font-inter font-semibold text-foreground text-[13px] leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-              {productData.name}
-            </h3>
-
-            {/* Price Row */}
-            <div className="flex items-baseline gap-2 pt-0.5">
-              <span className="font-inter font-bold text-primary text-[15px] leading-none">
-                ₹{productData.price.toLocaleString()}
-              </span>
-              {productData.originalPrice &&
-                productData.originalPrice > productData.price && (
-                  <>
-                    <span className="text-[11px] text-muted-foreground line-through">
-                      ₹{productData.originalPrice.toLocaleString()}
-                    </span>
-                    {discountPercent > 0 && (
-                      <span className="text-[10px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
-                        -{discountPercent}%
-                      </span>
-                    )}
-                  </>
-                )}
+              {/* Stock indicator */}
+              {stockQuantity > 0 ? (
+                <span className="truncate text-[9px] sm:text-[10px] text-muted-foreground">
+                  {stockQuantity <= 5
+                    ? `Only ${stockQuantity} left`
+                    : "In stock"}
+                </span>
+              ) : (
+                <span className="truncate text-[9px] sm:text-[10px] font-medium text-[#A07840]">
+                  {inquiryOnly ? "Custom request" : `Made to order in ${MADE_TO_ORDER_DAYS}`}
+                </span>
+              )}
             </div>
 
-            {/* Stock & Rating Row */}
-            <div className="flex items-center justify-between pt-1">
-              <div className="flex items-center gap-2">
-                {/* Rating */}
-                <div className="flex items-center gap-0.5">
-                  <Star className="w-3 h-3 fill-accent text-accent" />
-                  <span className="text-[10px] font-medium text-muted-foreground">
-                    4.8
-                  </span>
-                </div>
-
-                {/* Stock indicator */}
-                {stockQuantity > 0 ? (
-                  <span className="text-[10px] text-muted-foreground">
-                    {stockQuantity <= 5
-                      ? `Only ${stockQuantity} left`
-                      : "In stock"}
-                  </span>
-                ) : (
-                  <span className="text-[10px] font-medium text-[#A07840]">
-                    Recreated in {MADE_TO_ORDER_DAYS}
-                  </span>
-                )}
-              </div>
-
-              {/* Add to Cart - Compact icon button */}
+            {/* Add to Cart / WhatsApp Inquiry - Compact icon button */}
+            {inquiryOnly ? (
+              <span
+                className="w-7 h-7 sm:w-8 sm:h-8 shrink-0"
+                aria-label="Ask on WhatsApp"
+              />
+            ) : (
               <button
                 onClick={handleAddToCart}
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
+                  "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex shrink-0 items-center justify-center transition-all duration-200",
                   "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1",
                   !madeToOrder
                     ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md"
@@ -258,11 +285,42 @@ export const ProductCardCompact = memo(
                 )}
                 aria-label={!madeToOrder ? "Add to cart" : "Preorder made-to-order item"}
               >
-                <ShoppingBag className="w-3.5 h-3.5" />
+                <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </button>
-            </div>
+            )}
           </div>
-        </Link>
+        </div>
+      </>
+    );
+
+    return (
+      <motion.article
+        layout
+        initial="hidden"
+        animate="visible"
+        variants={cardVariants}
+        className="group relative bg-card rounded-md sm:rounded-lg border border-accent/15 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-accent/30 hover:-translate-y-0.5"
+      >
+        {inquiryOnly ? (
+          <>
+            <Link href={productUrl} className="block">
+              {cardContent}
+            </Link>
+            <a
+              href={inquiryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-2 right-2 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-[#25D366] text-white shadow-md transition-colors hover:bg-[#1A1512] sm:bottom-2.5 sm:right-2.5"
+              aria-label={`Ask on WhatsApp about ${productData.name}`}
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+            </a>
+          </>
+        ) : (
+          <Link href={productUrl} className="block">
+            {cardContent}
+          </Link>
+        )}
       </motion.article>
     );
   }
@@ -275,15 +333,15 @@ ProductCardCompact.displayName = "ProductCardCompact";
  * Use during loading states for consistent visual rhythm
  */
 export const ProductCardCompactSkeleton = () => (
-  <div className="bg-card rounded-lg border border-accent/10 overflow-hidden animate-pulse">
+  <div className="bg-card rounded-md sm:rounded-lg border border-accent/10 overflow-hidden animate-pulse">
     <div className="aspect-[4/5] bg-muted" />
-    <div className="p-3 space-y-2">
+    <div className="p-2.5 sm:p-3 space-y-1.5 sm:space-y-2">
       <div className="h-2 w-16 bg-muted rounded" />
-      <div className="h-4 w-full bg-muted rounded" />
-      <div className="h-4 w-3/4 bg-muted rounded" />
+      <div className="h-3 sm:h-4 w-full bg-muted rounded" />
+      <div className="h-3 sm:h-4 w-3/4 bg-muted rounded" />
       <div className="flex items-center justify-between pt-1">
-        <div className="h-4 w-20 bg-muted rounded" />
-        <div className="w-8 h-8 bg-muted rounded-full" />
+        <div className="h-3 sm:h-4 w-20 bg-muted rounded" />
+        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-muted rounded-full" />
       </div>
     </div>
   </div>

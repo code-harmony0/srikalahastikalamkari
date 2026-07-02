@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react"
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useQueryClient } from "@tanstack/react-query"
 import { useProducts } from "@/shared/hooks/use-products"
@@ -61,10 +61,21 @@ function getPageNumbers(current: number, total: number): (number | "...")[] {
   return pages
 }
 
-export default function ProductsPage() {
+const normalizeCategoryToken = (value: string) =>
+  decodeURIComponent(value)
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+
+interface ProductsPageProps {
+  mode?: "shop" | "custom-design"
+}
+
+export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
+  const isCustomDesignMode = mode === "custom-design"
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("")
@@ -79,25 +90,62 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
 
-  // Sync ?category= URL param once, then remove it so returning to the page
-  // or re-renders don't force the category back if the user deselected it.
+  // Ensure page always starts at the top
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  // Sync ?category= URL param once. Keep the URL stable so category links remain
+  // shareable and do not lose filter state during App Router navigation.
   useEffect(() => {
     const cat = searchParams.get("category")
     if (cat) {
       setSelectedCategories([decodeURIComponent(cat)])
       setCurrentPage(1)
-      // Consume the param — strip it from the URL so it won't re-apply
-      const params = new URLSearchParams(searchParams.toString())
-      params.delete("category")
-      const newUrl = params.toString() ? `${pathname}?${params}` : pathname
-      router.replace(newUrl, { scroll: false })
     }
-  }, [searchParams, pathname, router])
+    window.scrollTo(0, 0)
+  }, [searchParams])
 
   const gridRef = useRef<HTMLDivElement>(null)
 
   const { categories: filterCategories, isLoading: categoriesLoading } =
     useFilterCategories()
+
+  useEffect(() => {
+    if (categoriesLoading || !filterCategories.length || !selectedCategories.length)
+      return
+
+    const resolveCategoryLabel = (selectedCategory: string) => {
+      const selectedToken = normalizeCategoryToken(selectedCategory)
+
+      for (const cat of filterCategories) {
+        const catTokens = [cat.name, cat.slug]
+          .filter(Boolean)
+          .map((value) => normalizeCategoryToken(String(value)))
+
+        if (catTokens.includes(selectedToken)) return cat.name
+
+        for (const sub of cat.subcategories || []) {
+          const subTokens = [sub.name, sub.slug]
+            .filter(Boolean)
+            .map((value) => normalizeCategoryToken(String(value)))
+
+          if (subTokens.includes(selectedToken)) return sub.name
+        }
+      }
+
+      return selectedCategory
+    }
+
+    setSelectedCategories((current) => {
+      const resolved = Array.from(new Set(current.map(resolveCategoryLabel)))
+      const hasChanged =
+        resolved.length !== current.length ||
+        resolved.some((category, index) => category !== current[index])
+
+      return hasChanged ? resolved : current
+    })
+  }, [categoriesLoading, filterCategories, selectedCategories.length])
 
   // Resolve category IDs from selected names for the API
   // Must search both parent categories AND subcategories
@@ -106,13 +154,23 @@ export default function ProductsPage() {
     // Categories still loading — defer; don't show all products yet
     if (categoriesLoading || !filterCategories.length)
       return ["00000000-0000-0000-0000-000000000000"]
-    const selectedNames = new Set(selectedCategories)
+    const selectedTokens = new Set(
+      selectedCategories.map((category) => normalizeCategoryToken(category)),
+    )
     const matchedIds: string[] = []
 
+    const matchesSelectedCategory = (item: any) => {
+      const tokens = [item.name, item.slug]
+        .filter(Boolean)
+        .map((value) => normalizeCategoryToken(String(value)))
+
+      return tokens.some((token) => selectedTokens.has(token))
+    }
+
     for (const cat of filterCategories) {
-      if (selectedNames.has(cat.name)) matchedIds.push(cat.id)
+      if (matchesSelectedCategory(cat)) matchedIds.push(cat.id)
       for (const sub of cat.subcategories || []) {
-        if (selectedNames.has(sub.name)) matchedIds.push(sub.id)
+        if (matchesSelectedCategory(sub)) matchedIds.push(sub.id)
       }
     }
 
@@ -133,7 +191,9 @@ export default function ProductsPage() {
         categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
       price_min: priceRange[0],
       price_max: priceRange[1],
-      in_stock: inStockOnly || undefined,
+      in_stock: !isCustomDesignMode && inStockOnly ? true : undefined,
+      out_of_stock: isCustomDesignMode ? true : undefined,
+      is_visible: true,
       sort_by: sortBy,
     }),
     [
@@ -144,6 +204,7 @@ export default function ProductsPage() {
       priceRange,
       inStockOnly,
       sortBy,
+      isCustomDesignMode,
     ],
   )
 
@@ -151,6 +212,59 @@ export default function ProductsPage() {
   const { data: queryData, isLoading, isFetching } = useProducts(filters)
   const products = queryData?.data || []
   const totalCount = queryData?.count || 0
+
+  const customAvailableFilters = useMemo(() => {
+    if (!isCustomDesignMode) {
+      return {
+        categoryNames: undefined,
+        subCategoryNames: undefined,
+        subCategoryNamesByCategory: undefined,
+      }
+    }
+
+    const categoryNames = new Set<string>()
+    const subCategoryNames = new Set<string>()
+    const subCategoryNamesByCategory = new Map<string, Set<string>>()
+
+    for (const product of products) {
+      const categoryName = product.categoryName
+      const subCategoryName = product.subCategoryName
+
+      if (categoryName) categoryNames.add(categoryName)
+      if (subCategoryName) subCategoryNames.add(subCategoryName)
+      if (categoryName && subCategoryName) {
+        const categorySubcategories =
+          subCategoryNamesByCategory.get(categoryName) || new Set<string>()
+        categorySubcategories.add(subCategoryName)
+        subCategoryNamesByCategory.set(categoryName, categorySubcategories)
+      }
+    }
+
+    return { categoryNames, subCategoryNames, subCategoryNamesByCategory }
+  }, [isCustomDesignMode, products])
+
+  useEffect(() => {
+    if (!isCustomDesignMode || isLoading) return
+
+    setSelectedCategories((current) => {
+      const filtered = current.filter((categoryName) => {
+        if (customAvailableFilters.categoryNames?.has(categoryName)) return true
+
+        for (const subCategories of customAvailableFilters.subCategoryNamesByCategory?.values() ||
+          []) {
+          if (subCategories.has(categoryName)) return true
+        }
+
+        return false
+      })
+
+      return filtered.length === current.length ? current : filtered
+    })
+  }, [
+    customAvailableFilters,
+    isLoading,
+    isCustomDesignMode,
+  ])
 
   // Optimize: Prefetch next page
   const queryClient = useQueryClient()
@@ -224,14 +338,41 @@ export default function ProductsPage() {
     inStockOnly,
     setInStockOnly,
     clearFilters: clearAllFilters,
+    hideAvailabilityFilter: isCustomDesignMode,
+    availableCategoryNames: customAvailableFilters.categoryNames,
+    availableSubCategoryNames: customAvailableFilters.subCategoryNames,
+    availableSubCategoryNamesByCategory:
+      customAvailableFilters.subCategoryNamesByCategory,
+    restrictToAvailableFilters: isCustomDesignMode,
+    availableFiltersLoading: isCustomDesignMode && isLoading,
     productCounts,
     totalProducts: totalCount,
   }
 
+  const heroCopy = isCustomDesignMode
+    ? {
+        eyebrow: "Custom Design Gallery",
+        titleStart: "Custom",
+        titleAccent: "design",
+        titleEnd: "gallery",
+        description:
+          "Browse Kalamkari designs available for custom requests. Open any piece for details or send the exact design to our team on WhatsApp.",
+        scrollLabel: "View Designs",
+      }
+    : {
+        eyebrow: "Heritage Collective",
+        titleStart: "The Artisan's",
+        titleAccent: "gallery",
+        titleEnd: "",
+        description:
+          "Explore hand-painted sarees and heritage textiles crafted with five centuries of Srikalahasti tradition.",
+        scrollLabel: "Explore Collection",
+      }
+
   return (
     <div className="w-full min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512] overflow-hidden">
       {/* Hero Overview */}
-      <section className="relative w-full h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-[#1A1512] px-6">
+      <section className="relative w-full h-[42vh] min-h-[300px] sm:h-[60vh] sm:min-h-[400px] flex items-center justify-center overflow-hidden bg-[#1A1512] px-5 sm:px-6">
         {/* Subtle background motif */}
         <div
           className="absolute inset-0 opacity-[0.05] pointer-events-none"
@@ -245,7 +386,7 @@ export default function ProductsPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#1A1512]/60 via-transparent to-[#1A1512]/95 z-[1]" />
 
         {/* Luxury framing borders */}
-        <div className="absolute inset-6 z-[5] pointer-events-none border border-[#C19A5B]/15">
+        <div className="absolute inset-4 sm:inset-6 z-[5] pointer-events-none border border-[#C19A5B]/15">
           {/* Decorative Corner markers */}
           <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-[#C19A5B]" />
           <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-[#C19A5B]" />
@@ -257,20 +398,24 @@ export default function ProductsPage() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto text-center"
+          className="relative z-10 flex flex-col items-center max-w-[21rem] sm:max-w-2xl mx-auto text-center"
         >
-          <span className="font-sans text-[10px] md:text-[11px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-3">
-            Heritage Collective
+          <span className="font-sans text-[8px] sm:text-[10px] md:text-[11px] font-bold tracking-[0.22em] sm:tracking-[0.3em] uppercase text-[#C19A5B] mb-2 sm:mb-3">
+            {heroCopy.eyebrow}
           </span>
 
-          <h1 className="font-serif text-[32px] md:text-[44px] font-bold text-white tracking-wide leading-none mb-3 uppercase">
-            The Artisan's <span className="italic text-[#C19A5B] font-normal lowercase font-serif">gallery</span>
+          <h1 className="font-serif text-[25px] sm:text-[32px] md:text-[44px] font-bold text-white tracking-wide leading-none mb-2 sm:mb-3 uppercase">
+            {heroCopy.titleStart}{" "}
+            <span className="italic text-[#C19A5B] font-normal lowercase font-serif">
+              {heroCopy.titleAccent}
+            </span>
+            {heroCopy.titleEnd && ` ${heroCopy.titleEnd}`}
           </h1>
 
-          <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mb-3" />
+          <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mb-2 sm:mb-3" />
 
-          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed mb-6">
-            Explore hand-painted sarees and heritage textiles crafted with five centuries of Srikalahasti tradition.
+          <p className="font-sans text-white/70 text-[11px] sm:text-[13px] md:text-[14px] font-light tracking-wide max-w-[18rem] sm:max-w-[600px] leading-relaxed mb-4 sm:mb-6">
+            {heroCopy.description}
           </p>
 
           <motion.button
@@ -280,10 +425,10 @@ export default function ProductsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="group flex flex-col items-center gap-3 mt-2"
+            className="group hidden sm:flex flex-col items-center gap-3 mt-2"
           >
             <span className="text-[10px] font-bold text-[#C19A5B] tracking-[0.2em] uppercase transition-colors duration-500 group-hover:text-[#FAFAF8] leading-none">
-              Explore Collection
+              {heroCopy.scrollLabel}
             </span>
             <div className="relative w-[1px] h-10 overflow-hidden">
               <div className="absolute inset-0 bg-[#C19A5B]/30 group-hover:bg-[#FAFAF8]/30 transition-colors duration-500" />
@@ -335,10 +480,10 @@ export default function ProductsPage() {
 
         <div
           ref={gridRef}
-          className="max-w-[120rem] mx-auto px-6 md:px-10 py-12 relative z-10"
+          className="max-w-[120rem] mx-auto px-4 sm:px-6 md:px-10 py-8 sm:py-12 relative z-10"
           id="product-grid-start"
         >
-          <div className="flex flex-col md:flex-row gap-12 lg:gap-16 w-full">
+          <div className="flex flex-col md:flex-row gap-8 sm:gap-12 lg:gap-16 w-full">
             {/* Desktop Filter Sidebar */}
             <aside className="hidden lg:block w-[280px] flex-shrink-0">
               <div className="sticky top-6">
@@ -349,13 +494,13 @@ export default function ProductsPage() {
             {/* Main Product Area */}
             <main className="flex-1">
               {/* Toolbar Row */}
-              <div className="flex flex-col gap-4 mb-6 border-b border-[#C19A5B]/10 pb-5">
+              <div className="flex flex-col gap-3 sm:gap-4 mb-5 sm:mb-6 border-b border-[#C19A5B]/10 pb-4 sm:pb-5">
                 {/* Applied Filters Summary Bar */}
                 {hasActiveFilters && (
-                  <div className="flex items-center gap-3 flex-wrap lg:hidden">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap lg:hidden">
                     <div className="flex flex-wrap gap-1.5 flex-1">
                       {searchQuery && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold">
                           &ldquo;{searchQuery}&rdquo;
                           <button onClick={() => setSearchQuery("")} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
@@ -365,7 +510,7 @@ export default function ProductsPage() {
                       {selectedCategories.map((cat) => (
                         <span
                           key={cat}
-                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold"
+                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold"
                         >
                           {cat}
                           <button
@@ -381,7 +526,7 @@ export default function ProductsPage() {
                         </span>
                       ))}
                       {(priceRange[0] > 0 || priceRange[1] < 50000) && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold">
                           Price filtered
                           <button onClick={() => setPriceRange([0, 50000])} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
@@ -389,7 +534,7 @@ export default function ProductsPage() {
                         </span>
                       )}
                       {inStockOnly && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold">
                           In Stock
                           <button onClick={() => setInStockOnly(false)} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
@@ -399,21 +544,21 @@ export default function ProductsPage() {
                     </div>
                     <button
                       onClick={clearAllFilters}
-                      className="text-[10px] font-bold text-[#C19A5B] hover:text-[#1A1512] uppercase tracking-widest whitespace-nowrap transition-colors"
+                      className="text-[9px] sm:text-[10px] font-bold text-[#C19A5B] hover:text-[#1A1512] uppercase tracking-[0.16em] sm:tracking-widest whitespace-nowrap transition-colors"
                     >
                       Clear all
                     </button>
                   </div>
                 )}
  
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
                   {/* Left: Counts & Mobile Filter */}
                   <div className="flex items-center gap-5 w-full sm:w-auto">
                     <button
                       onClick={() => setShowFilters(true)}
-                      className="lg:hidden flex-1 sm:flex-none flex items-center justify-center gap-2.5 px-6 py-3 rounded-lg border border-[#C19A5B]/30 text-[10px] font-bold tracking-[0.2em] uppercase text-[#1A1512] bg-white/90 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
+                      className="lg:hidden flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-[#C19A5B]/30 text-[9px] sm:text-[10px] font-bold tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#1A1512] bg-white/90 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
                     >
-                      <SlidersHorizontal className="w-3.5 h-3.5 text-[#C19A5B]" />
+                      <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C19A5B]" />
                       Filters
                       {getActiveFiltersCount() > 0 && (
                         <span className="w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#1A1512] text-[#C19A5B] text-[9px] font-bold px-1.5">
@@ -424,7 +569,7 @@ export default function ProductsPage() {
                   </div>
  
                   {/* Right: Sort, View Toggle, Items per page */}
-                  <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                  <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
                     {/* View Toggle */}
                     <div className="hidden sm:flex items-center gap-1 bg-white/90 p-1 rounded-lg border border-[#C19A5B]/20 shadow-sm">
                       <button
@@ -472,14 +617,14 @@ export default function ProductsPage() {
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="w-full appearance-none pl-4 pr-10 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white/90 backdrop-blur-sm text-[10px] font-bold text-[#1A1512] uppercase tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-all cursor-pointer shadow-sm"
+                        className="w-full appearance-none pl-3 sm:pl-4 pr-9 sm:pr-10 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white/90 backdrop-blur-sm text-[9px] sm:text-[10px] font-bold text-[#1A1512] uppercase tracking-[0.12em] sm:tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-all cursor-pointer shadow-sm"
                       >
                         <option value="default">Sort: Recommended</option>
                         <option value="latest">Sort: Newest</option>
                         <option value="price-asc">Price: Low to High</option>
                         <option value="price-desc">Price: High to Low</option>
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#C19A5B] pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C19A5B] pointer-events-none" />
                     </div>
                   </div>
                 </div>
@@ -490,7 +635,7 @@ export default function ProductsPage() {
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5"
+                      ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"
                       : "grid grid-cols-1 gap-6 max-w-4xl mx-auto"
                   }
                 >
@@ -520,7 +665,7 @@ export default function ProductsPage() {
                     animate="visible"
                     className={
                       viewMode === "grid"
-                        ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5"
+                        ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"
                         : "grid grid-cols-1 gap-6 max-w-4xl mx-auto"
                     }
                   >
@@ -532,6 +677,11 @@ export default function ProductsPage() {
                             product={product}
                             index={index}
                             priority={index < 8}
+                            actionMode={
+                              isCustomDesignMode
+                                ? "whatsapp-inquiry"
+                                : "commerce"
+                            }
                           />
                         ) : (
                           <ProductCard
@@ -540,6 +690,11 @@ export default function ProductsPage() {
                             index={index}
                             viewMode="list"
                             priority={index < 8}
+                            actionMode={
+                              isCustomDesignMode
+                                ? "whatsapp-inquiry"
+                                : "commerce"
+                            }
                           />
                         ),
                       )}
@@ -547,8 +702,8 @@ export default function ProductsPage() {
                   </motion.div>
 
                   {/* Pagination Footer - Dashboard Style */}
-                  <div className="mt-12 px-6 py-4 border-t border-[#C19A5B]/10 bg-[#1A1512]/5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="text-sm text-[#1A1512]/60">
+                  <div className="mt-8 sm:mt-12 px-4 sm:px-6 py-3 sm:py-4 border-t border-[#C19A5B]/10 bg-[#1A1512]/5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                    <div className="text-xs sm:text-sm text-[#1A1512]/60">
                       Showing{" "}
                       <span className="font-semibold text-[#C19A5B]">
                         {Math.min(
@@ -563,11 +718,11 @@ export default function ProductsPage() {
                       </span>{" "}
                       products
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                       <button
                         onClick={() => goToPage(Math.max(1, currentPage - 1))}
                         disabled={currentPage === 1 || isFetching}
-                        className="flex items-center gap-1 h-9 px-4 text-[10px] font-bold uppercase tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
+                        className="flex items-center gap-1 h-8 sm:h-9 px-3 sm:px-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
                       >
                         <ChevronLeft className="w-3.5 h-3.5" />
                         <span>Prev</span>
@@ -610,7 +765,7 @@ export default function ProductsPage() {
                           goToPage(Math.min(totalPages, currentPage + 1))
                         }
                         disabled={currentPage >= totalPages || isFetching}
-                        className="flex items-center gap-1 h-9 px-4 text-[10px] font-bold uppercase tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
+                        className="flex items-center gap-1 h-8 sm:h-9 px-3 sm:px-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
                       >
                         <span>Next</span>
                         <ChevronRight className="w-3.5 h-3.5" />

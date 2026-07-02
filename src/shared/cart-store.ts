@@ -10,6 +10,8 @@ import { getPurchasableQuantityLimit } from '@/shared/lib/inventory';
 
 interface CartState {
   items: CartItem[];
+  _hasHydrated: boolean;
+  setHasHydrated: (val: boolean) => void;
   addItem: (product: Product, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -22,6 +24,9 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      _hasHydrated: false,
+
+      setHasHydrated: (val) => set({ _hasHydrated: val }),
 
       addItem: (product, quantity = 1) => {
         if (!product?.id) {
@@ -93,6 +98,9 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: 'cart-storage',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

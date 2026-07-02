@@ -1018,7 +1018,7 @@ const AddProduct = () => {
                     placeholder="Enter product name"
                     value={formData.name}
                     onChange={(e) => handleChange("name", e.target.value)}
-                    className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 ${errors.name ? "border-red-500" : ""}`}
+                    className={`h-10 md:h-11 rounded-lg md:rounded-xl ${errors.name ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
                   />
                   {errors.name && (
                     <p className="text-sm text-red-500">{errors.name}</p>
@@ -1040,7 +1040,7 @@ const AddProduct = () => {
                     onChange={(e) =>
                       handleChange("description", e.target.value)
                     }
-                    className={`rounded-lg md:rounded-xl border-slate-200 text-sm md:text-base ${errors.description ? "border-red-500" : ""}`}
+                    className={`rounded-lg md:rounded-xl text-sm md:text-base ${errors.description ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
                   />
                   {errors.description && (
                     <p className="text-sm text-red-500">{errors.description}</p>
@@ -1072,7 +1072,7 @@ const AddProduct = () => {
                       placeholder="0.00"
                       value={formData.price}
                       onChange={(e) => handleChange("price", e.target.value)}
-                      className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 focus:border-slate-400 ${errors.price ? "border-red-500" : ""}`}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl focus:border-slate-400 ${errors.price ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
                     />
                     {errors.price && (
                       <p className="text-sm text-red-500">{errors.price}</p>
@@ -1096,7 +1096,7 @@ const AddProduct = () => {
                       onChange={(e) =>
                         handleChange("originalPrice", e.target.value)
                       }
-                      className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 focus:border-slate-400 ${errors.originalPrice ? "border-red-500" : ""}`}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl focus:border-slate-400 ${errors.originalPrice ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
                     />
                   </div>
                 </div>
@@ -1116,7 +1116,7 @@ const AddProduct = () => {
                       placeholder="Enter quantity"
                       value={formData.quantity}
                       onChange={(e) => handleChange("quantity", e.target.value)}
-                      className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 focus:border-slate-400 ${errors.quantity ? "border-red-500" : ""}`}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl focus:border-slate-400 ${errors.quantity ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
                     />
                     {errors.quantity && (
                       <p className="text-sm text-red-500">{errors.quantity}</p>
@@ -1166,7 +1166,7 @@ const AddProduct = () => {
                     onValueChange={(value) => handleChange("category", value)}
                   >
                     <SelectTrigger
-                      className={`h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200 ${errors.category ? "border-red-500" : ""}`}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl ${errors.category ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
                     >
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>

@@ -2,16 +2,7 @@
 const isDev = process.env.NODE_ENV === "development"
 
 const nextConfig = {
-  // Experimental features for faster builds
   experimental: {
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
-      },
-    },
     optimizePackageImports: [
       "lucide-react",
       "recharts",
@@ -70,6 +61,7 @@ const nextConfig = {
       },
     ],
     formats: ["image/avif", "image/webp"],
+    qualities: [70, 75, 85],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 86400, // 24 hours in production
@@ -266,7 +258,6 @@ const nextConfig = {
   },
 
   reactStrictMode: true,
-  swcMinify: true,
   compiler: {
     // Note: removeConsole is not supported by Turbopack
     // Console logs are removed via terser in production instead

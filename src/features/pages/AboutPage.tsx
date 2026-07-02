@@ -1,11 +1,16 @@
 "use client"
 
+import { useEffect } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Heart, Award, Users, Leaf, Check } from "lucide-react"
 
 export default function AboutPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // --- Data ---
   const stats = [
     { number: "50+", label: "Master Artisans" },

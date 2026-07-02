@@ -1,69 +1,97 @@
 import type { MetadataRoute } from "next"
-import { getProducts } from "@/services/products"
+
+const BASE_URL = "https://srikalahastikalamkari.in"
+
+const staticRoutes: MetadataRoute.Sitemap = [
+  {
+    url: BASE_URL,
+    lastModified: new Date(),
+    changeFrequency: "daily",
+    priority: 1.0,
+  },
+  {
+    url: `${BASE_URL}/products`,
+    lastModified: new Date(),
+    changeFrequency: "daily",
+    priority: 0.9,
+  },
+  {
+    url: `${BASE_URL}/about`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  },
+  {
+    url: `${BASE_URL}/contact`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  },
+  {
+    url: `${BASE_URL}/faqs`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.5,
+  },
+  {
+    url: `${BASE_URL}/privacy`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.3,
+  },
+  {
+    url: `${BASE_URL}/terms`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.3,
+  },
+]
+
+async function getProductSlugs(): Promise<string[]> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!url || !key || url.includes("your-project-url")) return []
+
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 5000)
+
+  try {
+    const res = await fetch(
+      `${url}/rest/v1/products?select=slug&is_active=eq.true&slug=not.is.null`,
+      {
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+        },
+        signal: controller.signal,
+        next: { revalidate: 3600 },
+      },
+    )
+    clearTimeout(timer)
+    if (!res.ok) return []
+    const rows: { slug: string }[] = await res.json()
+    return rows.map((r) => r.slug).filter(Boolean)
+  } catch {
+    clearTimeout(timer)
+    return []
+  }
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://srikalahastikalamkari.in"
-
-  const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/products`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/faqs`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-  ]
-
   let productRoutes: MetadataRoute.Sitemap = []
+
   try {
-    const { data: products } = await getProducts()
-    if (products) {
-      productRoutes = products
-        .filter((p) => p.slug)
-        .map((p) => ({
-          url: `${baseUrl}/products/${p.slug}`,
-          lastModified: new Date(p.updated_at || p.created_at || Date.now()),
-          changeFrequency: "weekly" as const,
-          priority: 0.8,
-        }))
-    }
+    const slugs = await getProductSlugs()
+    productRoutes = slugs.map((slug) => ({
+      url: `${BASE_URL}/products/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
   } catch {
-    // If DB is unavailable during build, skip product routes
+    // products are optional — static routes always ship
   }
 
   return [...staticRoutes, ...productRoutes]

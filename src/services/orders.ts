@@ -33,8 +33,9 @@ export interface OrderStats {
   pending_orders: number
   processing_orders: number
   shipped_orders: number
-
   cancelled_orders: number
+  todayCount?: number
+  todayRevenue?: number
   recent_orders: Order[]
 }
 
@@ -107,6 +108,12 @@ export async function getOrderStatistics(): Promise<OrderStats> {
         new Date(order.created_at) <= lastMonthEnd,
     )
 
+    // Calculate today stats
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const todayOrders = ordersByStatus.filter(
+      (order) => new Date(order.created_at) >= todayStart
+    )
+
     // Calculate stats
     const stats: OrderStats = {
       total_orders: totalOrders || 0,
@@ -123,6 +130,8 @@ export async function getOrderStatistics(): Promise<OrderStats> {
         .length,
       cancelled_orders: ordersByStatus.filter((o) => o.status === "cancelled")
         .length,
+      todayCount: todayOrders.length,
+      todayRevenue: todayOrders.reduce((sum, order) => sum + (order.total_amount || 0), 0),
       recent_orders: [],
     }
 

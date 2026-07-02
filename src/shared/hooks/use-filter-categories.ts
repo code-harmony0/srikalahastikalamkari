@@ -5,6 +5,7 @@ import { getCategories, getSubCategories } from "@/services/categories";
 interface Subcategory {
   id: string;
   name: string;
+  slug?: string;
   image_url?: string;
   parentCategoryId: string;
 }
@@ -12,6 +13,7 @@ interface Subcategory {
 interface Category {
   id: string;
   name: string;
+  slug?: string;
   image_url?: string;
   subcategories: Subcategory[];
 }
@@ -66,12 +68,14 @@ export const useFilterCategories = (): UseFilterCategoriesResult => {
     return parents.map((parent) => ({
       id: parent.id,
       name: parent.name,
+      slug: parent.slug,
       image_url: parent.image_url,
       subcategories: children
         .filter((child) => child.category_id === parent.id || child.parent_id === parent.id)
         .map((child) => ({
           id: child.id,
           name: child.name,
+          slug: child.slug,
           image_url: child.image_url || undefined,
           parentCategoryId: child.category_id || child.parent_id,
         })),

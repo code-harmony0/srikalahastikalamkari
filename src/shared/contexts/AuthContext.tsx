@@ -127,15 +127,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Init App Check on first phone auth attempt (deferred from page load)
       await initAppCheckOnDemand()
-      // Clean up previous verifier
+
+      // Destroy any existing verifier to prevent "reCAPTCHA has already been rendered" error
       if ((window as any).recaptchaVerifier) {
         try { (window as any).recaptchaVerifier.clear() } catch (_) {}
         (window as any).recaptchaVerifier = null
       }
+
+      // Clear and reset the container DOM node
       const container = document.getElementById(recaptchaContainer)
       if (container) container.innerHTML = ""
 
-      const verifier = new RecaptchaVerifier(auth, recaptchaContainer, { size: "invisible" })
+      // Create a fresh invisible verifier
+      const verifier = new RecaptchaVerifier(auth, recaptchaContainer, {
+        size: "invisible",
+        callback: () => {}, // no-op; required for invisible reCAPTCHA
+      })
+
+      // Fully render the verifier before proceeding — prevents first-attempt failures
       await verifier.render()
       ;(window as any).recaptchaVerifier = verifier
 
@@ -144,10 +153,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: null }
     } catch (error: any) {
       console.error("Error sending OTP:", error)
+      // Always clean up on failure so the next attempt starts fresh
       if ((window as any).recaptchaVerifier) {
         try { (window as any).recaptchaVerifier.clear() } catch (_) {}
         (window as any).recaptchaVerifier = null
       }
+      const container = document.getElementById(recaptchaContainer)
+      if (container) container.innerHTML = ""
       return { error }
     }
   }

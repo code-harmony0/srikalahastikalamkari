@@ -27,8 +27,9 @@ import {
 } from "@/shared/lib/inventory";
 
 export default function CartPage() {
-  const { data: products = [] } = useAllProducts();
+  const { data: products = [], isLoading: productsLoading } = useAllProducts();
   const cart = useCartStore();
+  const hasHydrated = useCartStore((s) => s._hasHydrated);
 
   // 🛍 Merge Cart Items with Product Data
   const cartItems = useMemo(() => {
@@ -97,7 +98,18 @@ export default function CartPage() {
     });
   };
 
-  // 🪶 EMPTY STATE
+  // 🌀 LOADING STATE — wait for Zustand to rehydrate from localStorage + products
+  if (!hasHydrated || productsLoading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center bg-background kalamkari-static-background silk-fabric-texture">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-2 border-[#C19A5B]/30 border-t-[#1A1512] rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  // 🎶 EMPTY STATE
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex flex-col items-center justify-center px-6">
@@ -360,7 +372,7 @@ export default function CartPage() {
                     Made-to-order item included
                   </p>
                   <p className="text-xs text-[#1A1512]/70 mt-1 leading-relaxed">
-                    Sold-out pieces can still be ordered. They will be recreated and delivered in {MADE_TO_ORDER_DAYS}.
+                    Custom-request pieces can still be ordered and will be delivered in {MADE_TO_ORDER_DAYS}.
                   </p>
                 </div>
               )}

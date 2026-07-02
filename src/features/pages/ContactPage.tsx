@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase/client"
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,16 +39,17 @@ export default function ContactPage() {
 
       if (error) throw error
 
-      (toast as any).success("Message Sent! 🕊️", {
+      toast.success("Message Sent! 🕊️", {
         description: "We'll get back to you within 24 hours.",
       });
        console.log("Message Sent!");
       
+      setIsSuccess(true);
       // Reset form
       (e.target as HTMLFormElement).reset();
     } catch (error: any) {
       console.error("Error sending message:", error);
-      (toast as any).error("Failed to send message", {
+      toast.error("Failed to send message", {
         description: error.message || "Please try again later.",
       });
       console.error("Failed to send message");
@@ -211,89 +213,111 @@ export default function ContactPage() {
               <div className="h-[2px] w-12 bg-[#C19A5B]/30 mt-2 rounded-full" />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Row 1 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
-                    Name
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="name"
-                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
-                    placeholder="Your Full Name"
-                  />
+            {isSuccess ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center text-center py-12 space-y-4"
+              >
+                <div className="w-16 h-16 bg-[#C19A5B]/10 rounded-full flex items-center justify-center mb-2">
+                  <Send className="w-8 h-8 text-[#C19A5B]" />
                 </div>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
-                    Email
-                  </label>
-                  <input
-                    required
-                    type="email"
-                    name="email"
-                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
-                    placeholder="you@example.com"
-                  />
-                </div>
-              </div>
-
-              {/* Row 2 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
-                    placeholder="+91 98765 43210"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
-                    placeholder="Order Inquiry / Custom Request"
-                  />
-                </div>
-              </div>
-
-              {/* Message */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  required
-                  rows={5}
-                  className="w-full p-3.5 rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px] resize-none min-h-[140px]"
-                  placeholder="How can we help you today?"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="pt-2">
+                <h3 className="font-serif text-2xl font-bold text-[#1A1512]">Message Sent Successfully</h3>
+                <p className="font-sans text-[#1A1512]/70 text-[15px] max-w-sm leading-relaxed">
+                  Thank you for reaching out to us. We have received your message and will get back to you within 24 hours.
+                </p>
                 <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full md:w-auto px-8 h-[48px] bg-[#1A1512] text-white hover:bg-[#C19A5B] rounded-[4px] font-sans font-bold text-[12px] uppercase tracking-wider transition-all duration-300 shadow-md flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                  onClick={() => setIsSuccess(false)}
+                  className="mt-6 px-6 h-[40px] border border-[#C19A5B]/30 text-[#1A1512] hover:bg-[#C19A5B]/5 rounded-[4px] font-sans font-bold text-[12px] uppercase tracking-wider transition-all duration-300"
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                  {!isSubmitting && (
-                    <Send className="w-[18px] h-[18px] group-hover:translate-x-0.5 transition-transform" />
-                  )}
+                  Send Another Message
                 </button>
-              </div>
-            </form>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Row 1 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
+                      Name
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      name="name"
+                      className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
+                      placeholder="Your Full Name"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
+                      Email
+                    </label>
+                    <input
+                      required
+                      type="email"
+                      name="email"
+                      className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
+
+                {/* Row 2 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
+                      placeholder="+91 98765 43210"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      name="subject"
+                      className="w-full px-3.5 h-[48px] rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px]"
+                      placeholder="Order Inquiry / Custom Request"
+                    />
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-sans font-bold text-[#1A1512]/80 uppercase tracking-widest">
+                    Message
+                  </label>
+                  <textarea
+                    name="message"
+                    required
+                    rows={5}
+                    className="w-full p-3.5 rounded-[4px] border border-[#C19A5B]/20 text-[#1A1512] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 transition-all placeholder:text-[#1A1512]/40 font-sans text-[14px] resize-none min-h-[140px]"
+                    placeholder="How can we help you today?"
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto px-8 h-[48px] bg-[#1A1512] text-white hover:bg-[#C19A5B] rounded-[4px] font-sans font-bold text-[12px] uppercase tracking-wider transition-all duration-300 shadow-md flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                    {!isSubmitting && (
+                      <Send className="w-[18px] h-[18px] group-hover:translate-x-0.5 transition-transform" />
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
           </motion.div>
         </div>
       </div>

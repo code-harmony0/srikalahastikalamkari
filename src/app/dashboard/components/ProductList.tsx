@@ -150,7 +150,7 @@ const ProductList = () => {
     price_max: filters.priceRange[1],
     include_out_of_stock: !filters.inStock, // Logic inversion: inStock=true means only available
     in_stock: filters.inStock || undefined,
-    sort_by: sortBy === "newest" ? "latest" : sortBy // Map sort keys
+    sort_by: sortBy
   }), [page, limit, searchQuery, filters, subCategoryFilter, sortBy]);
 
   const { data: queryData, isLoading: isQueryLoading } = useProducts(queryFilters);

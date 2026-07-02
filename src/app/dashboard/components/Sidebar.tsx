@@ -18,18 +18,13 @@ import {
   FiStar,
   FiPercent,
   FiHeart,
+  FiUser,
 } from "react-icons/fi"
 import "./Sidebar.css"
 import { supabase } from "@/lib/supabase/client"
 import { useAuth } from "@/shared/contexts/AuthContext"
 import { useSidebar } from "@/shared/contexts/SidebarContext"
 import { toast } from "sonner"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/shared/ui/tooltip"
 
 const Sidebar = () => {
   const router = useRouter()
@@ -50,12 +45,9 @@ const Sidebar = () => {
         throw new Error("Logout request failed")
       }
 
-      try {
-        await logout()
-      } catch {
-        // Admin auth is cookie-based here; Firebase logout should not block it.
-      }
-
+      // Admin uses cookie-based auth — do NOT call firebaseSignOut here.
+      // Calling it would sign out ANY Firebase user on the same device,
+      // including storefront customers logged in via phone OTP.
       localStorage.removeItem("isLoggedIn")
       localStorage.removeItem("userRole")
       localStorage.removeItem("rememberMe")
@@ -196,18 +188,28 @@ const Sidebar = () => {
       <div className="sidebar-content">
         <div className="sidebar-header">
           <div className="logo-container">
-            <div className="logo-icon shrink-0">
-              <FiShoppingBag className="w-5 h-5" />
+            <div className="logo-icon shrink-0 bg-slate-100 flex items-center justify-center overflow-hidden rounded-xl border border-slate-200">
+              <img 
+                src="https://ui-avatars.com/api/?name=SK&background=000000&color=fff&size=128&font-size=0.35&bold=true" 
+                alt="Admin Profile" 
+                className="w-full h-full object-cover"
+              />
             </div>
             {!isCollapsed && (
               <div>
                 <h2 className="brand-name">Srikalahasti Kalamkari</h2>
-                <p className="brand-subtitle">Admin Panel</p>
-                {role && (
-                  <span className="text-xs text-gray-400 capitalize">
-                    {role.replace("_", " ")}
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div className="h-4 w-4 overflow-hidden rounded-full border border-slate-200 flex-shrink-0">
+                    <img 
+                      src="https://ui-avatars.com/api/?name=SK&background=000000&color=fff&size=32" 
+                      alt="Admin" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="brand-subtitle text-slate-500">
+                    Admin Panel {role && `- ${role.replace("_", " ")}`}
                   </span>
-                )}
+                </div>
               </div>
             )}
           </div>
@@ -222,89 +224,60 @@ const Sidebar = () => {
         </div>
 
         <nav className="sidebar-nav">
-          <TooltipProvider delayDuration={0}>
-            <ul>
-              {filteredItems.map((item) => (
-                <li key={item.to}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link
-                        href={item.to}
-                        className={`${pathname === item.to ? "active" : ""} relative`}
+          <ul>
+            {filteredItems.map((item) => (
+              <li key={item.to}>
+                <Link
+                  href={item.to}
+                  title={isCollapsed ? item.label : ""}
+                  className={`${pathname === item.to ? "active" : ""} relative`}
+                >
+                  <item.icon className="nav-icon" />
+                  {/* Badge for collapsed state - show count on icon */}
+                  {isCollapsed &&
+                    item.badge != null &&
+                    item.badge > 0 && (
+                      <span
+                        className={`absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-md ${
+                          item.badgeColor || "bg-[#C19A5B]"
+                        }`}
                       >
-                        <item.icon className="nav-icon" />
-                        {/* Badge for collapsed state - show count on icon */}
-                        {isCollapsed &&
-                          item.badge != null &&
-                          item.badge > 0 && (
-                            <span
-                              className={`absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center shadow-md ${
-                                item.badgeColor || "bg-[#C19A5B]"
-                              }`}
-                            >
-                              {item.badge}
-                            </span>
-                          )}
-                        {!isCollapsed && (
-                          <span className="flex items-center w-full">
-                            {item.label}
-                            {/* @ts-ignore */}
-                            {item.badge > 0 && (
-                              <span
-                                className={`ml-auto text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
-                                  // @ts-ignore
-                                  item.badgeColor || "bg-[#C19A5B]"
-                                }`}
-                              >
-                                {/* @ts-ignore */}
-                                {item.badge}
-                              </span>
-                            )}
-                          </span>
-                        )}
-                      </Link>
-                    </TooltipTrigger>
-                    {isCollapsed && (
-                      <TooltipContent side="right">
-                        <div className="flex items-center gap-2">
-                          {item.label}
-                          {/* @ts-ignore */}
-                          {item.badge > 0 && (
-                            <span
-                              className={`text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
-                                // @ts-ignore
-                                item.badgeColor || "bg-[#C19A5B]"
-                              }`}
-                            >
-                              {/* @ts-ignore */}
-                              {item.badge}
-                            </span>
-                          )}
-                        </div>
-                      </TooltipContent>
+                        {item.badge}
+                      </span>
                     )}
-                  </Tooltip>
-                </li>
-              ))}
-            </ul>
-          </TooltipProvider>
+                  {!isCollapsed && (
+                    <span className="flex items-center w-full">
+                      {item.label}
+                      {/* @ts-ignore */}
+                      {item.badge > 0 && (
+                        <span
+                          className={`ml-auto text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
+                            // @ts-ignore
+                            item.badgeColor || "bg-[#C19A5B]"
+                          }`}
+                        >
+                          {/* @ts-ignore */}
+                          {item.badge}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </nav>
       </div>
 
       <div className="sidebar-footer">
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button className="logout-btn" onClick={handleLogout}>
-                <FiLogOut className="logout-icon shrink-0" />
-                {!isCollapsed && <span>Logout</span>}
-              </button>
-            </TooltipTrigger>
-            {isCollapsed && (
-              <TooltipContent side="right">Logout</TooltipContent>
-            )}
-          </Tooltip>
-        </TooltipProvider>
+        <button 
+          className="logout-btn" 
+          onClick={handleLogout}
+          title={isCollapsed ? "Logout" : ""}
+        >
+          <FiLogOut className="logout-icon shrink-0" />
+          {!isCollapsed && <span>Logout</span>}
+        </button>
       </div>
     </div>
   )

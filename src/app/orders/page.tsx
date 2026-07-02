@@ -100,7 +100,7 @@ export default function OrdersPage() {
   }, [currentPage, firebaseUser])
 
   const fetchOrders = async () => {
-    if (!firebaseUser?.phoneNumber) {
+    if (!firebaseUser) {
       setOrders([])
       setTotalCount(0)
       setLoading(false)
@@ -112,6 +112,11 @@ export default function OrdersPage() {
 
       const from = (currentPage - 1) * itemsPerPage
       const to = from + itemsPerPage - 1
+
+      // Match by user_id (preferred) OR customer_phone (legacy orders placed before uid was saved)
+      const phoneFilter = firebaseUser.phoneNumber
+        ? `customer_phone.eq.${firebaseUser.phoneNumber},user_id.eq.${firebaseUser.uid}`
+        : `user_id.eq.${firebaseUser.uid}`
 
       const { data, error, count } = await supabase
         .from("orders")
@@ -137,7 +142,7 @@ export default function OrdersPage() {
             )
           )
         `, { count: 'exact' })
-        .eq("customer_phone", firebaseUser.phoneNumber)
+        .or(phoneFilter)
         .order("created_at", { ascending: false })
         .range(from, to)
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabase/client"
+import { supabase, supabaseAdmin } from "@/lib/supabase/client"
 import { ContactInquiry } from "@/lib/supabase/enhanced-types"
 import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
@@ -40,7 +40,7 @@ export default function InquiryDetailsPage({
   useEffect(() => {
     const fetchInquiry = async () => {
       try {
-        const { data, error } = await (supabase as any)
+        const { data, error } = await supabaseAdmin
           .from("contact_inquiries")
           .select("*")
           .eq("id", params.id)
@@ -64,7 +64,7 @@ export default function InquiryDetailsPage({
     if (!inquiry) return
 
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabaseAdmin
         .from("contact_inquiries")
         .update({ status: newStatus })
         .eq("id", inquiry.id)

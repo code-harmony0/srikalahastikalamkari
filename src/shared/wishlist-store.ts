@@ -8,6 +8,8 @@ import { persist } from 'zustand/middleware';
 
 interface WishlistState {
   items: string[]; // Product IDs
+  _hasHydrated: boolean;
+  setHasHydrated: (val: boolean) => void;
   addItem: (productId: string) => void;
   removeItem: (productId: string) => void;
   toggleItem: (productId: string) => void;
@@ -19,6 +21,9 @@ export const useWishlistStore = create<WishlistState>()(
   persist(
     (set, get) => ({
       items: [],
+      _hasHydrated: false,
+
+      setHasHydrated: (val) => set({ _hasHydrated: val }),
 
       addItem: (productId) => {
         if (!productId) return;
@@ -56,6 +61,9 @@ export const useWishlistStore = create<WishlistState>()(
     }),
     {
       name: 'wishlist-storage',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

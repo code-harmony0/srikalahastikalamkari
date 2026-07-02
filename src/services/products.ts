@@ -29,24 +29,32 @@ const sanitizePayload = (
         allowLegacy: false,
       };
 
+  const imageAliases: string[] = [];
+
   if (p.image !== undefined) {
-    p.image = validateImageRef(p.image, {
+    const image = validateImageRef(p.image, {
       fieldName: "image",
       ...imageValidation,
     });
+    if (image) imageAliases.push(image);
+    delete p.image;
   }
 
   if (p.mainImage !== undefined) {
-    p.mainImage = validateImageRef(p.mainImage, {
+    const mainImage = validateImageRef(p.mainImage, {
       fieldName: "mainImage",
       ...imageValidation,
     });
+    if (mainImage) imageAliases.push(mainImage);
+    delete p.mainImage;
   }
 
   if (p.images !== undefined) {
     p.images = validateImageRefArray(p.images, "images", {
       ...imageValidation,
     });
+  } else if (imageAliases.length > 0) {
+    p.images = imageAliases;
   }
 
   if (p.price !== undefined) p.price = p.price === "" ? null : Number(p.price);
@@ -155,7 +163,7 @@ const getExistingProductImageRefs = async (
 ): Promise<{ refs: string[]; error: any }> => {
   const { data, error } = await supabase
     .from("products")
-    .select("image, images")
+    .select("images")
     .eq("id", id)
     .maybeSingle();
 
@@ -168,7 +176,7 @@ const getExistingProductImageRefs = async (
   }
 
   return {
-    refs: [...collectStringRefs(data.image), ...collectStringRefs(data.images)],
+    refs: collectStringRefs(data.images),
     error: null,
   };
 };
@@ -914,6 +922,9 @@ export interface ProductFilters {
   price_min?: number;
   price_max?: number;
   in_stock?: boolean;
+  out_of_stock?: boolean;
+  is_visible?: boolean;
+  colors?: string[];
   sort_by?: string;
 }
 
@@ -930,12 +941,22 @@ export const getProductsPaginated = async (
       .from("products")
       .select("*, product_variants(*), categories:category_id(id, name), sub_category:sub_category_id(id, name)", { count: "exact" });
 
-    // Search by name only (not description) to avoid cross-category false positives.
-    // Strip trailing 's' so "sarees" matches "Kalamkari Saree" and "Kalamkari Sarees".
     if (filters.search) {
       const q = filters.search.trim().toLowerCase();
       const stem = q.endsWith("s") ? q.slice(0, -1) : q;
-      query = query.ilike("name", `%${stem}%`);
+      
+      // Find matching categories
+      const { data: cats } = await supabase
+        .from("categories")
+        .select("id")
+        .ilike("name", `%${stem}%`);
+        
+      if (cats && cats.length > 0) {
+        const matchingCategoryIds = cats.map(c => c.id);
+        query = query.or(`name.ilike.%${stem}%,category_id.in.(${matchingCategoryIds.join(',')})`);
+      } else {
+        query = query.ilike("name", `%${stem}%`);
+      }
     }
 
     if (filters.category_id) {
@@ -966,16 +987,41 @@ export const getProductsPaginated = async (
     if (filters.in_stock) {
       query = query.gt("stock_quantity", 0);
     }
+    if (filters.out_of_stock) {
+      query = query.lte("stock_quantity", 0);
+    }
+    
+    // Visibility Filter
+    if (filters.is_visible !== undefined) {
+      query = query.eq("is_visible", filters.is_visible);
+    }
+    
+    // Color Filter
+    if (filters.colors && filters.colors.length > 0) {
+      query = query.overlaps("colors", filters.colors);
+    }
 
     // Sort
     switch (filters.sort_by) {
       case "latest":
+      case "newest":
         query = query.order("created_at", { ascending: false });
         break;
+      case "oldest":
+        query = query.order("created_at", { ascending: true });
+        break;
+      case "name-asc":
+        query = query.order("name", { ascending: true });
+        break;
+      case "name-desc":
+        query = query.order("name", { ascending: false });
+        break;
       case "price-asc":
+      case "price-low":
         query = query.order("price", { ascending: true });
         break;
       case "price-desc":
+      case "price-high":
         query = query.order("price", { ascending: false });
         break;
       case "popularity":
@@ -1028,6 +1074,7 @@ export const productsService = {
       .from("products")
       .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, category_id, categories:category_id(id, name)")
       .eq("is_featured", true)
+      .eq("is_visible", true)
       .limit(limit)
       .order("created_at", { ascending: false });
     if (error) {
@@ -1045,6 +1092,7 @@ export const productsService = {
       let query = supabase
         .from("products")
         .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, category_id, categories:category_id(id, name)")
+        .eq("is_visible", true)
         .limit(needed)
         .order("created_at", { ascending: false });
 
