@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, use } from "react"
 import { useRouter } from "next/navigation"
 import { supabase, supabaseAdmin } from "@/lib/supabase/client"
 import { ContactInquiry } from "@/lib/supabase/enhanced-types"
@@ -31,8 +31,9 @@ import {
 export default function InquiryDetailsPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = use(params)
   const router = useRouter()
   const [inquiry, setInquiry] = useState<ContactInquiry | null>(null)
   const [loading, setLoading] = useState(true)
@@ -43,7 +44,7 @@ export default function InquiryDetailsPage({
         const { data, error } = await supabaseAdmin
           .from("contact_inquiries")
           .select("*")
-          .eq("id", params.id)
+          .eq("id", id)
           .single()
 
         if (error) throw error
@@ -58,7 +59,7 @@ export default function InquiryDetailsPage({
     }
 
     fetchInquiry()
-  }, [params.id, router])
+  }, [id, router])
 
   const updateStatus = async (newStatus: "new" | "solved" | "ignored") => {
     if (!inquiry) return
@@ -67,7 +68,7 @@ export default function InquiryDetailsPage({
       const { error } = await supabaseAdmin
         .from("contact_inquiries")
         .update({ status: newStatus })
-        .eq("id", inquiry.id)
+        .eq("id", id)
 
       if (error) throw error
 

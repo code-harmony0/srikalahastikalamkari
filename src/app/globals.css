@@ -164,7 +164,6 @@ body [role="dialog"] [class*="bg-[#F2E5CF]"] {
   }
 
   html {
-    scroll-behavior: smooth;
   }
 
   /* Website styles - warm beige theme */

@@ -18,6 +18,7 @@ const customJestConfig = {
     "!src/**/*.d.ts",
     "!src/**/*.stories.{js,jsx,ts,tsx}",
   ],
+  slowTestThreshold: 10,
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
