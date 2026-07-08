@@ -14,6 +14,8 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  
+  turbopack: {},
 
   // Production optimizations
   productionBrowserSourceMaps: false,
