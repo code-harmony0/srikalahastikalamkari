@@ -37,6 +37,7 @@ import {
   getDeliveryMessage,
   DELIVERY_CONFIG 
 } from "@/shared/config/delivery"
+import { getUserOrders } from "./actions"
 
 interface Order {
   id: string
@@ -113,40 +114,14 @@ export default function OrdersPage() {
       const from = (currentPage - 1) * itemsPerPage
       const to = from + itemsPerPage - 1
 
-      // Match by user_id (preferred) OR customer_phone (legacy orders placed before uid was saved)
-      const phoneFilter = firebaseUser.phoneNumber
-        ? `customer_phone.eq.${firebaseUser.phoneNumber},user_id.eq.${firebaseUser.uid}`
-        : `user_id.eq.${firebaseUser.uid}`
+      const { data, count, error } = await getUserOrders(
+        firebaseUser.uid,
+        firebaseUser.phoneNumber,
+        from,
+        to
+      )
 
-      const { data, error, count } = await supabase
-        .from("orders")
-        .select(`
-          id,
-          created_at,
-          total_amount,
-          status,
-          shipping_address,
-          customer_email,
-          shipping_company,
-          tracking_id,
-          shipped_at,
-          delivered_at,
-          order_items (
-            id,
-            quantity,
-            price_at_purchase,
-            products (
-              id,
-              name,
-              images
-            )
-          )
-        `, { count: 'exact' })
-        .or(phoneFilter)
-        .order("created_at", { ascending: false })
-        .range(from, to)
-
-      if (error) throw error
+      if (error) throw new Error(error)
 
       setOrders(data as any || [])
       setTotalCount(count || 0)

@@ -653,7 +653,7 @@ export default function HomePage() {
                   }}
                   className="block whitespace-nowrap font-serif font-bold uppercase text-[clamp(1.35rem,6.2vw,2.45rem)] sm:text-5xl md:text-7xl lg:text-[88px]"
                 >
-                  Authentic Srikalahasti Kalamkari
+                  Srikalahasti Kalamkari
                 </motion.span>
                 <motion.span
                   variants={{
@@ -701,8 +701,8 @@ export default function HomePage() {
                 }}
                 className="font-sans text-sm md:text-xl text-white/75 mb-6 sm:mb-10 max-w-[20rem] sm:max-w-2xl mx-auto leading-relaxed font-light tracking-wide"
               >
-                Where every thread tells a timeless story. Authentic
-                hand-painted heritage directly from the master artisans of
+                Where every thread tells a timeless story. Hand-painted 
+                heritage directly from the master artisans of
                 Andhra Pradesh.
               </motion.p>
 

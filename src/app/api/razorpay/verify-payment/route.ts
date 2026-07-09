@@ -46,7 +46,8 @@ export async function POST(req: NextRequest) {
         shipping_address: shippingAddress,
         customer_email: formData.email,
         customer_phone: customerPhone || formData.phone || null,
-        user_id: userId || null,
+        user_id: null,
+        firebase_uid: userId || null,
         razorpay_order_id,
         razorpay_payment_id,
       })

@@ -18,9 +18,8 @@ rl.question('Select a deployment option (1-2): ', (answer) => {
     console.log('\nDeploying to Staging (Vercel)...');
     runCommand('npx', ['vercel']);
   } else if (answer === '2') {
-    console.log('\nDeploying to Production (Hostinger) via GitHub Actions...');
-    console.log('Pushing latest code and triggering deployment...\n');
-    runCommand('bash', ['-c', 'git push origin main && gh workflow run hostinger-deploy.yml --ref main && echo "\n✅ Deployment triggered successfully! Check your GitHub Actions tab to see the progress."']);
+    console.log('\nDeploying to Production (Hostinger) directly from this computer...');
+    runCommand('bash', ['scripts/deploy-to-hostinger.sh']);
   } else {
     console.log('\nDeployment cancelled.');
   }

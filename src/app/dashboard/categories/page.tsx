@@ -293,9 +293,29 @@ const Categories = () => {
     fileInputRef.current?.click()
   }
 
+  const [imageError, setImageError] = useState(false)
+  const [nameError, setNameError] = useState(false)
+  const [categoryError, setCategoryError] = useState(false)
+
   const handleSaveSubCategory = async () => {
-    if (!subCategoryForm.name.trim() || !subCategoryForm.category_id) {
-      toast.success("Validation Error", { description: "Name and category are required" })
+    let hasError = false
+    const isNameEmpty = !subCategoryForm.name.trim()
+    const isCategoryEmpty = !subCategoryForm.category_id
+    const isImageEmpty = !subCategoryForm.image_url && !subCategoryImageFile && !subCategoryImagePreview
+
+    setNameError(isNameEmpty)
+    setCategoryError(isCategoryEmpty)
+    setImageError(isImageEmpty)
+
+    if (isNameEmpty || isCategoryEmpty || isImageEmpty) {
+      toast.error("Validation Error", { description: "Please fill in all mandatory fields" })
+      
+      if (isImageEmpty) {
+        const imgSection = document.getElementById("subcat-image-section")
+        if (imgSection) {
+          imgSection.scrollIntoView({ behavior: "smooth", block: "center" })
+        }
+      }
       return
     }
 
@@ -668,7 +688,11 @@ const Categories = () => {
                   })
                 }
                 placeholder="e.g., Silk Sarees"
-                className="mt-2 h-11 rounded-xl border-slate-300 focus-visible:border-slate-900 focus-visible:ring-0 text-slate-900"
+                className={`mt-2 h-11 rounded-xl focus-visible:ring-0 text-slate-900 ${
+                  nameError 
+                    ? "border-red-500 bg-red-50 focus-visible:border-red-500" 
+                    : "border-slate-300 focus-visible:border-slate-900"
+                }`}
               />
             </div>
             <div>
@@ -687,7 +711,11 @@ const Categories = () => {
                   })
                 }
               >
-                <SelectTrigger className="mt-2 h-11 rounded-xl border-slate-300 focus:border-slate-900 focus:ring-0 text-slate-900">
+                <SelectTrigger className={`mt-2 h-11 rounded-xl focus:ring-0 text-slate-900 ${
+                  categoryError
+                    ? "border-red-500 bg-red-50 focus:border-red-500"
+                    : "border-slate-300 focus:border-slate-900"
+                }`}>
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-slate-300">
@@ -699,16 +727,20 @@ const Categories = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div>
+            <div id="subcat-image-section">
               <Label className="text-slate-700 font-medium">
-                Subcategory Image
+                Subcategory Image *
               </Label>
               <p className="text-xs text-slate-500 mt-1">
                 Used on the storefront subcategory tiles. Recommended size
                 600x600px.
               </p>
               <div
-                className="mt-3 border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50/40 hover:border-slate-400 transition cursor-pointer relative"
+                className={`mt-3 border-2 border-dashed rounded-2xl p-4 text-center transition cursor-pointer relative ${
+                  imageError 
+                    ? "border-red-500 bg-red-50" 
+                    : "border-slate-300 bg-slate-50/40 hover:border-slate-400"
+                }`}
                 onClick={handleSubCategoryImageBoxClick}
               >
                 {subCategoryImagePreview ? (

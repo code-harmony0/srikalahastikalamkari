@@ -720,6 +720,10 @@ const AddProduct = () => {
         description: "Please upload at least one image for the product",
         variant: "destructive",
       })
+      const imgSection = document.getElementById("product-images-section")
+      if (imgSection) {
+        imgSection.scrollIntoView({ behavior: "smooth", block: "center" })
+      }
     }
 
     setErrors(newErrors)
@@ -1526,11 +1530,12 @@ const AddProduct = () => {
             </FormSection>
 
             {/* Section 5: Media (Image Upload) */}
-            <FormSection
-              title="Product Images"
-              icon={<Image className="h-4 w-4" />}
-              badge="Required"
-            >
+            <div id="product-images-section">
+              <FormSection
+                title="Product Images"
+                icon={<Image className="h-4 w-4" />}
+                badge="Required"
+              >
               <div className="space-y-2">
                 <p className="text-sm text-slate-500 mb-4">
                   Upload up to 5 product images. The first image will be the
@@ -1541,6 +1546,8 @@ const AddProduct = () => {
                     className={`border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${
                       isDragging
                         ? "border-[#D49217] bg-[#D49217]/10 scale-105"
+                        : errors.images 
+                        ? "border-red-500 bg-red-50"
                         : "border-gray-300 hover:border-[#D49217] hover:bg-gray-50"
                     }`}
                     onDragOver={handleDragOver}
@@ -1831,6 +1838,7 @@ const AddProduct = () => {
                 )}
               </div>
             </FormSection>
+            </div>
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4">

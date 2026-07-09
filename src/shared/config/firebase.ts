@@ -35,11 +35,15 @@ export async function initAppCheckOnDemand() {
   }
 
   try {
-    const { initializeAppCheck, ReCaptchaEnterpriseProvider } = await import("firebase/app-check")
-    initializeAppCheck(app, {
+    const { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } = await import("firebase/app-check")
+    const appCheck = initializeAppCheck(app, {
       provider: new ReCaptchaEnterpriseProvider("6LdHaY4sAAAAABqgqjuTAclT4QFfmnJ2IJ5KgY4z"),
       isTokenAutoRefreshEnabled: true,
     })
+    
+    // Wait for the App Check token to be fetched to prevent a race condition 
+    // with signInWithPhoneNumber on the first click.
+    await getToken(appCheck).catch(err => console.warn("App Check token fetch failed:", err))
   } catch (error) {
     console.warn("Firebase App Check failed to initialize:", error)
   }
