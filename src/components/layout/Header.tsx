@@ -7,6 +7,9 @@ import { Menu, X, Heart, ShoppingBag, User, LogIn } from "lucide-react"; // Swit
 import { useCartStore } from "@/shared/cart-store";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useAuth } from "@/shared/contexts/AuthContext";
+import { useAuthModalStore } from "@/shared/auth-modal-store";
+import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/shared/utils";
 
@@ -18,6 +21,7 @@ const ActionIcon = ({
   count = 0,
   isActive = false,
   variant = "profile",
+  onClick,
 }: {
   href: string;
   label: string;
@@ -25,10 +29,12 @@ const ActionIcon = ({
   count?: number;
   isActive?: boolean;
   variant?: "wishlist" | "cart" | "profile";
+  onClick?: (e: React.MouseEvent) => void;
 }) => {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className="relative group p-2.5 rounded-full hover:bg-[#FAFAF8]/10 transition-all duration-300"
       aria-label={label}
     >
@@ -74,11 +80,30 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Stores
   const cart = useCartStore();
   const wishlist = useWishlistStore();
   const { user } = useAuth();
+  const { openModal } = useAuthModalStore();
+
+  const handleWishlistClick = useAuthGuardedAction(() => {
+    router.push("/wishlist");
+  }, { redirectUrl: "/wishlist" });
+
+  const handleCartClick = useAuthGuardedAction(() => {
+    router.push("/cart");
+  }, { redirectUrl: "/cart" });
+
+  const handleProfileClick = useAuthGuardedAction(() => {
+    router.push("/profile");
+  }, { redirectUrl: "/profile" });
+
+  const handleMobileProfileClick = useAuthGuardedAction((e) => {
+    setIsMobileMenuOpen(false);
+    router.push("/profile");
+  }, { redirectUrl: "/profile" });
 
   useEffect(() => {
     setMounted(true);
@@ -158,6 +183,7 @@ export default function Header() {
               variant="wishlist"
               count={mounted ? wishlist.items.filter(Boolean).length : 0}
               isActive={mounted && wishlist.items.filter(Boolean).length > 0}
+              onClick={handleWishlistClick}
             />
 
             {/* Cart */}
@@ -167,6 +193,7 @@ export default function Header() {
               icon={ShoppingBag}
               variant="cart"
               count={mounted ? cart.items.filter(i => !!i.productId).reduce((acc, i) => acc + i.quantity, 0) : 0}
+              onClick={handleCartClick}
             />
 
             {/* Profile / Login */}
@@ -176,6 +203,7 @@ export default function Header() {
               icon={user ? User : LogIn}
               variant="profile"
               isActive={!!user}
+              onClick={handleProfileClick}
             />
 
             {/* Mobile Menu Toggle */}
@@ -227,7 +255,7 @@ export default function Header() {
 
               <Link
                 href={user ? "/profile" : "/login"}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={handleMobileProfileClick}
                 className="flex items-center gap-3 py-3 px-4 text-[#1A1512]/70 hover:text-[#1A1512] transition-colors rounded-lg hover:bg-[#1A1512]/5 font-medium"
               >
                 {user ? (

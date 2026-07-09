@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,6 +8,7 @@ import { useProducts } from "@/shared/hooks/use-products";
 import { useCartStore } from "@/shared/cart-store";
 import { useCoupon, incrementCouponUsage } from "@/shared/hooks/use-coupon";
 import { useAuth } from "@/shared/contexts/AuthContext";
+import { useAuthModalStore } from "@/shared/auth-modal-store";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -101,10 +102,17 @@ const FormInput = ({
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { user: firebaseUser } = useAuth();
+  const { user: firebaseUser, loading: authLoading } = useAuth();
+  const { openModal } = useAuthModalStore();
   const { data: productsData } = useProducts();
   const products = productsData?.data || [];
   const cart = useCartStore();
+
+  useEffect(() => {
+    if (!authLoading && !firebaseUser) {
+      openModal("/checkout");
+    }
+  }, [firebaseUser, authLoading]);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -231,7 +239,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       await loadRazorpayScript()
 
       const options = {
-        key: environment.razorpay.keyId,
+        key: orderData.keyId || environment.razorpay.keyId,
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Shri Kalahasti Kalamkari",
@@ -294,6 +302,19 @@ const handleSubmit = async (e: React.FormEvent) => {
       setIsProcessing(false)
     }
   };
+
+  // --- Auth Check ---
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background kalamkari-static-background silk-fabric-texture">
+        <div className="w-12 h-12 border-2 border-[#C19A5B]/30 border-t-[#1A1512] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!firebaseUser) {
+    return null;
+  }
 
   // --- Empty State ---
   if (cartItems.length === 0) {

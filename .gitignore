@@ -76,3 +76,7 @@ supabase/.temp/
 
 # Documentation (local only)
 docs/
+
+# Graphify
+graphify-out/
+.graphify/

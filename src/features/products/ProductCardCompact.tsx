@@ -2,10 +2,12 @@
 
 import React, { memo, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { AuthGuardedLink } from "@/shared/components/AuthGuardedLink";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, ShoppingBag, Star } from "lucide-react";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
+import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action";
 import { toast } from "sonner";
 import { cn } from "@/shared/utils";
 import { Product } from "@/shared/types";
@@ -78,9 +80,7 @@ export const ProductCardCompact = memo(
     const madeToOrder = isMadeToOrder(product);
     const purchasableLimit = getPurchasableQuantityLimit(product);
 
-    const toggleWishlist = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+    const toggleWishlist = useAuthGuardedAction(() => {
       if (isWishlisted) {
         wishlist.removeItem(product.id);
         toast.success("Removed from wishlist");
@@ -88,12 +88,9 @@ export const ProductCardCompact = memo(
         wishlist.addItem(product.id);
         toast.success("Added to wishlist");
       }
-    };
+    });
 
-    const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
+    const handleAddToCart = useAuthGuardedAction(() => {
       const existingItem = cart.items.find((i) => i.productId === product.id);
       const currentQty = existingItem?.quantity ?? 0;
       if (currentQty >= purchasableLimit) {
@@ -111,7 +108,7 @@ export const ProductCardCompact = memo(
           ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
           : undefined,
       });
-    };
+    });
 
     const mainImage = productData.image || "/images/products/product-placeholder.png";
     const productUrl = `/products/${product.slug || product.id}`;
@@ -303,9 +300,9 @@ export const ProductCardCompact = memo(
       >
         {inquiryOnly ? (
           <>
-            <Link href={productUrl} className="block">
+            <AuthGuardedLink href={productUrl} className="block">
               {cardContent}
-            </Link>
+            </AuthGuardedLink>
             <a
               href={inquiryUrl}
               target="_blank"
@@ -317,9 +314,9 @@ export const ProductCardCompact = memo(
             </a>
           </>
         ) : (
-          <Link href={productUrl} className="block">
+          <AuthGuardedLink href={productUrl} className="block">
             {cardContent}
-          </Link>
+          </AuthGuardedLink>
         )}
       </motion.article>
     );

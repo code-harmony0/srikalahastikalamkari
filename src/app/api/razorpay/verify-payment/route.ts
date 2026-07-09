@@ -4,6 +4,9 @@ import { supabaseAdmin } from "@/lib/supabase/client";
 import environment from "@/shared/config/environment";
 
 export async function POST(req: NextRequest) {
+  // Read at runtime to ensure Hostinger env vars are always used (not build-time inlined)
+  const keySecret = process.env.RAZORPAY_KEY_SECRET || environment.razorpay.keySecret;
+
   try {
     const {
       razorpay_order_id,
@@ -18,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     // Verify signature
     const expectedSignature = crypto
-      .createHmac("sha256", environment.razorpay.keySecret)
+      .createHmac("sha256", keySecret)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 

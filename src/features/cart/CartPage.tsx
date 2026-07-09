@@ -1,10 +1,13 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAllProducts } from "@/shared/hooks/use-products";
 import { useCartStore } from "@/shared/cart-store";
+import { useAuth } from "@/shared/contexts/AuthContext";
+import { useAuthModalStore } from "@/shared/auth-modal-store";
 import {
   Minus,
   Plus,
@@ -27,9 +30,19 @@ import {
 } from "@/shared/lib/inventory";
 
 export default function CartPage() {
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const { openModal } = useAuthModalStore();
   const { data: products = [], isLoading: productsLoading } = useAllProducts();
   const cart = useCartStore();
   const hasHydrated = useCartStore((s) => s._hasHydrated);
+
+  // Auth Guard
+  useEffect(() => {
+    if (!authLoading && !user) {
+      openModal("/cart");
+    }
+  }, [user, authLoading, openModal]);
 
   // 🛍 Merge Cart Items with Product Data
   const cartItems = useMemo(() => {
@@ -386,11 +399,18 @@ export default function CartPage() {
                 </span>
               </div>
 
-              <Link href="/checkout" className="block">
-                <button className="w-full bg-[#1A1512] text-white hover:bg-[#C19A5B] py-3.5 rounded-[4px] font-sans font-bold text-xs uppercase tracking-widest shadow-md hover:shadow-lg transition-all duration-300">
-                  Proceed to Checkout
-                </button>
-              </Link>
+              <button
+                onClick={() => {
+                  if (!authLoading && !user) {
+                    openModal("/checkout");
+                    return;
+                  }
+                  router.push("/checkout");
+                }}
+                className="w-full bg-[#1A1512] text-white hover:bg-[#C19A5B] py-3.5 rounded-[4px] font-sans font-bold text-xs uppercase tracking-widest shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                Proceed to Checkout
+              </button>
             </div>
 
             {/* 2. 🆕 New Shipping Widget (Placed Below) */}

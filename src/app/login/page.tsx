@@ -27,7 +27,11 @@ export default function UserLoginPage() {
   const router = useRouter()
 
   useEffect(() => {
-    if (user) router.push("/profile")
+    if (user) {
+      const params = new URLSearchParams(window.location.search)
+      const redirectTo = params.get("redirect") || "/profile"
+      router.push(redirectTo)
+    }
   }, [user, router])
 
   // Timer Logic

@@ -2,9 +2,11 @@
 
 import React, { memo, useMemo } from "react";
 import Link from "next/link";
+import { AuthGuardedLink } from "@/shared/components/AuthGuardedLink";
 import { motion } from "framer-motion";
 import { Star, ShoppingBag } from "lucide-react";
 import { useCartStore } from "@/shared/cart-store";
+import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action";
 import { toast } from "sonner";
 import { Product } from "@/shared/types";
 import { cn } from "@/shared/utils";
@@ -46,9 +48,7 @@ export const CuratedProductCard = memo(
     const madeToOrder = isMadeToOrder(product);
     const purchasableLimit = getPurchasableQuantityLimit(product);
 
-    const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+    const handleAddToCart = useAuthGuardedAction(() => {
       const existingItem = cart.items.find((i) => i.productId === product.id);
       const currentQty = existingItem?.quantity ?? 0;
       if (currentQty >= purchasableLimit) {
@@ -65,7 +65,7 @@ export const CuratedProductCard = memo(
           ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
           : undefined,
       });
-    };
+    });
 
     // Determine badge type
     const getBadge = () => {
@@ -95,7 +95,7 @@ export const CuratedProductCard = memo(
         )}
       >
         {/* Entire card is clickable */}
-        <Link href={productUrl} className="flex flex-col h-full">
+        <AuthGuardedLink href={productUrl} className="flex flex-col h-full">
           {/* IMAGE AREA - Inside card, max 55-60% height */}
           <div className="relative aspect-[4/5] max-h-[200px] overflow-hidden bg-[#F8F4EF]">
             <OptimizedImage
@@ -189,7 +189,7 @@ export const CuratedProductCard = memo(
               </div>
             </div>
           </div>
-        </Link>
+        </AuthGuardedLink>
       </motion.article>
     );
   }

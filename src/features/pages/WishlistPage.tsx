@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAllProducts } from "@/shared/hooks/use-products";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
+import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import {
   Heart,
@@ -74,7 +75,7 @@ export default function WishlistPage() {
     });
   };
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = useAuthGuardedAction((e, product: any) => {
     const madeToOrder = isMadeToOrder(product);
     cart.addItem(product, 1);
     wishlist.removeItem(product.id);
@@ -83,9 +84,9 @@ export default function WishlistPage() {
         ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
         : undefined,
     });
-  };
+  });
 
-  const handleAddAll = () => {
+  const handleAddAll = useAuthGuardedAction(() => {
     let count = 0;
     wishlistItems.forEach((p) => {
       cart.addItem(p, 1);
@@ -97,7 +98,7 @@ export default function WishlistPage() {
     } else {
       toast.error("No items to move");
     }
-  };
+  });
 
   // 🌀 LOADING STATE — wait for Zustand to rehydrate from localStorage
   if (!hasHydrated || isLoading) {
@@ -308,7 +309,7 @@ export default function WishlistPage() {
                       )}
 
                       <button
-                        onClick={() => handleAddToCart(product)}
+                        onClick={(e) => handleAddToCart(e, product)}
                         disabled={atLimit}
                         className={cn(
                           "w-full h-10 rounded-[4px] font-sans text-[11px] font-bold uppercase tracking-wider transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm",

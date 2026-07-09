@@ -304,6 +304,14 @@ export const getProducts = async (): Promise<{
 export const getProductById = async (
   id: string,
 ): Promise<{ data: Product | null; error: any }> => {
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  if (!isUUID) {
+    return {
+      data: null,
+      error: { message: "Invalid product ID format (not a UUID)", code: "INVALID_UUID", status: 400 },
+    };
+  }
+
   try {
     const { data, error } = await supabase
       .from("products")

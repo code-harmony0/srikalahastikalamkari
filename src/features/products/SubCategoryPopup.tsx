@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/shared/ui/dialog";
 import { cn } from "@/shared/utils";
 import { Check } from "lucide-react";
@@ -49,6 +50,9 @@ export function SubCategoryPopup({
                 collection
               </span>
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Choose a subcategory from {parentCategory.name} to refine your selection.
+            </DialogDescription>
             <p className="hidden text-[9px] font-bold uppercase tracking-[0.14em] text-[#1A1512]/45 sm:block">
               Refine selection
             </p>

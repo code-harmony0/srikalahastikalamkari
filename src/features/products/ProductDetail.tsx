@@ -17,6 +17,7 @@ import {
 } from "@/shared/hooks/use-products"
 import { useCartStore } from "@/shared/cart-store"
 import { useWishlistStore } from "@/shared/wishlist-store"
+import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action"
 import {
   Accordion,
   AccordionContent,
@@ -183,7 +184,7 @@ export default function ProductDetail() {
   const purchasableLimit = getPurchasableQuantityLimit(product)
 
   // Handlers
-  const handleAddToCart = () => {
+  const handleAddToCart = useAuthGuardedAction(() => {
     if (!product) return
     const existingItem = cart.items.find((i) => i.productId === product.id)
     const currentQty = existingItem?.quantity ?? 0
@@ -202,13 +203,13 @@ export default function ProductDetail() {
         ? `This custom request will be prepared and delivered in ${MADE_TO_ORDER_DAYS}.`
         : undefined,
     })
-  }
+  })
 
-  const handleToggleWishlist = () => {
+  const handleToggleWishlist = useAuthGuardedAction(() => {
     if (!product) return
     wishlist.toggleItem(product.id)
     toast.success(isInWishlist ? "Removed from wishlist" : "Added to wishlist")
-  }
+  })
 
   const handleShare = () => {
     if (navigator.share) {

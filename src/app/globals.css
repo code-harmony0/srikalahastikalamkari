@@ -153,6 +153,21 @@ body [role="dialog"] [class*="bg-[#F2E5CF]"] {
   background-color: rgba(26, 21, 18, 0.05) !important;
 }
 
+/* 🎨 AuthModal Custom Styling Overrides (Bypass legacy dialog styles) */
+body [role="dialog"].auth-modal-dialog {
+  background-color: #ffffff !important;
+  padding: 0 !important;
+}
+
+body [role="dialog"].auth-modal-dialog .auth-modal-header {
+  background-color: #1A1512 !important;
+}
+
+/* Hide only the Radix default close button which is a direct child of the DialogContent */
+body [role="dialog"].auth-modal-dialog > button {
+  display: none !important;
+}
+
 @layer base {
   * {
     @apply border-border;

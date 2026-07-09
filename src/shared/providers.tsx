@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
 import { useState } from "react"
 import { AuthProvider } from "./contexts/AuthContext"
+import { AuthModal } from "@/components/auth/AuthModal"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -30,6 +31,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           {children}
           <Toaster position="top-center" richColors />
+          <AuthModal />
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

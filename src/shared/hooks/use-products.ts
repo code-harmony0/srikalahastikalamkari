@@ -46,10 +46,11 @@ export function useFeaturedProducts() {
 }
 
 export function useProduct(id: string) {
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
   return useQuery({
     queryKey: ["products", id],
     queryFn: () => productsService.getById(id),
-    enabled: !!id,
+    enabled: !!id && isUUID,
     staleTime: 10 * 60 * 1000, // 10 minutes - individual product cache
     gcTime: 15 * 60 * 1000,
     refetchOnWindowFocus: false,

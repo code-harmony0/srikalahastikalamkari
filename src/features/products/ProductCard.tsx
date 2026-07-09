@@ -2,10 +2,12 @@
 
 import React, { memo, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import { AuthGuardedLink } from "@/shared/components/AuthGuardedLink"
 import { motion } from "framer-motion"
 import { Star, Heart, MessageCircle, ShoppingBag } from "lucide-react"
 import { useWishlistStore } from "@/shared/wishlist-store"
 import { useCartStore } from "@/shared/cart-store"
+import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action"
 import { toast } from "sonner"
 import { cn } from "@/shared/utils"
 import { useCategories } from "@/shared/hooks/use-categories"
@@ -83,9 +85,7 @@ export const ProductCard = memo(
       }
     }, [siteOrigin])
 
-    const toggleWishlist = (e: React.MouseEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
+    const toggleWishlist = useAuthGuardedAction((e) => {
       if (isWishlisted) {
         wishlist.removeItem(product.id)
         toast.success("Removed from wishlist")
@@ -93,12 +93,9 @@ export const ProductCard = memo(
         wishlist.addItem(product.id)
         toast.success("Added to wishlist")
       }
-    }
+    })
 
-    const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-
+    const handleAddToCart = useAuthGuardedAction((e) => {
       const existingItem = cart.items.find((i) => i.productId === product.id)
       const currentQty = existingItem?.quantity ?? 0
 
@@ -117,7 +114,7 @@ export const ProductCard = memo(
           ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
           : undefined,
       })
-    }
+    })
 
     const isList = viewMode === "list"
 
@@ -166,81 +163,42 @@ export const ProductCard = memo(
             isList ? "w-[180px] h-full shrink-0" : "w-full aspect-[4/5]",
           )}
         >
-          {inquiryOnly ? (
-            <Link href={productUrl} className="block w-full h-full">
-              {/* Secondary Image (Hover) */}
-              {productData.images && productData.images.length > 1 && (
-                <OptimizedImage
-                  src={
-                    getImageTier(product?.images, "thumb", 1) ||
-                    "/images/products/product-placeholder.png"
-                  }
-                  alt={`${productData.name} alternate`}
-                  fill
-                  className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-                  sizes={imageSizes}
-                  imageType={isList ? "productCardCompact" : "productCard"}
-                  priority={false}
-                  loading="lazy"
-                />
-              )}
-
-              {/* Main Image */}
+          <AuthGuardedLink href={productUrl} className="block w-full h-full">
+            {/* Secondary Image (Hover) */}
+            {productData.images && productData.images.length > 1 && (
               <OptimizedImage
-                src={productData.image}
-                alt={productData.name}
+                src={
+                  getImageTier(product?.images, "thumb", 1) ||
+                  "/images/products/product-placeholder.png"
+                }
+                alt={`${productData.name} alternate`}
                 fill
-                className={cn(
-                  "object-cover transition-all duration-700 ease-out group-hover:scale-105",
-                  productData.images && productData.images.length > 1
-                    ? "group-hover:opacity-0"
-                    : "",
-                  madeToOrder && "grayscale-[30%] brightness-95",
-                )}
+                className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
                 sizes={imageSizes}
                 imageType={isList ? "productCardCompact" : "productCard"}
-                priority={priority}
-                loading={priority ? undefined : "lazy"}
+                priority={false}
+                loading="lazy"
               />
-            </Link>
-          ) : (
-            <Link href={productUrl} className="block w-full h-full">
-              {/* Secondary Image (Hover) */}
-              {productData.images && productData.images.length > 1 && (
-                <OptimizedImage
-                  src={
-                    getImageTier(product?.images, "thumb", 1) ||
-                    "/images/products/product-placeholder.png"
-                  }
-                  alt={`${productData.name} alternate`}
-                  fill
-                  className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-                  sizes={imageSizes}
-                  imageType={isList ? "productCardCompact" : "productCard"}
-                  priority={false}
-                  loading="lazy"
-                />
-              )}
+            )}
 
-              {/* Main Image */}
-              <OptimizedImage
-                src={productData.image}
-                alt={productData.name}
-                fill
-                className={cn(
-                  "object-cover transition-all duration-700 ease-out group-hover:scale-105",
-                  productData.images && productData.images.length > 1
-                    ? "group-hover:opacity-0"
-                    : "",
-                  madeToOrder && "grayscale-[30%] brightness-95",
-                )}
-                sizes={imageSizes}
-                imageType={isList ? "productCardCompact" : "productCard"}
-                priority={priority}
-                loading={priority ? undefined : "lazy"}
-              />
-            </Link>
-          )}
+            {/* Main Image */}
+            <OptimizedImage
+              src={productData.image}
+              alt={productData.name}
+              fill
+              className={cn(
+                "object-cover transition-all duration-700 ease-out group-hover:scale-105",
+                productData.images && productData.images.length > 1
+                  ? "group-hover:opacity-0"
+                  : "",
+                madeToOrder && "grayscale-[30%] brightness-95",
+              )}
+              sizes={imageSizes}
+              imageType={isList ? "productCardCompact" : "productCard"}
+              priority={priority}
+              loading={priority ? undefined : "lazy"}
+            />
+          </AuthGuardedLink>
 
           {/* Made-to-order indicator */}
           {madeToOrder && (
@@ -271,40 +229,13 @@ export const ProductCard = memo(
         </div>
 
         {/* 2️⃣ CONTENT SECTION */}
-        <div
-          className={cn(
+        <AuthGuardedLink href={productUrl} className={cn(
             "flex flex-col flex-1",
             // 🛠 Compact List View: Less Padding
             isList ? "p-4 justify-between" : "p-4 justify-between",
-          )}
-        >
+          )}>
           <div>
-            {inquiryOnly ? (
-              <Link href={productUrl} className="space-y-1 block group/text">
-                <span className="font-playfair italic text-[#C19A5B] text-[11px] block">
-                  {categoryName}
-                </span>
-
-                <h3
-                  className={cn(
-                    "font-inter font-bold text-[#1A1512] leading-tight group-hover/text:text-[#C19A5B] transition-colors",
-                    isList
-                      ? "text-[15px] line-clamp-1"
-                      : "text-[14px] line-clamp-2",
-                  )}
-                >
-                  {productData.name}
-                </h3>
-
-                {/* Description: Only show in List view, limit to 2 lines */}
-                {isList && (
-                  <p className="font-inter text-[12px] text-[#1A1512]/60 leading-relaxed mt-1.5 line-clamp-2 pr-4">
-                    {productData.description || "Handcrafted with natural dyes."}
-                  </p>
-                )}
-              </Link>
-            ) : (
-              <Link href={productUrl} className="space-y-1 block group/text">
+            <div className="space-y-1 block group/text">
               <span className="font-playfair italic text-[#C19A5B] text-[11px] block">
                 {categoryName}
               </span>
@@ -326,8 +257,7 @@ export const ProductCard = memo(
                   {productData.description || "Handcrafted with natural dyes."}
                 </p>
               )}
-              </Link>
-            )}
+            </div>
           </div>
 
           {/* Price & Actions */}
@@ -436,7 +366,7 @@ export const ProductCard = memo(
               )}
             </div>
           </div>
-        </div>
+        </AuthGuardedLink>
       </motion.div>
     )
   },
