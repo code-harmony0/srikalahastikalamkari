@@ -58,7 +58,7 @@ $SSH_CMD << EOF
   echo "Installing production dependencies..."
   source ~/.bashrc 2>/dev/null || true
   source ~/.bash_profile 2>/dev/null || true
-  export PATH=$PATH:~/.npm-global/bin:~/.nvm/versions/node/$(nvm current 2>/dev/null)/bin
+  export PATH=$PATH:~/.npm-global/bin:~/.nvm/versions/node/$(nvm current 2>/dev/null)/bin:/opt/alt/alt-nodejs22/root/bin:/opt/alt/alt-nodejs20/root/bin:/opt/alt/alt-nodejs18/root/bin
   
   if command -v npm &> /dev/null; then
     npm install --production
