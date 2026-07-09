@@ -31,11 +31,21 @@ echo "📦 Building and creating deploy.zip..."
 npm run build:hostinger
 
 echo "📤 Uploading deploy.zip to $HOSTINGER_HOST on port $PORT..."
-scp -P "$PORT" deploy.zip "$HOSTINGER_USER@$HOSTINGER_HOST:$HOSTINGER_PATH/"
+if [ -n "$HOSTINGER_PASS" ]; then
+  sshpass -p "$HOSTINGER_PASS" scp -P "$PORT" deploy.zip "$HOSTINGER_USER@$HOSTINGER_HOST:$HOSTINGER_PATH/"
+else
+  scp -P "$PORT" deploy.zip "$HOSTINGER_USER@$HOSTINGER_HOST:$HOSTINGER_PATH/"
+fi
 
 echo "🔧 Extracting and setting up on the remote server..."
 # Using a Here-Doc to run commands over SSH
-ssh -p "$PORT" "$HOSTINGER_USER@$HOSTINGER_HOST" << EOF
+if [ -n "$HOSTINGER_PASS" ]; then
+  SSH_CMD="sshpass -p $HOSTINGER_PASS ssh -p $PORT $HOSTINGER_USER@$HOSTINGER_HOST"
+else
+  SSH_CMD="ssh -p $PORT $HOSTINGER_USER@$HOSTINGER_HOST"
+fi
+
+$SSH_CMD << EOF
   set -e
   cd "$HOSTINGER_PATH"
   
