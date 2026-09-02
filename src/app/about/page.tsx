@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description:
       "25+ years of traditional Srikalahasti Kalamkari craftsmanship. Authentic pen-work sarees from Andhra Pradesh artisans.",
     url: "https://srikalahastikalamkari.in/about",
-    images: [{ url: "/images/logo.jpg", alt: "Srikalahasti Kalamkari" }],
+    images: [{ url: "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full", alt: "Srikalahasti Kalamkari" }],
   },
 };
 

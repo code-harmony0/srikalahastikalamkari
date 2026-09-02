@@ -36,6 +36,8 @@ export interface Product {
   isFeatured?: boolean // compatibility
   is_visible?: boolean
   isVisible?: boolean // compatibility
+  is_custom_design?: boolean
+  isCustomDesign?: boolean // compatibility
   in_stock?: boolean
   slug?: string
   category_id?: string

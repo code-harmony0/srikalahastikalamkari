@@ -72,7 +72,7 @@ export const ProductCard = memo(
     const cart = useCartStore()
     const isWishlisted = wishlist.items.includes(product.id)
     const stockQuantity = getStockQuantity(product)
-    const madeToOrder = isMadeToOrder(product)
+    const madeToOrder = isMadeToOrder(product) || (product as any).is_custom_design
     const purchasableLimit = getPurchasableQuantityLimit(product)
     const inquiryOnly = actionMode === "whatsapp-inquiry"
     const [siteOrigin, setSiteOrigin] = useState(

@@ -238,7 +238,7 @@ const categories = [
   },
   {
     name: "Dupattas",
-    filterName: "Dupattas",
+    filterName: "Duppatta",
     image: "/images/brand-models/model-saree-05.jpeg",
     alt: "Authentic Kalamkari Dupattas from Srikalahasti",
     count: "30+",
@@ -252,17 +252,10 @@ const categories = [
   },
   {
     name: "Wall Art",
-    filterName: "canvas-paintings",
+    filterName: "wall-paintings",
     image: "/images/wall-art/wall-art-04.jpeg",
     alt: "Traditional Srikalahasti Kalamkari Wall Art",
     count: "25+",
-  },
-  {
-    name: "Canvas Art",
-    filterName: "wall-paintings",
-    image: "/images/wall-art/wall-art-01.jpeg",
-    alt: "Shri Kalahasti Kalamkari Canvas Paintings",
-    count: "20+",
   },
 ]
 
@@ -479,12 +472,6 @@ export default function HomePage() {
       tone: "Rich",
     },
     {
-      src: "/images/wall-art/wall-art-03.jpeg",
-      alt: "Kalamkari canvas artwork with a traditional figure framed by floral borders",
-      category: "Canvas Art",
-      tone: "Earthy",
-    },
-    {
       src: "/images/wall-art/wall-art-04.jpeg",
       alt: "Hand-painted Kalamkari horse procession wall artwork on natural fabric",
       category: "Horse Motif",
@@ -512,7 +499,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         <section
           ref={heroRef}
-          className="relative w-full min-h-[calc(100svh-56px)] py-6 sm:h-[100vh] sm:min-h-[700px] sm:py-0 flex items-center justify-center overflow-hidden bg-[#1A1512]"
+          className="relative w-full min-h-[calc(100svh-56px)] py-6 sm:h-[100vh] sm:min-h-[700px] sm:py-0 flex items-center justify-center overflow-hidden bg-[hsl(var(--brand-ink))]"
           role="banner"
           aria-label="Srikalahasti Kalamkari - Premium Heritage Collection"
         >
@@ -592,13 +579,13 @@ export default function HomePage() {
                 className="mb-3 sm:mb-6 flex justify-center"
               >
                 <Image
-                  src="/images/logo-transparent.png"
+                  src="https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo-transparent/full"
                   alt="Srikalahasti Kalamkari Logo"
                   width={300}
                   height={320}
                   priority
                   className="h-20 w-auto object-contain drop-shadow-[0_18px_35px_rgba(0,0,0,0.55)] sm:h-40 md:h-48 lg:h-56"
-                />
+                unoptimized />
               </motion.div>
 
               {/* Est. Badge */}
@@ -623,7 +610,7 @@ export default function HomePage() {
                     ease: [0.22, 1, 0.36, 1],
                   }}
                   style={{ originX: 1 }}
-                  className="hidden h-px w-8 bg-[#C19A5B]/60 sm:block md:w-12"
+                  className="hidden h-px w-8 bg-[hsl(var(--brand-gold)/0.6)] sm:block md:w-12"
                 />
 
                 <motion.div
@@ -635,7 +622,7 @@ export default function HomePage() {
                     ease: [0.22, 1, 0.36, 1],
                   }}
                   style={{ originX: 0 }}
-                  className="hidden h-px w-8 bg-[#C19A5B]/60 sm:block md:w-12"
+                  className="hidden h-px w-8 bg-[hsl(var(--brand-gold)/0.6)] sm:block md:w-12"
                 />
               </motion.div>
 
@@ -685,7 +672,7 @@ export default function HomePage() {
                     transition: { duration: 1, ease: [0.22, 1, 0.36, 1] },
                   },
                 }}
-                className="w-16 sm:w-20 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/60 to-transparent mb-4 sm:mb-8"
+                className="w-16 sm:w-20 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.6)] to-transparent mb-4 sm:mb-8"
               />
 
               {/* Subheadline */}
@@ -724,7 +711,7 @@ export default function HomePage() {
                     whileTap={{ scale: 0.97 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Button className="w-full sm:w-[220px] h-11 sm:h-14 rounded-none bg-white text-[#1A1512] hover:bg-[#C19A5B] hover:text-white text-[10px] sm:text-[13px] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase transition-colors duration-400 cta-glow">
+                    <Button className="w-full sm:w-[220px] h-11 sm:h-14 rounded-none bg-white text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-gold))] hover:text-white text-[10px] sm:text-[13px] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase transition-colors duration-400 cta-glow">
                       <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
                       Shop Collection
                     </Button>
@@ -738,7 +725,7 @@ export default function HomePage() {
                   >
                     <Button
                       variant="outline"
-                      className="w-full sm:w-[220px] h-11 sm:h-14 rounded-none border-[#C19A5B]/50 text-white hover:bg-[#C19A5B]/15 hover:border-[#C19A5B] text-[10px] sm:text-[13px] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase transition-all duration-400 bg-transparent backdrop-blur-sm"
+                      className="w-full sm:w-[220px] h-11 sm:h-14 rounded-none border-[hsl(var(--brand-gold)/0.5)] text-white hover:bg-[hsl(var(--brand-gold)/0.15)] hover:border-[hsl(var(--brand-gold))] text-[10px] sm:text-[13px] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase transition-all duration-400 bg-transparent backdrop-blur-sm"
                     >
                       Discover Our Story
                     </Button>
@@ -770,7 +757,7 @@ export default function HomePage() {
                         transition: { duration: 0.5, ease: "easeOut" },
                       },
                     }}
-                    whileHover={{ scale: 1.08, color: "#C19A5B" }}
+                    whileHover={{ scale: 1.08, color: "hsl(var(--brand-gold))" }}
                     className="flex min-w-0 items-center justify-center gap-1.5 sm:gap-2 text-white/55 cursor-default"
                   >
                     <badge.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -794,7 +781,7 @@ export default function HomePage() {
               Scroll
             </span>
             {/* Mouse shell */}
-            <div className="w-[22px] h-[34px] rounded-full border border-[#C19A5B]/40 flex items-start justify-center pt-[5px]">
+            <div className="w-[22px] h-[34px] rounded-full border border-[hsl(var(--brand-gold)/0.4)] flex items-start justify-center pt-[5px]">
               {/* Scroll wheel dot */}
               <motion.div
                 animate={{ y: [0, 10, 0], opacity: [1, 0.2, 1] }}
@@ -803,7 +790,7 @@ export default function HomePage() {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="w-[3px] h-[6px] rounded-full bg-[#C19A5B]/70"
+                className="w-[3px] h-[6px] rounded-full bg-[hsl(var(--brand-gold)/0.7)]"
               />
             </div>
           </motion.div>
@@ -812,9 +799,9 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* CUSTOM DESIGN CTA — Immediate WhatsApp Inquiry                 */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full overflow-hidden bg-[#F8F1E6] border-y border-[#C19A5B]/20">
+        <section className="relative w-full overflow-hidden bg-[#F8F1E6] border-y border-[hsl(var(--brand-gold)/0.2)]">
           <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
-            <DecorativePattern className="absolute inset-0 text-[#1A1512]" />
+            <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-ink))]" />
           </div>
           <div className="max-w-[1300px] mx-auto px-6 lg:px-12 py-8 md:py-10 relative z-10">
             <div className="grid lg:grid-cols-[1fr_auto] gap-7 lg:gap-10 items-center">
@@ -825,20 +812,20 @@ export default function HomePage() {
                 transition={{ duration: 0.65, ease: "easeOut" }}
                 className="flex flex-col md:flex-row md:items-center gap-5 md:gap-7"
               >
-                <div className="w-14 h-14 shrink-0 rounded-full bg-[#1A1512] text-[#C19A5B] flex items-center justify-center shadow-[0_14px_35px_rgba(26,21,18,0.16)]">
+                <div className="w-14 h-14 shrink-0 rounded-full bg-[hsl(var(--brand-ink))] text-[hsl(var(--brand-gold))] flex items-center justify-center shadow-[0_14px_35px_rgba(26,21,18,0.16)]">
                   <Palette className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="h-px w-8 bg-[#C19A5B]" />
-                    <span className="font-sans text-[10px] font-bold uppercase tracking-[0.24em] text-[#A07840]">
+                    <span className="h-px w-8 bg-[hsl(var(--brand-gold))]" />
+                    <span className="font-sans text-[10px] font-bold uppercase tracking-[0.24em] text-[hsl(var(--brand-gold-deep))]">
                       Custom Kalamkari Studio
                     </span>
                   </div>
-                  <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-[#1A1512] leading-tight">
-                    Create your own saree, dupatta, wall art or canvas design.
+                  <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-[hsl(var(--brand-ink))] leading-tight">
+                    Create your own saree, dupatta, or wall art design.
                   </h2>
-                  <p className="mt-3 max-w-3xl text-sm md:text-base leading-relaxed text-[#1A1512]/68 font-light">
+                  <p className="mt-3 max-w-3xl text-sm md:text-base leading-relaxed text-[hsl(var(--brand-ink)/0.68)] font-light">
                     Share your idea, size, fabric, colors, motif or reference.
                     Our artisans can adapt heritage stories or paint a fully
                     personal Kalamkari piece for you.
@@ -857,32 +844,32 @@ export default function HomePage() {
                   href={customDesignWhatsAppUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-12 min-w-[210px] items-center justify-center gap-3 bg-[#1A1512] px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[#A07840]"
+                  className="inline-flex h-12 min-w-[210px] items-center justify-center gap-3 bg-[hsl(var(--brand-ink))] px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[hsl(var(--brand-gold-deep))]"
                 >
-                  <MessageCircle className="w-4 h-4 text-[#C19A5B]" />
+                  <MessageCircle className="w-4 h-4 text-[hsl(var(--brand-gold))]" />
                   WhatsApp Message
                 </a>
                 <Link
                   href="/custom-design"
-                  className="inline-flex h-12 min-w-[230px] items-center justify-center gap-3 border border-[#1A1512]/20 bg-white/55 px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-[#1A1512] transition-all duration-300 hover:border-[#1A1512] hover:bg-white"
+                  className="inline-flex h-12 min-w-[230px] items-center justify-center gap-3 border border-[hsl(var(--brand-ink)/0.2)] bg-white/55 px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-[hsl(var(--brand-ink))] transition-all duration-300 hover:border-[hsl(var(--brand-ink))] hover:bg-white"
                 >
                   View Custom Designs
-                  <ArrowRight className="w-4 h-4 text-[#C19A5B]" />
+                  <ArrowRight className="w-4 h-4 text-[hsl(var(--brand-gold))]" />
                 </Link>
               </motion.div>
             </div>
 
-            <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-[#C19A5B]/20 pt-5">
+            <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-[hsl(var(--brand-gold)/0.2)] pt-5">
               {[
                 { icon: Scissors, text: "Sarees, dupattas and fabric panels" },
-                { icon: Paintbrush, text: "Wall art, canvas and story motifs" },
+                { icon: Paintbrush, text: "Wall art and story motifs" },
                 { icon: Clock, text: "Timeline shared before confirmation" },
               ].map((item) => (
                 <div
                   key={item.text}
-                  className="flex items-center gap-3 text-[#1A1512]/70"
+                  className="flex items-center gap-3 text-[hsl(var(--brand-ink)/0.7)]"
                 >
-                  <item.icon className="w-4 h-4 text-[#A07840] shrink-0" />
+                  <item.icon className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] shrink-0" />
                   <span className="text-[12px] font-semibold uppercase tracking-[0.08em]">
                     {item.text}
                   </span>
@@ -911,9 +898,9 @@ export default function HomePage() {
                   whileInView={{ width: 40 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="h-px bg-[#C19A5B]/50"
+                  className="h-px bg-[hsl(var(--brand-gold)/0.5)]"
                 />
-                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[#C19A5B]">
+                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold))]">
                   Browse Collections
                 </span>
                 <motion.div
@@ -921,20 +908,20 @@ export default function HomePage() {
                   whileInView={{ width: 40 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="h-px bg-[#C19A5B]/50"
+                  className="h-px bg-[hsl(var(--brand-gold)/0.5)]"
                 />
               </div>
-              <h2 className="font-serif text-4xl md:text-5xl text-[#1A1512] mb-4 leading-tight">
-                Shop by <span className="italic text-[#C19A5B]">Category</span>
+              <h2 className="font-serif text-4xl md:text-5xl text-[hsl(var(--brand-ink))] mb-4 leading-tight">
+                Shop by <span className="italic text-[hsl(var(--brand-gold))]">Category</span>
               </h2>
-              <p className="font-sans text-base text-[#1A1512]/60 max-w-xl mx-auto leading-relaxed font-light">
+              <p className="font-sans text-base text-[hsl(var(--brand-ink)/0.6)] max-w-xl mx-auto leading-relaxed font-light">
                 Explore our curated collections, each piece handcrafted with
                 centuries of tradition
               </p>
             </motion.div>
 
             {/* Category Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {categories.map((cat, i) => (
                 <motion.div
                   key={cat.name}
@@ -959,24 +946,24 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-all duration-500 group-hover:from-black/80" />
 
                       {/* Gold border on hover */}
-                      <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#C19A5B]/40 rounded-xl transition-all duration-500" />
+                      <div className="absolute inset-0 border-2 border-transparent group-hover:border-[hsl(var(--brand-gold)/0.4)] rounded-xl transition-all duration-500" />
 
                       {/* Content */}
                       <div className="absolute bottom-0 left-0 right-0 p-5">
-                        <h3 className="font-serif text-lg md:text-xl font-bold text-white mb-1 group-hover:text-[#C19A5B] transition-colors duration-300">
+                        <h3 className="font-serif text-lg md:text-xl font-bold text-white mb-1 group-hover:text-[hsl(var(--brand-gold))] transition-colors duration-300">
                           {cat.name}
                         </h3>
                         <div className="flex items-center gap-2">
                           <span className="text-[11px] font-bold text-white/60 uppercase tracking-wider">
                             {cat.count} Items
                           </span>
-                          <ArrowRight className="w-3 h-3 text-white/40 group-hover:text-[#C19A5B] group-hover:translate-x-1 transition-all duration-300" />
+                          <ArrowRight className="w-3 h-3 text-white/40 group-hover:text-[hsl(var(--brand-gold))] group-hover:translate-x-1 transition-all duration-300" />
                         </div>
                       </div>
 
                       {/* Shimmer badge */}
                       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span className="text-[9px] font-bold text-[#C19A5B] uppercase tracking-widest bg-white/90 px-2 py-1 rounded-full">
+                        <span className="text-[9px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-widest bg-white/90 px-2 py-1 rounded-full">
                           Explore
                         </span>
                       </div>
@@ -999,13 +986,13 @@ export default function HomePage() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.7 }}
               >
-                <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[#C19A5B]">
+                <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[hsl(var(--brand-gold))]">
                   Curated Collection
                 </span>
-                <h2 className="font-serif text-4xl md:text-5xl text-[#1A1512] mt-4 mb-4 leading-tight">
+                <h2 className="font-serif text-4xl md:text-5xl text-[hsl(var(--brand-ink))] mt-4 mb-4 leading-tight">
                   Masterpieces of <span className="italic">Heritage</span>
                 </h2>
-                <div className="w-12 h-px bg-[#1A1512]/20 mx-auto mt-6"></div>
+                <div className="w-12 h-px bg-[hsl(var(--brand-ink)/0.2)] mx-auto mt-6"></div>
               </motion.div>
             </div>
 
@@ -1035,7 +1022,7 @@ export default function HomePage() {
               className="text-center mt-16"
             >
               <Link href="/products">
-                <button className="inline-flex items-center gap-3 px-8 py-4 text-[13px] font-bold tracking-[0.1em] uppercase text-[#1A1512] border border-[#1A1512]/20 hover:bg-[#1A1512] hover:text-white transition-all duration-300">
+                <button className="inline-flex items-center gap-3 px-8 py-4 text-[13px] font-bold tracking-[0.1em] uppercase text-[hsl(var(--brand-ink))] border border-[hsl(var(--brand-ink)/0.2)] hover:bg-[hsl(var(--brand-ink))] hover:text-white transition-all duration-300">
                   View Full Gallery
                   <ArrowRight className="w-4 h-4" />
                 </button>
@@ -1045,7 +1032,7 @@ export default function HomePage() {
         </section>
 
         {/* The Soul of the Artisan Section - Refined Polish (Section 3) */}
-        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-white/40 backdrop-blur-[2px] border-y border-[#C19A5B]/10">
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-white/40 backdrop-blur-[2px] border-y border-[hsl(var(--brand-gold)/0.1)]">
           <div className="max-w-[1200px] mx-auto px-6 lg:px-12 relative z-20">
             <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
               {/* Image Block - Editorial Framing */}
@@ -1066,18 +1053,18 @@ export default function HomePage() {
                     loading="lazy"
                   />
                   {/* Subtle vignette for premium feel */}
-                  <div className="absolute inset-0 border border-[#1A1512]/10 mix-blend-overlay"></div>
+                  <div className="absolute inset-0 border border-[hsl(var(--brand-ink)/0.1)] mix-blend-overlay"></div>
                 </div>
 
                 {/* Stat Card: Minimalist Floating */}
-                <motion.div className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-md p-8 shadow-lg border border-[#C19A5B]/15">
+                <motion.div className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-md p-8 shadow-lg border border-[hsl(var(--brand-gold)/0.15)]">
                   <CountUpNumber
                     end={500}
                     duration={2000}
-                    className="text-4xl font-serif text-[#1A1512] mb-2 leading-none"
+                    className="text-4xl font-serif text-[hsl(var(--brand-ink))] mb-2 leading-none"
                     suffix="+"
                   />
-                  <div className="text-[10px] font-sans font-bold text-[#C19A5B] tracking-[0.2em] uppercase">
+                  <div className="text-[10px] font-sans font-bold text-[hsl(var(--brand-gold))] tracking-[0.2em] uppercase">
                     Years of Heritage
                   </div>
                 </motion.div>
@@ -1093,27 +1080,27 @@ export default function HomePage() {
               >
                 {/* Tag */}
                 <div className="flex items-center gap-4 mb-8">
-                  <span className="w-12 h-px bg-[#C19A5B]"></span>
-                  <span className="font-sans text-[10px] font-bold text-[#C19A5B] uppercase tracking-[0.25em]">
+                  <span className="w-12 h-px bg-[hsl(var(--brand-gold))]"></span>
+                  <span className="font-sans text-[10px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.25em]">
                     Our Heritage
                   </span>
                 </div>
 
                 {/* Heading */}
-                <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1A1512] mb-8 leading-[1.1] tracking-tight">
+                <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[hsl(var(--brand-ink))] mb-8 leading-[1.1] tracking-tight">
                   The Soul of the <br />
-                  <span className="italic text-[#C19A5B]">Artisan</span>
+                  <span className="italic text-[hsl(var(--brand-gold))]">Artisan</span>
                 </h2>
 
                 {/* Content */}
                 <div className="space-y-6 mb-12 max-w-xl">
-                  <p className="font-sans text-base text-[#1A1512]/70 leading-relaxed font-light mb-4">
+                  <p className="font-sans text-base text-[hsl(var(--brand-ink)/0.7)] leading-relaxed font-light mb-4">
                     Srikalahasti Kalamkari is more than an art form; it is a
                     living narrative whispered through generations. Specializing
                     in authentic hand-painted textiles, from elegant Sarees and
                     Duppatas to exquisite Wall Paintings and Canvas art.
                   </p>
-                  <p className="font-sans text-sm text-[#1A1512]/60 leading-relaxed font-light">
+                  <p className="font-sans text-sm text-[hsl(var(--brand-ink)/0.6)] leading-relaxed font-light">
                     Also recognized worldwide as <strong>Shri Kalahasti Kalamkari</strong>, our artisans preserve the authentic pen Kalamkari technique, creating some of the finest Indian handloom sarees and fabrics available today.
                   </p>
 
@@ -1122,7 +1109,7 @@ export default function HomePage() {
                       (item) => (
                         <span
                           key={item}
-                          className="text-[11px] font-bold text-[#1A1512]/60 uppercase tracking-widest border-b border-[#1A1512]/20 pb-1"
+                          className="text-[11px] font-bold text-[hsl(var(--brand-ink)/0.6)] uppercase tracking-widest border-b border-[hsl(var(--brand-ink)/0.2)] pb-1"
                         >
                           {item}
                         </span>
@@ -1134,16 +1121,16 @@ export default function HomePage() {
                 {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-5">
                   <Link href="/about">
-                    <Button className="w-full sm:w-auto h-[52px] px-8 rounded-none bg-[#1A1512] text-white hover:bg-[#1A1512]/90 transition-all text-[12px] font-bold tracking-[0.15em] uppercase">
+                    <Button className="w-full sm:w-auto h-[52px] px-8 rounded-none bg-[hsl(var(--brand-ink))] text-white hover:bg-[hsl(var(--brand-ink)/0.9)] transition-all text-[12px] font-bold tracking-[0.15em] uppercase">
                       Discover the Craft
                     </Button>
                   </Link>
 
                   <Link
                     href="/custom-design"
-                    className="group inline-flex items-center justify-center gap-3 px-8 h-[52px] border border-[#1A1512]/20 hover:border-[#1A1512] text-[#1A1512] text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-300"
+                    className="group inline-flex items-center justify-center gap-3 px-8 h-[52px] border border-[hsl(var(--brand-ink)/0.2)] hover:border-[hsl(var(--brand-ink))] text-[hsl(var(--brand-ink))] text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-300"
                   >
-                    <Palette className="w-4 h-4 text-[#C19A5B] group-hover:scale-110 transition-transform" />
+                    <Palette className="w-4 h-4 text-[hsl(var(--brand-gold))] group-hover:scale-110 transition-transform" />
                     Custom Designs
                   </Link>
                 </div>
@@ -1152,7 +1139,7 @@ export default function HomePage() {
           </div>
 
           {/* Faint Watermark (Bottom Right) */}
-          <div className="absolute -bottom-24 -right-24 w-96 h-96 opacity-[0.03] pointer-events-none rotate-12 text-[#1A1512]">
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 opacity-[0.03] pointer-events-none rotate-12 text-[hsl(var(--brand-ink))]">
             <svg
               viewBox="0 0 200 200"
               fill="currentColor"
@@ -1168,7 +1155,7 @@ export default function HomePage() {
         {promotions.length > 0 && (
           <section className="w-full pt-10 pb-16 md:pb-22 relative overflow-hidden">
             <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
-              <div className="h-px w-full bg-gradient-to-r from-transparent via-[#E5B97C]/50 to-transparent" />
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold-soft)/0.5)] to-transparent" />
             </div>
 
             <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
@@ -1462,7 +1449,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* EXCLUSIVE OFFERS — Full-Width Cinematic Banner with Countdown  */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="w-full relative overflow-hidden bg-[#1A1512]">
+        <section className="w-full relative overflow-hidden bg-[hsl(var(--brand-ink))]">
           <div className="relative min-h-[500px] md:min-h-[550px] flex items-center">
             {/* Parallax BG Image */}
             <div className="absolute inset-0">
@@ -1472,7 +1459,7 @@ export default function HomePage() {
                 fill
                 className="object-cover opacity-40"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#1A1512]/90 via-[#1A1512]/70 to-[#1A1512]/50" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--brand-ink)/0.9)] via-[hsl(var(--brand-ink)/0.7)] to-[hsl(var(--brand-ink)/0.5)]" />
             </div>
 
             {/* Gold line accents */}
@@ -1481,14 +1468,14 @@ export default function HomePage() {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.5 }}
-              className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/40 to-transparent"
+              className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.4)] to-transparent"
             />
             <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.5 }}
-              className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/40 to-transparent"
+              className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.4)] to-transparent"
             />
 
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 md:py-24">
@@ -1506,17 +1493,17 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
-                    className="inline-flex items-center gap-2 bg-[#C19A5B]/20 border border-[#C19A5B]/30 rounded-full px-4 py-1.5 mb-6"
+                    className="inline-flex items-center gap-2 bg-[hsl(var(--brand-gold)/0.2)] border border-[hsl(var(--brand-gold)/0.3)] rounded-full px-4 py-1.5 mb-6"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-[#C19A5B]" />
-                    <span className="text-[11px] font-bold text-[#C19A5B] uppercase tracking-[0.2em]">
+                    <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--brand-gold))]" />
+                    <span className="text-[11px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.2em]">
                       Limited Time Offer
                     </span>
                   </motion.div>
 
                   <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-[1.1]">
                     Heritage Season{" "}
-                    <span className="italic text-[#C19A5B]">Sale</span>
+                    <span className="italic text-[hsl(var(--brand-gold))]">Sale</span>
                   </h2>
 
                   <p className="font-sans text-lg text-white/70 mb-8 max-w-lg leading-relaxed font-light">
@@ -1530,7 +1517,7 @@ export default function HomePage() {
                     whileInView={{ rotate: 0, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
-                    className="inline-flex items-center gap-3 bg-gradient-to-r from-[#C19A5B] to-[#A07840] px-6 py-3 rounded-lg mb-8"
+                    className="inline-flex items-center gap-3 bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-deep))] px-6 py-3 rounded-lg mb-8"
                   >
                     <span className="font-serif text-3xl font-bold text-white">
                       30%
@@ -1547,7 +1534,7 @@ export default function HomePage() {
 
                   <div className="flex gap-4 mt-2">
                     <Link href="/products">
-                      <Button className="h-12 px-8 rounded-none bg-white text-[#1A1512] hover:bg-[#C19A5B] hover:text-white text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-500">
+                      <Button className="h-12 px-8 rounded-none bg-white text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-gold))] hover:text-white text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-500">
                         Shop Now
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
@@ -1587,17 +1574,17 @@ export default function HomePage() {
               className="text-center mb-12 md:mb-16"
             >
               <div className="flex items-center justify-center gap-3 mb-5">
-                <div className="w-10 h-px bg-[#C19A5B]/50" />
-                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[#C19A5B]">
+                <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.5)]" />
+                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold))]">
                   From Fabric to Art
                 </span>
-                <div className="w-10 h-px bg-[#C19A5B]/50" />
+                <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.5)]" />
               </div>
-              <h2 className="font-serif text-4xl md:text-5xl text-[#1A1512] dark:text-[#FAF3E8] mb-4 leading-tight">
+              <h2 className="font-serif text-4xl md:text-5xl text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))] mb-4 leading-tight">
                 The Kalamkari{" "}
-                <span className="italic text-[#C19A5B]">Process</span>
+                <span className="italic text-[hsl(var(--brand-gold))]">Process</span>
               </h2>
-              <p className="font-sans text-base text-[#1A1512]/60 dark:text-[#FAF3E8]/70 max-w-2xl mx-auto leading-relaxed font-light">
+              <p className="font-sans text-base text-[hsl(var(--brand-ink)/0.6)] dark:text-[hsl(var(--brand-cream)/0.7)] max-w-2xl mx-auto leading-relaxed font-light">
                 Every masterpiece passes through five meticulous stages of
                 artisan craftsmanship, each step guided by centuries of
                 inherited wisdom.
@@ -1613,7 +1600,7 @@ export default function HomePage() {
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 1.5, delay: 0.5 }}
-                  className="w-full h-full bg-gradient-to-r from-[#C19A5B]/10 via-[#C19A5B]/30 to-[#C19A5B]/10 origin-left"
+                  className="w-full h-full bg-gradient-to-r from-[hsl(var(--brand-gold)/0.1)] via-[hsl(var(--brand-gold)/0.3)] to-[hsl(var(--brand-gold)/0.1)] origin-left"
                 />
               </div>
 
@@ -1633,23 +1620,23 @@ export default function HomePage() {
                       className="relative w-20 h-20 mb-4"
                     >
                       {/* Outer ring - solid background masks the connecting line behind it */}
-                      <div className="absolute inset-0 rounded-full border-2 border-[#C19A5B]/20 bg-white dark:bg-[#120905] group-hover:border-[#C19A5B]/50 transition-colors duration-500" />
+                      <div className="absolute inset-0 rounded-full border-2 border-[hsl(var(--brand-gold)/0.2)] bg-white dark:bg-[#120905] group-hover:border-[hsl(var(--brand-gold)/0.5)] transition-colors duration-500" />
                       {/* Inner circle */}
-                      <div className="absolute inset-2 rounded-full bg-gradient-to-br from-white to-neutral-200/40 group-hover:from-[#C19A5B]/10 group-hover:to-[#C19A5B]/20 transition-all duration-500 flex items-center justify-center shadow-sm">
-                        <step.icon className="w-7 h-7 text-[#C19A5B] group-hover:scale-110 transition-transform duration-300" />
+                      <div className="absolute inset-2 rounded-full bg-gradient-to-br from-white to-neutral-200/40 group-hover:from-[hsl(var(--brand-gold)/0.1)] group-hover:to-[hsl(var(--brand-gold)/0.2)] transition-all duration-500 flex items-center justify-center shadow-sm">
+                        <step.icon className="w-7 h-7 text-[hsl(var(--brand-gold))] group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       {/* Step number */}
-                      <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#1A1512] dark:bg-[#C19A5B] flex items-center justify-center">
-                        <span className="text-[10px] font-bold text-white dark:text-[#1A1512]">
+                      <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[hsl(var(--brand-ink))] dark:bg-[hsl(var(--brand-gold))] flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-white dark:text-[hsl(var(--brand-ink))]">
                           {i + 1}
                         </span>
                       </div>
                     </motion.div>
 
-                    <h3 className="font-serif text-lg font-bold text-[#1A1512] dark:text-[#FAF3E8] mb-2 group-hover:text-[#C19A5B] transition-colors duration-300">
+                    <h3 className="font-serif text-lg font-bold text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))] mb-2 group-hover:text-[hsl(var(--brand-gold))] transition-colors duration-300">
                       {step.title}
                     </h3>
-                    <p className="font-sans text-[13px] text-[#1A1512]/60 dark:text-[#FAF3E8]/60 leading-relaxed max-w-[200px]">
+                    <p className="font-sans text-[13px] text-[hsl(var(--brand-ink)/0.6)] dark:text-[hsl(var(--brand-cream)/0.6)] leading-relaxed max-w-[200px]">
                       {step.desc}
                     </p>
                   </motion.div>
@@ -1680,19 +1667,19 @@ export default function HomePage() {
               className="text-center mb-10"
             >
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-px bg-[#C19A5B]" />
-                <span className="font-sans text-[10px] font-bold text-[#C19A5B] uppercase tracking-[0.2em]">
+                <div className="w-12 h-px bg-[hsl(var(--brand-gold))]" />
+                <span className="font-sans text-[10px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.2em]">
                   Our Promise
                 </span>
-                <div className="w-12 h-px bg-[#C19A5B]" />
+                <div className="w-12 h-px bg-[hsl(var(--brand-gold))]" />
               </div>
 
-              <h2 className="font-serif text-3xl md:text-4xl text-[#1A1512] mb-3 leading-tight">
+              <h2 className="font-serif text-3xl md:text-4xl text-[hsl(var(--brand-ink))] mb-3 leading-tight">
                 The Srikalahasti{" "}
-                <span className="text-[#C19A5B] italic">Promise</span>
+                <span className="text-[hsl(var(--brand-gold))] italic">Promise</span>
               </h2>
 
-              <p className="font-sans text-base text-[#1A1512]/90 leading-relaxed max-w-2xl mx-auto">
+              <p className="font-sans text-base text-[hsl(var(--brand-ink)/0.9)] leading-relaxed max-w-2xl mx-auto">
                 Authentic experiences steeped in tradition, quality, and
                 heritage.
               </p>
@@ -1707,29 +1694,29 @@ export default function HomePage() {
                     className="group relative h-full"
                   >
                     {/* Gold Hover Glow */}
-                    <div className="absolute -inset-1 bg-[#C19A5B]/0 group-hover:bg-[#C19A5B]/15 rounded-[16px] blur-lg transition-all duration-500" />
+                    <div className="absolute -inset-1 bg-[hsl(var(--brand-gold)/0)] group-hover:bg-[hsl(var(--brand-gold)/0.15)] rounded-[16px] blur-lg transition-all duration-500" />
 
                     {/* Card with Darker Gradient */}
-                    <div className="relative h-full bg-gradient-to-b from-white to-white/40 rounded-xl py-8 px-6 shadow-[0_6px_18px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_28px_rgba(193,154,91,0.12)] transition-all duration-500 border border-[#C19A5B]/20 group-hover:border-[#C19A5B]/50 overflow-hidden">
+                    <div className="relative h-full bg-gradient-to-b from-white to-white/40 rounded-xl py-8 px-6 shadow-[0_6px_18px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_28px_rgba(193,154,91,0.12)] transition-all duration-500 border border-[hsl(var(--brand-gold)/0.2)] group-hover:border-[hsl(var(--brand-gold)/0.5)] overflow-hidden">
                       {/* Icon - Smaller with Gold Gradient */}
-                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#C19A5B] to-[#C19A5B]/80 shadow-md">
+                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold)/0.8)] shadow-md">
                         <item.icon className="w-5 h-5 text-white" />
                       </div>
 
                       {/* Title - Playfair Bold 20px */}
-                      <h3 className="font-serif text-[20px] font-bold text-[#1A1512] mb-2 text-center leading-tight">
+                      <h3 className="font-serif text-[20px] font-bold text-[hsl(var(--brand-ink))] mb-2 text-center leading-tight">
                         {item.title}
                       </h3>
 
                       {/* Description - Inter 15px */}
-                      <p className="font-sans text-[15px] text-[#1A1512]/90 leading-[1.5] text-center mb-4">
+                      <p className="font-sans text-[15px] text-[hsl(var(--brand-ink)/0.9)] leading-[1.5] text-center mb-4">
                         {item.description}
                       </p>
 
                       {/* Badge - Inter SemiBold 13px */}
                       <div className="text-center">
-                        <span className="inline-flex items-center px-3 py-1.5 bg-[#C19A5B]/8 rounded-full border border-[#C19A5B]/25 text-[13px] font-semibold text-[#C19A5B] group-hover:border-[#C19A5B]/50 transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-offset-1 group-hover:ring-[#C19A5B]/40">
-                          <Sparkles className="w-3 h-3 mr-1.5 text-[#C19A5B]" />
+                        <span className="inline-flex items-center px-3 py-1.5 bg-[hsl(var(--brand-gold)/0.08)] rounded-full border border-[hsl(var(--brand-gold)/0.25)] text-[13px] font-semibold text-[hsl(var(--brand-gold))] group-hover:border-[hsl(var(--brand-gold)/0.5)] transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-offset-1 group-hover:ring-[hsl(var(--brand-gold)/0.4)]">
+                          <Sparkles className="w-3 h-3 mr-1.5 text-[hsl(var(--brand-gold))]" />
                           {item.highlight}
                         </span>
                       </div>
@@ -1765,7 +1752,7 @@ export default function HomePage() {
                 <motion.path
                   d="M-50,200 C200,150 400,250 600,200 C800,150 1000,250 1250,200"
                   fill="none"
-                  stroke="#C19A5B"
+                  style={{ stroke: "hsl(var(--brand-gold))" }}
                   strokeWidth="1.5"
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{
@@ -1782,7 +1769,7 @@ export default function HomePage() {
                 <motion.path
                   d="M-50,600 C200,550 400,650 600,600 C800,550 1000,650 1250,600"
                   fill="none"
-                  stroke="#C19A5B"
+                  style={{ stroke: "hsl(var(--brand-gold))" }}
                   strokeWidth="1.5"
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{
@@ -1811,18 +1798,18 @@ export default function HomePage() {
               className="text-center mb-16"
             >
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-10 h-px bg-[#C19A5B]/40" />
-                <span className="font-sans text-[12px] font-bold text-[#C19A5B] uppercase tracking-[0.2em]">
+                <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.4)]" />
+                <span className="font-sans text-[12px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.2em]">
                   VISUAL GALLERY
                 </span>
-                <div className="w-10 h-px bg-[#C19A5B]/40" />
+                <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.4)]" />
               </div>
 
               <h2 className="font-serif text-4xl md:text-5xl text-[#3A2A1C] mb-5 leading-tight relative inline-block">
-                Woven in <span className="text-[#A65329] italic">Elegance</span>
+                Woven in <span className="text-[hsl(var(--brand-madder))] italic">Elegance</span>
                 {/* Gold Underline Animation */}
                 <motion.div
-                  className="absolute -bottom-2 left-0 h-px bg-[#C19A5B]/60"
+                  className="absolute -bottom-2 left-0 h-px bg-[hsl(var(--brand-gold)/0.6)]"
                   initial={{ width: 0 }}
                   whileInView={{ width: "100%" }}
                   transition={{ duration: 0.8, delay: 0.3 }}
@@ -1841,8 +1828,6 @@ export default function HomePage() {
               {galleryImages.map((image, index) => {
                 let gridClasses = "md:col-span-1 md:row-span-1"
                 if (index === 0) gridClasses = "md:col-span-2 md:row-span-1"
-                if (index === 2) gridClasses = "md:col-span-1 md:row-span-2"
-                if (index === 5) gridClasses = "md:col-span-2 md:row-span-1"
 
                 return (
                   <AnimatedElement
@@ -1868,7 +1853,7 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-[rgba(35,22,10,0.55)] via-transparent to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-75" />
 
                       {/* Refined Hover Overlay Tint */}
-                      <div className="absolute inset-0 bg-[#C19A5B]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ring-1 ring-inset ring-[#C19A5B]/20 rounded-[14px] pointer-events-none" />
+                      <div className="absolute inset-0 bg-[hsl(var(--brand-gold)/0.05)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ring-1 ring-inset ring-[hsl(var(--brand-gold)/0.2)] rounded-[14px] pointer-events-none" />
 
                       <div className="absolute bottom-6 left-6 overflow-hidden">
                         <motion.div
@@ -1911,16 +1896,16 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <span className="font-sans text-xs font-semibold tracking-[0.25em] uppercase text-[#C19A5B] dark:text-[#E5B97C] block mb-4">
+                <span className="font-sans text-xs font-semibold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] block mb-4">
                   Authentic Voices
                 </span>
-                <h2 className="font-playfair text-4xl md:text-5xl text-[#3A2413] dark:text-[#FAF3E8] font-bold leading-tight mb-6">
+                <h2 className="font-playfair text-4xl md:text-5xl text-[hsl(var(--brand-ink-soft))] dark:text-[hsl(var(--brand-cream))] font-bold leading-tight mb-6">
                   Voices of{" "}
-                  <span className="italic text-[#A4552A] dark:text-[#E88A54]">
+                  <span className="italic text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))]">
                     Heritage
                   </span>
                 </h2>
-                <p className="font-sans text-[16px] text-[#3A2413]/70 dark:text-[#FAF3E8]/70 max-w-2xl mx-auto leading-relaxed">
+                <p className="font-sans text-[16px] text-[hsl(var(--brand-ink-soft)/0.7)] dark:text-[hsl(var(--brand-cream)/0.7)] max-w-2xl mx-auto leading-relaxed">
                   Real stories from those who carry our legacy forward, woven
                   through threads of trust and timeless craftsmanship.
                 </p>
@@ -1935,13 +1920,13 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  className="relative p-10 md:p-14 bg-white/60 dark:bg-[#1a0f0a]/60 backdrop-blur-md rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.3)] border border-[#C19A5B]/10 dark:border-[#C19A5B]/20 overflow-hidden text-center max-w-5xl mx-auto"
+                  className="relative p-10 md:p-14 bg-white/60 dark:bg-[#1a0f0a]/60 backdrop-blur-md rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.3)] border border-[hsl(var(--brand-gold)/0.1)] dark:border-[hsl(var(--brand-gold)/0.2)] overflow-hidden text-center max-w-5xl mx-auto"
                 >
                   {/* Decorative Heritage Corner Frames */}
-                  <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-[#C19A5B]/30" />
-                  <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-[#C19A5B]/30" />
+                  <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-[hsl(var(--brand-gold)/0.3)]" />
+                  <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-[hsl(var(--brand-gold)/0.3)]" />
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 opacity-[0.03] dark:opacity-[0.06] pointer-events-none">
-                    <svg viewBox="0 0 100 100" fill="none" stroke="#C19A5B">
+                    <svg viewBox="0 0 100 100" fill="none" style={{ stroke: "hsl(var(--brand-gold))" }}>
                       <path
                         d="M50 10 L80 90 L20 40 L80 40 L20 90 Z"
                         strokeWidth="0.5"
@@ -1950,10 +1935,10 @@ export default function HomePage() {
                   </div>
 
                   <div className="relative z-10">
-                    <div className="text-[64px] font-playfair text-[#C19A5B] dark:text-[#E5B97C] opacity-[0.15] leading-none mb-4 h-12">
+                    <div className="text-[64px] font-playfair text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] opacity-[0.15] leading-none mb-4 h-12">
                       ❝
                     </div>
-                    <p className="font-playfair text-[20px] md:text-[24px] leading-[1.7] text-[#3A2413]/85 dark:text-[#FAF3E8]/90 mb-10 italic max-w-3xl mx-auto">
+                    <p className="font-playfair text-[20px] md:text-[24px] leading-[1.7] text-[hsl(var(--brand-ink-soft)/0.85)] dark:text-[hsl(var(--brand-cream)/0.9)] mb-10 italic max-w-3xl mx-auto">
                       "Each piece tells a story that transcends time. Truly a
                       masterpiece of Srikalahasti art, hand-painted with a soul
                       that connects me to the divine heritage. The colors are
@@ -1962,7 +1947,7 @@ export default function HomePage() {
 
                     <div className="flex flex-col items-center gap-4">
                       <div className="relative">
-                        <div className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 border-[#C19A5B]/20 dark:border-[#C19A5B]/40">
+                        <div className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 border-[hsl(var(--brand-gold)/0.2)] dark:border-[hsl(var(--brand-gold)/0.4)]">
                           <Image
                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&auto=format&fit=crop"
                             alt="Verified Customer"
@@ -1972,14 +1957,14 @@ export default function HomePage() {
                           />
                         </div>
                         <div className="absolute -bottom-1 -right-1 bg-white dark:bg-[#120905] rounded-full p-0.5 shadow-sm">
-                          <CheckCircle2 className="w-4 h-4 text-[#C19A5B] dark:text-[#E5B97C] fill-current" />
+                          <CheckCircle2 className="w-4 h-4 text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] fill-current" />
                         </div>
                       </div>
                       <div>
-                        <p className="font-playfair text-[18px] font-bold text-[#A4552A] dark:text-[#E88A54] leading-tight mb-1 uppercase tracking-wide">
+                        <p className="font-playfair text-[18px] font-bold text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] leading-tight mb-1 uppercase tracking-wide">
                           Priya Sharma
                         </p>
-                        <p className="font-sans text-[13px] text-[#3A2413]/60 dark:text-[#FAF3E8]/60 italic font-medium">
+                        <p className="font-sans text-[13px] text-[hsl(var(--brand-ink-soft)/0.6)] dark:text-[hsl(var(--brand-cream)/0.6)] italic font-medium">
                           Mumbai, Maharashtra
                         </p>
                       </div>
@@ -2034,35 +2019,35 @@ export default function HomePage() {
                     whileHover={{
                       y: -8,
                     }}
-                    className="group relative h-full p-8 md:p-10 bg-white/50 dark:bg-[#1a0f0a]/40 backdrop-blur-sm rounded-[16px] border border-[#C19A5B]/10 dark:border-[#C19A5B]/20 flex flex-col justify-between transition-all duration-500 hover:bg-white/80 dark:hover:bg-[#1a0f0a]/60 hover:border-[#C19A5B]/30 dark:hover:border-[#C19A5B]/40 shadow-sm dark:shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-2xl dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)]"
+                    className="group relative h-full p-8 md:p-10 bg-white/50 dark:bg-[#1a0f0a]/40 backdrop-blur-sm rounded-[16px] border border-[hsl(var(--brand-gold)/0.1)] dark:border-[hsl(var(--brand-gold)/0.2)] flex flex-col justify-between transition-all duration-500 hover:bg-white/80 dark:hover:bg-[#1a0f0a]/60 hover:border-[hsl(var(--brand-gold)/0.3)] dark:hover:border-[hsl(var(--brand-gold)/0.4)] shadow-sm dark:shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-2xl dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)]"
                   >
                     {/* Decorative Heritage Corner Frames */}
-                    <div className="absolute top-3 left-3 w-4 h-4 border-l border-t border-[#C19A5B]/30 group-hover:border-[#C19A5B]/60 transition-all duration-300" />
-                    <div className="absolute bottom-3 right-3 w-4 h-4 border-r border-b border-[#C19A5B]/30 group-hover:border-[#C19A5B]/60 transition-all duration-300" />
+                    <div className="absolute top-3 left-3 w-4 h-4 border-l border-t border-[hsl(var(--brand-gold)/0.3)] group-hover:border-[hsl(var(--brand-gold)/0.6)] transition-all duration-300" />
+                    <div className="absolute bottom-3 right-3 w-4 h-4 border-r border-b border-[hsl(var(--brand-gold)/0.3)] group-hover:border-[hsl(var(--brand-gold)/0.6)] transition-all duration-300" />
                     <div className="mb-6">
                       <div className="flex justify-between items-start mb-4">
-                        <div className="text-[40px] font-playfair text-[#C19A5B] dark:text-[#E5B97C] opacity-[0.2] leading-none h-6">
+                        <div className="text-[40px] font-playfair text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] opacity-[0.2] leading-none h-6">
                           “
                         </div>
                         <div className="flex gap-0.5">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className="w-3 h-3 fill-[#C19A5B] dark:fill-[#E5B97C] text-[#C19A5B] dark:text-[#E5B97C]"
+                              className="w-3 h-3 fill-[hsl(var(--brand-gold))] dark:fill-[hsl(var(--brand-gold-soft))] text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))]"
                             />
                           ))}
                         </div>
                       </div>
-                      <p className="font-serif text-[16px] md:text-[17px] leading-[1.7] text-[#3A2413]/85 dark:text-[#FAF3E8]/90 italic">
+                      <p className="font-serif text-[16px] md:text-[17px] leading-[1.7] text-[hsl(var(--brand-ink-soft)/0.85)] dark:text-[hsl(var(--brand-cream)/0.9)] italic">
                         {item.quote}
                       </p>
                     </div>
 
-                    <div className="pt-6 border-t border-[#C19A5B]/10 dark:border-[#C19A5B]/20">
-                      <p className="font-sans text-[14px] font-bold text-[#A4552A] dark:text-[#E88A54] uppercase tracking-wider mb-1">
+                    <div className="pt-6 border-t border-[hsl(var(--brand-gold)/0.1)] dark:border-[hsl(var(--brand-gold)/0.2)]">
+                      <p className="font-sans text-[14px] font-bold text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] uppercase tracking-wider mb-1">
                         {item.name}
                       </p>
-                      <p className="font-sans text-[12px] text-[#3A2413]/50 dark:text-[#FAF3E8]/50 font-medium">
+                      <p className="font-sans text-[12px] text-[hsl(var(--brand-ink-soft)/0.5)] dark:text-[hsl(var(--brand-cream)/0.5)] font-medium">
                         {item.city}
                       </p>
                     </div>
@@ -2072,7 +2057,7 @@ export default function HomePage() {
             </div>
 
             {/* Trust Anchors Footer */}
-            <div className="mt-12 md:mt-16 border-t border-[#C19A5B]/20 dark:border-[#C19A5B]/30 pt-10 md:pt-12">
+            <div className="mt-12 md:mt-16 border-t border-[hsl(var(--brand-gold)/0.2)] dark:border-[hsl(var(--brand-gold)/0.3)] pt-10 md:pt-12">
               <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
                 {[
                   {
@@ -2094,16 +2079,16 @@ export default function HomePage() {
                   <AnimatedElement key={idx} delay={idx * 150}>
                     <motion.div
                       whileHover={{ scale: 1.03, y: -4 }}
-                      className="flex items-center gap-5 bg-white/70 dark:bg-[#1a0f0a]/50 backdrop-blur-md px-8 py-5 rounded-2xl shadow-[0_4px_18px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.15)] border border-[#C19A5B]/15 dark:border-[#C19A5B]/25 min-w-[260px] justify-center group transition-all duration-300 hover:border-[#C19A5B]/40 dark:hover:border-[#C19A5B]/50"
+                      className="flex items-center gap-5 bg-white/70 dark:bg-[#1a0f0a]/50 backdrop-blur-md px-8 py-5 rounded-2xl shadow-[0_4px_18px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.15)] border border-[hsl(var(--brand-gold)/0.15)] dark:border-[hsl(var(--brand-gold)/0.25)] min-w-[260px] justify-center group transition-all duration-300 hover:border-[hsl(var(--brand-gold)/0.4)] dark:hover:border-[hsl(var(--brand-gold)/0.5)]"
                     >
-                      <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-[#A4552A]/8 dark:bg-[#E88A54]/10 border border-[#A4552A]/20 dark:border-[#E88A54]/30 text-[#A4552A] dark:text-[#E88A54] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#A4552A]/15 group-hover:border-[#A4552A]/40 dark:group-hover:border-[#E88A54]/50">
+                      <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-[hsl(var(--brand-madder)/0.08)] dark:bg-[hsl(var(--brand-madder-soft)/0.1)] border border-[hsl(var(--brand-madder)/0.2)] dark:border-[hsl(var(--brand-madder-soft)/0.3)] text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] transition-all duration-300 group-hover:scale-110 group-hover:bg-[hsl(var(--brand-madder)/0.15)] group-hover:border-[hsl(var(--brand-madder)/0.4)] dark:group-hover:border-[hsl(var(--brand-madder-soft)/0.5)]">
                         <anchor.icon className="w-5 h-5 stroke-[1.5]" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-playfair text-[22px] font-bold text-[#3A2413] dark:text-[#FAF3E8] leading-tight mb-0.5">
+                        <span className="font-playfair text-[22px] font-bold text-[hsl(var(--brand-ink-soft))] dark:text-[hsl(var(--brand-cream))] leading-tight mb-0.5">
                           {anchor.value}
                         </span>
-                        <span className="font-sans text-[11px] font-bold text-[#A4552A] dark:text-[#E88A54] uppercase tracking-[0.1em] opacity-80 group-hover:opacity-100 transition-opacity">
+                        <span className="font-sans text-[11px] font-bold text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] uppercase tracking-[0.1em] opacity-80 group-hover:opacity-100 transition-opacity">
                           {anchor.label}
                         </span>
                       </div>

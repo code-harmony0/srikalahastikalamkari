@@ -94,6 +94,12 @@ const sanitizePayload = (
     delete p.isFeatured;
   }
 
+  // Handle isCustomDesign field
+  if (p.isCustomDesign !== undefined) {
+    p.is_custom_design = Boolean(p.isCustomDesign);
+    delete p.isCustomDesign;
+  }
+
   // Handle category field (now exists as category_id in database)
   if (p.category !== undefined) {
     p.category_id = p.category || null;
@@ -932,6 +938,7 @@ export interface ProductFilters {
   in_stock?: boolean;
   out_of_stock?: boolean;
   is_visible?: boolean;
+  is_custom_design?: boolean;
   colors?: string[];
   sort_by?: string;
 }
@@ -997,6 +1004,11 @@ export const getProductsPaginated = async (
     }
     if (filters.out_of_stock) {
       query = query.lte("stock_quantity", 0);
+    }
+
+    // Custom Design Filter
+    if (filters.is_custom_design !== undefined) {
+      query = query.eq("is_custom_design", filters.is_custom_design);
     }
     
     // Visibility Filter
@@ -1099,10 +1111,13 @@ export const productsService = {
 
       let query = supabase
         .from("products")
-        .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, category_id, categories:category_id(id, name)")
+        .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, is_custom_design, category_id, categories:category_id(id, name)")
         .eq("is_visible", true)
         .limit(needed)
         .order("created_at", { ascending: false });
+
+      // Hide custom designs from featured fallback by default
+      query = query.eq("is_custom_design", false);
 
       if (existingIds.length > 0) {
         query = query.not("id", "in", `(${existingIds.join(",")})`);

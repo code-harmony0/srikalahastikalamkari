@@ -41,6 +41,9 @@ process.env.NEXT_PUBLIC_SUPABASE_URL = "https://test.supabase.co"
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "test-key"
 process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID = "test_razorpay_key"
 
+// Browser globals below only exist under the jsdom environment; node-environment
+// suites (edge/server modules) share this setup file and must skip them.
+if (typeof window !== "undefined") {
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -84,6 +87,7 @@ Object.defineProperty(window, "Razorpay", {
     close: jest.fn(),
   })),
 })
+}
 
 // Suppress console errors during tests
 global.console = {

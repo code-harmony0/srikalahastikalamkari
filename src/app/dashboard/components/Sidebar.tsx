@@ -53,7 +53,7 @@ const Sidebar = () => {
       localStorage.removeItem("rememberMe")
       sessionStorage.removeItem("isLoggedIn")
       sessionStorage.removeItem("userRole")
-      document.cookie = "isLoggedIn=; path=/; max-age=0"
+      // The session cookie is httpOnly; the logout endpoint above clears it.
       window.location.href = "/admin/login"
     } catch {
       toast.error("Could not log out. Please try again.")

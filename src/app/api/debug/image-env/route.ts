@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from "next/server"
+import {
+  ADMIN_SESSION_COOKIE,
+  verifyAdminSessionToken,
+} from "@/shared/lib/admin-session"
 
 // Lightweight server-side diagnostic: verifies which image env vars are present
 // and whether sharp (Next.js image optimizer) is loadable.
-// Protected by admin cookie — not a public endpoint.
+// Protected by a signed admin session — not a public endpoint.
 //
 // Usage: GET /api/debug/image-env
 // Or in browser: visit while logged in as admin
 export async function GET(request: NextRequest) {
-  if (request.cookies.get("isLoggedIn")?.value !== "true") {
+  const session = await verifyAdminSessionToken(
+    request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
+  )
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 

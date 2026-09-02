@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     description:
       "Authentic Srikalahasti Kalamkari sarees and fabrics. Handcrafted traditional pen-work collection from Andhra Pradesh artisans.",
     url: "https://srikalahastikalamkari.in/products",
-    images: [{ url: "/images/logo.jpg", alt: "Srikalahasti Kalamkari Sarees" }],
+    images: [{ url: "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full", alt: "Srikalahasti Kalamkari Sarees" }],
   },
 };
 

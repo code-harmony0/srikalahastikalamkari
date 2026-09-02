@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
+import {
+  ADMIN_SESSION_COOKIE,
+  verifyAdminSessionToken,
+} from "@/shared/lib/admin-session"
 
 const CLOUDFLARE_TIMEOUT_MS = 45_000
 
@@ -36,7 +40,10 @@ async function cloudflareFetch(input: string, init: RequestInit) {
 
 export async function POST(request: NextRequest) {
   try {
-    if (request.cookies.get("isLoggedIn")?.value !== "true") {
+    const session = await verifyAdminSessionToken(
+      request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
+    )
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 

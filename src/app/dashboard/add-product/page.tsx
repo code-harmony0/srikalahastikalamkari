@@ -171,6 +171,7 @@ const AddProduct = () => {
     quantity: "",
     inStock: true,
     isVisible: true,
+    isCustomDesign: false,
   })
 
   // UI state
@@ -346,6 +347,7 @@ const AddProduct = () => {
       const originalPrice = getVal("originalPrice", "original_price")
       const quantity = getVal("quantity", "stock_quantity")
       const inStock = getVal("inStock", "in_stock")
+      const isCustomDesign = getVal("isCustomDesign", "is_custom_design")
 
       console.log(
         "📂 Category ID:",
@@ -371,6 +373,7 @@ const AddProduct = () => {
         colors: "",
         quantity: quantity?.toString() || "1",
         inStock: inStock ?? true,
+        isCustomDesign: isCustomDesign ?? false,
       }))
 
       // Handle colors - they might be array, JSON string, or comma-separated string
@@ -866,11 +869,12 @@ const AddProduct = () => {
           : null,
         category: formData.category, // Keep as UUID string
         subCategory: formData.subCategory || null, // Keep as UUID string
-        colors: selectedColors, // Use the selectedColors array
-        specifications: specsObject, // Add specifications
-        quantity: parseInt(formData.quantity),
         inStock: formData.inStock,
         isVisible: formData.isVisible,
+        isCustomDesign: formData.isCustomDesign,
+        colors: selectedColors.length > 0 ? selectedColors : [],
+        specifications: specsObject, // Add specifications
+        quantity: parseInt(formData.quantity),
         images: imageUrls, // All images (array)
         barcode: barcode, // Add barcode to product data
         material: materialValue, // Add material from specifications
@@ -1144,6 +1148,26 @@ const AddProduct = () => {
                         className="cursor-pointer text-slate-600 font-normal"
                       >
                         Product is in stock and available
+                      </Label>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 md:space-y-2">
+                    <Label className="text-slate-700 font-medium">
+                      Custom Design
+                    </Label>
+                    <div className="flex items-center gap-3 h-10 md:h-11 px-4 rounded-lg md:rounded-xl border border-slate-200 bg-white">
+                      <Checkbox
+                        id="isCustomDesign"
+                        checked={formData.isCustomDesign}
+                        onCheckedChange={(checked) =>
+                          handleChange("isCustomDesign", checked)
+                        }
+                      />
+                      <Label
+                        htmlFor="isCustomDesign"
+                        className="cursor-pointer text-slate-600 font-normal"
+                      >
+                        Hide from Normal Shop (Custom Design Archive)
                       </Label>
                     </div>
                   </div>

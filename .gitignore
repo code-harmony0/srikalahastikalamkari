@@ -25,9 +25,12 @@ deploy.zip
 
 # Environment Variables
 .env
+.env.*
 .env*.local
 .env.production
+.env.deploy
 !.env.example
+!.env.local.example
 
 # Debug Logs
 npm-debug.log*

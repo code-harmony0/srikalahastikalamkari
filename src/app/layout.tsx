@@ -6,6 +6,8 @@ import AppWrapper from "./AppWrapper"
 import { InventoryProvider } from "@/shared/contexts/InventoryContext"
 import { ThemeProvider } from "@/components/providers/ThemeProvider"
 
+import { SITE_OFFLINE } from "@/shared/config/site-status";
+
 // Srikalahasti Fonts
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -20,7 +22,7 @@ const inter = Inter({
   display: "swap",
 })
 
-export const metadata: Metadata = {
+const brandMetadata: Metadata = {
   title: {
     default: "Srikalahasti Kalamkari (Shri Kalahasti) - Authentic Handcrafted Sarees & Fabrics",
     template: "%s | Srikalahasti Kalamkari",
@@ -65,7 +67,7 @@ export const metadata: Metadata = {
       "Buy authentic Srikalahasti Kalamkari sarees, dupattas and fabrics handcrafted using traditional pen-work techniques. Direct from Srikalahasti artisans. Also known as Shri Kalahasti Kalamkari.",
     images: [
       {
-        url: "/images/logo.jpg",
+        url: "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full",
         width: 1200,
         height: 630,
         alt: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees",
@@ -77,7 +79,7 @@ export const metadata: Metadata = {
     title: "Srikalahasti Kalamkari - Authentic Handcrafted Sarees & Fabrics",
     description:
       "Buy authentic Srikalahasti Kalamkari sarees handcrafted using traditional pen-work techniques.",
-    images: ["/images/logo.jpg"],
+    images: ["https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full"],
   },
   robots: {
     index: true,
@@ -105,6 +107,14 @@ export const metadata: Metadata = {
   },
   category: "shopping",
 }
+
+const offlineMetadata: Metadata = {
+  title: "Temporarily unavailable",
+  description: "This site is temporarily unavailable.",
+  robots: { index: false, follow: false },
+};
+
+export const metadata: Metadata = SITE_OFFLINE ? offlineMetadata : brandMetadata;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -137,11 +147,11 @@ const jsonLd = {
       url: "https://srikalahastikalamkari.in",
       logo: {
         "@type": "ImageObject",
-        url: "https://srikalahastikalamkari.in/images/logo.jpg",
+        url: "https://srikalahastikalamkari.inhttps://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full",
         width: 512,
         height: 512,
       },
-      image: "https://srikalahastikalamkari.in/images/logo.jpg",
+      image: "https://srikalahastikalamkari.inhttps://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full",
       contactPoint: {
         "@type": "ContactPoint",
         telephone: "+91-72888-48881",
@@ -171,7 +181,7 @@ const jsonLd = {
         longitude: 79.6988,
       },
       priceRange: "₹₹",
-      image: "https://srikalahastikalamkari.in/images/logo.jpg",
+      image: "https://srikalahastikalamkari.inhttps://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full",
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Kalamkari Sarees & Fabrics",
@@ -203,7 +213,7 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_OFFLINE ? {} : jsonLd) }}
         />
         <script
           dangerouslySetInnerHTML={{

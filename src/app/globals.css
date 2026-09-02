@@ -62,6 +62,21 @@
 
     --radius: 0.5rem; /* 8px unified radius */
 
+    /* ── Brand ramp ──────────────────────────────────────────────────────
+       The storefront previously hardcoded these as hex in ~300 places, so
+       the theme could not be changed from one spot. They live here now.
+       Values are drawn from Kalamkari's own mordant dyes rather than a
+       generic luxury gold: iron-jaggery ink, myrobalan cream, madder red. */
+    --brand-ink: 24 30% 6%;          /* iron-jaggery black — the anchor */
+    --brand-ink-soft: 24 14% 26%;
+    --brand-paper: 0 0% 100%;        /* clean white ground, not beige */
+    --brand-cream: 40 56% 96%;       /* myrobalan cream — a light accent band */
+    --brand-gold: 43 74% 52%;        /* luminous gold; the old tan read as mud */
+    --brand-gold-soft: 43 88% 76%;
+    --brand-gold-deep: 38 66% 32%;   /* bronze — for gold-coloured TEXT (4.5:1 on white) */
+    --brand-madder: 8 68% 44%;       /* alizarin red — the chromatic counterpoint */
+    --brand-madder-soft: 16 76% 62%;
+
     /* Chart/Sidebar placeholders (mapped to slate theme) */
     --sidebar-background: 215 20% 95%;
     --sidebar-foreground: 215 25% 15%;
@@ -115,6 +130,16 @@
 
     --popover: 20 30% 6.5%;
     --popover-foreground: 36 30% 90%;
+
+    --brand-ink: 36 30% 90%;
+    --brand-ink-soft: 36 20% 72%;
+    --brand-paper: 20 30% 6.5%;
+    --brand-cream: 20 25% 12%;
+    --brand-gold: 42 70% 58%;
+    --brand-gold-soft: 42 60% 70%;
+    --brand-gold-deep: 42 55% 44%;
+    --brand-madder: 12 60% 52%;
+    --brand-madder-soft: 18 72% 66%;
 
     /* Primary: Golden #D49217 */
     --primary: 42 85% 46%;

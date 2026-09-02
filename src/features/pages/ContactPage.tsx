@@ -161,11 +161,21 @@ export default function ContactPage() {
             />
             <ContactCard
               icon={MapPin}
-              title="Our Studio"
-              content="# 17-68, Bharathi Nagar"
+              title="Srikalahasti Studio"
+              content="#17-68, Bharathi Nagar"
               subContent={
                 <div className="space-y-2">
                   <p>Tirupati Main Road, Near Railway Station, Srikalahasti-517640</p>
+                </div>
+              }
+            />
+            <ContactCard
+              icon={MapPin}
+              title="Tirupati Store"
+              content="#6-8-1126, NGOs Colony"
+              subContent={
+                <div className="space-y-2">
+                  <p>Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati</p>
                   <a
                     href="https://maps.app.goo.gl/tABoSwfoUcmEQjgJA"
                     target="_blank"
