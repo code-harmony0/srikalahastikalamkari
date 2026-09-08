@@ -36,7 +36,8 @@ function base64UrlDecode(value: string): Uint8Array {
 }
 
 function getSecret(): string {
-  const secret = process.env.ADMIN_SESSION_SECRET
+  const secret =
+    process.env.ADMIN_SESSION_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!secret || secret.length < MIN_SECRET_LENGTH) {
     throw new Error(
       `ADMIN_SESSION_SECRET must be set and at least ${MIN_SECRET_LENGTH} characters`,

@@ -314,12 +314,15 @@ export default function AdminLoginPage() {
     setError("")
     setLoading(true)
 
-    if (!email || !password) {
+    const cleanEmail = email.trim().toLowerCase()
+    const cleanPassword = password.trim()
+
+    if (!cleanEmail || !cleanPassword) {
       setError("Please enter both email and password")
       setLoading(false)
       return
     }
-    if (!email.includes("@")) {
+    if (!cleanEmail.includes("@")) {
       setError("Please enter a valid email address")
       setLoading(false)
       return
@@ -329,7 +332,7 @@ export default function AdminLoginPage() {
       const res  = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, rememberMe }),
+        body: JSON.stringify({ email: cleanEmail, password: cleanPassword, rememberMe }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -579,6 +582,9 @@ export default function AdminLoginPage() {
                       className="admin-input"
                       disabled={loading}
                       autoComplete="email"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
                       autoFocus
                       required
                     />
@@ -601,6 +607,9 @@ export default function AdminLoginPage() {
                       className="admin-input"
                       disabled={loading}
                       autoComplete="current-password"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
                       required
                     />
                     <button

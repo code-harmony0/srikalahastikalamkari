@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL
-    const adminPassword = process.env.ADMIN_PASSWORD
+    const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase()
+    const adminPassword = (process.env.ADMIN_PASSWORD || "").trim()
 
     if (!adminEmail || !adminPassword) {
       console.error("Admin credentials not configured in environment variables")
@@ -37,8 +37,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const emailMatches = timingSafeEqual(String(email), adminEmail)
-    const passwordMatches = timingSafeEqual(String(password), adminPassword)
+    const inputEmail = String(email || "").trim().toLowerCase()
+    const inputPassword = String(password || "")
+
+    const emailMatches = timingSafeEqual(inputEmail, adminEmail)
+    const passwordMatches =
+      timingSafeEqual(inputPassword, adminPassword) ||
+      timingSafeEqual(inputPassword.trim(), adminPassword)
 
     if (!emailMatches || !passwordMatches) {
       return NextResponse.json(
