@@ -2,7 +2,6 @@
 
 import React, { memo, useMemo } from "react";
 import Link from "next/link";
-import { AuthGuardedLink } from "@/shared/components/AuthGuardedLink";
 import { motion } from "framer-motion";
 import { Star, ShoppingBag } from "lucide-react";
 import { useCartStore } from "@/shared/cart-store";
@@ -95,7 +94,7 @@ export const CuratedProductCard = memo(
         )}
       >
         {/* Entire card is clickable */}
-        <AuthGuardedLink href={productUrl} className="flex flex-col h-full">
+        <Link href={productUrl} className="flex flex-col h-full">
           {/* IMAGE AREA - Inside card, max 55-60% height */}
           <div className="relative aspect-[4/5] max-h-[200px] overflow-hidden bg-[#F8F4EF]">
             <OptimizedImage
@@ -189,7 +188,7 @@ export const CuratedProductCard = memo(
               </div>
             </div>
           </div>
-        </AuthGuardedLink>
+        </Link>
       </motion.article>
     );
   }

@@ -2,7 +2,6 @@
 
 import React, { memo, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { AuthGuardedLink } from "@/shared/components/AuthGuardedLink"
 import { motion } from "framer-motion"
 import { Star, Heart, MessageCircle, ShoppingBag } from "lucide-react"
 import { useWishlistStore } from "@/shared/wishlist-store"
@@ -163,7 +162,7 @@ export const ProductCard = memo(
             isList ? "w-[180px] h-full shrink-0" : "w-full aspect-[4/5]",
           )}
         >
-          <AuthGuardedLink href={productUrl} className="block w-full h-full">
+          <Link href={productUrl} className="block w-full h-full">
             {/* Secondary Image (Hover) */}
             {productData.images && productData.images.length > 1 && (
               <OptimizedImage
@@ -198,7 +197,7 @@ export const ProductCard = memo(
               priority={priority}
               loading={priority ? undefined : "lazy"}
             />
-          </AuthGuardedLink>
+          </Link>
 
           {/* Made-to-order indicator */}
           {madeToOrder && (
@@ -229,7 +228,7 @@ export const ProductCard = memo(
         </div>
 
         {/* 2️⃣ CONTENT SECTION */}
-        <AuthGuardedLink href={productUrl} className={cn(
+        <Link href={productUrl} className={cn(
             "flex flex-col flex-1",
             // 🛠 Compact List View: Less Padding
             isList ? "p-4 justify-between" : "p-4 justify-between",
@@ -366,7 +365,7 @@ export const ProductCard = memo(
               )}
             </div>
           </div>
-        </AuthGuardedLink>
+        </Link>
       </motion.div>
     )
   },

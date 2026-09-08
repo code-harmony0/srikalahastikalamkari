@@ -2,7 +2,6 @@
 
 import React, { memo, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { AuthGuardedLink } from "@/shared/components/AuthGuardedLink";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, ShoppingBag, Star } from "lucide-react";
 import { useWishlistStore } from "@/shared/wishlist-store";
@@ -300,9 +299,9 @@ export const ProductCardCompact = memo(
       >
         {inquiryOnly ? (
           <>
-            <AuthGuardedLink href={productUrl} className="block">
+            <Link href={productUrl} className="block">
               {cardContent}
-            </AuthGuardedLink>
+            </Link>
             <a
               href={inquiryUrl}
               target="_blank"
@@ -314,9 +313,9 @@ export const ProductCardCompact = memo(
             </a>
           </>
         ) : (
-          <AuthGuardedLink href={productUrl} className="block">
+          <Link href={productUrl} className="block">
             {cardContent}
-          </AuthGuardedLink>
+          </Link>
         )}
       </motion.article>
     );
