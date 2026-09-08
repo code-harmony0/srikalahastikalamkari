@@ -9,4 +9,4 @@
  *
  * Set to false to bring the site back exactly as it was.
  */
-export const SITE_OFFLINE = true
+export const SITE_OFFLINE = false
