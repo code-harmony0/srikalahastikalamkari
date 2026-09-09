@@ -24,6 +24,7 @@ import { useAuth } from "@/shared/contexts/AuthContext"
 import { toast } from "sonner"
 
 import { useUserProfileStore } from "@/shared/user-profile-store"
+import { PageHero } from "@/components/layout/PageHero"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -120,33 +121,14 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* ─────────────────────────────────────────────
-          🌅 HERO SECTION (Premium Dark Charcoal Hero)
+          🌅 HERO SECTION (Unified Signature Luxury PageHero)
       ────────────────────────────────────────────── */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[180px] md:h-[220px] bg-[#1A1512]">
-        <div className="absolute inset-0 z-[6] pointer-events-none">
-          <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
-        >
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-2">
-            Customer Dashboard
-          </span>
-
-          <h1 className="font-serif text-[32px] md:text-[40px] font-bold text-white tracking-wide leading-tight mb-2 uppercase">
-            My <span className="italic text-[#C19A5B] font-normal lowercase">profile</span>
-          </h1>
-
-          <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
-            Manage your orders, preferences, and personal details.
-          </p>
-        </motion.div>
-      </section>
+      <PageHero
+        eyebrow="Customer Dashboard"
+        titleStart="My"
+        titleAccent="profile"
+        description="Manage your orders, preferences, and personal details."
+      />
 
       {/* ─────────────────────────────────────────────
           📦 MAIN CONTENT GRID

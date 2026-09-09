@@ -10,6 +10,7 @@ import { cn } from "@/shared/utils"
 
 // --- Types ---
 import { useUserProfileStore } from "@/shared/user-profile-store"
+import { PageHero } from "@/components/layout/PageHero"
 
 // --- Helper Components ---
 
@@ -128,43 +129,12 @@ export default function EditProfilePage() {
   return (
     <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* 🏛 Page Hero */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[160px] md:h-[220px] bg-[#1A1512] border-b border-[#C19A5B]/20 shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)]">
-        {/* Subtle Warmth Hint */}
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#C19A5B]/10 to-transparent pointer-events-none" />
-
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
-        >
-          {/* Icon */}
-          <div className="mb-4">
-            <UserCog
-              className="w-8 h-8 md:w-9 md:h-9 text-[#C19A5B]"
-              strokeWidth={1.5}
-            />
-          </div>
-
-          {/* Title */}
-          <h1 className="font-playfair text-[32px] md:text-[40px] font-bold text-[#FAFAF8] tracking-wide leading-tight mb-2">
-            Edit Profile
-          </h1>
-
-          {/* Subtitle */}
-          <p className="font-inter text-[#FAFAF8]/80 text-[14px] md:text-[16px] font-normal tracking-wide leading-relaxed max-w-[640px]">
-            Update your personal and delivery details.
-          </p>
-
-          {/* Accent */}
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 40, opacity: 0.9 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="h-[2px] bg-[#C19A5B] mt-4 rounded-full"
-          />
-        </motion.div>
-      </section>
+      <PageHero
+        eyebrow="Account Settings"
+        titleStart="Edit"
+        titleAccent="profile"
+        description="Update your personal and delivery details."
+      />
 
       {/* ─────────────────────────────────────────────
           2. MAIN CONTENT

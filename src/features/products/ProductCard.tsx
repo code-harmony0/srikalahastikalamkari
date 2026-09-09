@@ -217,7 +217,7 @@ export const ProductCard = memo(
           {!isList && !inquiryOnly && (
             <button
               onClick={toggleWishlist}
-              className="absolute top-2 right-2 z-30 w-7 h-7 rounded-full bg-white/90 text-[#1A1512] hover:bg-[#C19A5B] hover:text-white flex items-center justify-center shadow-sm transition-colors opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300"
+              className="absolute top-2 right-2 z-30 w-7 h-7 rounded-full bg-white/90 text-[#1A1512] hover:bg-[#C19A5B] hover:text-white flex items-center justify-center shadow-sm transition-colors opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300 before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']"
               title="Wishlist"
             >
               <Heart
@@ -314,7 +314,7 @@ export const ProductCard = memo(
               {isList && !inquiryOnly && (
                 <button
                   onClick={toggleWishlist}
-                  className="w-8 h-8 rounded-full border border-[#C19A5B]/20 text-[#1A1512] hover:bg-[#C19A5B]/10 flex items-center justify-center transition-colors"
+                  className="relative before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-[''] w-8 h-8 rounded-full border border-[#C19A5B]/20 text-[#1A1512] hover:bg-[#C19A5B]/10 flex items-center justify-center transition-colors"
                 >
                   <Heart
                     className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#C19A5B] text-[#C19A5B]" : ""}`}
@@ -331,7 +331,7 @@ export const ProductCard = memo(
                     "transition-all shadow-sm flex items-center justify-center gap-2 bg-[#25D366] text-white hover:shadow-md hover:bg-[#1A1512]",
                     isList
                       ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide"
-                      : "w-8 h-8 rounded-full",
+                      : "relative before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-[''] w-8 h-8 rounded-full",
                   )}
                   title="Ask on WhatsApp"
                 >
@@ -352,7 +352,7 @@ export const ProductCard = memo(
                     // 🛠 Compact Button sizing
                     isList
                       ? "h-8 px-4 rounded-md text-[11px] font-bold uppercase tracking-wide"
-                      : "w-8 h-8 rounded-full",
+                      : "relative before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-[''] w-8 h-8 rounded-full",
                   )}
                   title={!madeToOrder ? "Add to Cart" : `Made to order: ${MADE_TO_ORDER_DAYS}`}
                 >

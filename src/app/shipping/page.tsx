@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { PageHero } from "@/components/layout/PageHero"
 
 export const metadata: Metadata = {
   title: "Shipping Policy | Shri Kalahasti Kalamkari",
@@ -10,23 +11,27 @@ export const revalidate = 3600
 
 export default function ShippingPolicyPage() {
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 shadow-sm p-8 md:p-12 backdrop-blur-sm">
-          <h1 className="font-playfair text-4xl font-bold text-[#1A1512] mb-2">
-            Shipping Policy
-          </h1>
-          <p className="text-[#1A1512]/60 mb-8 font-inter text-sm">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
+      <PageHero
+        compact
+        eyebrow="Delivery Information"
+        titleStart="Shipping"
+        titleAccent="policy"
+        description="Detailed information on processing timelines, domestic dispatches, and international delivery."
+      />
+      <div className="max-w-4xl mx-auto px-5 sm:px-6 py-10 md:py-14">
+        <div className="bg-white/95 dark:bg-[#1E1510] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
+          <p className="text-[hsl(var(--brand-gold-deep))] dark:text-[hsl(var(--brand-gold))] mb-6 font-sans text-xs font-bold uppercase tracking-wider">
             Last updated: November 2025
           </p>
 
-          <div className="space-y-8 text-[#1A1512]">
+          <div className="space-y-8 text-[#1A1512] max-w-[68ch]">
             <p className="font-inter text-[15px] leading-relaxed">
               At Srikalahasti Kalamkari, we take immense pride in ensuring that your handcrafted authentic pieces reach you safely and securely. Please read our shipping policy below.
             </p>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 1. Processing Time
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -37,7 +42,7 @@ export default function ShippingPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 2. Domestic Shipping
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -48,7 +53,7 @@ export default function ShippingPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 3. International Shipping
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -59,7 +64,7 @@ export default function ShippingPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 4. Tracking Your Order
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -70,7 +75,7 @@ export default function ShippingPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 5. Contact Us
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">

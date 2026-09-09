@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { PageHero } from "@/components/layout/PageHero"
 
 export const metadata: Metadata = {
   title: "Textile Care | Shri Kalahasti Kalamkari",
@@ -11,14 +12,15 @@ export const revalidate = 3600
 export default function TextileCarePage() {
   return (
     <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
-      <div className="max-w-4xl mx-auto px-6 py-16">
+      <PageHero
+        eyebrow="Preservation Guide"
+        titleStart="Textile"
+        titleAccent="care"
+        titleEnd="Guide"
+        description="Preserving your authentic handcrafted Kalamkari textiles and organic natural dyes for generations."
+      />
+      <div className="max-w-4xl mx-auto px-6 py-12 md:py-16">
         <div className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 shadow-sm p-8 md:p-12 backdrop-blur-sm">
-          <h1 className="font-playfair text-4xl font-bold text-[#1A1512] mb-2">
-            Textile Care Guide
-          </h1>
-          <p className="text-[#1A1512]/60 mb-8 font-inter text-sm">
-            Preserving Your Kalamkari Heritage
-          </p>
 
           <div className="space-y-8 text-[#1A1512]">
             <p className="font-inter text-[15px] leading-relaxed">
@@ -26,7 +28,7 @@ export default function TextileCarePage() {
             </p>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 1. Washing Instructions
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -39,7 +41,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 2. Drying
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -51,7 +53,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 3. Ironing
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -62,7 +64,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 4. Storage
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -73,7 +75,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#C19A5B] mb-4">
+              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
                 Understanding Natural Dyes
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">

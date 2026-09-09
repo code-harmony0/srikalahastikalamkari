@@ -163,7 +163,7 @@ export const ProductCardCompact = memo(
               <div className="absolute inset-0 bg-black/10 z-15 pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
                 <div className="bg-[#1A1512]/85 py-1 flex items-center justify-center">
-                  <span className="text-white text-[8px] sm:text-[9px] font-bold tracking-wider uppercase">
+                  <span className="text-white text-[10px] sm:text-[10px] font-bold tracking-wider uppercase">
                     {inquiryOnly ? "Custom request" : `Made to Order · ${MADE_TO_ORDER_DAYS}`}
                   </span>
                 </div>
@@ -177,6 +177,7 @@ export const ProductCardCompact = memo(
               onClick={toggleWishlist}
               className={cn(
                 "absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200",
+                "before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']",
                 "bg-background/90 backdrop-blur-sm shadow-sm",
                 "md:opacity-0 md:translate-y-1 md:group-hover:opacity-100 md:group-hover:translate-y-0",
                 isWishlisted
@@ -198,15 +199,15 @@ export const ProductCardCompact = memo(
           {(categoryName || subCategoryName) && (
             <div className="flex items-center gap-1 flex-wrap">
               {categoryName && (
-                <span className="font-playfair italic text-accent text-[9px] sm:text-[10px] leading-none">
+                <span className="font-playfair italic text-accent text-[10px] sm:text-[10px] leading-none">
                   {categoryName}
                 </span>
               )}
               {categoryName && subCategoryName && (
-                <span className="text-accent/40 text-[9px] sm:text-[10px] leading-none">›</span>
+                <span className="text-accent/40 text-[10px] sm:text-[10px] leading-none">›</span>
               )}
               {subCategoryName && (
-                <span className="font-playfair italic text-accent/80 text-[9px] sm:text-[10px] leading-none">
+                <span className="font-playfair italic text-accent/80 text-[10px] sm:text-[10px] leading-none">
                   {subCategoryName}
                 </span>
               )}
@@ -226,11 +227,11 @@ export const ProductCardCompact = memo(
             {productData.originalPrice &&
               productData.originalPrice > productData.price && (
                 <>
-                  <span className="text-[9.5px] sm:text-[11px] text-muted-foreground line-through">
+                  <span className="text-[10px] sm:text-[11px] text-muted-foreground line-through">
                     ₹{productData.originalPrice.toLocaleString()}
                   </span>
                   {discountPercent > 0 && (
-                    <span className="text-[8.5px] sm:text-[10px] font-bold text-green-600 bg-green-50 px-1 sm:px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] sm:text-[10px] font-bold text-green-600 bg-green-50 px-1 sm:px-1.5 py-0.5 rounded">
                       -{discountPercent}%
                     </span>
                   )}
@@ -244,20 +245,20 @@ export const ProductCardCompact = memo(
               {/* Rating */}
               <div className="flex items-center gap-0.5">
                 <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-accent text-accent" />
-                <span className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">
+                <span className="text-[10px] sm:text-[10px] font-medium text-muted-foreground">
                   4.8
                 </span>
               </div>
 
               {/* Stock indicator */}
               {stockQuantity > 0 ? (
-                <span className="truncate text-[9px] sm:text-[10px] text-muted-foreground">
+                <span className="truncate text-[10px] sm:text-[10px] text-muted-foreground">
                   {stockQuantity <= 5
                     ? `Only ${stockQuantity} left`
                     : "In stock"}
                 </span>
               ) : (
-                <span className="truncate text-[9px] sm:text-[10px] font-medium text-[#A07840]">
+                <span className="truncate text-[10px] sm:text-[10px] font-medium text-[#A07840]">
                   {inquiryOnly ? "Custom request" : `Made to order in ${MADE_TO_ORDER_DAYS}`}
                 </span>
               )}
@@ -274,6 +275,7 @@ export const ProductCardCompact = memo(
                 onClick={handleAddToCart}
                 className={cn(
                   "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex shrink-0 items-center justify-center transition-all duration-200",
+                  "relative before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']",
                   "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1",
                   !madeToOrder
                     ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md"

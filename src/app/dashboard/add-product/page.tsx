@@ -65,6 +65,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/ui/alert-dialog"
+import { formatColorEntry, parseColorEntry } from "@/shared/lib/color-swatch"
 
 // Indian number formatting helper
 const formatIndianNumber = (num: string | number): string => {
@@ -186,6 +187,7 @@ const AddProduct = () => {
   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [selectedColors, setSelectedColors] = useState<string[]>([])
+  const [customColor, setCustomColor] = useState({ name: "", hex: "#C19A5B" })
   const [generatedBarcode, setGeneratedBarcode] = useState<string | null>(null)
 
   // Duplicate prevention state
@@ -196,32 +198,40 @@ const AddProduct = () => {
   )
   const [stockToAdd, setStockToAdd] = useState("")
 
-  // Predefined color palette
+  // Predefined colour palette - names are what customers see on the storefront
   const colorPalette = [
-    "#FF0000",
-    "#00FF00",
-    "#0000FF",
-    "#FFFF00",
-    "#FF00FF",
-    "#00FFFF",
-    "#800000",
-    "#008000",
-    "#000080",
-    "#808000",
-    "#800080",
-    "#008080",
-    "#FFA500",
-    "#FFC0CB",
-    "#A52A2A",
-    "#DDA0DD",
-    "#F0E68C",
-    "#E6E6FA",
-    "#000000",
-    "#FFFFFF",
-    "#808080",
-    "#C0C0C0",
-    "#D2691E",
-    "#F5F5DC",
+    { name: "Red", hex: "#DC2626" },
+    { name: "Maroon", hex: "#7B1E23" },
+    { name: "Rust", hex: "#B7410E" },
+    { name: "Terracotta", hex: "#C56B4A" },
+    { name: "Pink", hex: "#EC4899" },
+    { name: "Rose", hex: "#C96480" },
+    { name: "Peach", hex: "#F4B393" },
+    { name: "Orange", hex: "#EA7317" },
+    { name: "Mustard", hex: "#C9A227" },
+    { name: "Gold", hex: "#C19A5B" },
+    { name: "Yellow", hex: "#EAB308" },
+    { name: "Turmeric", hex: "#D4A017" },
+    { name: "Green", hex: "#16A34A" },
+    { name: "Olive", hex: "#6B7A3A" },
+    { name: "Bottle Green", hex: "#0B4A32" },
+    { name: "Teal", hex: "#0F766E" },
+    { name: "Blue", hex: "#1D4ED8" },
+    { name: "Indigo", hex: "#2B3A67" },
+    { name: "Navy", hex: "#14213D" },
+    { name: "Sky Blue", hex: "#7EC8E3" },
+    { name: "Purple", hex: "#6B21A8" },
+    { name: "Lavender", hex: "#B9A5D6" },
+    { name: "Brown", hex: "#6B4423" },
+    { name: "Coffee", hex: "#4B3621" },
+    { name: "Beige", hex: "#E8DCC4" },
+    { name: "Cream", hex: "#F3E9D2" },
+    { name: "Off White", hex: "#F5F1E8" },
+    { name: "White", hex: "#FFFFFF" },
+    { name: "Grey", hex: "#9CA3AF" },
+    { name: "Charcoal", hex: "#36454F" },
+    { name: "Black", hex: "#111111" },
+    { name: "Natural", hex: "#E4D9C3" },
   ]
 
   // Specifications state
@@ -674,7 +684,11 @@ const AddProduct = () => {
 
   // Color picker functions
   const addColor = (color: string) => {
-    if (!selectedColors.includes(color)) {
+    const name = parseColorEntry(color).name.toLowerCase()
+    const alreadyPicked = selectedColors.some(
+      (c) => parseColorEntry(c).name.toLowerCase() === name,
+    )
+    if (!alreadyPicked) {
       setSelectedColors([...selectedColors, color])
     }
   }
@@ -1267,18 +1281,20 @@ const AddProduct = () => {
                       Selected Colors ({selectedColors.length})
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {selectedColors.map((color) => (
+                      {selectedColors.map((color) => {
+                        const entry = parseColorEntry(color)
+                        return (
                         <div
                           key={color}
                           className="group relative flex items-center gap-2 px-3 py-2 bg-white rounded-lg border-2 shadow-sm hover:shadow-md transition-shadow"
-                          style={{ borderColor: color }}
+                          style={{ borderColor: entry.hex ?? "#CBD5E1" }}
                         >
                           <div
                             className="w-6 h-6 rounded-md border border-gray-200"
-                            style={{ backgroundColor: color }}
+                            style={{ backgroundColor: entry.hex ?? "#F1F5F9" }}
                           />
-                          <span className="text-xs font-mono text-gray-600">
-                            {color}
+                          <span className="text-sm font-medium text-slate-700">
+                            {entry.name}
                           </span>
                           <button
                             type="button"
@@ -1289,7 +1305,8 @@ const AddProduct = () => {
                             <X className="w-4 h-4" />
                           </button>
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -1311,14 +1328,25 @@ const AddProduct = () => {
                     )}
                   </div>
                   <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2.5 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-                    {colorPalette.map((color) => {
-                      const isSelected = selectedColors.includes(color)
+                    {colorPalette.map(({ name, hex }) => {
+                      const value = formatColorEntry(name, hex)
+                      const isSelected = selectedColors.some(
+                        (c) => parseColorEntry(c).name.toLowerCase() === name.toLowerCase(),
+                      )
                       return (
                         <button
-                          key={color}
+                          key={name}
                           type="button"
                           onClick={() =>
-                            isSelected ? removeColor(color) : addColor(color)
+                            isSelected
+                              ? setSelectedColors(
+                                  selectedColors.filter(
+                                    (c) =>
+                                      parseColorEntry(c).name.toLowerCase() !==
+                                      name.toLowerCase(),
+                                  ),
+                                )
+                              : addColor(value)
                           }
                           className={`
                           relative w-10 h-10 rounded-lg cursor-pointer
@@ -1329,8 +1357,8 @@ const AddProduct = () => {
                               : "hover:scale-105 hover:shadow-md ring-1 ring-gray-300"
                           }
                         `}
-                          style={{ backgroundColor: color }}
-                          title={`${color}${isSelected ? " (Selected)" : " - Click to select"}`}
+                          style={{ backgroundColor: hex }}
+                          title={`${name}${isSelected ? " (Selected)" : " - Click to select"}`}
                         >
                           {isSelected && (
                             <div className="absolute inset-0 flex items-center justify-center">
@@ -1359,109 +1387,81 @@ const AddProduct = () => {
                   </p>
                 </div>
 
-                {/* Custom Color Input - Modern Design */}
+                {/* Custom Colour - pick a shade AND name it for customers */}
                 <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm space-y-3">
                   <p className="text-sm font-medium text-gray-700">
-                    Custom Color
+                    Add a Custom Colour
                   </p>
-                  <div className="flex gap-3">
+                  <p className="text-xs text-gray-500">
+                    Customers only ever see the name you type here — never the colour code.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
                     <div className="flex-1">
-                      <div className="relative">
-                        <Input
-                          id="custom-color"
-                          type="text"
-                          placeholder="#FF5733"
-                          className="pl-10 font-mono uppercase placeholder:normal-case"
-                          onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault()
-                              const input = e.target as HTMLInputElement
-                              if (input.value.match(/^#[0-9A-Fa-f]{6}$/)) {
-                                addColor(input.value.toUpperCase())
-                                input.value = ""
-                                toast({
-                                  title: "Color Added!",
-                                  description: `${input.value} has been added to your color selection`,
-                                })
-                              } else {
-                                toast({
-                                  title: "Invalid Color",
-                                  description:
-                                    "Please enter a valid hex color (e.g., #FF5733)",
-                                  variant: "destructive",
-                                })
-                              }
-                            }
-                          }}
-                        />
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1.5">
-                        Press Enter to add
-                      </p>
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="relative group">
-                        <input
-                          id="color-picker"
-                          type="color"
-                          defaultValue="#000000"
-                          onBlur={(e) => {
-                            // Handle color change on blur as well
-                            const val = e.target.value.toUpperCase()
-                            // No automatic add anymore to avoid duplicates
-                          }}
-                          className="w-20 h-11 rounded-lg cursor-pointer border-2 border-gray-300 hover:border-[#D49217] transition-colors shadow-sm"
-                        />
-                        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                          <svg
-                            className="w-5 h-5 text-gray-600 group-hover:text-[#D49217] transition-colors"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          const picker = document.getElementById(
-                            "color-picker",
-                          ) as HTMLInputElement
-                          if (picker) {
-                            addColor(picker.value.toUpperCase())
-                            toast({
-                              title: "Color Added!",
-                              description: picker.value.toUpperCase(),
-                            })
+                      <Label
+                        htmlFor="custom-color-name"
+                        className="text-xs font-medium text-slate-600"
+                      >
+                        Colour name
+                      </Label>
+                      <Input
+                        id="custom-color-name"
+                        type="text"
+                        value={customColor.name}
+                        placeholder="e.g. Peacock Blue"
+                        onChange={(e) =>
+                          setCustomColor((c) => ({ ...c, name: e.target.value }))
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault()
+                            document.getElementById("add-custom-color")?.click()
                           }
                         }}
-                        className="mt-1.5 h-7 px-2 text-[10px] font-bold uppercase bg-slate-900 border-0"
-                      >
-                        Done
-                      </Button>
+                        className="mt-1"
+                      />
                     </div>
+                    <div>
+                      <Label
+                        htmlFor="custom-color-hex"
+                        className="text-xs font-medium text-slate-600"
+                      >
+                        Shade
+                      </Label>
+                      <input
+                        id="custom-color-hex"
+                        type="color"
+                        value={customColor.hex}
+                        onChange={(e) =>
+                          setCustomColor((c) => ({ ...c, hex: e.target.value }))
+                        }
+                        className="mt-1 block w-20 h-11 rounded-lg cursor-pointer border-2 border-gray-300 hover:border-[#D49217] transition-colors shadow-sm"
+                      />
+                    </div>
+                    <Button
+                      id="add-custom-color"
+                      type="button"
+                      onClick={() => {
+                        const name = customColor.name.trim()
+                        if (!name) {
+                          toast({
+                            title: "Colour name required",
+                            description:
+                              "Give the colour a customer-friendly name, e.g. Peacock Blue.",
+                            variant: "destructive",
+                          })
+                          return
+                        }
+                        addColor(formatColorEntry(name, customColor.hex.toUpperCase()))
+                        setCustomColor({ name: "", hex: "#C19A5B" })
+                        toast({
+                          title: "Colour added",
+                          description: `"${name}" is now on this product.`,
+                        })
+                      }}
+                      className="h-11 px-4 text-xs font-bold uppercase bg-slate-900 border-0"
+                    >
+                      Add Colour
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -1752,33 +1752,28 @@ const AddProduct = () => {
                             </div>
                             <div className="space-y-1.5 flex flex-col">
                               <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                Color Swatch
+                                Colour Name
                               </Label>
                               <div className="flex items-center gap-2 mt-1">
-                                <div className="relative group/color shrink-0">
-                                  <input
-                                    type="color"
-                                    value={
-                                      variant.color &&
-                                      variant.color.startsWith("#")
-                                        ? variant.color
-                                        : "#000000"
-                                    }
-                                    onChange={(e) =>
-                                      updateVariant(
-                                        index,
-                                        "color",
-                                        e.target.value.toUpperCase(),
-                                      )
-                                    }
-                                    className="w-10 h-10 rounded-lg cursor-pointer border border-slate-200"
-                                  />
-                                  <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-0 group-hover/color:opacity-100 transition-opacity">
-                                    <Plus className="w-3 h-3 text-white mix-blend-difference" />
-                                  </div>
-                                </div>
+                                <div
+                                  aria-hidden="true"
+                                  title={parseColorEntry(variant.color || "").name}
+                                  className="w-10 h-10 shrink-0 rounded-lg border border-slate-200"
+                                  style={
+                                    parseColorEntry(variant.color || "").hex
+                                      ? {
+                                          backgroundColor: parseColorEntry(
+                                            variant.color || "",
+                                          ).hex as string,
+                                        }
+                                      : {
+                                          backgroundImage:
+                                            "linear-gradient(135deg,#E2E8F0 0 45%,#FFFFFF 45% 55%,#E2E8F0 55% 100%)",
+                                        }
+                                  }
+                                />
                                 <Input
-                                  placeholder="Color Name"
+                                  placeholder="e.g. Indigo"
                                   value={variant.color}
                                   onChange={(e) =>
                                     updateVariant(
@@ -1787,7 +1782,7 @@ const AddProduct = () => {
                                       e.target.value,
                                     )
                                   }
-                                  className="h-10 border-slate-200 focus-visible:ring-slate-900 font-mono text-xs"
+                                  className="h-10 border-slate-200 focus-visible:ring-slate-900"
                                 />
                               </div>
                             </div>

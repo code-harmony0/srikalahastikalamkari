@@ -86,7 +86,7 @@ export const CuratedProductCard = memo(
         className={cn(
           "group relative flex flex-col",
           // CARD CONTAINER - Solid background, subtle border, rounded corners
-          "w-full max-w-[280px]",
+          "w-full",
           "bg-card border border-[#C19A5B]/20",
           "rounded-xl overflow-hidden",
           "shadow-[0_2px_8px_rgba(26,21,18,0.06)]",
@@ -96,7 +96,7 @@ export const CuratedProductCard = memo(
         {/* Entire card is clickable */}
         <Link href={productUrl} className="flex flex-col h-full">
           {/* IMAGE AREA - Inside card, max 55-60% height */}
-          <div className="relative aspect-[4/5] max-h-[200px] overflow-hidden bg-[#F8F4EF]">
+          <div className="relative aspect-[4/5] overflow-hidden bg-[#F8F4EF]">
             <OptimizedImage
               src={productData.image}
               alt={productData.name}
@@ -127,7 +127,7 @@ export const CuratedProductCard = memo(
             {/* Badges - top-left (only when in stock) */}
             {badge && !madeToOrder && (
               <div className="absolute top-3 left-3 z-10">
-                <span className="bg-[#1A1512] text-white text-[9px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase shadow-sm border border-white/10">
+                <span className="bg-[#1A1512] text-white text-[11px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase shadow-sm border border-white/10">
                   {badge}
                 </span>
               </div>
@@ -136,7 +136,8 @@ export const CuratedProductCard = memo(
             <button
               onClick={handleAddToCart}
               className={cn(
-                "absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center",
+                "absolute bottom-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center",
+                "before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']",
                 "bg-white text-[#1A1512] shadow-md",
                 "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
                 "transition-all duration-300",
@@ -151,12 +152,12 @@ export const CuratedProductCard = memo(
           {/* CONTENT AREA - Padded, structured */}
           <div className="flex flex-col flex-1 p-4">
             {/* PRODUCT TITLE - PRIMARY, visually dominant */}
-            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 mb-2 group-hover:text-[#C19A5B] transition-colors duration-200">
+            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 min-h-[2.6em] mb-2 group-hover:text-[#C19A5B] transition-colors duration-200">
               {productData.name}
             </h3>
 
             {/* PRICE - Secondary to title */}
-            <div className="flex items-baseline gap-2 mb-2">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-2">
               <span className="font-inter font-semibold text-[15px] text-[#1A1512]">
                 ₹{productData.price.toLocaleString()}
               </span>
@@ -178,15 +179,6 @@ export const CuratedProductCard = memo(
               </p>
             )}
 
-            {/* TRUST SIGNAL - Single, subtle, at bottom */}
-            <div className="mt-auto pt-2 border-t border-[#C19A5B]/20">
-              <div className="flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 fill-[#C19A5B] text-[#C19A5B]" />
-                <span className="text-[11px] font-medium text-[#1A1512]/55 tracking-wide">
-                  Artisan Crafted
-                </span>
-              </div>
-            </div>
           </div>
         </Link>
       </motion.article>
@@ -198,8 +190,8 @@ CuratedProductCard.displayName = "CuratedProductCard";
 
 // Skeleton Loader - Matches card structure
 export const CuratedProductCardSkeleton = () => (
-  <div className="flex flex-col w-full max-w-[280px] bg-card border border-[#E8DDD0] rounded-xl overflow-hidden animate-pulse">
-    <div className="aspect-[4/5] max-h-[200px] bg-[#E8DDD0]/40" />
+  <div className="flex flex-col w-full bg-card border border-[#E8DDD0] rounded-xl overflow-hidden animate-pulse">
+    <div className="aspect-[4/5] bg-[#E8DDD0]/40" />
     <div className="p-4 space-y-3">
       <div className="h-5 bg-[#E8DDD0]/50 rounded w-full" />
       <div className="h-4 bg-[#E8DDD0]/50 rounded w-3/4" />

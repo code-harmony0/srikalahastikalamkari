@@ -38,6 +38,7 @@ import {
   DELIVERY_CONFIG 
 } from "@/shared/config/delivery"
 import { getUserOrders } from "./actions"
+import { PageHero } from "@/components/layout/PageHero"
 
 interface Order {
   id: string
@@ -193,34 +194,12 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* Hero Section */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[180px] md:h-[220px] bg-[#1A1512]">
-        <div className="absolute inset-0 bg-[url('/images/kalamkari-pattern-dark.png')] opacity-5 mix-blend-overlay" />
-        <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
-        <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
-
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
-        >
-          <div className="mb-2">
-            <Package className="w-7 h-7 text-[#C19A5B]" strokeWidth={1.5} />
-          </div>
-
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-1">
-            Purchase History
-          </span>
-
-          <h1 className="font-playfair text-[28px] md:text-[38px] font-bold text-white tracking-wide leading-tight mb-1">
-            My Orders
-          </h1>
-
-          <p className="font-inter text-[#FAFAF8]/70 text-[12px] md:text-[14px] font-normal tracking-wide leading-relaxed">
-            Track your current and previous purchases
-          </p>
-        </motion.div>
-      </section>
+      <PageHero
+        eyebrow="Purchase History"
+        titleStart="My"
+        titleAccent="orders"
+        description="Track your current and previous purchases."
+      />
 
       {/* Orders Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">

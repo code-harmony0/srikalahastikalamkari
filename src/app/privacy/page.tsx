@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { PageHero } from "@/components/layout/PageHero"
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Shri Kalahasti Kalamkari",
@@ -11,17 +12,21 @@ export const revalidate = 3600
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 shadow-sm p-8 md:p-12 backdrop-blur-sm">
-          <h1 className="font-playfair text-4xl font-bold text-[#1A1512] mb-2">
-            Privacy Policy
-          </h1>
-          <p className="text-[#1A1512]/60 mb-8 font-inter text-sm">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
+      <PageHero
+        compact
+        eyebrow="Data Protection"
+        titleStart="Privacy"
+        titleAccent="policy"
+        description="How we safeguard your personal information, privacy, and online transactions."
+      />
+      <div className="max-w-4xl mx-auto px-5 sm:px-6 py-10 md:py-14">
+        <div className="bg-white/95 dark:bg-[#1E1510] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
+          <p className="text-[hsl(var(--brand-gold-deep))] dark:text-[hsl(var(--brand-gold))] mb-6 font-sans text-xs font-bold uppercase tracking-wider">
             Last updated: November 2025
           </p>
 
-          <div className="space-y-8 text-[#1A1512]">
+          <div className="space-y-8 text-[#1A1512] max-w-[68ch]">
             <p className="font-inter text-[15px] leading-relaxed">
               Your privacy is important to us. This Privacy Policy explains how
               we collect, use, disclose, and safeguard your information when you

@@ -1,7 +1,9 @@
 "use client"
 
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState, useRef, useMemo } from "react"
 import Link from "next/link"
+import { cn } from "@/shared/utils"
+import { useAllReviews, type Review } from "@/shared/hooks/use-reviews"
 import {
   motion,
   useScroll,
@@ -35,6 +37,8 @@ import {
   Waves,
   Crown,
   MessageCircle,
+  Quote,
+  BadgeCheck,
 } from "lucide-react"
 import {
   KanjeevaramPattern,
@@ -149,63 +153,6 @@ const KalamkariHeroBackground = ({
   />
 )
 
-// Countdown Timer Component
-const CountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 3,
-    hours: 14,
-    minutes: 27,
-    seconds: 45,
-  })
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        let { days, hours, minutes, seconds } = prev
-        seconds--
-        if (seconds < 0) {
-          seconds = 59
-          minutes--
-        }
-        if (minutes < 0) {
-          minutes = 59
-          hours--
-        }
-        if (hours < 0) {
-          hours = 23
-          days--
-        }
-        if (days < 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
-        return { days, hours, minutes, seconds }
-      })
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const blocks = [
-    { value: timeLeft.days, label: "Days" },
-    { value: timeLeft.hours, label: "Hours" },
-    { value: timeLeft.minutes, label: "Mins" },
-    { value: timeLeft.seconds, label: "Secs" },
-  ]
-
-  return (
-    <div className="flex gap-3">
-      {blocks.map((block, i) => (
-        <div key={i} className="flex flex-col items-center">
-          <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg flex items-center justify-center countdown-pulse">
-            <span className="font-serif text-2xl md:text-3xl font-bold text-white">
-              {String(block.value).padStart(2, "0")}
-            </span>
-          </div>
-          <span className="text-[10px] font-bold text-white/60 uppercase tracking-[0.15em] mt-2">
-            {block.label}
-          </span>
-        </div>
-      ))}
-    </div>
-  )
-}
 
 // Gold floating particles for hero
 const GoldParticles = () => (
@@ -294,6 +241,62 @@ const customDesignWhatsAppUrl =
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
   const [promotions, setPromotions] = useState<Promotion[]>([])
+
+  // Approved 4-and-5 star reviews with real written content, newest first.
+  const { reviews: allReviews } = useAllReviews()
+  const homeReviews = useMemo(
+    () =>
+      (allReviews || [])
+        .filter(
+          (r: Review) =>
+            r.is_approved &&
+            r.rating >= 4 &&
+            typeof r.content === "string" &&
+            r.content.trim().length > 20,
+        )
+        .sort(
+          (a: Review, b: Review) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        )
+        .slice(0, 6),
+    [allReviews],
+  )
+
+  const reviewStats = useMemo(() => {
+    const approved = (allReviews || []).filter((r: Review) => r.is_approved)
+    if (!approved.length) return null
+    return {
+      average:
+        approved.reduce((sum: number, r: Review) => sum + r.rating, 0) /
+        approved.length,
+      count: approved.length,
+    }
+  }, [allReviews])
+
+  // Sample quotes shown only while no approved review exists. Shaped like a
+  // real review row so the rail has one rendering path. Initials, not stock
+  // portraits: these are samples, not identified customers.
+  const placeholderReviews = useMemo(
+    () =>
+      [
+        ["Impeccable craftsmanship — it feels like wearing centuries of tradition.", "Ananya Reddy", "Hyderabad"],
+        ["The natural dyes and hand-painted motifs make every saree unique. Worth every rupee.", "Lakshmi Iyer", "Chennai"],
+        ["Gifted this to my mother and she was moved to tears. Unmatched quality.", "Rajesh Kumar", "Bangalore"],
+        ["A legacy I'm proud to pass down. The detail in the Kalamkari is simply sublime.", "Meera Das", "Kolkata"],
+        ["Fast delivery and exquisite packaging. The saree is a true art piece.", "Sita Rao", "Delhi"],
+        ["Authentic Srikalahasti work. So glad I found Srikalahasti Kalamkari.", "Uma Pillai", "Kochi"],
+      ].map(([content, customer_name, city], i) => ({
+        id: `sample-${i}`,
+        content,
+        customer_name,
+        city,
+        rating: 5,
+        is_verified_purchase: false,
+      })),
+    [],
+  )
+
+  const displayReviews = homeReviews.length ? homeReviews : placeholderReviews
   const [loading, setLoading] = useState(true)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [textColor] = useState("text-white") // Fixed to white for maximum clarity
@@ -499,7 +502,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         <section
           ref={heroRef}
-          className="relative w-full min-h-[calc(100svh-56px)] py-6 sm:h-[100vh] sm:min-h-[700px] sm:py-0 flex items-center justify-center overflow-hidden bg-[hsl(var(--brand-ink))]"
+          className="relative w-full min-h-[calc(86svh-56px)] pt-6 pb-24 sm:h-[100vh] sm:min-h-[700px] sm:py-0 flex items-center justify-center overflow-hidden bg-[hsl(var(--brand-ink))]"
           role="banner"
           aria-label="Srikalahasti Kalamkari - Premium Heritage Collection"
         >
@@ -739,7 +742,7 @@ export default function HomePage() {
                   hidden: {},
                   visible: { transition: { staggerChildren: 0.1 } },
                 }}
-                className="grid w-full max-w-[20rem] grid-cols-2 gap-x-3 gap-y-2 sm:flex sm:max-w-none sm:flex-wrap sm:justify-center sm:gap-6 md:gap-10"
+                className="grid w-full max-w-none grid-cols-2 gap-x-2 gap-y-2.5 px-1 sm:flex sm:flex-wrap sm:justify-center sm:gap-6 md:gap-10"
               >
                 {[
                   { icon: Truck, text: "Free Shipping" },
@@ -761,7 +764,7 @@ export default function HomePage() {
                     className="flex min-w-0 items-center justify-center gap-1.5 sm:gap-2 text-white/55 cursor-default"
                   >
                     <badge.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    <span className="truncate text-[7.5px] sm:text-[10px] font-bold uppercase tracking-[0.08em] sm:tracking-[0.15em]">
+                    <span className="truncate text-[10px] font-bold uppercase tracking-[0.02em] sm:tracking-[0.15em]">
                       {badge.text}
                     </span>
                   </motion.div>
@@ -777,7 +780,7 @@ export default function HomePage() {
             transition={{ delay: 2.8, duration: 1, ease: "easeOut" }}
             className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2"
           >
-            <span className="font-sans text-[9px] font-bold tracking-[0.4em] text-white/40 uppercase mb-1">
+            <span className="font-sans text-[10px] font-bold tracking-[0.3em] text-white/50 uppercase mb-1">
               Scroll
             </span>
             {/* Mouse shell */}
@@ -846,7 +849,7 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="inline-flex h-12 min-w-[210px] items-center justify-center gap-3 bg-[hsl(var(--brand-ink))] px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-all duration-300 hover:bg-[hsl(var(--brand-gold-deep))]"
                 >
-                  <MessageCircle className="w-4 h-4 text-[hsl(var(--brand-gold))]" />
+                  <MessageCircle className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
                   WhatsApp Message
                 </a>
                 <Link
@@ -854,7 +857,7 @@ export default function HomePage() {
                   className="inline-flex h-12 min-w-[230px] items-center justify-center gap-3 border border-[hsl(var(--brand-ink)/0.2)] bg-white/55 px-6 text-[12px] font-bold uppercase tracking-[0.14em] text-[hsl(var(--brand-ink))] transition-all duration-300 hover:border-[hsl(var(--brand-ink))] hover:bg-white"
                 >
                   View Custom Designs
-                  <ArrowRight className="w-4 h-4 text-[hsl(var(--brand-gold))]" />
+                  <ArrowRight className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
                 </Link>
               </motion.div>
             </div>
@@ -900,7 +903,7 @@ export default function HomePage() {
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="h-px bg-[hsl(var(--brand-gold)/0.5)]"
                 />
-                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold))]">
+                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold-deep))]">
                   Browse Collections
                 </span>
                 <motion.div
@@ -912,7 +915,7 @@ export default function HomePage() {
                 />
               </div>
               <h2 className="font-serif text-4xl md:text-5xl text-[hsl(var(--brand-ink))] mb-4 leading-tight">
-                Shop by <span className="italic text-[hsl(var(--brand-gold))]">Category</span>
+                Shop by <span className="text-[hsl(var(--brand-gold-deep))]">Category</span>
               </h2>
               <p className="font-sans text-base text-[hsl(var(--brand-ink)/0.6)] max-w-xl mx-auto leading-relaxed font-light">
                 Explore our curated collections, each piece handcrafted with
@@ -963,7 +966,7 @@ export default function HomePage() {
 
                       {/* Shimmer badge */}
                       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span className="text-[9px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-widest bg-white/90 px-2 py-1 rounded-full">
+                        <span className="text-[11px] font-bold text-[hsl(var(--brand-gold-deep))] uppercase tracking-widest bg-white/90 px-2 py-1 rounded-full">
                           Explore
                         </span>
                       </div>
@@ -979,25 +982,25 @@ export default function HomePage() {
         <section className="relative w-full pt-6 pb-14 md:pt-8 md:pb-18 overflow-hidden">
           <div className="max-w-[1200px] mx-auto px-6 relative z-10">
             {/* Header Block - Editorial, balanced */}
-            <div className="text-center mb-16 md:mb-20">
+            <div className="text-center mb-8 md:mb-11">
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.7 }}
               >
-                <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[hsl(var(--brand-gold))]">
+                <span className="font-sans text-[11px] font-bold tracking-[0.2em] uppercase text-[hsl(var(--brand-gold-deep))]">
                   Curated Collection
                 </span>
                 <h2 className="font-serif text-4xl md:text-5xl text-[hsl(var(--brand-ink))] mt-4 mb-4 leading-tight">
-                  Masterpieces of <span className="italic">Heritage</span>
+                  Masterpieces of <span className="text-[hsl(var(--brand-gold-deep))]">Heritage</span>
                 </h2>
                 <div className="w-12 h-px bg-[hsl(var(--brand-ink)/0.2)] mx-auto mt-6"></div>
               </motion.div>
             </div>
 
             {/* Product Grid - 3-col with more breathing room */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 justify-items-center">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-7 sm:gap-x-5 sm:gap-y-9 md:gap-x-6 md:gap-y-10">
               {loading
                 ? [...Array(6)].map((_, i) => (
                     <CuratedProductCardSkeleton key={i} />
@@ -1064,7 +1067,7 @@ export default function HomePage() {
                     className="text-4xl font-serif text-[hsl(var(--brand-ink))] mb-2 leading-none"
                     suffix="+"
                   />
-                  <div className="text-[10px] font-sans font-bold text-[hsl(var(--brand-gold))] tracking-[0.2em] uppercase">
+                  <div className="text-[10px] font-sans font-bold text-[hsl(var(--brand-gold-deep))] tracking-[0.2em] uppercase">
                     Years of Heritage
                   </div>
                 </motion.div>
@@ -1081,7 +1084,7 @@ export default function HomePage() {
                 {/* Tag */}
                 <div className="flex items-center gap-4 mb-8">
                   <span className="w-12 h-px bg-[hsl(var(--brand-gold))]"></span>
-                  <span className="font-sans text-[10px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.25em]">
+                  <span className="font-sans text-[10px] font-bold text-[hsl(var(--brand-gold-deep))] uppercase tracking-[0.25em]">
                     Our Heritage
                   </span>
                 </div>
@@ -1089,7 +1092,7 @@ export default function HomePage() {
                 {/* Heading */}
                 <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[hsl(var(--brand-ink))] mb-8 leading-[1.1] tracking-tight">
                   The Soul of the <br />
-                  <span className="italic text-[hsl(var(--brand-gold))]">Artisan</span>
+                  <span className="text-[hsl(var(--brand-gold-deep))]">Artisan</span>
                 </h2>
 
                 {/* Content */}
@@ -1130,7 +1133,7 @@ export default function HomePage() {
                     href="/custom-design"
                     className="group inline-flex items-center justify-center gap-3 px-8 h-[52px] border border-[hsl(var(--brand-ink)/0.2)] hover:border-[hsl(var(--brand-ink))] text-[hsl(var(--brand-ink))] text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-300"
                   >
-                    <Palette className="w-4 h-4 text-[hsl(var(--brand-gold))] group-hover:scale-110 transition-transform" />
+                    <Palette className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] group-hover:scale-110 transition-transform" />
                     Custom Designs
                   </Link>
                 </div>
@@ -1151,414 +1154,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Seasonal Offerings Section - Modern Tactile Cards with Editorial Feel */}
-        {promotions.length > 0 && (
-          <section className="w-full pt-10 pb-16 md:pb-22 relative overflow-hidden">
-            <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 mb-12">
-              <div className="h-px w-full bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold-soft)/0.5)] to-transparent" />
-            </div>
 
-            <div className="max-w-[120rem] mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-              {/* Editorial Header with Luxury Typography */}
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                viewport={{ once: true }}
-                className="text-center mb-20"
-              >
-                <div className="flex items-center justify-center gap-6 mb-8">
-                  <motion.div
-                    className="w-24 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 1.2, delay: 0.3 }}
-                    viewport={{ once: true }}
-                  />
-                  <span className="font-paragraph text-sm font-bold text-accent-color uppercase tracking-[0.3em] relative">
-                    Limited Time
-                    <motion.div
-                      className="absolute -bottom-1 left-0 right-0 h-px bg-accent-color/30"
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
-                      viewport={{ once: true }}
-                    />
-                  </span>
-                  <motion.div
-                    className="w-24 h-px bg-gradient-to-r from-transparent via-accent-color to-transparent"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 1.2, delay: 0.3 }}
-                    viewport={{ once: true }}
-                  />
-                </div>
-
-                <motion.h2
-                  className="font-heading text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[0.9] tracking-tight font-light"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.4 }}
-                  viewport={{ once: true }}
-                >
-                  Seasonal
-                  <span className="block text-primary font-normal italic">
-                    Offerings
-                  </span>
-                </motion.h2>
-
-                <motion.p
-                  className="font-paragraph text-xl md:text-2xl text-foreground/75 max-w-4xl mx-auto leading-relaxed font-light"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.6 }}
-                  viewport={{ once: true }}
-                >
-                  Discover our curated seasonal collections featuring exclusive
-                  designs and limited-edition pieces that celebrate the artistry
-                  of each season.
-                </motion.p>
-              </motion.div>
-
-              {/* Modern Tactile Cards with Editorial Layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-                {promotions[0] && (
-                  <motion.article
-                    initial={{ opacity: 0, x: -60, scale: 0.9 }}
-                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                    transition={{
-                      duration: 1.2,
-                      ease: [0.25, 0.46, 0.45, 0.94],
-                    }}
-                    viewport={{ once: true }}
-                    className="group relative"
-                  >
-                    {/* Tactile Card Container */}
-                    <motion.div
-                      whileHover={{ y: -8, scale: 1.015 }}
-                      transition={{
-                        duration: 0.25,
-                        ease: [0.25, 0.46, 0.45, 0.94],
-                      }}
-                      className="relative overflow-hidden rounded-[2rem] shadow-2xl bg-white/95 backdrop-blur-md border border-white/60"
-                    >
-                      {/* Kalamkari Motif Overlay on Card */}
-                      <div
-                        className="absolute inset-0 opacity-2 pointer-events-none"
-                        style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A0522D' fill-opacity='0.04'%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3Cpath d='M40 30c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
-                        }}
-                      />
-
-                      {/* Image Container with Parallax */}
-                      <div className="relative h-[480px] md:h-[520px] overflow-hidden">
-                        <motion.div
-                          whileHover={{ scale: 1.06 }}
-                          transition={{ duration: 0.35, ease: "easeOut" }}
-                          className="w-full h-full"
-                        >
-                          <Image
-                            src={
-                              promotions[0].bannerImage ||
-                              "/images/promotions/promo-1.png"
-                            }
-                            alt={promotions[0].title || "Seasonal Promotion"}
-                            className="w-full h-full object-cover"
-                            width={800}
-                            height={520}
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                          />
-                        </motion.div>
-
-                        {/* Sophisticated Hover Overlay */}
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
-                          initial={{ opacity: 0.7 }}
-                          whileHover={{ opacity: 0.9 }}
-                          transition={{ duration: 0.2 }}
-                        />
-
-                        {/* Editorial Content Overlay */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 40 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 1, delay: 0.3 }}
-                          viewport={{ once: true }}
-                          className="absolute bottom-0 left-0 right-0 p-10 md:p-12 text-white"
-                        >
-                          <motion.h3
-                            className="font-heading text-4xl md:text-5xl mb-6 font-light text-white leading-tight tracking-tight"
-                            whileHover={{ scale: 1.02, x: 4 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            {promotions[0].title}
-                          </motion.h3>
-
-                          <p className="font-paragraph text-lg md:text-xl mb-8 text-white/95 leading-relaxed max-w-lg font-light">
-                            {promotions[0].description}
-                          </p>
-
-                          {/* Editorial CTA */}
-                          <motion.div
-                            whileHover={{ scale: 1.05, y: -3 }}
-                            whileTap={{ scale: 0.98 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <Button
-                              size="lg"
-                              className="h-14 px-10 text-lg rounded-2xl bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground font-medium group transition-all duration-500 shadow-xl hover:shadow-2xl border-0 tracking-wide"
-                              asChild
-                            >
-                              <a href={promotions[0].callToActionUrl}>
-                                Shop Collection
-                                <motion.span
-                                  className="inline-block ml-3"
-                                  animate={{ x: [0, 4, 0] }}
-                                  transition={{
-                                    duration: 2,
-                                    repeat: Infinity,
-                                    ease: "easeInOut",
-                                  }}
-                                >
-                                  <ArrowRight className="h-6 w-6" />
-                                </motion.span>
-                              </a>
-                            </Button>
-                          </motion.div>
-                        </motion.div>
-                      </div>
-                    </motion.div>
-                  </motion.article>
-                )}
-
-                {promotions[1] && (
-                  <motion.article
-                    initial={{ opacity: 0, x: 60, scale: 0.9 }}
-                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                    transition={{
-                      duration: 1.2,
-                      delay: 0.2,
-                      ease: [0.25, 0.46, 0.45, 0.94],
-                    }}
-                    viewport={{ once: true }}
-                    className="group relative"
-                  >
-                    {/* Tactile Card Container */}
-                    <motion.div
-                      whileHover={{ y: -8, scale: 1.015 }}
-                      transition={{
-                        duration: 0.25,
-                        ease: [0.25, 0.46, 0.45, 0.94],
-                      }}
-                      className="relative overflow-hidden rounded-[2rem] shadow-2xl bg-white/95 backdrop-blur-md border border-white/60"
-                    >
-                      {/* Kalamkari Motif Overlay on Card */}
-                      <div
-                        className="absolute inset-0 opacity-2 pointer-events-none"
-                        style={{
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8860B' fill-opacity='0.04'%3E%3Cpath d='M40 15c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25z'/%3E%3Cpath d='M40 25c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z'/%3E%3C/g%3E%3C/svg%3E")`,
-                        }}
-                      />
-
-                      {/* Image Container with Parallax */}
-                      <div className="relative h-[480px] md:h-[520px] overflow-hidden">
-                        <motion.div
-                          whileHover={{ scale: 1.06 }}
-                          transition={{ duration: 0.35, ease: "easeOut" }}
-                          className="w-full h-full"
-                        >
-                          <Image
-                            src={
-                              promotions[1].bannerImage ||
-                              "/images/promotions/promo-2.png"
-                            }
-                            alt={promotions[1].title || "Special Offer"}
-                            className="w-full h-full object-cover"
-                            width={800}
-                            height={520}
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                          />
-                        </motion.div>
-
-                        {/* Sophisticated Hover Overlay */}
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
-                          initial={{ opacity: 0.7 }}
-                          whileHover={{ opacity: 0.9 }}
-                          transition={{ duration: 0.2 }}
-                        />
-
-                        {/* Editorial Content Overlay */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 40 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 1, delay: 0.5 }}
-                          viewport={{ once: true }}
-                          className="absolute bottom-0 left-0 right-0 p-10 md:p-12 text-white"
-                        >
-                          <motion.h3
-                            className="font-heading text-4xl md:text-5xl mb-6 font-light text-white leading-tight tracking-tight"
-                            whileHover={{ scale: 1.02, x: 4 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            {promotions[1].title}
-                          </motion.h3>
-
-                          <p className="font-paragraph text-lg md:text-xl mb-8 text-white/95 leading-relaxed max-w-lg font-light">
-                            {promotions[1].description}
-                          </p>
-
-                          {/* Editorial CTA */}
-                          <motion.div
-                            whileHover={{ scale: 1.05, y: -3 }}
-                            whileTap={{ scale: 0.98 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <Button
-                              variant="outline"
-                              size="lg"
-                              className="h-14 px-10 text-lg rounded-2xl border-2 border-white/90 hover:bg-white/25 hover:border-white text-white font-medium transition-all duration-500 backdrop-blur-md bg-white/15 shadow-xl hover:shadow-2xl tracking-wide"
-                              asChild
-                            >
-                              <a href={promotions[1].callToActionUrl}>
-                                Explore Offers
-                                <motion.span
-                                  className="inline-block ml-3"
-                                  animate={{ x: [0, 4, 0] }}
-                                  transition={{
-                                    duration: 2,
-                                    repeat: Infinity,
-                                    ease: "easeInOut",
-                                  }}
-                                >
-                                  <ArrowRight className="h-6 w-6" />
-                                </motion.span>
-                              </a>
-                            </Button>
-                          </motion.div>
-                        </motion.div>
-                      </div>
-                    </motion.div>
-                  </motion.article>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* ═══════════════════════════════════════════════════════════════ */}
-        {/* EXCLUSIVE OFFERS — Full-Width Cinematic Banner with Countdown  */}
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="w-full relative overflow-hidden bg-[hsl(var(--brand-ink))]">
-          <div className="relative min-h-[500px] md:min-h-[550px] flex items-center">
-            {/* Parallax BG Image */}
-            <div className="absolute inset-0">
-              <Image
-                src="/images/brand-models/model-saree-04.jpeg"
-                alt="Exclusive hand-painted purple Kalamkari saree collection"
-                fill
-                className="object-cover opacity-40"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--brand-ink)/0.9)] via-[hsl(var(--brand-ink)/0.7)] to-[hsl(var(--brand-ink)/0.5)]" />
-            </div>
 
-            {/* Gold line accents */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5 }}
-              className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.4)] to-transparent"
-            />
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5 }}
-              className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.4)] to-transparent"
-            />
-
-            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 md:py-24">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                {/* Left: Content */}
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                >
-                  {/* Badge */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    className="inline-flex items-center gap-2 bg-[hsl(var(--brand-gold)/0.2)] border border-[hsl(var(--brand-gold)/0.3)] rounded-full px-4 py-1.5 mb-6"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--brand-gold))]" />
-                    <span className="text-[11px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.2em]">
-                      Limited Time Offer
-                    </span>
-                  </motion.div>
-
-                  <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-[1.1]">
-                    Heritage Season{" "}
-                    <span className="italic text-[hsl(var(--brand-gold))]">Sale</span>
-                  </h2>
-
-                  <p className="font-sans text-lg text-white/70 mb-8 max-w-lg leading-relaxed font-light">
-                    Enjoy up to 30% off on selected handcrafted Kalamkari
-                    pieces. Each artwork is a one-of-a-kind masterpiece.
-                  </p>
-
-                  {/* Discount badge */}
-                  <motion.div
-                    initial={{ rotate: -5, scale: 0 }}
-                    whileInView={{ rotate: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
-                    className="inline-flex items-center gap-3 bg-gradient-to-r from-[hsl(var(--brand-gold))] to-[hsl(var(--brand-gold-deep))] px-6 py-3 rounded-lg mb-8"
-                  >
-                    <span className="font-serif text-3xl font-bold text-white">
-                      30%
-                    </span>
-                    <div>
-                      <span className="block text-[10px] font-bold text-white/80 uppercase tracking-widest">
-                        Off on
-                      </span>
-                      <span className="block text-[12px] font-bold text-white uppercase tracking-wider">
-                        Select Pieces
-                      </span>
-                    </div>
-                  </motion.div>
-
-                  <div className="flex gap-4 mt-2">
-                    <Link href="/products">
-                      <Button className="h-12 px-8 rounded-none bg-white text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-gold))] hover:text-white text-[12px] font-bold tracking-[0.15em] uppercase transition-all duration-500">
-                        Shop Now
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
-                  </div>
-                </motion.div>
-
-                {/* Right: Countdown */}
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="flex flex-col items-center md:items-end"
-                >
-                  <span className="text-[11px] font-bold text-white/50 uppercase tracking-[0.3em] mb-6">
-                    Offer Ends In
-                  </span>
-                  <CountdownTimer />
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* THE KALAMKARI PROCESS — Visual Storytelling Steps              */}
@@ -1575,14 +1174,14 @@ export default function HomePage() {
             >
               <div className="flex items-center justify-center gap-3 mb-5">
                 <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.5)]" />
-                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold))]">
+                <span className="font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold-deep))]">
                   From Fabric to Art
                 </span>
                 <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.5)]" />
               </div>
               <h2 className="font-serif text-4xl md:text-5xl text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))] mb-4 leading-tight">
                 The Kalamkari{" "}
-                <span className="italic text-[hsl(var(--brand-gold))]">Process</span>
+                <span className="text-[hsl(var(--brand-gold-deep))]">Process</span>
               </h2>
               <p className="font-sans text-base text-[hsl(var(--brand-ink)/0.6)] dark:text-[hsl(var(--brand-cream)/0.7)] max-w-2xl mx-auto leading-relaxed font-light">
                 Every masterpiece passes through five meticulous stages of
@@ -1623,7 +1222,7 @@ export default function HomePage() {
                       <div className="absolute inset-0 rounded-full border-2 border-[hsl(var(--brand-gold)/0.2)] bg-white dark:bg-[#120905] group-hover:border-[hsl(var(--brand-gold)/0.5)] transition-colors duration-500" />
                       {/* Inner circle */}
                       <div className="absolute inset-2 rounded-full bg-gradient-to-br from-white to-neutral-200/40 group-hover:from-[hsl(var(--brand-gold)/0.1)] group-hover:to-[hsl(var(--brand-gold)/0.2)] transition-all duration-500 flex items-center justify-center shadow-sm">
-                        <step.icon className="w-7 h-7 text-[hsl(var(--brand-gold))] group-hover:scale-110 transition-transform duration-300" />
+                        <step.icon className="w-7 h-7 text-[hsl(var(--brand-gold-deep))] group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       {/* Step number */}
                       <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[hsl(var(--brand-ink))] dark:bg-[hsl(var(--brand-gold))] flex items-center justify-center">
@@ -1668,7 +1267,7 @@ export default function HomePage() {
             >
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-12 h-px bg-[hsl(var(--brand-gold))]" />
-                <span className="font-sans text-[10px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.2em]">
+                <span className="font-sans text-[10px] font-bold text-[hsl(var(--brand-gold-deep))] uppercase tracking-[0.2em]">
                   Our Promise
                 </span>
                 <div className="w-12 h-px bg-[hsl(var(--brand-gold))]" />
@@ -1676,7 +1275,7 @@ export default function HomePage() {
 
               <h2 className="font-serif text-3xl md:text-4xl text-[hsl(var(--brand-ink))] mb-3 leading-tight">
                 The Srikalahasti{" "}
-                <span className="text-[hsl(var(--brand-gold))] italic">Promise</span>
+                <span className="text-[hsl(var(--brand-gold-deep))]">Promise</span>
               </h2>
 
               <p className="font-sans text-base text-[hsl(var(--brand-ink)/0.9)] leading-relaxed max-w-2xl mx-auto">
@@ -1715,8 +1314,8 @@ export default function HomePage() {
 
                       {/* Badge - Inter SemiBold 13px */}
                       <div className="text-center">
-                        <span className="inline-flex items-center px-3 py-1.5 bg-[hsl(var(--brand-gold)/0.08)] rounded-full border border-[hsl(var(--brand-gold)/0.25)] text-[13px] font-semibold text-[hsl(var(--brand-gold))] group-hover:border-[hsl(var(--brand-gold)/0.5)] transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-offset-1 group-hover:ring-[hsl(var(--brand-gold)/0.4)]">
-                          <Sparkles className="w-3 h-3 mr-1.5 text-[hsl(var(--brand-gold))]" />
+                        <span className="inline-flex items-center px-3 py-1.5 bg-[hsl(var(--brand-gold)/0.08)] rounded-full border border-[hsl(var(--brand-gold)/0.25)] text-[13px] font-semibold text-[hsl(var(--brand-gold-deep))] group-hover:border-[hsl(var(--brand-gold)/0.5)] transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-offset-1 group-hover:ring-[hsl(var(--brand-gold)/0.4)]">
+                          <Sparkles className="w-3 h-3 mr-1.5 text-[hsl(var(--brand-gold-deep))]" />
                           {item.highlight}
                         </span>
                       </div>
@@ -1799,14 +1398,14 @@ export default function HomePage() {
             >
               <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.4)]" />
-                <span className="font-sans text-[12px] font-bold text-[hsl(var(--brand-gold))] uppercase tracking-[0.2em]">
+                <span className="font-sans text-[12px] font-bold text-[hsl(var(--brand-gold-deep))] uppercase tracking-[0.2em]">
                   VISUAL GALLERY
                 </span>
                 <div className="w-10 h-px bg-[hsl(var(--brand-gold)/0.4)]" />
               </div>
 
               <h2 className="font-serif text-4xl md:text-5xl text-[#3A2A1C] mb-5 leading-tight relative inline-block">
-                Woven in <span className="text-[hsl(var(--brand-madder))] italic">Elegance</span>
+                Woven in <span className="text-[hsl(var(--brand-gold-deep))]">Elegance</span>
                 {/* Gold Underline Animation */}
                 <motion.div
                   className="absolute -bottom-2 left-0 h-px bg-[hsl(var(--brand-gold)/0.6)]"
@@ -1850,12 +1449,12 @@ export default function HomePage() {
                       {/* Inner Shadow Simulation */}
                       <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.1)] pointer-events-none" />
                       {/* Refined Soft Linear Gradient Overlay for Legibility */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[rgba(35,22,10,0.55)] via-transparent to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-75" />
+                      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[rgba(20,12,6,0.92)] via-[rgba(20,12,6,0.55)] to-transparent transition-opacity duration-500" />
 
                       {/* Refined Hover Overlay Tint */}
                       <div className="absolute inset-0 bg-[hsl(var(--brand-gold)/0.05)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ring-1 ring-inset ring-[hsl(var(--brand-gold)/0.2)] rounded-[14px] pointer-events-none" />
 
-                      <div className="absolute bottom-6 left-6 overflow-hidden">
+                      <div className="absolute bottom-4 left-5 right-5 overflow-hidden">
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           whileInView={{ opacity: 1, y: 0 }}
@@ -1864,7 +1463,7 @@ export default function HomePage() {
                             duration: 0.4,
                           }} // Staggered label reveal
                         >
-                          <span className="font-serif italic text-[18px] text-[#F9E8CF] block drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] group-hover:text-[#FFD58C] transition-colors duration-300">
+                          <span className="font-sans text-[15px] font-semibold tracking-[0.02em] text-white block drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] group-hover:text-[hsl(var(--brand-gold-soft))] transition-colors duration-300">
                             {image.category}
                           </span>
                         </motion.div>
@@ -1877,8 +1476,10 @@ export default function HomePage() {
           </div>
         </section>
         {/* VOICES OF HERITAGE — Community & Trust Redesign (KDLS 2026) */}
-        <section className="w-full pt-16 pb-12 md:pt-24 md:pb-16 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FFF3E6] dark:from-[#120905] dark:to-[#1b0e08]">
-          {/* Subtle Fabric Texture Overlay */}
+        {/* VOICES OF HERITAGE — reads real approved reviews; the samples below
+            stand in only until the dashboard has some. Kept compact so it
+            supports the page rather than becoming a second page of its own. */}
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FFF3E6] dark:from-[#120905] dark:to-[#1b0e08]">
           <div
             className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none"
             style={{
@@ -1887,215 +1488,99 @@ export default function HomePage() {
             }}
           />
 
-          <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
-            {/* Section Header */}
-            <div className="text-center mb-10 md:mb-14">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-              >
-                <span className="font-sans text-xs font-semibold tracking-[0.25em] uppercase text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] block mb-4">
-                  Authentic Voices
-                </span>
-                <h2 className="font-playfair text-4xl md:text-5xl text-[hsl(var(--brand-ink-soft))] dark:text-[hsl(var(--brand-cream))] font-bold leading-tight mb-6">
-                  Voices of{" "}
-                  <span className="italic text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))]">
-                    Heritage
+          <div className="max-w-6xl mx-auto px-5 sm:px-6 md:px-8 relative z-10">
+            <AnimatedElement className="text-center" delay={0}>
+              <h2 className="font-serif text-[26px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))]">
+                Voices of Heritage
+              </h2>
+
+              {/* Figures come from real reviews once they exist. */}
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-5">
+                <span className="inline-flex items-center gap-1.5">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star
+                      key={i}
+                      className="h-[15px] w-[15px] fill-[hsl(var(--brand-gold))] text-[hsl(var(--brand-gold))]"
+                    />
+                  ))}
+                  <span className="ml-1 font-sans text-[14px] font-bold text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))]">
+                    {reviewStats ? reviewStats.average.toFixed(1) : "5.0"}
                   </span>
-                </h2>
-                <p className="font-sans text-[16px] text-[hsl(var(--brand-ink-soft)/0.7)] dark:text-[hsl(var(--brand-cream)/0.7)] max-w-2xl mx-auto leading-relaxed">
-                  Real stories from those who carry our legacy forward, woven
-                  through threads of trust and timeless craftsmanship.
-                </p>
-              </motion.div>
-            </div>
-
-            {/* Hero Testimonial - Full Width */}
-            <div className="mb-10 md:mb-12">
-              <AnimatedElement className="w-full" delay={100}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                  className="relative p-10 md:p-14 bg-white/60 dark:bg-[#1a0f0a]/60 backdrop-blur-md rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.3)] border border-[hsl(var(--brand-gold)/0.1)] dark:border-[hsl(var(--brand-gold)/0.2)] overflow-hidden text-center max-w-5xl mx-auto"
-                >
-                  {/* Decorative Heritage Corner Frames */}
-                  <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-[hsl(var(--brand-gold)/0.3)]" />
-                  <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-[hsl(var(--brand-gold)/0.3)]" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 opacity-[0.03] dark:opacity-[0.06] pointer-events-none">
-                    <svg viewBox="0 0 100 100" fill="none" style={{ stroke: "hsl(var(--brand-gold))" }}>
-                      <path
-                        d="M50 10 L80 90 L20 40 L80 40 L20 90 Z"
-                        strokeWidth="0.5"
-                      />
-                    </svg>
-                  </div>
-
-                  <div className="relative z-10">
-                    <div className="text-[64px] font-playfair text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] opacity-[0.15] leading-none mb-4 h-12">
-                      ❝
-                    </div>
-                    <p className="font-playfair text-[20px] md:text-[24px] leading-[1.7] text-[hsl(var(--brand-ink-soft)/0.85)] dark:text-[hsl(var(--brand-cream)/0.9)] mb-10 italic max-w-3xl mx-auto">
-                      "Each piece tells a story that transcends time. Truly a
-                      masterpiece of Srikalahasti art, hand-painted with a soul
-                      that connects me to the divine heritage. The colors are
-                      even more vibrant than I imagined."
-                    </p>
-
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="relative">
-                        <div className="w-[52px] h-[52px] rounded-full overflow-hidden border-2 border-[hsl(var(--brand-gold)/0.2)] dark:border-[hsl(var(--brand-gold)/0.4)]">
-                          <Image
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&auto=format&fit=crop"
-                            alt="Verified Customer"
-                            width={52}
-                            height={52}
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 bg-white dark:bg-[#120905] rounded-full p-0.5 shadow-sm">
-                          <CheckCircle2 className="w-4 h-4 text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] fill-current" />
-                        </div>
-                      </div>
-                      <div>
-                        <p className="font-playfair text-[18px] font-bold text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] leading-tight mb-1 uppercase tracking-wide">
-                          Priya Sharma
-                        </p>
-                        <p className="font-sans text-[13px] text-[hsl(var(--brand-ink-soft)/0.6)] dark:text-[hsl(var(--brand-cream)/0.6)] italic font-medium">
-                          Mumbai, Maharashtra
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatedElement>
-            </div>
-
-            {/* Community Grid - 2 Rows of 3 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {[
-                {
-                  quote:
-                    "Impeccable craftsmanship, it feels like wearing centuries of tradition.",
-                  name: "Ananya Reddy",
-                  city: "Hyderabad",
-                },
-                {
-                  quote:
-                    "The natural dyes and hand-painted motifs make every saree unique. Worth every rupee.",
-                  name: "Lakshmi Iyer",
-                  city: "Chennai",
-                },
-                {
-                  quote:
-                    "Gifted this to my mother and she was moved to tears. Unmatched quality.",
-                  name: "Rajesh Kumar",
-                  city: "Bangalore",
-                },
-                {
-                  quote:
-                    "A legacy I'm proud to pass down. The detail in the Kalamkari is simply sublime.",
-                  name: "Meera Das",
-                  city: "Kolkata",
-                },
-                {
-                  quote:
-                    "Fast delivery and exquisite packaging. The saree is a true art piece.",
-                  name: "Sita Rao",
-                  city: "Delhi",
-                },
-                {
-                  quote:
-                    "Authentic Srikalahasti work. So glad I found Srikalahasti Kalamkari.",
-                  name: "Uma Pillai",
-                  city: "Kochi",
-                },
-              ].map((item, idx) => (
-                <AnimatedElement key={idx} delay={idx * 100}>
-                  <motion.div
-                    whileHover={{
-                      y: -8,
-                    }}
-                    className="group relative h-full p-8 md:p-10 bg-white/50 dark:bg-[#1a0f0a]/40 backdrop-blur-sm rounded-[16px] border border-[hsl(var(--brand-gold)/0.1)] dark:border-[hsl(var(--brand-gold)/0.2)] flex flex-col justify-between transition-all duration-500 hover:bg-white/80 dark:hover:bg-[#1a0f0a]/60 hover:border-[hsl(var(--brand-gold)/0.3)] dark:hover:border-[hsl(var(--brand-gold)/0.4)] shadow-sm dark:shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-2xl dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.5)]"
-                  >
-                    {/* Decorative Heritage Corner Frames */}
-                    <div className="absolute top-3 left-3 w-4 h-4 border-l border-t border-[hsl(var(--brand-gold)/0.3)] group-hover:border-[hsl(var(--brand-gold)/0.6)] transition-all duration-300" />
-                    <div className="absolute bottom-3 right-3 w-4 h-4 border-r border-b border-[hsl(var(--brand-gold)/0.3)] group-hover:border-[hsl(var(--brand-gold)/0.6)] transition-all duration-300" />
-                    <div className="mb-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="text-[40px] font-playfair text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))] opacity-[0.2] leading-none h-6">
-                          “
-                        </div>
-                        <div className="flex gap-0.5">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="w-3 h-3 fill-[hsl(var(--brand-gold))] dark:fill-[hsl(var(--brand-gold-soft))] text-[hsl(var(--brand-gold))] dark:text-[hsl(var(--brand-gold-soft))]"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="font-serif text-[16px] md:text-[17px] leading-[1.7] text-[hsl(var(--brand-ink-soft)/0.85)] dark:text-[hsl(var(--brand-cream)/0.9)] italic">
-                        {item.quote}
-                      </p>
-                    </div>
-
-                    <div className="pt-6 border-t border-[hsl(var(--brand-gold)/0.1)] dark:border-[hsl(var(--brand-gold)/0.2)]">
-                      <p className="font-sans text-[14px] font-bold text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] uppercase tracking-wider mb-1">
-                        {item.name}
-                      </p>
-                      <p className="font-sans text-[12px] text-[hsl(var(--brand-ink-soft)/0.5)] dark:text-[hsl(var(--brand-cream)/0.5)] font-medium">
-                        {item.city}
-                      </p>
-                    </div>
-                  </motion.div>
-                </AnimatedElement>
-              ))}
-            </div>
-
-            {/* Trust Anchors Footer */}
-            <div className="mt-12 md:mt-16 border-t border-[hsl(var(--brand-gold)/0.2)] dark:border-[hsl(var(--brand-gold)/0.3)] pt-10 md:pt-12">
-              <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
-                {[
-                  {
-                    icon: Star,
-                    value: "4.9/5",
-                    label: "Customer Rating",
-                  },
-                  {
-                    icon: Scissors,
-                    value: "100%",
-                    label: "Handcrafted",
-                  },
-                  {
-                    icon: Users,
-                    value: "10K+",
-                    label: "Happy Customers",
-                  },
-                ].map((anchor, idx) => (
-                  <AnimatedElement key={idx} delay={idx * 150}>
-                    <motion.div
-                      whileHover={{ scale: 1.03, y: -4 }}
-                      className="flex items-center gap-5 bg-white/70 dark:bg-[#1a0f0a]/50 backdrop-blur-md px-8 py-5 rounded-2xl shadow-[0_4px_18px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.15)] border border-[hsl(var(--brand-gold)/0.15)] dark:border-[hsl(var(--brand-gold)/0.25)] min-w-[260px] justify-center group transition-all duration-300 hover:border-[hsl(var(--brand-gold)/0.4)] dark:hover:border-[hsl(var(--brand-gold)/0.5)]"
-                    >
-                      <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-[hsl(var(--brand-madder)/0.08)] dark:bg-[hsl(var(--brand-madder-soft)/0.1)] border border-[hsl(var(--brand-madder)/0.2)] dark:border-[hsl(var(--brand-madder-soft)/0.3)] text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] transition-all duration-300 group-hover:scale-110 group-hover:bg-[hsl(var(--brand-madder)/0.15)] group-hover:border-[hsl(var(--brand-madder)/0.4)] dark:group-hover:border-[hsl(var(--brand-madder-soft)/0.5)]">
-                        <anchor.icon className="w-5 h-5 stroke-[1.5]" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-playfair text-[22px] font-bold text-[hsl(var(--brand-ink-soft))] dark:text-[hsl(var(--brand-cream))] leading-tight mb-0.5">
-                          {anchor.value}
-                        </span>
-                        <span className="font-sans text-[11px] font-bold text-[hsl(var(--brand-madder))] dark:text-[hsl(var(--brand-madder-soft))] uppercase tracking-[0.1em] opacity-80 group-hover:opacity-100 transition-opacity">
-                          {anchor.label}
-                        </span>
-                      </div>
-                    </motion.div>
-                  </AnimatedElement>
-                ))}
+                </span>
+                <span className="hidden h-3 w-px bg-[hsl(var(--brand-ink)/0.2)] sm:block" />
+                <span className="font-sans text-[13px] text-[hsl(var(--brand-ink)/0.7)] dark:text-[hsl(var(--brand-cream)/0.7)]">
+                  {reviewStats
+                    ? reviewStats.count === 1
+                      ? "1 customer review"
+                      : `${reviewStats.count} customer reviews`
+                    : "Loved by customers across India"}
+                </span>
+                <span className="hidden h-3 w-px bg-[hsl(var(--brand-ink)/0.2)] sm:block" />
+                <span className="font-sans text-[13px] text-[hsl(var(--brand-ink)/0.7)] dark:text-[hsl(var(--brand-cream)/0.7)]">
+                  100% hand-painted
+                </span>
               </div>
+            </AnimatedElement>
+
+            <div className="mt-9 md:mt-12 -mx-5 px-5 sm:mx-0 sm:px-0">
+              <ul className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 sm:gap-5 md:gap-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {displayReviews.map((r: any) => (
+                  <li
+                    key={r.id}
+                    className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]"
+                  >
+                    <figure className="flex h-full flex-col rounded-xl border border-[hsl(var(--brand-gold)/0.25)] bg-white/85 p-5 shadow-[0_2px_12px_rgba(26,21,18,0.05)] backdrop-blur-sm dark:bg-[#1a0f0a]/70 md:p-6">
+                      <div className="mb-3 flex items-center gap-1">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <Star
+                            key={i}
+                            className={cn(
+                              "h-3.5 w-3.5",
+                              i < r.rating
+                                ? "fill-[hsl(var(--brand-gold))] text-[hsl(var(--brand-gold))]"
+                                : "text-[hsl(var(--brand-ink)/0.2)]",
+                            )}
+                          />
+                        ))}
+                      </div>
+
+                      <blockquote className="font-serif text-[16px] leading-[1.55] text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))] md:text-[17px]">
+                        {r.content}
+                      </blockquote>
+
+                      <figcaption className="mt-auto flex items-center gap-3 pt-5">
+                        <span
+                          aria-hidden="true"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--brand-gold)/0.18)] font-sans text-[14px] font-bold text-[hsl(var(--brand-gold-deep))]"
+                        >
+                          {r.customer_name
+                            .split(" ")
+                            .slice(0, 2)
+                            .map((w: string) => w[0])
+                            .join("")
+                            .toUpperCase()}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block truncate font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))]">
+                            {r.customer_name}
+                          </span>
+                          {r.city && (
+                            <span className="mt-0.5 block font-sans text-[12px] text-[hsl(var(--brand-ink)/0.55)] dark:text-[hsl(var(--brand-cream)/0.55)]">
+                              {r.city}
+                            </span>
+                          )}
+                          {r.is_verified_purchase && (
+                            <span className="mt-0.5 inline-flex items-center gap-1 font-sans text-[12px] text-[hsl(var(--brand-ink)/0.55)] dark:text-[hsl(var(--brand-cream)/0.55)]">
+                              <BadgeCheck className="h-3.5 w-3.5 text-[hsl(var(--brand-gold-deep))]" />
+                              Verified purchase
+                            </span>
+                          )}
+                        </span>
+                      </figcaption>
+                    </figure>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>

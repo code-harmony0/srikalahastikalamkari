@@ -116,7 +116,7 @@ export default function SignUpPage() {
                 <CheckCircle className="w-10 h-10 text-[#C19A5B]" />
               )}
             </motion.div>
-            <h1 className="text-3xl font-serif font-light text-white mb-2">
+            <h1 className="text-3xl font-serif font-normal text-white mb-2">
               {step === 'details' ? 'Create Account' : 'Verify Email'}
             </h1>
             <p className="text-white/70 text-sm font-sans">

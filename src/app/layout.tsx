@@ -9,9 +9,10 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider"
 import { SITE_OFFLINE } from "@/shared/config/site-status";
 
 // Srikalahasti Fonts
+// Variable face: one file covering 400-900, instead of five static cuts of
+// which 500 and 800 were never used.
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-heading",
   display: "swap",
 })

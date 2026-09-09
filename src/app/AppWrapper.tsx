@@ -7,6 +7,7 @@ import FloatingAdminButton from "@/components/layout/FloatingAdminButton"
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton"
 import { cn } from "@/shared/utils"
 import { SITE_OFFLINE } from "@/shared/config/site-status"
+import MiniCartDrawer from "@/features/cart/MiniCartDrawer"
 
 export default function AppWrapper({
   children,
@@ -34,6 +35,7 @@ export default function AppWrapper({
           <Footer />
           <FloatingAdminButton />
           <WhatsAppButton phoneNumber="917288848881" />
+          <MiniCartDrawer />
         </>
       )}
     </div>

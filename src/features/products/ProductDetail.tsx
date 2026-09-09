@@ -16,6 +16,7 @@ import {
   useProduct,
 } from "@/shared/hooks/use-products"
 import { useCartStore } from "@/shared/cart-store"
+import { useMiniCartStore } from "@/shared/mini-cart-store"
 import { useWishlistStore } from "@/shared/wishlist-store"
 import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action"
 import {
@@ -38,6 +39,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
+import { hasSelectableColors, parseColorEntry } from "@/shared/lib/color-swatch"
 import { getResponsiveSizes } from "@/lib/image-utils"
 import { getImageTier } from "@/lib/image-tiers"
 import { resolveProductImageSrc } from "@/lib/cloudflare-images"
@@ -101,6 +103,7 @@ export default function ProductDetail() {
   }, [])
 
   const cart = useCartStore()
+  const openMiniCart = useMiniCartStore((s) => s.open)
   const wishlist = useWishlistStore()
 
   const { averageRating, totalReviews } = useReviews(product?.id || "")
@@ -198,11 +201,14 @@ export default function ProductDetail() {
       return
     }
     cart.addItem(product, addable)
-    toast.success(`Added ${addable} item(s) to cart`, {
-      description: madeToOrder
-        ? `This custom request will be prepared and delivered in ${MADE_TO_ORDER_DAYS}.`
-        : undefined,
-    })
+    // Issue 08: the mini-cart is the confirmation, so the visitor can see what
+    // landed in the cart and choose to keep browsing or check out.
+    openMiniCart(product.id)
+    if (madeToOrder) {
+      toast.success(`Added ${addable} item(s) to cart`, {
+        description: `This custom request will be prepared and delivered in ${MADE_TO_ORDER_DAYS}.`,
+      })
+    }
   })
 
   const handleToggleWishlist = useAuthGuardedAction(() => {
@@ -456,27 +462,54 @@ export default function ProductDetail() {
               {/* Actions */}
               <div className="space-y-3 pt-2">
                 
-                {/* Colors */}
-                {product.colors && Array.isArray(product.colors) && product.colors.length > 0 && (
+                {/* Colors - only shown when the customer actually has a choice */}
+                {hasSelectableColors(product.colors) && (
                   <div className="mb-4 space-y-2">
                     <p className="text-sm font-medium text-[#1A1512]">
-                      Color: <span className="text-[#1A1512]/60 font-normal">{selectedColor || 'Select color'}</span>
+                      Colour:{" "}
+                      <span className="text-[#1A1512]/60 font-normal">
+                        {selectedColor ? parseColorEntry(selectedColor).name : "Select a colour"}
+                      </span>
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {product.colors.map((color: string) => (
-                        <button
-                          key={color}
-                          onClick={() => setSelectedColor(color)}
-                          className={cn(
-                            "px-3 py-1.5 text-xs font-medium rounded border transition-all",
-                            selectedColor === color
-                              ? "border-[#C19A5B] bg-[#C19A5B]/10 text-[#1A1512]"
-                              : "border-slate-200 text-slate-600 hover:border-slate-300"
-                          )}
-                        >
-                          {color}
-                        </button>
-                      ))}
+                      {(product.colors ?? []).map((color: string) => {
+                        const { name, hex } = parseColorEntry(color)
+                        const swatch = hex
+                        const isSelected = selectedColor === color
+                        return (
+                          <button
+                            key={color}
+                            type="button"
+                            onClick={() => setSelectedColor(color)}
+                            aria-pressed={isSelected}
+                            aria-label={name}
+                            title={name}
+                            className={cn(
+                              "flex items-center gap-2 min-h-[44px] pl-2 pr-3 py-1.5 text-xs font-medium rounded-full border transition-all",
+                              isSelected
+                                ? "border-[#C19A5B] bg-[#C19A5B]/10 text-[#1A1512]"
+                                : "border-slate-200 text-slate-600 hover:border-slate-300"
+                            )}
+                          >
+                            <span
+                              aria-hidden="true"
+                              className={cn(
+                                "w-6 h-6 rounded-full shrink-0 ring-1 ring-inset ring-black/10",
+                                isSelected && "ring-2 ring-[#C19A5B] ring-offset-1 ring-offset-white"
+                              )}
+                              style={
+                                swatch
+                                  ? { backgroundColor: swatch }
+                                  : {
+                                      backgroundImage:
+                                        "linear-gradient(135deg,#E5E7EB 0 45%,#FFFFFF 45% 55%,#E5E7EB 55% 100%)",
+                                    }
+                              }
+                            />
+                            {name}
+                          </button>
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -673,7 +706,7 @@ export default function ProductDetail() {
                       loading="lazy"
                     />
                     {relProduct.isFeatured && (
-                      <span className="absolute top-2 left-2 bg-white/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#1A1512] rounded-[2px] backdrop-blur-sm">
+                      <span className="absolute top-2 left-2 bg-white/90 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#1A1512] rounded-[2px] backdrop-blur-sm">
                         Artisan
                       </span>
                     )}

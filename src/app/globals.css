@@ -6,6 +6,42 @@
 /* All colors MUST be HSL */
 
 @layer base {
+  /* Site-wide typography baseline. Without this, body text falls back to the
+     browser default (Times) wherever a component does not set a font class. */
+  body {
+    font-family: theme("fontFamily.sans");
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: theme("fontFamily.serif");
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer base {
   /* WEBSITE THEME (Kalamkari Heritage) - Default */
   :root {
     /* SRIKALAHASTI THEME */
@@ -338,8 +374,8 @@ body [role="dialog"].auth-modal-dialog > button {
 
 /* Premium Typography with Enhanced Contrast and Accessibility */
 .luxury-headline {
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 300;
+  font-family: theme("fontFamily.serif");
+  font-weight: 400;
   color: #ffffff !important;
   text-shadow:
     0 2px 8px rgba(0, 0, 0, 0.9),
@@ -369,9 +405,9 @@ body [role="dialog"].auth-modal-dialog > button {
 }
 
 .luxury-tagline {
-  font-family: "Cormorant Garamond", serif;
+  font-family: theme("fontFamily.serif");
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
   color: #ffffff !important;
   letter-spacing: 0.01em;
   text-shadow:
@@ -530,8 +566,8 @@ body [role="dialog"].auth-modal-dialog > button {
 
 /* Premium centered serif title styling */
 .cinematic-title {
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 300;
+  font-family: theme("fontFamily.serif");
+  font-weight: 400;
   color: #ffffff;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
   letter-spacing: -0.02em;
@@ -541,9 +577,9 @@ body [role="dialog"].auth-modal-dialog > button {
 
 /* Elegant italic tagline */
 .cinematic-tagline {
-  font-family: "Cormorant Garamond", serif;
+  font-family: theme("fontFamily.serif");
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
   color: #ffffff;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.01em;

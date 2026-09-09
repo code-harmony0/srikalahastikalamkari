@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { formatPrice, cn } from "@/shared/utils";
 import { toast } from "sonner";
-import { PageHero } from "./page-hero";
+import { PageHero } from "@/components/layout/PageHero";
 import { ShippingWidget } from "./ShippingWidget";
 import environment from "@/shared/config/environment";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
@@ -342,9 +342,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
       {/* 🏛 Page Hero */}
       <PageHero
-        icon={Wallet}
-        title="Checkout"
-        subtitle="Almost there — confirm your details and place your order."
+        eyebrow="Secure Checkout"
+        titleStart="Finalize"
+        titleAccent="order"
+        description="Almost there — confirm your delivery details and proceed to secure payment."
       />
 
       {/* 📦 Main Content */}

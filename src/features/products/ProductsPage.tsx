@@ -19,10 +19,8 @@ import {
   X,
 } from "lucide-react"
 import { ProductCard } from "./ProductCard"
-import {
-  ProductCardCompact,
-  ProductCardCompactSkeleton,
-} from "./ProductCardCompact"
+import { ProductCardCompact, ProductCardCompactSkeleton } from "./ProductCardCompact"
+import { PageHero } from "@/components/layout/PageHero"
 import dynamic from "next/dynamic"
 
 const FilterSidebar = dynamic(
@@ -101,6 +99,12 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
     const cat = searchParams.get("category")
     if (cat) {
       setSelectedCategories([decodeURIComponent(cat)])
+      setCurrentPage(1)
+    }
+    // ?search= lets the header search box hand a query straight to the grid.
+    const q = searchParams.get("search")
+    if (q !== null) {
+      setSearchQuery(decodeURIComponent(q))
       setCurrentPage(1)
     }
     window.scrollTo(0, 0)
@@ -373,81 +377,14 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   return (
     <div className="w-full min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512] overflow-hidden">
       {/* Hero Overview */}
-      <section className="relative w-full h-[42vh] min-h-[300px] sm:h-[60vh] sm:min-h-[400px] flex items-center justify-center overflow-hidden bg-[#1A1512] px-5 sm:px-6">
-        {/* Subtle background motif */}
-        <div
-          className="absolute inset-0 opacity-[0.05] pointer-events-none"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C19A5B' stroke-width='0.5'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z'/%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: "200px 200px",
-          }}
-        />
-
-        {/* Ambient glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1A1512]/60 via-transparent to-[#1A1512]/95 z-[1]" />
-
-        {/* Luxury framing borders */}
-        <div className="absolute inset-4 sm:inset-6 z-[5] pointer-events-none border border-[#C19A5B]/15">
-          {/* Decorative Corner markers */}
-          <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-[#C19A5B]" />
-          <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-[#C19A5B]" />
-          <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-[#C19A5B]" />
-          <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-[#C19A5B]" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 flex flex-col items-center max-w-[21rem] sm:max-w-2xl mx-auto text-center"
-        >
-          <span className="font-sans text-[8px] sm:text-[10px] md:text-[11px] font-bold tracking-[0.22em] sm:tracking-[0.3em] uppercase text-[#C19A5B] mb-2 sm:mb-3">
-            {heroCopy.eyebrow}
-          </span>
-
-          <h1 className="font-serif text-[25px] sm:text-[32px] md:text-[44px] font-bold text-white tracking-wide leading-none mb-2 sm:mb-3 uppercase">
-            {heroCopy.titleStart}{" "}
-            <span className="italic text-[#C19A5B] font-normal lowercase font-serif">
-              {heroCopy.titleAccent}
-            </span>
-            {heroCopy.titleEnd && ` ${heroCopy.titleEnd}`}
-          </h1>
-
-          <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mb-2 sm:mb-3" />
-
-          <p className="font-sans text-white/70 text-[11px] sm:text-[13px] md:text-[14px] font-light tracking-wide max-w-[18rem] sm:max-w-[600px] leading-relaxed mb-4 sm:mb-6">
-            {heroCopy.description}
-          </p>
-
-          <motion.button
-            onClick={() =>
-              gridRef.current?.scrollIntoView({ behavior: "smooth" })
-            }
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="group hidden sm:flex flex-col items-center gap-3 mt-2"
-          >
-            <span className="text-[10px] font-bold text-[#C19A5B] tracking-[0.2em] uppercase transition-colors duration-500 group-hover:text-[#FAFAF8] leading-none">
-              {heroCopy.scrollLabel}
-            </span>
-            <div className="relative w-[1px] h-10 overflow-hidden">
-              <div className="absolute inset-0 bg-[#C19A5B]/30 group-hover:bg-[#FAFAF8]/30 transition-colors duration-500" />
-              <motion.div
-                animate={{
-                  y: [-40, 40],
-                  backgroundColor: ["#C19A5B", "#C19A5B", "#FAFAF8"],
-                }}
-                transition={{
-                  y: { duration: 2.5, repeat: Infinity, ease: "linear" },
-                  backgroundColor: { duration: 0.5 },
-                }}
-                className="absolute top-0 left-0 w-full h-1/2 bg-[#C19A5B] transition-colors duration-500 group-hover:bg-[#FAFAF8]"
-              />
-            </div>
-          </motion.button>
-        </motion.div>
-      </section>
+      {/* Signature Hero Overview */}
+      <PageHero
+        eyebrow={heroCopy.eyebrow}
+        titleStart={heroCopy.titleStart}
+        titleAccent={heroCopy.titleAccent}
+        titleEnd={heroCopy.titleEnd}
+        description={heroCopy.description}
+      />
 
       {/* Main Content */}
       <div className="relative bg-transparent min-h-screen">
@@ -501,7 +438,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                   <div className="flex items-center gap-2 sm:gap-3 flex-wrap lg:hidden">
                     <div className="flex flex-wrap gap-1.5 flex-1">
                       {searchQuery && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                           &ldquo;{searchQuery}&rdquo;
                           <button onClick={() => setSearchQuery("")} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
@@ -511,7 +448,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       {selectedCategories.map((cat) => (
                         <span
                           key={cat}
-                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold"
+                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold"
                         >
                           {cat}
                           <button
@@ -527,7 +464,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         </span>
                       ))}
                       {(priceRange[0] > 0 || priceRange[1] < 50000) && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                           Price filtered
                           <button onClick={() => setPriceRange([0, 50000])} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
@@ -535,7 +472,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         </span>
                       )}
                       {inStockOnly && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[9px] sm:text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                           In Stock
                           <button onClick={() => setInStockOnly(false)} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
@@ -545,7 +482,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                     </div>
                     <button
                       onClick={clearAllFilters}
-                      className="text-[9px] sm:text-[10px] font-bold text-[#C19A5B] hover:text-[#1A1512] uppercase tracking-[0.16em] sm:tracking-widest whitespace-nowrap transition-colors"
+                      className="text-[10px] sm:text-[10px] font-bold text-[#C19A5B] hover:text-[#1A1512] uppercase tracking-[0.16em] sm:tracking-widest whitespace-nowrap transition-colors"
                     >
                       Clear all
                     </button>
@@ -557,20 +494,53 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                   <div className="flex items-center gap-5 w-full sm:w-auto">
                     <button
                       onClick={() => setShowFilters(true)}
-                      className="lg:hidden flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-[#C19A5B]/30 text-[9px] sm:text-[10px] font-bold tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#1A1512] bg-white/90 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
+                      className="lg:hidden flex-1 sm:flex-none flex min-h-[44px] items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-[#C19A5B]/30 text-[10px] sm:text-[10px] font-bold tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#1A1512] bg-white/90 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
                     >
                       <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C19A5B]" />
                       Filters
                       {getActiveFiltersCount() > 0 && (
-                        <span className="w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#1A1512] text-[#C19A5B] text-[9px] font-bold px-1.5">
+                        <span className="w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#1A1512] text-[#C19A5B] text-[11px] font-bold px-1.5">
                           {getActiveFiltersCount()}
                         </span>
                       )}
                     </button>
                   </div>
  
-                  {/* Right: Sort, View Toggle, Items per page */}
-                  <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+                  {/* Right: Search, Sort, View Toggle, Items per page */}
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:flex-1 justify-end">
+                    {/* Search - sits with the grid controls so it is reachable
+                        without opening the filter drawer */}
+                    <div className="relative order-first w-full sm:order-none sm:flex-1 sm:min-w-[240px] sm:max-w-[520px] sm:mr-auto">
+                      <LucideSearch
+                        aria-hidden="true"
+                        className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[#C19A5B]"
+                      />
+                      <input
+                        type="search"
+                        value={searchQuery}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value)
+                          setCurrentPage(1)
+                        }}
+                        placeholder="Search sarees, dupattas, fabrics..."
+                        aria-label="Search products"
+                        className="h-12 w-full rounded-lg border border-[#C19A5B]/25 bg-white pl-11 pr-10 text-[15px] text-[#1A1512] shadow-sm placeholder:text-[#1A1512]/40 focus:border-[#C19A5B] focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery("")
+                            setCurrentPage(1)
+                          }}
+                          aria-label="Clear search"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#1A1512]/40 hover:bg-[#1A1512]/5 hover:text-[#1A1512] transition-colors"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+
                     {/* View Toggle */}
                     <div className="hidden sm:flex items-center gap-1 bg-white/90 p-1 rounded-lg border border-[#C19A5B]/20 shadow-sm">
                       <button
@@ -604,7 +574,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         onChange={(e) =>
                           setItemsPerPage(Number(e.target.value))
                         }
-                        className="appearance-none pl-3 pr-8 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white text-[11px] font-bold text-[#3B2C23] uppercase tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/30 cursor-pointer shadow-sm"
+                        className="appearance-none min-h-[44px] pl-3 pr-8 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white text-[11px] font-bold text-[#3B2C23] uppercase tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/30 cursor-pointer shadow-sm"
                       >
                         <option value={12}>12 / page</option>
                         <option value={24}>24 / page</option>
@@ -618,7 +588,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="w-full appearance-none pl-3 sm:pl-4 pr-9 sm:pr-10 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white/90 backdrop-blur-sm text-[9px] sm:text-[10px] font-bold text-[#1A1512] uppercase tracking-[0.12em] sm:tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-all cursor-pointer shadow-sm"
+                        className="w-full appearance-none min-h-[44px] pl-3 sm:pl-4 pr-9 sm:pr-10 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white/90 backdrop-blur-sm text-[10px] sm:text-[10px] font-bold text-[#1A1512] uppercase tracking-[0.12em] sm:tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-all cursor-pointer shadow-sm"
                       >
                         <option value="default">Sort: Recommended</option>
                         <option value="latest">Sort: Newest</option>
@@ -723,7 +693,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       <button
                         onClick={() => goToPage(Math.max(1, currentPage - 1))}
                         disabled={currentPage === 1 || isFetching}
-                        className="flex items-center gap-1 h-8 sm:h-9 px-3 sm:px-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
+                        className="flex items-center gap-1 h-11 sm:h-9 px-3 sm:px-4 text-[10px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
                       >
                         <ChevronLeft className="w-3.5 h-3.5" />
                         <span>Prev</span>
@@ -749,7 +719,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                                 key={pNum}
                                 onClick={() => goToPage(pNum)}
                                 disabled={isFetching}
-                                className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
+                                className={`h-11 w-11 sm:h-9 sm:w-9 rounded-lg text-xs font-medium transition-colors ${
                                   currentPage === pNum
                                     ? "bg-[#C19A5B] text-white shadow-md shadow-[#C19A5B]/20"
                                     : "text-[#1A1512]/60 hover:bg-[#C19A5B]/10 hover:text-[#C19A5B]"
@@ -766,7 +736,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                           goToPage(Math.min(totalPages, currentPage + 1))
                         }
                         disabled={currentPage >= totalPages || isFetching}
-                        className="flex items-center gap-1 h-8 sm:h-9 px-3 sm:px-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
+                        className="flex items-center gap-1 h-11 sm:h-9 px-3 sm:px-4 text-[10px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
                       >
                         <span>Next</span>
                         <ChevronRight className="w-3.5 h-3.5" />

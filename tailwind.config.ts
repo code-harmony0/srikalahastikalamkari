@@ -26,12 +26,51 @@ const config: Config = {
         "4xl": ["2.5rem", { lineHeight: "1.2", fontWeight: "600" }],  // 40px - H1
         "5xl": ["3rem", { lineHeight: "1.2", fontWeight: "700" }],     // 48px
         "6xl": ["3.75rem", { lineHeight: "1.1", fontWeight: "700" }], // 60px
+
+        // Semantic type scale - prefer these over arbitrary text-[13px] values.
+        // 12px (`label`) is the readable floor on mobile.
+        display: [
+          "clamp(2.5rem, 5vw, 3.5rem)",
+          { lineHeight: "1.05", letterSpacing: "-0.02em" },
+        ],
+        h1: [
+          "clamp(2rem, 4vw, 2.5rem)",
+          { lineHeight: "1.15", letterSpacing: "-0.015em" },
+        ],
+        h2: [
+          "clamp(1.5rem, 3vw, 1.75rem)",
+          { lineHeight: "1.2", letterSpacing: "-0.01em" },
+        ],
+        h3: ["1.25rem", { lineHeight: "1.3" }],
+        h4: ["1.125rem", { lineHeight: "1.4" }],
+        "body-lg": ["1.0625rem", { lineHeight: "1.6" }],
+        body: ["1rem", { lineHeight: "1.6" }],
+        "body-sm": ["0.875rem", { lineHeight: "1.55" }],
+        caption: ["0.8125rem", { lineHeight: "1.5" }],
+        // 12px floor for ordinary small text. No letter-spacing here so
+        // existing tracking-* classes win.
+        label: ["0.75rem", { lineHeight: "1.45" }],
+        // 11px, reserved for UPPERCASE tracked micro-labels (badges, eyebrows).
+        // Caps + tracking carry legibility at this size where sentence case
+        // would not, and it keeps dense badge rows on one line.
+        micro: ["0.6875rem", { lineHeight: "1.4" }],
       },
       fontFamily: {
-        heading: ["Playfair Display", "serif"],
-        paragraph: ["Inter", "sans-serif"],
-        sans: ["Inter", "sans-serif"],
-        serif: ["Playfair Display", "serif"],
+        // Bound to the next/font CSS variables set in app/layout.tsx. Naming the
+        // families literally does not work: next/font emits a hashed family name.
+        heading: ["var(--font-heading)", "Playfair Display", "Georgia", "serif"],
+        paragraph: [
+          "var(--font-paragraph)",
+          "Inter",
+          "system-ui",
+          "sans-serif",
+        ],
+        sans: ["var(--font-paragraph)", "Inter", "system-ui", "sans-serif"],
+        serif: ["var(--font-heading)", "Playfair Display", "Georgia", "serif"],
+        // Aliases for the font-inter / font-playfair classes already used across
+        // the codebase, which previously resolved to nothing.
+        inter: ["var(--font-paragraph)", "Inter", "system-ui", "sans-serif"],
+        playfair: ["var(--font-heading)", "Playfair Display", "Georgia", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
