@@ -184,7 +184,7 @@ export default function OrdersPage() {
     return (
       <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512] flex items-center justify-center">
         <div className="text-center bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-[#C19A5B]/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-          <Loader2 className="w-8 h-8 animate-spin text-[#C19A5B] mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-[hsl(var(--brand-gold-deep))] mx-auto mb-4" />
           <p className="text-[#1A1512]/60 font-inter text-sm">Loading your orders...</p>
         </div>
       </div>
@@ -205,7 +205,7 @@ export default function OrdersPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-[#1A1512]/60 hover:text-[#C19A5B] transition-colors mb-6 font-inter text-sm"
+          className="inline-flex items-center gap-2 text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] transition-colors mb-6 font-inter text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
@@ -213,7 +213,7 @@ export default function OrdersPage() {
 
         {orders.length === 0 ? (
           <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-xl border border-[#C19A5B]/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-            <Package className="w-16 h-16 text-[#C19A5B] mx-auto mb-4" />
+            <Package className="w-16 h-16 text-[hsl(var(--brand-gold-deep))] mx-auto mb-4" />
             <h3 className="font-serif text-xl font-bold text-[#1A1512] mb-2 italic">
               No orders yet
             </h3>
@@ -266,7 +266,7 @@ export default function OrdersPage() {
                               placeholder="empty"
                             />
                           ) : (
-                            <Package className="w-5 h-5 text-[#C19A5B] absolute inset-0 m-auto" />
+                            <Package className="w-5 h-5 text-[hsl(var(--brand-gold-deep))] absolute inset-0 m-auto" />
                           )}
                         </div>
                       ))}
@@ -309,7 +309,7 @@ export default function OrdersPage() {
                         <span>•</span>
                         <span>{order.order_items?.length || 0} items</span>
                         <span>•</span>
-                        <span className="font-semibold text-[#C19A5B]">
+                        <span className="font-semibold text-[hsl(var(--brand-gold-deep))]">
                           {formatPrice(order.total_amount)}
                         </span>
                       </div>
@@ -397,7 +397,7 @@ export default function OrdersPage() {
                                         placeholder="empty"
                                       />
                                     ) : (
-                                      <Package className="w-5 h-5 text-[#C19A5B] absolute inset-0 m-auto" />
+                                      <Package className="w-5 h-5 text-[hsl(var(--brand-gold-deep))] absolute inset-0 m-auto" />
                                     )}
                                   </div>
                                   <div className="flex-1 min-w-0">
@@ -409,7 +409,7 @@ export default function OrdersPage() {
                                     </p>
                                   </div>
                                   <div className="text-right">
-                                    <p className="font-inter text-sm font-semibold text-[#C19A5B]">
+                                    <p className="font-inter text-sm font-semibold text-[hsl(var(--brand-gold-deep))]">
                                       {formatPrice(item.price_at_purchase * item.quantity)}
                                     </p>
                                     {(order.status === 'shipped' || order.status === 'paid') && (
@@ -421,7 +421,7 @@ export default function OrdersPage() {
                                           productImage:
                                             getImageTier(item.products?.images, "thumb", 0) || "",
                                         })}
-                                        className="mt-2 text-xs font-medium text-[#C19A5B] hover:text-[#1A1512] flex items-center justify-end gap-1 transition-colors"
+                                        className="mt-2 text-xs font-medium text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] flex items-center justify-end gap-1 transition-colors"
                                       >
                                         <Star className="w-3 h-3" />
                                         Write Review
@@ -482,7 +482,7 @@ export default function OrdersPage() {
                                 </div>
                                 <div className="flex justify-between pt-2 border-t border-[#C19A5B]/10">
                                   <span className="text-sm font-semibold text-[#1A1512] font-inter">Total</span>
-                                  <span className="text-lg font-bold text-[#C19A5B] font-playfair">
+                                  <span className="text-lg font-bold text-[hsl(var(--brand-gold-deep))] font-playfair">
                                     {formatPrice(order.total_amount)}
                                   </span>
                                 </div>
@@ -501,7 +501,7 @@ export default function OrdersPage() {
                               {/* Estimated Delivery */}
                               {(order.status === 'paid' || order.status === 'in_packing' || order.status === 'packed') && (
                                 <div className="flex items-center gap-2 text-xs font-inter">
-                                  <Calendar className="w-3 h-3 text-[#C19A5B]" />
+                                  <Calendar className="w-3 h-3 text-[hsl(var(--brand-gold-deep))]" />
                                   <span className="text-[#1A1512]/60">Expected by:</span>
                                   <span className="font-medium text-[#1A1512]">
                                     {calculateEstimatedDelivery(new Date(order.created_at)).estimatedDate.toLocaleDateString("en-US", {
@@ -533,7 +533,7 @@ export default function OrdersPage() {
                                           href={trackingUrl}
                                           target="_blank"
                                           rel="noopener noreferrer"
-                                          className="inline-flex items-center gap-1 text-xs text-[#C19A5B] hover:text-[#1A1512] font-medium transition-colors"
+                                          className="inline-flex items-center gap-1 text-xs text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] font-medium transition-colors"
                                         >
                                           Track Order
                                           <ExternalLink className="w-3 h-3" />
@@ -559,7 +559,7 @@ export default function OrdersPage() {
         {orders.length > 0 && totalCount > 0 && (
           <div className="mt-6 px-6 py-4 border border-[#C19A5B]/20 bg-white/80 backdrop-blur-sm rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-sm text-[#1A1512]/60">
-              Showing <span className="font-semibold text-[#C19A5B]">{Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)}-{Math.min(currentPage * itemsPerPage, totalCount)}</span> of <span className="font-semibold text-[#1A1512]">{totalCount}</span> orders
+              Showing <span className="font-semibold text-[hsl(var(--brand-gold-deep))]">{Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)}-{Math.min(currentPage * itemsPerPage, totalCount)}</span> of <span className="font-semibold text-[#1A1512]">{totalCount}</span> orders
             </div>
             <div className="flex items-center gap-2">
               <button

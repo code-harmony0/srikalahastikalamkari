@@ -33,14 +33,14 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
       {/* 1️⃣ Header & Free Shipping Banner */}
       <div className="p-5 border-b border-[#C19A5B]/20 bg-[#C19A5B]/5">
         <h3 className="font-playfair font-bold text-[#1A1512] text-lg mb-1 flex items-center gap-2">
-          <Truck className="w-5 h-5 text-[#C19A5B]" />
+          <Truck className="w-5 h-5 text-[hsl(var(--brand-gold-deep))]" />
           Shipping & Delivery
         </h3>
 
         {/* Static Free Shipping Banner */}
         <div className="mt-4 bg-[#C19A5B]/10 p-3 rounded-lg border border-[#C19A5B]/20">
           <p className="font-inter text-sm text-[#1A1512] flex items-center gap-2">
-            <Gift className="w-4 h-4 text-[#C19A5B]" />
+            <Gift className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
             <span className="font-bold">Free Shipping</span> on all orders
           </p>
         </div>
@@ -51,7 +51,7 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
         {/* Processing Time */}
         <div className="flex gap-3 group">
           <div className="w-8 h-8 rounded-full bg-[#C19A5B]/10 flex items-center justify-center shrink-0 border border-[#C19A5B]/20 group-hover:border-[#C19A5B] transition-colors">
-            <Clock className="w-4 h-4 text-[#C19A5B]" />
+            <Clock className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
           </div>
           <div>
             <h4 className="font-inter font-bold text-[#1A1512] text-sm">
@@ -59,7 +59,7 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
             </h4>
             <p className="font-inter text-[#1A1512]/60 text-xs mt-0.5 leading-relaxed">
               We hand-prepare every order. Please allow{" "}
-              <span className="font-medium text-[#C19A5B]">1–2 days</span> for
+              <span className="font-medium text-[hsl(var(--brand-gold-deep))]">1–2 days</span> for
               crafting & packing.
             </p>
           </div>
@@ -71,7 +71,7 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
         {/* Delivery Options */}
         <div className="flex gap-3 group">
           <div className="w-8 h-8 rounded-full bg-[#C19A5B]/10 flex items-center justify-center shrink-0 border border-[#C19A5B]/20 group-hover:border-[#C19A5B] transition-colors">
-            <Gift className="w-4 h-4 text-[#C19A5B]" />
+            <Gift className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
           </div>
           <div className="w-full">
             <h4 className="font-inter font-bold text-[#1A1512] text-sm">
@@ -96,7 +96,7 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
         {/* Support */}
         <div className="flex gap-3 group">
           <div className="w-8 h-8 rounded-full bg-[#C19A5B]/10 flex items-center justify-center shrink-0 border border-[#C19A5B]/20 group-hover:border-[#C19A5B] transition-colors">
-            <ShieldCheck className="w-4 h-4 text-[#C19A5B]" />
+            <ShieldCheck className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
           </div>
           <div className="w-full">
             <h4 className="font-inter font-bold text-[#1A1512] text-sm">
@@ -108,7 +108,7 @@ export const ShippingWidget = ({ subtotal }: ShippingWidgetProps) => {
             <div className="flex items-center gap-4">
               <a
                 href="/contact"
-                className="flex items-center gap-1 text-[11px] font-bold uppercase text-[#C19A5B] hover:text-[#1A1512] transition-colors"
+                className="flex items-center gap-1 text-[11px] font-bold uppercase text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors"
               >
                 Support <Phone className="w-3 h-3" />
               </a>

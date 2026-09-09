@@ -83,7 +83,7 @@ export default function ShippingPolicyPage() {
                   If you have any questions or concerns regarding your order's shipping status, please contact us at{" "}
                   <a
                     href="mailto:srikalahastikalamkari.sk@gmail.com"
-                    className="text-[#C19A5B] hover:underline"
+                    className="text-[hsl(var(--brand-gold-deep))] hover:underline"
                   >
                     srikalahastikalamkari.sk@gmail.com
                   </a>

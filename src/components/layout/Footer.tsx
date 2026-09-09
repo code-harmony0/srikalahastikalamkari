@@ -82,7 +82,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-[13px] text-[#D6CBC0] hover:text-[#E2BD7A] transition-colors group"
               >
-                <Instagram className="w-4 h-4 text-[#C19A5B] group-hover:scale-110 transition-transform" />
+                <Instagram className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] group-hover:scale-110 transition-transform" />
                 <span>@srikalahasti_kalamkari_offical</span>
               </a>
             </div>
@@ -151,7 +151,7 @@ export default function Footer() {
                   href={telHref(CONTACT.phones[0])}
                   className="inline-flex items-center gap-2 text-white hover:text-[#E2BD7A] font-semibold transition-colors"
                 >
-                  <Phone className="w-3.5 h-3.5 text-[#C19A5B]" />
+                  <Phone className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))]" />
                   <span>{CONTACT.phones[0]}</span>
                 </a>
                 <span className="text-white/20">·</span>
@@ -172,7 +172,7 @@ export default function Footer() {
                   href={mailtoHref()}
                   className="inline-flex items-center gap-2 text-[#D6CBC0] hover:text-white transition-colors break-all"
                 >
-                  <Mail className="w-3.5 h-3.5 text-[#C19A5B] shrink-0" />
+                  <Mail className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))] shrink-0" />
                   <span>{CONTACT.email}</span>
                 </a>
               </div>
@@ -181,7 +181,7 @@ export default function Footer() {
               <div className="pt-2 border-t border-white/10 space-y-3 text-[13px]">
                 {/* Srikalahasti */}
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#C19A5B] shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] shrink-0 mt-0.5" />
                   <div>
                     <div className="font-semibold text-white">Srikalahasti Atelier</div>
                     <div className="text-[#D6CBC0] leading-snug">#17-68, Bharathi Nagar, Tirupati Main Rd</div>
@@ -190,7 +190,7 @@ export default function Footer() {
 
                 {/* Tirupati */}
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#C19A5B] shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] shrink-0 mt-0.5" />
                   <div>
                     <div className="font-semibold text-white">
                       Tirupati Store{" "}
@@ -209,7 +209,7 @@ export default function Footer() {
 
                 {/* Timings */}
                 <div className="flex items-center gap-2 text-[12.5px] text-[#A89F91] pt-0.5">
-                  <Clock className="w-3.5 h-3.5 text-[#C19A5B] shrink-0" />
+                  <Clock className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))] shrink-0" />
                   <span>Mon – Sat: 10:00 AM – 8:00 PM</span>
                 </div>
               </div>
@@ -229,7 +229,7 @@ export default function Footer() {
             <Link href="/shipping" className="hover:text-[#E2BD7A] transition-colors">Shipping</Link>
           </div>
 
-          <div className="font-serif italic text-[12px] text-[#C19A5B] tracking-wide">
+          <div className="font-serif italic text-[12px] text-[hsl(var(--brand-gold-deep))] tracking-wide">
             Crafted with Devotion in Srikalahasti
           </div>
         </div>

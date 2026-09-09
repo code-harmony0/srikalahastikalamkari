@@ -205,7 +205,7 @@ export const ProductCard = memo(
               <div className="absolute inset-0 bg-[#1A1512]/15 z-15 pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
                 <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 px-3 flex items-center justify-center gap-1.5">
-                  <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
+                  <span className="text-[hsl(var(--brand-gold-deep))] text-[10px] font-semibold tracking-[0.12em] uppercase">
                     {inquiryOnly ? "Custom request" : `Made to Order · ${MADE_TO_ORDER_DAYS}`}
                   </span>
                 </div>
@@ -221,7 +221,7 @@ export const ProductCard = memo(
               title="Wishlist"
             >
               <Heart
-                className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#C19A5B] text-[#C19A5B]" : ""}`}
+                className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#C19A5B] text-[hsl(var(--brand-gold-deep))]" : ""}`}
               />
             </button>
           )}
@@ -235,13 +235,13 @@ export const ProductCard = memo(
           )}>
           <div>
             <div className="space-y-1 block group/text">
-              <span className="font-playfair italic text-[#C19A5B] text-[11px] block">
+              <span className="font-playfair italic text-[hsl(var(--brand-gold-deep))] text-[11px] block">
                 {categoryName}
               </span>
 
               <h3
                 className={cn(
-                  "font-inter font-bold text-[#1A1512] leading-tight group-hover/text:text-[#C19A5B] transition-colors",
+                  "font-inter font-bold text-[#1A1512] leading-tight group-hover/text:text-[hsl(var(--brand-gold-deep))] transition-colors",
                   isList
                     ? "text-[15px] line-clamp-1"
                     : "text-[14px] line-clamp-2",
@@ -302,7 +302,7 @@ export const ProductCard = memo(
 
               {!isList && (
                 <div className="flex items-center gap-1 mt-0.5">
-                  <Star className="w-2.5 h-2.5 fill-[#C19A5B] text-[#C19A5B]" />
+                  <Star className="w-2.5 h-2.5 fill-[#C19A5B] text-[hsl(var(--brand-gold-deep))]" />
                   <span className="text-[11px] font-medium text-[#1A1512]/70">
                     4.8
                   </span>
@@ -317,7 +317,7 @@ export const ProductCard = memo(
                   className="relative before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-[''] w-8 h-8 rounded-full border border-[#C19A5B]/20 text-[#1A1512] hover:bg-[#C19A5B]/10 flex items-center justify-center transition-colors"
                 >
                   <Heart
-                    className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#C19A5B] text-[#C19A5B]" : ""}`}
+                    className={`w-3.5 h-3.5 ${isWishlisted ? "fill-[#C19A5B] text-[hsl(var(--brand-gold-deep))]" : ""}`}
                   />
                 </button>
               )}

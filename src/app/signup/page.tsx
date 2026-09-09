@@ -111,9 +111,9 @@ export default function SignUpPage() {
               className="w-20 h-20 mx-auto mb-4 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-[#C19A5B]/20"
             >
               {step === 'details' ? (
-                <User className="w-10 h-10 text-[#C19A5B]" />
+                <User className="w-10 h-10 text-[hsl(var(--brand-gold-deep))]" />
               ) : (
-                <CheckCircle className="w-10 h-10 text-[#C19A5B]" />
+                <CheckCircle className="w-10 h-10 text-[hsl(var(--brand-gold-deep))]" />
               )}
             </motion.div>
             <h1 className="text-3xl font-serif font-normal text-white mb-2">
@@ -135,7 +135,7 @@ export default function SignUpPage() {
                     Full Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#C19A5B]/70" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-gold-deep))]/70" />
                     <input
                       id="name"
                       type="text"
@@ -153,7 +153,7 @@ export default function SignUpPage() {
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#C19A5B]/70" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-gold-deep))]/70" />
                     <input
                       id="email"
                       type="email"
@@ -171,7 +171,7 @@ export default function SignUpPage() {
                     Phone Number
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#C19A5B]/70" />
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-gold-deep))]/70" />
                     <input
                       id="phone"
                       type="tel"
@@ -244,7 +244,7 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={() => setStep('details')}
-                  className="w-full text-sm text-[#1A1512]/60 hover:text-[#C19A5B] transition-colors"
+                  className="w-full text-sm text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
                   disabled={loading}
                 >
                   ← Back to Details
@@ -276,7 +276,7 @@ export default function SignUpPage() {
             {/* Sign In Link */}
             <p className="mt-6 text-center text-sm text-[#1A1512]/60">
               Already have an account?{" "}
-              <Link href="/login" className="text-[#C19A5B] hover:text-[#1A1512] font-semibold transition-colors">
+              <Link href="/login" className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] font-semibold transition-colors">
                 Sign In
               </Link>
             </p>

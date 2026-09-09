@@ -134,7 +134,7 @@ export default function AboutPage() {
 
                 {/* Floating Craft Badge with Gold Accent */}
                 <div className="absolute bottom-3 left-3 right-3 bg-[#1A1512]/90 backdrop-blur-md px-3.5 py-2.5 rounded-lg border border-[#C19A5B]/30 flex items-center gap-2.5 text-white">
-                  <div className="w-7 h-7 rounded-full bg-[#C19A5B]/20 flex items-center justify-center text-[#C19A5B] shrink-0 border border-[#C19A5B]/40">
+                  <div className="w-7 h-7 rounded-full bg-[#C19A5B]/20 flex items-center justify-center text-[hsl(var(--brand-gold-deep))] shrink-0 border border-[#C19A5B]/40">
                     <Paintbrush className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-[11px] font-sans font-medium text-white/90 truncate">
@@ -393,7 +393,7 @@ export default function AboutPage() {
                 />
 
                 <div className="absolute bottom-3 left-3 right-3 bg-[#1A1512]/90 backdrop-blur-md px-3.5 py-2.5 rounded-lg border border-[#C19A5B]/30 text-center">
-                  <p className="font-serif italic text-[#C19A5B] text-xs sm:text-[13px]">
+                  <p className="font-serif italic text-[hsl(var(--brand-gold-deep))] text-xs sm:text-[13px]">
                     &ldquo;Wearable mythology, painted by hand.&rdquo;
                   </p>
                 </div>

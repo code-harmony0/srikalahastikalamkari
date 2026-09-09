@@ -321,7 +321,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     return (
       <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex flex-col items-center justify-center px-6 text-center text-[#1A1512]">
         <div className="w-16 h-16 bg-[#C19A5B]/10 rounded-full flex items-center justify-center mb-4 border border-[#C19A5B]/30">
-          <Wallet className="w-8 h-8 text-[#C19A5B]" />
+          <Wallet className="w-8 h-8 text-[hsl(var(--brand-gold-deep))]" />
         </div>
         <h1 className="font-playfair text-3xl font-bold text-[#1A1512] mb-4">
           Your cart is empty
@@ -566,7 +566,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                             </p>
                           )}
                         </div>
-                        <p className="font-inter font-semibold text-[#C19A5B] text-xs">
+                        <p className="font-inter font-semibold text-[hsl(var(--brand-gold-deep))] text-xs">
                           {formatPrice((product.price || 0) * quantity)}
                         </p>
                       </div>
@@ -577,7 +577,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 {/* Coupon Section */}
                 <div className="pt-4 border-t border-[#C19A5B]/20">
                   <div className="flex items-center gap-2 mb-3">
-                    <Tag className="w-4 h-4 text-[#C19A5B]" />
+                    <Tag className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
                     <span className="text-sm font-medium text-[#1A1512]">Have a coupon?</span>
                   </div>
                   
@@ -683,7 +683,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     <span className="font-playfair font-bold text-lg text-[#1A1512]">
                       Total
                     </span>
-                    <span className="font-playfair font-bold text-2xl text-[#C19A5B]">
+                    <span className="font-playfair font-bold text-2xl text-[hsl(var(--brand-gold-deep))]">
                       {formatPrice(total)}
                     </span>
                   </div>
@@ -725,7 +725,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[#C19A5B]/20 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40">
         <div className="flex justify-between items-center mb-3 px-1">
           <span className="font-playfair font-bold text-[#1A1512]">Total</span>
-          <span className="font-playfair font-bold text-xl text-[#C19A5B]">
+          <span className="font-playfair font-bold text-xl text-[hsl(var(--brand-gold-deep))]">
             {formatPrice(total)}
           </span>
         </div>

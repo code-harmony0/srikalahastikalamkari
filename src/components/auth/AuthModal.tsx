@@ -158,7 +158,7 @@ export function AuthModal() {
           </button>
           
           <div className="w-14 h-14 bg-[#1A1512] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-[#1A1512]/10 border border-[#C19A5B]/30">
-            <User className="w-7 h-7 text-[#C19A5B]" />
+            <User className="w-7 h-7 text-[hsl(var(--brand-gold-deep))]" />
           </div>
 
           <DialogTitle className="font-playfair text-2xl md:text-3xl font-bold text-[#1A1512] mb-2">
@@ -250,7 +250,7 @@ export function AuthModal() {
                   <button
                     type="button"
                     onClick={() => setStep("phone")}
-                    className="text-[#1A1512]/60 hover:text-[#C19A5B] transition-colors"
+                    className="text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
                   >
                     Change Number
                   </button>
@@ -262,7 +262,7 @@ export function AuthModal() {
                     <button
                       type="button"
                       onClick={handleResendOtp}
-                      className="text-[#C19A5B] hover:text-[#1A1512] transition-colors font-bold uppercase tracking-wide"
+                      className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors font-bold uppercase tracking-wide"
                     >
                       Resend Code
                     </button>

@@ -50,7 +50,7 @@ const InputField = ({
 }) => (
   <div className={cn("space-y-1.5", fullWidth && "md:col-span-2")}>
     <label className="block text-[13px] font-inter font-semibold text-[#1A1512]/80 uppercase tracking-wider">
-      {label} {required && <span className="text-[#C19A5B]">*</span>}
+      {label} {required && <span className="text-[hsl(var(--brand-gold-deep))]">*</span>}
     </label>
     <input
       type={type}
@@ -226,7 +226,7 @@ export default function EditProfilePage() {
                 <Link href="/profile" className="w-full sm:w-auto">
                   <button
                     type="button"
-                    className="w-full sm:w-auto px-6 h-[48px] rounded-[6px] border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] font-inter font-medium text-[15px] hover:bg-white hover:text-[#C19A5B] hover:border-[#C19A5B]/50 transition-all"
+                    className="w-full sm:w-auto px-6 h-[48px] rounded-[6px] border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] font-inter font-medium text-[15px] hover:bg-white hover:text-[hsl(var(--brand-gold-deep))] hover:border-[#C19A5B]/50 transition-all"
                   >
                     Cancel
                   </button>

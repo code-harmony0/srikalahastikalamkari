@@ -240,12 +240,12 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center px-4">
-        <Package className="h-12 w-12 text-[#C19A5B] mb-3" />
+        <Package className="h-12 w-12 text-[hsl(var(--brand-gold-deep))] mb-3" />
         <h1 className="font-playfair text-xl font-bold text-[#1A1512] mb-2">
           Product Not Found
         </h1>
         <Link href="/products">
-          <button className="text-[#C19A5B] font-medium text-sm hover:underline underline-offset-4">
+          <button className="text-[hsl(var(--brand-gold-deep))] font-medium text-sm hover:underline underline-offset-4">
             Return to Shop
           </button>
         </Link>
@@ -263,13 +263,13 @@ export default function ProductDetail() {
           {" "}
           {/* Increased width */}
           <div className="flex items-center gap-2 text-[11px] text-[#1A1512]/60 font-inter uppercase tracking-wide">
-            <Link href="/" className="hover:text-[#C19A5B] transition-colors">
+            <Link href="/" className="hover:text-[hsl(var(--brand-gold-deep))] transition-colors">
               Home
             </Link>
             <span className="opacity-40">/</span>
             <Link
               href="/products"
-              className="hover:text-[#C19A5B] transition-colors"
+              className="hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
             >
               Shop
             </Link>
@@ -372,13 +372,13 @@ export default function ProductDetail() {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-3.5 h-3.5 ${i < Math.round(averageRating) ? "fill-[#C19A5B] text-[#C19A5B]" : "text-[#C19A5B]/30"}`}
+                        className={`w-3.5 h-3.5 ${i < Math.round(averageRating) ? "fill-[#C19A5B] text-[hsl(var(--brand-gold-deep))]" : "text-[hsl(var(--brand-gold-deep))]/30"}`}
                       />
                     ))}
                   </div>
                   <a
                     href="#reviews"
-                    className="text-xs text-[#1A1512]/60 hover:text-[#C19A5B] underline underline-offset-2"
+                    className="text-xs text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] underline underline-offset-2"
                   >
                     {averageRating.toFixed(1)} ({totalReviews} reviews)
                   </a>
@@ -439,15 +439,15 @@ export default function ProductDetail() {
               {/* Trust Strip */}
               <div className="flex items-center gap-6 py-2">
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
-                  <Truck className="w-3.5 h-3.5 text-[#C19A5B]" />
+                  <Truck className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))]" />
                   <span>Free shipping {">"} ₹2000</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
-                  <Package className="w-3.5 h-3.5 text-[#C19A5B]" />
+                  <Package className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))]" />
                   <span>{madeToOrder ? `${MADE_TO_ORDER_DAYS} Delivery` : "5-7 Day Delivery"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#1A1512]/80">
-                  <Shield className="w-3.5 h-3.5 text-[#C19A5B]" />
+                  <Shield className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))]" />
                   <span>Secure Checkout</span>
                 </div>
               </div>
@@ -584,7 +584,7 @@ export default function ProductDetail() {
                     <Heart
                       className={cn(
                         "w-3.5 h-3.5",
-                        isInWishlist && "fill-[#C19A5B] text-[#C19A5B]",
+                        isInWishlist && "fill-[#C19A5B] text-[hsl(var(--brand-gold-deep))]",
                       )}
                     />
                     Wishlist
@@ -620,7 +620,7 @@ export default function ProductDetail() {
                     Product Details
                   </AccordionTrigger>
                   <AccordionContent className="pb-4 text-sm text-[#1A1512]/70 font-inter leading-relaxed">
-                    <ul className="space-y-2 list-disc pl-4 marker:text-[#C19A5B]/45">
+                    <ul className="space-y-2 list-disc pl-4 marker:text-[hsl(var(--brand-gold-deep))]/45">
                       {Object.entries(product.specifications).map(
                         ([key, value]) => (
                           <li key={key}>
@@ -711,7 +711,7 @@ export default function ProductDetail() {
                       </span>
                     )}
                   </div>
-                  <h3 className="font-inter text-sm font-medium text-[#1A1512] line-clamp-1 group-hover:text-[#C19A5B] transition-colors">
+                  <h3 className="font-inter text-sm font-medium text-[#1A1512] line-clamp-1 group-hover:text-[hsl(var(--brand-gold-deep))] transition-colors">
                     {relProduct.name || relProduct.title}
                   </h3>
                   <p className="font-playfair text-base font-bold text-[#1A1512] mt-1">

@@ -440,7 +440,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       {searchQuery && (
                         <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                           &ldquo;{searchQuery}&rdquo;
-                          <button onClick={() => setSearchQuery("")} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
+                          <button onClick={() => setSearchQuery("")} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
                           </button>
                         </span>
@@ -457,7 +457,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                                 selectedCategories.filter((c) => c !== cat),
                               )
                             }
-                            className="text-[#C19A5B] hover:text-[#1A1512] transition-colors"
+                            className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -466,7 +466,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       {(priceRange[0] > 0 || priceRange[1] < 50000) && (
                         <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                           Price filtered
-                          <button onClick={() => setPriceRange([0, 50000])} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
+                          <button onClick={() => setPriceRange([0, 50000])} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
                           </button>
                         </span>
@@ -474,7 +474,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       {inStockOnly && (
                         <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                           In Stock
-                          <button onClick={() => setInStockOnly(false)} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
+                          <button onClick={() => setInStockOnly(false)} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
                           </button>
                         </span>
@@ -482,7 +482,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                     </div>
                     <button
                       onClick={clearAllFilters}
-                      className="text-[10px] sm:text-[10px] font-bold text-[#C19A5B] hover:text-[#1A1512] uppercase tracking-[0.16em] sm:tracking-widest whitespace-nowrap transition-colors"
+                      className="text-[10px] sm:text-[10px] font-bold text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] uppercase tracking-[0.16em] sm:tracking-widest whitespace-nowrap transition-colors"
                     >
                       Clear all
                     </button>
@@ -496,7 +496,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       onClick={() => setShowFilters(true)}
                       className="lg:hidden flex-1 sm:flex-none flex min-h-[44px] items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-[#C19A5B]/30 text-[10px] sm:text-[10px] font-bold tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#1A1512] bg-white/90 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
                     >
-                      <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C19A5B]" />
+                      <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--brand-gold-deep))]" />
                       Filters
                       {getActiveFiltersCount() > 0 && (
                         <span className="w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#1A1512] text-[#C19A5B] text-[11px] font-bold px-1.5">
@@ -513,7 +513,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                     <div className="relative order-first w-full sm:order-none sm:flex-1 sm:min-w-[240px] sm:max-w-[520px] sm:mr-auto">
                       <LucideSearch
                         aria-hidden="true"
-                        className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[#C19A5B]"
+                        className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[hsl(var(--brand-gold-deep))]"
                       />
                       <input
                         type="search"
@@ -548,7 +548,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         className={`p-2 rounded-md transition-all ${
                           viewMode === "grid"
                             ? "bg-[#1A1512] text-[#C19A5B] shadow-sm"
-                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[#C19A5B]"
+                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[hsl(var(--brand-gold-deep))]"
                         }`}
                         title="Grid View"
                       >
@@ -559,7 +559,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         className={`p-2 rounded-md transition-all ${
                           viewMode === "list"
                             ? "bg-[#1A1512] text-[#C19A5B] shadow-sm"
-                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[#C19A5B]"
+                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[hsl(var(--brand-gold-deep))]"
                         }`}
                         title="List View"
                       >
@@ -580,7 +580,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         <option value={24}>24 / page</option>
                         <option value={48}>48 / page</option>
                       </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#C19A5B] pointer-events-none" />
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))] pointer-events-none" />
                     </div>
  
                     {/* Sort */}
@@ -595,7 +595,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         <option value="price-asc">Price: Low to High</option>
                         <option value="price-desc">Price: High to Low</option>
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C19A5B] pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--brand-gold-deep))] pointer-events-none" />
                     </div>
                   </div>
                 </div>
@@ -676,7 +676,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                   <div className="mt-8 sm:mt-12 px-4 sm:px-6 py-3 sm:py-4 border-t border-[#C19A5B]/10 bg-[#1A1512]/5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
                     <div className="text-xs sm:text-sm text-[#1A1512]/60">
                       Showing{" "}
-                      <span className="font-semibold text-[#C19A5B]">
+                      <span className="font-semibold text-[hsl(var(--brand-gold-deep))]">
                         {Math.min(
                           (currentPage - 1) * itemsPerPage + 1,
                           totalCount,
@@ -722,7 +722,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                                 className={`h-11 w-11 sm:h-9 sm:w-9 rounded-lg text-xs font-medium transition-colors ${
                                   currentPage === pNum
                                     ? "bg-[#C19A5B] text-white shadow-md shadow-[#C19A5B]/20"
-                                    : "text-[#1A1512]/60 hover:bg-[#C19A5B]/10 hover:text-[#C19A5B]"
+                                    : "text-[#1A1512]/60 hover:bg-[#C19A5B]/10 hover:text-[hsl(var(--brand-gold-deep))]"
                                 }`}
                               >
                                 {pNum}
@@ -761,7 +761,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                   
                   <div className="max-w-md mx-auto px-6 relative z-10">
                     <div className="w-16 h-16 bg-[#1A1512]/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/25">
-                      <LucideSearch className="w-6 h-6 text-[#C19A5B]" />
+                      <LucideSearch className="w-6 h-6 text-[hsl(var(--brand-gold-deep))]" />
                     </div>
                     <h3 className="font-serif text-2xl text-[#1A1512] font-semibold mb-3 tracking-wide">
                       No masterpieces found

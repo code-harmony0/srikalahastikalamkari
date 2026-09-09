@@ -58,7 +58,7 @@ function FilterSection({
         className="flex items-center justify-between w-full py-3 sm:py-3.5 group"
       >
         <div className="flex items-center gap-2">
-          <h3 className="uppercase text-[10px] sm:text-[11px] tracking-[0.14em] sm:tracking-[0.15em] font-semibold text-[#C19A5B] group-hover:text-[#1A1512] transition-colors">
+          <h3 className="uppercase text-[10px] sm:text-[11px] tracking-[0.14em] sm:tracking-[0.15em] font-semibold text-[hsl(var(--brand-gold-deep))] group-hover:text-[#1A1512] transition-colors">
             {title}
           </h3>
           {count !== undefined && count > 0 && (
@@ -68,7 +68,7 @@ function FilterSection({
           )}
         </div>
         <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-          <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C19A5B]" />
+          <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--brand-gold-deep))]" />
         </motion.div>
       </button>
       <AnimatePresence initial={false}>
@@ -200,7 +200,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-2.5">
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#C19A5B]/10 flex items-center justify-center border border-[#C19A5B]/20">
-              <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C19A5B]" />
+              <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[hsl(var(--brand-gold-deep))]" />
             </div>
             <div>
               <h2 className="text-[13px] sm:text-[15px] font-serif font-bold text-[#1A1512] leading-tight uppercase tracking-wider">
@@ -212,7 +212,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-[10px] sm:text-[10px] font-bold text-[#1A1512]/60 hover:text-[#C19A5B] uppercase tracking-widest transition-colors"
+                className="text-[10px] sm:text-[10px] font-bold text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] uppercase tracking-widest transition-colors"
               >
                 Clear all
               </button>
@@ -243,7 +243,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               {searchQuery && (
                 <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                   &ldquo;{searchQuery}&rdquo;
-                  <button onClick={() => setSearchQuery("")} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
+                  <button onClick={() => setSearchQuery("")} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                     <X className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   </button>
                 </span>
@@ -254,7 +254,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold"
                 >
                   {cat}
-                  <button onClick={() => toggleCategory(cat)} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
+                  <button onClick={() => toggleCategory(cat)} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                     <X className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   </button>
                 </span>
@@ -264,7 +264,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
                   <button
                     onClick={() => setPriceRange([0, 50000])}
-                    className="text-[#C19A5B] hover:text-[#1A1512] transition-colors"
+                    className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors"
                   >
                     <X className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   </button>
@@ -273,7 +273,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               {inStockOnly && (
                 <span className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
                   In Stock
-                  <button onClick={() => setInStockOnly(false)} className="text-[#C19A5B] hover:text-[#1A1512] transition-colors">
+                  <button onClick={() => setInStockOnly(false)} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                     <X className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   </button>
                 </span>
@@ -333,11 +333,11 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                             {category.name}
                           </span>
                           {hasSubSelected && (
-                            <span className="text-[10px] sm:text-[10px] text-[#C19A5B] italic font-light">subset filtered</span>
+                            <span className="text-[10px] sm:text-[10px] text-[hsl(var(--brand-gold-deep))] italic font-light">subset filtered</span>
                           )}
                         </div>
                       </div>
-                      <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C19A5B]/60 group-hover/cat:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--brand-gold-deep))]/60 group-hover/cat:translate-x-0.5 transition-transform" />
                     </button>
                   </div>
                 );
@@ -370,7 +370,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               <div className="w-4 h-px bg-[#C19A5B]/30" />
               <div className="flex-1 bg-[#1A1512]/5 border border-[#C19A5B]/20 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-center">
                 <span className="text-[10px] sm:text-[10px] text-[#1A1512]/50 block leading-none mb-0.5 uppercase tracking-wider">Max</span>
-                <span className="text-[11px] sm:text-[13px] font-bold text-[#C19A5B]">
+                <span className="text-[11px] sm:text-[13px] font-bold text-[hsl(var(--brand-gold-deep))]">
                   {formatPrice(priceRange[1])}
                 </span>
               </div>
@@ -422,7 +422,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* Availability */}
         {!hideAvailabilityFilter && (
           <div className="py-3.5 sm:py-4">
-            <h3 className="uppercase text-[10px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] font-bold text-[#C19A5B] mb-2 sm:mb-2.5">
+            <h3 className="uppercase text-[10px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] font-bold text-[hsl(var(--brand-gold-deep))] mb-2 sm:mb-2.5">
               Availability
             </h3>
             <button
@@ -450,7 +450,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
               <div className="flex items-center gap-2 flex-1">
                 <Package
-                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${inStockOnly ? "text-[#C19A5B]" : "text-[#1A1512]/40"}`}
+                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${inStockOnly ? "text-[hsl(var(--brand-gold-deep))]" : "text-[#1A1512]/40"}`}
                 />
                 <span
                   className={`text-[10.5px] sm:text-[12px] uppercase tracking-wider font-semibold ${
@@ -471,7 +471,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               onClick={onCloseMobile}
               className="w-full h-10 sm:h-11 bg-[#1A1512] text-[#C19A5B] border border-[#C19A5B]/30 rounded-lg text-[10px] sm:text-[10px] font-bold uppercase tracking-[0.16em] sm:tracking-[0.2em] hover:bg-[#C19A5B] hover:text-white transition-all flex items-center justify-center gap-2 shadow-md"
             >
-              <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C19A5B]" />
+              <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[hsl(var(--brand-gold-deep))]" />
               <span>Show Results</span>
               {activeFilterCount > 0 && (
                 <span className="bg-[#C19A5B]/20 border border-[#C19A5B]/40 px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[10px] font-bold">

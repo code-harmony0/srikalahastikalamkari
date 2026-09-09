@@ -95,8 +95,8 @@ export default function ProfilePage() {
         className={cn(
           "w-4 h-4 ml-auto transition-transform duration-200",
           active
-            ? "text-[#C19A5B]"
-            : "text-[#C19A5B]/40 group-hover:text-[#C19A5B] group-hover:translate-x-1",
+            ? "text-[hsl(var(--brand-gold-deep))]"
+            : "text-[hsl(var(--brand-gold-deep))]/40 group-hover:text-[hsl(var(--brand-gold-deep))] group-hover:translate-x-1",
         )}
       />
     </Link>
@@ -145,7 +145,7 @@ export default function ProfilePage() {
             >
               <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#1A1512] to-[#C19A5B] p-[3px] shadow-lg shadow-[#1A1512]/10">
                 <div className="w-full h-full rounded-full bg-white flex items-center justify-center border-[3px] border-white overflow-hidden">
-                  <User className="w-10 h-10 text-[#C19A5B]" />
+                  <User className="w-10 h-10 text-[hsl(var(--brand-gold-deep))]" />
                 </div>
               </div>
               <h2 className="font-serif text-xl font-bold text-[#1A1512] mb-1">
@@ -229,7 +229,7 @@ export default function ProfilePage() {
                 </h3>
                 <Link
                   href="/orders"
-                  className="text-[#C19A5B] text-sm font-sans font-medium hover:text-[#1A1512] transition-colors hover:underline decoration-[#C19A5B]/30 underline-offset-4"
+                  className="text-[hsl(var(--brand-gold-deep))] text-sm font-sans font-medium hover:text-[#1A1512] transition-colors hover:underline decoration-[#C19A5B]/30 underline-offset-4"
                 >
                   View All
                 </Link>
@@ -261,7 +261,7 @@ export default function ProfilePage() {
                         {/* Handcrafted Icon Box */}
                         <div className="w-12 h-12 bg-white rounded-[10px] border border-[#C19A5B]/20 flex items-center justify-center group-hover:bg-[#1A1512] transition-colors">
                           <Package
-                            className="w-6 h-6 text-[#C19A5B]"
+                            className="w-6 h-6 text-[hsl(var(--brand-gold-deep))]"
                             strokeWidth={1.5}
                           />
                         </div>
@@ -287,7 +287,7 @@ export default function ProfilePage() {
                             "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 border transition-colors",
                             order.status === "Shipped"
                               ? "bg-green-500/10 text-green-700 border-green-500/20"
-                              : "bg-[#C19A5B]/10 text-[#C19A5B] border-[#C19A5B]/20",
+                              : "bg-[#C19A5B]/10 text-[hsl(var(--brand-gold-deep))] border-[#C19A5B]/20",
                           )}
                         >
                           {order.status === "Shipped" ? (
@@ -298,7 +298,7 @@ export default function ProfilePage() {
                           {order.status}
                         </div>
 
-                        <ChevronRight className="w-4 h-4 text-[#C19A5B]/40 group-hover:text-[#1A1512] group-hover:translate-x-1 transition-all" />
+                        <ChevronRight className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]/40 group-hover:text-[#1A1512] group-hover:translate-x-1 transition-all" />
                       </div>
                     </Link>
                   ))

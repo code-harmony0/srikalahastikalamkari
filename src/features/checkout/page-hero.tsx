@@ -47,7 +47,7 @@ export function PageHero({
         {/* Icon */}
         {Icon && (
           <div className="mb-4 p-3 rounded-full bg-[#FAFAF8]/10 border border-[#FAFAF8]/20 backdrop-blur-sm shadow-sm">
-            <Icon className="w-6 h-6 text-[#C19A5B]" strokeWidth={1.5} />
+            <Icon className="w-6 h-6 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
           </div>
         )}
 

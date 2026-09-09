@@ -33,7 +33,7 @@ export default function OrderSuccessPage() {
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
           className="inline-flex items-center justify-center w-20 h-20 bg-[#1A1512] rounded-full mb-6 border border-[#C19A5B]/30 shadow-lg shadow-[#1A1512]/10"
         >
-          <CheckCircle2 className="w-10 h-10 text-[#C19A5B]" />
+          <CheckCircle2 className="w-10 h-10 text-[hsl(var(--brand-gold-deep))]" />
         </motion.div>
 
         {/* Title */}

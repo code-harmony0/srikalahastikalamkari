@@ -45,7 +45,7 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
   if (isLoading) {
     return (
       <div className="py-12 flex justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#C19A5B]" />
+        <Loader2 className="w-6 h-6 animate-spin text-[hsl(var(--brand-gold-deep))]" />
       </div>
     );
   }
@@ -56,7 +56,7 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
       {totalReviews === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border border-[#C19A5B]/20 px-6">
           <div className="w-16 h-16 bg-[#C19A5B]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#C19A5B]/20">
-            <Star className="w-8 h-8 text-[#C19A5B]" fill="currentColor" />
+            <Star className="w-8 h-8 text-[hsl(var(--brand-gold-deep))]" fill="currentColor" />
           </div>
           <h3 className="font-playfair text-xl font-bold text-[#1A1512] mb-2">
             Be the First to Own a Masterpiece
@@ -64,7 +64,7 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
           <p className="text-[#1A1512]/60 max-w-md mx-auto mb-6 leading-relaxed">
             This authentic Kalamkari piece is waiting for its home. Purchase now and perform the first review to share your experience with the world.
           </p>
-          <div className="inline-flex items-center justify-center px-4 py-1.5 bg-[#C19A5B]/10 rounded-full border border-[#C19A5B]/25 text-xs font-medium text-[#C19A5B]">
+          <div className="inline-flex items-center justify-center px-4 py-1.5 bg-[#C19A5B]/10 rounded-full border border-[#C19A5B]/25 text-xs font-medium text-[hsl(var(--brand-gold-deep))]">
             <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
             Verified Purchase Required for Review
           </div>
@@ -78,7 +78,7 @@ export function ProductReviews({ productId, productName }: ProductReviewsProps) 
           {reviews.length > 3 && (
             <button
               onClick={() => setShowAll(!showAll)}
-              className="w-full py-3 text-[#1A1512] hover:text-[#C19A5B] font-medium flex items-center justify-center gap-2 hover:bg-[#C19A5B]/5 rounded-lg transition-colors"
+              className="w-full py-3 text-[#1A1512] hover:text-[hsl(var(--brand-gold-deep))] font-medium flex items-center justify-center gap-2 hover:bg-[#C19A5B]/5 rounded-lg transition-colors"
             >
               {showAll ? "Show Less" : `Show All ${reviews.length} Reviews`}
               <ChevronDown
@@ -119,7 +119,7 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-white border border-[#C19A5B]/30 flex items-center justify-center">
-            <User className="w-5 h-5 text-[#C19A5B]" />
+            <User className="w-5 h-5 text-[hsl(var(--brand-gold-deep))]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -157,8 +157,8 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
           className={cn(
             "flex items-center gap-1.5 text-xs transition-colors",
             hasVoted
-              ? "text-[#C19A5B] cursor-default"
-              : "text-[#1A1512]/50 hover:text-[#C19A5B]"
+              ? "text-[hsl(var(--brand-gold-deep))] cursor-default"
+              : "text-[#1A1512]/50 hover:text-[hsl(var(--brand-gold-deep))]"
           )}
         >
           <ThumbsUp className="w-3.5 h-3.5" />

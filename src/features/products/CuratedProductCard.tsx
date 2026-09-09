@@ -116,7 +116,7 @@ export const CuratedProductCard = memo(
                 <div className="absolute inset-0 bg-[#1A1512]/15 z-15 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
                   <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 flex items-center justify-center">
-                    <span className="text-[#C19A5B] text-[10px] font-semibold tracking-[0.12em] uppercase">
+                    <span className="text-[hsl(var(--brand-gold-deep))] text-[10px] font-semibold tracking-[0.12em] uppercase">
                       Made to Order · {MADE_TO_ORDER_DAYS}
                     </span>
                   </div>
@@ -152,7 +152,7 @@ export const CuratedProductCard = memo(
           {/* CONTENT AREA - Padded, structured */}
           <div className="flex flex-col flex-1 p-4">
             {/* PRODUCT TITLE - PRIMARY, visually dominant */}
-            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 min-h-[2.6em] mb-2 group-hover:text-[#C19A5B] transition-colors duration-200">
+            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 min-h-[2.6em] mb-2 group-hover:text-[hsl(var(--brand-gold-deep))] transition-colors duration-200">
               {productData.name}
             </h3>
 

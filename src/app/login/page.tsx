@@ -139,12 +139,12 @@ export default function UserLoginPage() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
         >
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[#C19A5B] mb-2">
+          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[hsl(var(--brand-gold-deep))] mb-2">
             Authentication
           </span>
 
           <h1 className="font-serif text-[32px] md:text-[40px] font-bold text-white tracking-wide leading-tight mb-2 uppercase">
-            Welcome <span className="italic text-[#C19A5B] font-normal lowercase">back</span>
+            Welcome <span className="italic text-[hsl(var(--brand-gold-deep))] font-normal lowercase">back</span>
           </h1>
 
           <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
@@ -167,7 +167,7 @@ export default function UserLoginPage() {
           {/* Card Header */}
           <div className="pt-10 px-8 pb-6 text-center">
             <div className="w-14 h-14 bg-[#1A1512] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-[#1A1512]/10 border border-[#C19A5B]/30">
-              <User className="w-7 h-7 text-[#C19A5B]" />
+              <User className="w-7 h-7 text-[hsl(var(--brand-gold-deep))]" />
             </div>
             <h2 className="font-playfair text-2xl md:text-3xl font-bold text-[#1A1512] mb-2">
               {step === "phone" ? "Sign In" : "Verify Phone"}
@@ -258,7 +258,7 @@ export default function UserLoginPage() {
                     <button
                       type="button"
                       onClick={() => setStep("phone")}
-                      className="text-[#1A1512]/60 hover:text-[#C19A5B] transition-colors"
+                      className="text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
                     >
                       Change Number
                     </button>
@@ -270,7 +270,7 @@ export default function UserLoginPage() {
                       <button
                         type="button"
                         onClick={handleResendOtp}
-                        className="text-[#C19A5B] hover:text-[#1A1512] transition-colors font-bold uppercase tracking-wide"
+                        className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors font-bold uppercase tracking-wide"
                       >
                         Resend Code
                       </button>

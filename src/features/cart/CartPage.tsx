@@ -134,7 +134,7 @@ export default function CartPage() {
           className="text-center max-w-md"
         >
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/30 shadow-sm">
-            <ShoppingBag className="w-8 h-8 text-[#C19A5B]" strokeWidth={1.5} />
+            <ShoppingBag className="w-8 h-8 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
           </div>
 
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1A1512] mb-3">
@@ -223,7 +223,7 @@ export default function CartPage() {
                     <div className="flex-1 w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="space-y-1">
                         <Link href={productLink}>
-                          <h3 className="font-serif font-bold text-[#1A1512] text-[15px] leading-tight hover:text-[#C19A5B] transition-colors">
+                          <h3 className="font-serif font-bold text-[#1A1512] text-[15px] leading-tight hover:text-[hsl(var(--brand-gold-deep))] transition-colors">
                             {productName}
                           </h3>
                         </Link>
@@ -306,7 +306,7 @@ export default function CartPage() {
             <div className="pt-4">
               <Link
                 href="/products"
-                className="inline-flex items-center gap-2 text-[#C19A5B] font-sans text-sm font-semibold hover:text-[#1A1512] transition-colors group"
+                className="inline-flex items-center gap-2 text-[hsl(var(--brand-gold-deep))] font-sans text-sm font-semibold hover:text-[#1A1512] transition-colors group"
               >
                 <ArrowRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
                 Continue Shopping
@@ -377,7 +377,7 @@ export default function CartPage() {
                 <span className="font-serif font-bold text-[#1A1512] text-lg">
                   Total
                 </span>
-                <span className="font-serif font-bold text-[#C19A5B] text-2xl">
+                <span className="font-serif font-bold text-[hsl(var(--brand-gold-deep))] text-2xl">
                   {formatPrice(total)}
                 </span>
               </div>

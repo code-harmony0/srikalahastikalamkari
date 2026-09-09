@@ -123,7 +123,7 @@ export default function WishlistPage() {
           className="text-center max-w-md"
         >
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/30 shadow-sm">
-            <Heart className="w-8 h-8 text-[#C19A5B]" strokeWidth={1.5} />
+            <Heart className="w-8 h-8 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
           </div>
 
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1A1512] mb-3">
@@ -164,7 +164,7 @@ export default function WishlistPage() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
           <Link
             href="/products"
-            className="group flex items-center gap-2 text-[#C19A5B] font-sans text-sm font-semibold hover:text-[#1A1512] transition-colors"
+            className="group flex items-center gap-2 text-[hsl(var(--brand-gold-deep))] font-sans text-sm font-semibold hover:text-[#1A1512] transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span className="border-b border-transparent group-hover:border-[#C19A5B]">
@@ -260,7 +260,7 @@ export default function WishlistPage() {
                       href={`/products/${product.slug || product.id}`}
                       className="block mb-1"
                     >
-                      <h3 className="font-serif font-bold text-[#1A1512] text-[16px] leading-tight line-clamp-1 group-hover:text-[#C19A5B] transition-colors">
+                      <h3 className="font-serif font-bold text-[#1A1512] text-[16px] leading-tight line-clamp-1 group-hover:text-[hsl(var(--brand-gold-deep))] transition-colors">
                         {product.title || product.name}
                       </h3>
                     </Link>

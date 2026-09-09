@@ -160,11 +160,11 @@ export default function ReturnsPolicyPage() {
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
                 <p>
                   Email us at{" "}
-                  <a href={mailtoHref()} className="inline-flex min-h-[44px] items-center text-[#C19A5B] hover:underline">
+                  <a href={mailtoHref()} className="inline-flex min-h-[44px] items-center text-[hsl(var(--brand-gold-deep))] hover:underline">
                     {CONTACT.email}
                   </a>{" "}
                   or call{" "}
-                  <a href={telHref(CONTACT.phones[0])} className="inline-flex min-h-[44px] items-center text-[#C19A5B] hover:underline">
+                  <a href={telHref(CONTACT.phones[0])} className="inline-flex min-h-[44px] items-center text-[hsl(var(--brand-gold-deep))] hover:underline">
                     {CONTACT.phones[0]}
                   </a>{" "}
                   with your order number, the reason for the return and photographs of the item.

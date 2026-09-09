@@ -89,7 +89,7 @@ export default function MiniCartDrawer() {
           >
             <header className="flex items-center justify-between border-b border-[#C19A5B]/20 px-5 py-4">
               <div className="flex items-center gap-2.5">
-                <ShoppingBag className="h-5 w-5 text-[#C19A5B]" strokeWidth={1.5} />
+                <ShoppingBag className="h-5 w-5 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
                 <h2 className="font-serif text-[18px] font-bold text-[#1A1512]">
                   Your Cart
                 </h2>
@@ -110,7 +110,7 @@ export default function MiniCartDrawer() {
 
             {lines.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-                <ShoppingBag className="h-10 w-10 text-[#C19A5B]/40" strokeWidth={1.25} />
+                <ShoppingBag className="h-10 w-10 text-[hsl(var(--brand-gold-deep))]/40" strokeWidth={1.25} />
                 <p className="font-sans text-[15px] text-[#1A1512]/60">
                   Your cart is empty.
                 </p>
@@ -152,11 +152,11 @@ export default function MiniCartDrawer() {
                           <Link
                             href={`/products/${p.slug || p.id}`}
                             onClick={close}
-                            className="line-clamp-2 font-sans text-[14px] font-semibold leading-snug text-[#1A1512] hover:text-[#C19A5B]"
+                            className="line-clamp-2 font-sans text-[14px] font-semibold leading-snug text-[#1A1512] hover:text-[hsl(var(--brand-gold-deep))]"
                           >
                             {p.name || p.title}
                           </Link>
-                          <span className="mt-1 font-sans text-[14px] font-bold text-[#C19A5B]">
+                          <span className="mt-1 font-sans text-[14px] font-bold text-[hsl(var(--brand-gold-deep))]">
                             {formatPrice(Number(p.price) || 0)}
                           </span>
 
@@ -231,7 +231,7 @@ export default function MiniCartDrawer() {
                     <Link
                       href="/cart"
                       onClick={close}
-                      className="text-center font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[#C19A5B] hover:text-[#1A1512]"
+                      className="text-center font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512]"
                     >
                       View full cart
                     </Link>
