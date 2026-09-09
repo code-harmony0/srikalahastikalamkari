@@ -205,7 +205,7 @@ export default function CartPage() {
                   >
                     {/* Image */}
                     <Link href={productLink} className="relative shrink-0">
-                      <div className="relative w-24 h-24 rounded-[10px] overflow-hidden border border-[#EAD6C3] bg-[#FDFBF7]">
+                      <div className="relative w-24 h-24 rounded-[10px] overflow-hidden border border-[#EAD6C3] bg-[#FDFCFB]">
                         <OptimizedImage
                           src={imageRef}
                           alt={productName}
@@ -363,7 +363,7 @@ export default function CartPage() {
               )}
 
               {cartItems.some(({ product }) => isMadeToOrder(product)) && (
-                <div className="bg-[#FFF7E8] border border-[#C19A5B]/30 rounded-[4px] p-3 mb-6 text-[#1A1512]">
+                <div className="bg-[#FDFBF6] border border-[#C19A5B]/30 rounded-[4px] p-3 mb-6 text-[#1A1512]">
                   <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#A07840]">
                     Made-to-order item included
                   </p>

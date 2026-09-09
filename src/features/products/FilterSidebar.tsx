@@ -302,7 +302,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <div className="text-[11px] sm:text-[12px] text-red-500/80 py-2">Failed to load categories</div>
           )}
           {!isLoading && !availableFiltersLoading && !error && visibleCategories.length === 0 && (
-            <div className="rounded-lg border border-[#D3B37A]/25 bg-[#FFFCF6] px-3 py-4 text-[12px] leading-relaxed text-[#1A1512]/60">
+            <div className="rounded-lg border border-[#D3B37A]/25 bg-[#FDFCFA] px-3 py-4 text-[12px] leading-relaxed text-[#1A1512]/60">
               No matching custom categories are available right now.
             </div>
           )}

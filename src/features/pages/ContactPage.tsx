@@ -71,7 +71,7 @@ export default function ContactPage() {
   )
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0E0A08] text-[#1A1512] dark:text-neutral-100 selection:bg-[#C19A5B]/30 relative">
+    <div className="min-h-screen bg-[#FCFBFA] dark:bg-[#0E0A08] text-[#1A1512] dark:text-neutral-100 selection:bg-[#C19A5B]/30 relative">
       {/* Subtle Ambient Heritage Light Glow */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(193,154,91,0.08),transparent_70%)]" />
 
@@ -130,7 +130,7 @@ export default function ContactPage() {
             {/* Direct Phone Numbers */}
             <div className="p-5 rounded-2xl bg-white dark:bg-[#16110E] border border-[#E8DDD1] dark:border-[#2D221A] hover:border-[#C19A5B]/60 shadow-[0_2px_12px_rgba(26,21,18,0.03)] transition-all">
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -147,7 +147,7 @@ export default function ContactPage() {
                           {phone}
                         </a>
                         {idx === 0 && (
-                          <span className="text-[10px] uppercase font-bold text-[#854D0E] dark:text-[#E2BD7A] bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] px-2 py-0.5 rounded">
+                          <span className="text-[10px] uppercase font-bold text-[#854D0E] dark:text-[#E2BD7A] bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] px-2 py-0.5 rounded">
                             Primary
                           </span>
                         )}
@@ -161,7 +161,7 @@ export default function ContactPage() {
             {/* Email & GSTIN */}
             <div className="p-5 rounded-2xl bg-white dark:bg-[#16110E] border border-[#E8DDD1] dark:border-[#2D221A] hover:border-[#C19A5B]/60 shadow-[0_2px_12px_rgba(26,21,18,0.03)] transition-all">
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -174,7 +174,7 @@ export default function ContactPage() {
                   >
                     {CONTACT.email}
                   </a>
-                  <div className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded bg-[#FAF7F2] dark:bg-[#201813] border border-[#EBE3D7] dark:border-[#33261D] text-[11.5px] font-medium text-[#1A1512]/80 dark:text-neutral-300">
+                  <div className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded bg-[#FBFAF8] dark:bg-[#201813] border border-[#EBE3D7] dark:border-[#33261D] text-[11.5px] font-medium text-[#1A1512]/80 dark:text-neutral-300">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#854D0E] dark:text-[#E2BD7A]" />
                     <span>GSTIN: {CONTACT.gstin}</span>
                   </div>
@@ -185,7 +185,7 @@ export default function ContactPage() {
             {/* Srikalahasti Studio */}
             <div className="p-5 rounded-2xl bg-white dark:bg-[#16110E] border border-[#E8DDD1] dark:border-[#2D221A] hover:border-[#C19A5B]/60 shadow-[0_2px_12px_rgba(26,21,18,0.03)] transition-all">
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -193,7 +193,7 @@ export default function ContactPage() {
                     <span className="font-sans font-bold text-[11px] tracking-[0.16em] uppercase text-[#854D0E] dark:text-[#E2BD7A]">
                       Srikalahasti Studio
                     </span>
-                    <span className="text-[10px] font-bold text-[#854D0E] dark:text-[#E2BD7A] bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-bold text-[#854D0E] dark:text-[#E2BD7A] bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] px-2 py-0.5 rounded">
                       Workshop
                     </span>
                   </div>
@@ -210,7 +210,7 @@ export default function ContactPage() {
             {/* Tirupati Store */}
             <div className="p-5 rounded-2xl bg-white dark:bg-[#16110E] border border-[#E8DDD1] dark:border-[#2D221A] hover:border-[#C19A5B]/60 shadow-[0_2px_12px_rgba(26,21,18,0.03)] transition-all">
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] text-[#854D0E] dark:text-[#E2BD7A] flex items-center justify-center shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -218,7 +218,7 @@ export default function ContactPage() {
                     <span className="font-sans font-bold text-[11px] tracking-[0.16em] uppercase text-[#854D0E] dark:text-[#E2BD7A]">
                       Tirupati Store
                     </span>
-                    <span className="text-[10px] font-bold text-[#854D0E] dark:text-[#E2BD7A] bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-bold text-[#854D0E] dark:text-[#E2BD7A] bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] px-2 py-0.5 rounded">
                       Experience Store
                     </span>
                   </div>
@@ -242,7 +242,7 @@ export default function ContactPage() {
 
             {/* Business Hours */}
             <div className="p-4 rounded-2xl bg-white dark:bg-[#16110E] border border-[#E8DDD1] dark:border-[#2D221A] flex items-center gap-3.5 text-[13px] shadow-[0_2px_12px_rgba(26,21,18,0.02)]">
-              <div className="w-10 h-10 rounded-xl bg-[#FAF5ED] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] flex items-center justify-center text-[#854D0E] dark:text-[#E2BD7A] shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#FBFAF8] dark:bg-[#251D16] border border-[#EADBCE] dark:border-[#3D2F22] flex items-center justify-center text-[#854D0E] dark:text-[#E2BD7A] shrink-0">
                 <Clock className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">
@@ -283,7 +283,7 @@ export default function ContactPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex flex-col items-center justify-center text-center py-10 px-4 space-y-4"
               >
-                <div className="w-16 h-16 bg-[#FAF5ED] dark:bg-[#251D16] rounded-full flex items-center justify-center border-2 border-[#C19A5B] shadow-inner">
+                <div className="w-16 h-16 bg-[#FBFAF8] dark:bg-[#251D16] rounded-full flex items-center justify-center border-2 border-[#C19A5B] shadow-inner">
                   <CheckCircle2 className="w-8 h-8 text-[#854D0E] dark:text-[#E2BD7A]" />
                 </div>
                 <h3 className="font-serif text-2xl font-bold text-[#1A1512] dark:text-white">
@@ -295,7 +295,7 @@ export default function ContactPage() {
                 <button
                   type="button"
                   onClick={() => setIsSuccess(false)}
-                  className="mt-4 px-6 h-11 border border-[#E8DDD1] dark:border-[#2D221A] text-[#1A1512] dark:text-white hover:bg-[#FAF7F2] rounded-xl font-sans font-bold text-[12px] uppercase tracking-wider transition-all"
+                  className="mt-4 px-6 h-11 border border-[#E8DDD1] dark:border-[#2D221A] text-[#1A1512] dark:text-white hover:bg-[#FBFAF8] rounded-xl font-sans font-bold text-[12px] uppercase tracking-wider transition-all"
                 >
                   Send Another Message
                 </button>
@@ -317,7 +317,7 @@ export default function ContactPage() {
                       type="text"
                       name="name"
                       disabled={isSubmitting}
-                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FAF8F5] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
+                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FCFBFA] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
                       placeholder="Your Full Name"
                     />
                   </div>
@@ -335,7 +335,7 @@ export default function ContactPage() {
                       type="email"
                       name="email"
                       disabled={isSubmitting}
-                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FAF8F5] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
+                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FCFBFA] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
                       placeholder="you@example.com"
                     />
                   </div>
@@ -355,7 +355,7 @@ export default function ContactPage() {
                       type="tel"
                       name="phone"
                       disabled={isSubmitting}
-                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FAF8F5] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
+                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FCFBFA] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
                       placeholder="+91 98765 43210"
                     />
                   </div>
@@ -372,7 +372,7 @@ export default function ContactPage() {
                       type="text"
                       name="subject"
                       disabled={isSubmitting}
-                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FAF8F5] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
+                      className="w-full px-4 h-12 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FCFBFA] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
                       placeholder="Order Inquiry / Custom Request"
                     />
                   </div>
@@ -392,7 +392,7 @@ export default function ContactPage() {
                     name="message"
                     rows={4}
                     disabled={isSubmitting}
-                    className="w-full p-4 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FAF8F5] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all resize-none min-h-[120px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] leading-relaxed"
+                    className="w-full p-4 rounded-xl border border-[#DFD6CA] dark:border-[#382C22] bg-[#FCFBFA] dark:bg-[#1E1713] text-[#1A1512] dark:text-white font-sans text-[14px] placeholder:text-[#1A1512]/40 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25 focus:border-[#854D0E] focus:bg-white dark:focus:bg-[#251D17] transition-all resize-none min-h-[120px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] leading-relaxed"
                     placeholder="Describe your query, fabric preference, custom requirement, or visit schedule..."
                   />
                 </div>
@@ -408,7 +408,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto min-w-[200px] h-12 px-8 bg-gradient-to-r from-[#1A1512] via-[#2A1E17] to-[#1A1512] hover:from-[#854D0E] hover:to-[#A16207] text-[#FAF7F2] font-sans font-bold text-[12px] uppercase tracking-[0.18em] rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2.5 group border border-[#C19A5B]/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto min-w-[200px] h-12 px-8 bg-gradient-to-r from-[#1A1512] via-[#2A1E17] to-[#1A1512] hover:from-[#854D0E] hover:to-[#A16207] text-[#FBFAF8] font-sans font-bold text-[12px] uppercase tracking-[0.18em] rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2.5 group border border-[#C19A5B]/30 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <span>Sending Message...</span>

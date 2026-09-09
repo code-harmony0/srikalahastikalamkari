@@ -218,7 +218,7 @@ export default function WishlistPage() {
                   {/* Image Container */}
                   <Link
                     href={`/products/${product.slug || product.id}`}
-                    className="relative block aspect-[3/4] bg-[#FDFBF7] overflow-hidden border-b border-[#C19A5B]/10"
+                    className="relative block aspect-[3/4] bg-[#FDFCFB] overflow-hidden border-b border-[#C19A5B]/10"
                   >
                     <OptimizedImage
                       src={
@@ -279,7 +279,7 @@ export default function WishlistPage() {
                             "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm border",
                             !madeToOrder
                               ? "bg-green-50 text-green-700 border-green-200"
-                              : "bg-[#FFF7E8] text-[#A07840] border-[#C19A5B]/30",
+                              : "bg-[#FDFBF6] text-[#A07840] border-[#C19A5B]/30",
                           )}
                         >
                           {!madeToOrder ? `${stockQuantity} In Stock` : "Made to Order"}

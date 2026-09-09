@@ -231,7 +231,7 @@ export default function ProductDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center bg-[#FDFBF7]">
+      <div className="min-h-[80vh] flex items-center justify-center bg-[#FDFCFB]">
         <div className="w-10 h-10 border-2 border-[#C19A5B] border-t-transparent rounded-full animate-spin" />
       </div>
     )
@@ -239,7 +239,7 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center px-4">
+      <div className="min-h-screen bg-[#FDFCFB] flex flex-col items-center justify-center px-4">
         <Package className="h-12 w-12 text-[hsl(var(--brand-gold-deep))] mb-3" />
         <h1 className="font-playfair text-xl font-bold text-[#1A1512] mb-2">
           Product Not Found
@@ -404,7 +404,7 @@ export default function ProductDetail() {
                     "flex items-center gap-1.5 px-2.5 py-1 rounded-full border",
                     inStock
                       ? "bg-[#EBF7EF] border-[#3FAF6C]/20"
-                      : "bg-[#FFF7E8] border-[#C19A5B]/35",
+                      : "bg-[#FDFBF6] border-[#C19A5B]/35",
                   )}
                 >
                   <div
@@ -515,7 +515,7 @@ export default function ProductDetail() {
                 )}
                 {/* Made-to-order Banner - Prominent warning */}
                 {madeToOrder && (
-                  <div className="bg-gradient-to-r from-[#FFF7E8] to-[#F8E6C8] border border-[#C19A5B]/35 rounded-lg p-4 flex items-start gap-3">
+                  <div className="bg-gradient-to-r from-[#FDFBF6] to-[#F6EFE2] border border-[#C19A5B]/35 rounded-lg p-4 flex items-start gap-3">
                     <div className="w-10 h-10 rounded-full bg-white border border-[#C19A5B]/35 flex items-center justify-center flex-shrink-0">
                       <Clock className="w-5 h-5 text-[#A07840]" />
                     </div>

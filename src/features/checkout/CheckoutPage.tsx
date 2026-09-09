@@ -537,7 +537,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                         className="flex gap-3 py-3 border-b border-[#C19A5B]/10 last:border-0"
                       >
                         {/* Tiny Image */}
-                        <div className="w-12 h-16 bg-[#FDFBF7] rounded border border-[#EAD6C3]/50 shrink-0 overflow-hidden relative">
+                        <div className="w-12 h-16 bg-[#FDFCFB] rounded border border-[#EAD6C3]/50 shrink-0 overflow-hidden relative">
                           <OptimizedImage
                             src={
                               getImageTier(product.images, "thumb", 0) ||
@@ -630,7 +630,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </div>
 
                 {hasMadeToOrderItems && (
-                  <div className="mt-4 rounded-lg border border-[#C19A5B]/30 bg-[#FFF7E8] p-3">
+                  <div className="mt-4 rounded-lg border border-[#C19A5B]/30 bg-[#FDFBF6] p-3">
                     <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#A07840]">
                       Made-to-order timeline
                     </p>

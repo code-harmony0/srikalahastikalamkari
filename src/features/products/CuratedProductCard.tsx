@@ -96,7 +96,7 @@ export const CuratedProductCard = memo(
         {/* Entire card is clickable */}
         <Link href={productUrl} className="flex flex-col h-full">
           {/* IMAGE AREA - Inside card, max 55-60% height */}
-          <div className="relative aspect-[4/5] overflow-hidden bg-[#F8F4EF]">
+          <div className="relative aspect-[4/5] overflow-hidden bg-[#FAFAF8]">
             <OptimizedImage
               src={productData.image}
               alt={productData.name}

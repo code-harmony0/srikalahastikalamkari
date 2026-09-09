@@ -802,7 +802,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* CUSTOM DESIGN CTA — Immediate WhatsApp Inquiry                 */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full overflow-hidden bg-[#F8F1E6] border-y border-[hsl(var(--brand-gold)/0.2)]">
+        <section className="relative w-full overflow-hidden bg-[#FAF9F6] border-y border-[hsl(var(--brand-gold)/0.2)]">
           <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
             <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-ink))]" />
           </div>
@@ -1479,7 +1479,7 @@ export default function HomePage() {
         {/* VOICES OF HERITAGE — reads real approved reviews; the samples below
             stand in only until the dashboard has some. Kept compact so it
             supports the page rather than becoming a second page of its own. */}
-        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-[#FFF8F0] to-[#FFF3E6] dark:from-[#120905] dark:to-[#1b0e08]">
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-[#FCFBF9] to-[#FAF9F6] dark:from-[#120905] dark:to-[#1b0e08]">
           <div
             className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none"
             style={{
