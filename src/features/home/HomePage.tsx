@@ -1487,14 +1487,14 @@ export default function HomePage() {
         {/* VOICES OF HERITAGE — reads real approved reviews; the samples below
             stand in only until the dashboard has some. Kept compact so it
             supports the page rather than becoming a second page of its own. */}
-        <section className="w-full py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#221A15] via-[#1A1512] to-[#150F0C] border-y border-[hsl(var(--brand-gold)/0.3)]">
+        <section className="w-full py-14 md:py-18 relative overflow-hidden bg-gradient-to-b from-[#F6F2EA] via-[#F2EDE3] to-[#EDE7DB] border-y border-[hsl(var(--brand-gold)/0.35)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-14px_28px_-22px_rgba(26,21,18,0.28)]">
           <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
             <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-gold))]" />
           </div>
 
           <div className="max-w-6xl mx-auto px-5 sm:px-6 md:px-8 relative z-10">
             <AnimatedElement className="text-center" delay={0}>
-              <h2 className="font-serif text-[26px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-white">
+              <h2 className="font-serif text-[26px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-[hsl(var(--brand-ink))]">
                 Voices of Heritage
               </h2>
 
@@ -1507,20 +1507,20 @@ export default function HomePage() {
                       className="h-[15px] w-[15px] fill-[hsl(var(--brand-gold))] text-[hsl(var(--brand-gold))]"
                     />
                   ))}
-                  <span className="ml-1 font-sans text-[14px] font-bold text-white">
+                  <span className="ml-1 font-sans text-[14px] font-bold text-[hsl(var(--brand-ink))]">
                     {reviewStats ? reviewStats.average.toFixed(1) : "5.0"}
                   </span>
                 </span>
-                <span className="hidden h-3 w-px bg-white/25 sm:block" />
-                <span className="font-sans text-[13px] text-white/70">
+                <span className="hidden h-3 w-px bg-[hsl(var(--brand-ink)/0.22)] sm:block" />
+                <span className="font-sans text-[13px] text-[hsl(var(--brand-ink)/0.7)]">
                   {reviewStats
                     ? reviewStats.count === 1
                       ? "1 customer review"
                       : `${reviewStats.count} customer reviews`
                     : "Loved by customers across India"}
                 </span>
-                <span className="hidden h-3 w-px bg-white/25 sm:block" />
-                <span className="font-sans text-[13px] text-white/70">
+                <span className="hidden h-3 w-px bg-[hsl(var(--brand-ink)/0.22)] sm:block" />
+                <span className="font-sans text-[13px] text-[hsl(var(--brand-ink)/0.7)]">
                   100% hand-painted
                 </span>
               </div>
@@ -1533,7 +1533,7 @@ export default function HomePage() {
                     key={r.id}
                     className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]"
                   >
-                    <figure className="flex h-full flex-col rounded-xl border border-[hsl(var(--brand-gold)/0.22)] bg-white p-5 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] md:p-6">
+                    <figure className="flex h-full flex-col rounded-xl border border-[hsl(var(--brand-gold)/0.35)] bg-white/70 p-5 shadow-[0_10px_28px_-16px_rgba(26,21,18,0.4)] backdrop-blur-[2px] md:p-6">
                       <div className="mb-3 flex items-center gap-1">
                         {[0, 1, 2, 3, 4].map((i) => (
                           <Star
