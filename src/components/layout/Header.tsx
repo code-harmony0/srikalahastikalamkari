@@ -25,7 +25,7 @@ import { useFilterCategories } from "@/shared/hooks/use-filter-categories";
 
 // A nav panel is a map of the catalogue, not the catalogue itself. Longer
 // category lists spill to the category page rather than growing the menu.
-const SHOP_MENU_LIMIT = 6;
+const SHOP_MENU_LIMIT = 9;
 
 // 🎨 Custom Icon Component
 const ActionIcon = ({
@@ -94,6 +94,7 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [mobileShopOpen, setMobileShopOpen] = useState(false);
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -178,6 +179,13 @@ export default function Header() {
 
   const categoryHref = (name: string) =>
     `/products?category=${encodeURIComponent(name)}`;
+
+  // The eight categories have wildly uneven child counts (six down to zero), so
+  // a column-per-category grid left tall ragged gaps and a heading with nothing
+  // under it. Showing one category's children at a time keeps the panel a
+  // predictable height and gives the eye a single list to scan.
+  const activeCategory =
+    shopCategories.find((c) => c.id === activeCategoryId) ?? shopCategories[0];
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -417,42 +425,115 @@ export default function Header() {
             onMouseEnter={openShop}
             onMouseLeave={() => closeShop()}
           >
-            <div className="mx-auto grid max-w-[1280px] grid-cols-2 items-start gap-x-8 gap-y-7 px-6 py-8 lg:grid-cols-4">
-              {shopCategories.map((category) => (
-                <div key={category.id} className="min-w-0">
-                  <Link
-                    href={categoryHref(category.name)}
-                    className="group inline-flex items-baseline gap-1.5 font-serif text-[15px] font-bold text-[hsl(var(--brand-ink))] hover:text-[hsl(var(--brand-gold-deep))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
-                  >
-                    {category.name}
-                  </Link>
+            <div className="mx-auto flex max-w-[1280px] px-6 py-5">
+              {/* Left rail: the categories themselves */}
+              <ul
+                className="w-[248px] shrink-0 border-r border-[hsl(var(--brand-ink)/0.08)] pr-3"
+                role="list"
+              >
+                {shopCategories.map((category) => {
+                  const isActive = activeCategory?.id === category.id;
+                  return (
+                    <li key={category.id}>
+                      <Link
+                        href={categoryHref(category.name)}
+                        onMouseEnter={() => setActiveCategoryId(category.id)}
+                        onFocus={() => setActiveCategoryId(category.id)}
+                        aria-current={isActive ? "true" : undefined}
+                        className={cn(
+                          "flex items-center justify-between gap-2 rounded-md px-3 py-2 font-sans text-[14px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]",
+                          isActive
+                            ? "bg-[hsl(var(--brand-gold)/0.12)] font-semibold text-[hsl(var(--brand-ink))]"
+                            : "text-[hsl(var(--brand-ink)/0.7)] hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))]",
+                        )}
+                      >
+                        <span className="truncate">{category.name}</span>
+                        <ChevronDown
+                          aria-hidden="true"
+                          className={cn(
+                            "h-3.5 w-3.5 -rotate-90 shrink-0 transition-opacity",
+                            isActive
+                              ? "text-[hsl(var(--brand-gold-deep))] opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
 
-                  {category.subcategories.length > 0 && (
-                    <ul className="mt-3 space-y-1.5 border-l border-[hsl(var(--brand-gold)/0.25)] pl-3">
-                      {category.subcategories.slice(0, SHOP_MENU_LIMIT).map((sub) => (
-                        <li key={sub.id}>
-                          <Link
-                            href={categoryHref(sub.name)}
-                            className="block truncate text-[13px] leading-relaxed text-[hsl(var(--brand-ink)/0.62)] hover:text-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
-                          >
-                            {sub.name}
-                          </Link>
-                        </li>
-                      ))}
-                      {category.subcategories.length > SHOP_MENU_LIMIT && (
-                        <li>
-                          <Link
-                            href={categoryHref(category.name)}
-                            className="block text-[13px] font-semibold text-[hsl(var(--brand-gold-deep))] hover:text-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
-                          >
-                            {category.subcategories.length - SHOP_MENU_LIMIT} more
-                          </Link>
-                        </li>
+              {/* Right: the selected category's product types */}
+              <div className="min-w-0 flex-1 pl-7 min-h-[290px]">
+                {activeCategory && (
+                  <>
+                    <div className="mb-4 flex items-baseline justify-between gap-4">
+                      <h3 className="font-serif text-[17px] font-bold text-[hsl(var(--brand-ink))]">
+                        {activeCategory.name}
+                      </h3>
+                      <Link
+                        href={categoryHref(activeCategory.name)}
+                        className="shrink-0 font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-gold-deep))] hover:text-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
+                      >
+                        Shop all {activeCategory.name}
+                      </Link>
+                    </div>
+
+                    <div className="flex gap-7">
+                      <div className="min-w-0 flex-1">
+                    {activeCategory.subcategories.length > 0 ? (
+                      <ul className="grid grid-cols-2 gap-x-6 gap-y-1">
+                        {activeCategory.subcategories.slice(0, SHOP_MENU_LIMIT).map((sub) => (
+                          <li key={sub.id}>
+                            <Link
+                              href={categoryHref(sub.name)}
+                              className="block truncate rounded-md px-2 py-1.5 font-sans text-[13.5px] text-[hsl(var(--brand-ink)/0.68)] transition-colors hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                            >
+                              {sub.name}
+                            </Link>
+                          </li>
+                        ))}
+                        {activeCategory.subcategories.length > SHOP_MENU_LIMIT && (
+                          <li>
+                            <Link
+                              href={categoryHref(activeCategory.name)}
+                              className="block rounded-md px-2 py-1.5 font-sans text-[13.5px] font-semibold text-[hsl(var(--brand-gold-deep))] transition-colors hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                            >
+                              +{activeCategory.subcategories.length - SHOP_MENU_LIMIT} more
+                            </Link>
+                          </li>
+                        )}
+                      </ul>
+                    ) : (
+                      <p className="px-2 font-sans text-[13.5px] text-[hsl(var(--brand-ink)/0.5)]">
+                        Browse everything in {activeCategory.name}.
+                      </p>
+                    )}
+                      </div>
+
+                      {activeCategory.image_url && (
+                        <Link
+                          href={categoryHref(activeCategory.name)}
+                          className="group relative hidden h-[232px] w-[260px] shrink-0 overflow-hidden rounded-lg lg:block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                        >
+                          <Image
+                            src={activeCategory.image_url}
+                            alt={activeCategory.name}
+                            fill
+                            sizes="260px"
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                            unoptimized
+                          />
+                          <span className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[rgba(20,12,6,0.9)] to-transparent" />
+                          <span className="absolute bottom-3 left-4 right-4 font-sans text-[13px] font-semibold text-white">
+                            Shop {activeCategory.name}
+                          </span>
+                        </Link>
                       )}
-                    </ul>
-                  )}
-                </div>
-              ))}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
 
             <div className="border-t border-[hsl(var(--brand-ink)/0.06)]">
