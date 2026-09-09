@@ -802,7 +802,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* CUSTOM DESIGN CTA — Immediate WhatsApp Inquiry                 */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full overflow-hidden bg-[#FAF9F6] border-y border-[hsl(var(--brand-gold)/0.2)]">
+        <section className="relative w-full overflow-hidden bg-[#F9F5EE] border-y border-[hsl(var(--brand-gold)/0.25)]">
           <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
             <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-ink))]" />
           </div>
@@ -1479,9 +1479,9 @@ export default function HomePage() {
         {/* VOICES OF HERITAGE — reads real approved reviews; the samples below
             stand in only until the dashboard has some. Kept compact so it
             supports the page rather than becoming a second page of its own. */}
-        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-[#FCFBF9] to-[#FAF9F6] dark:from-[#120905] dark:to-[#1b0e08]">
+        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-[#FBF6EE] to-[#F7F1E7] border-y border-[hsl(var(--brand-gold)/0.18)] dark:from-[#120905] dark:to-[#1b0e08]">
           <div
-            className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none"
+            className="absolute inset-0 opacity-[0.018] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none"
             style={{
               backgroundImage: `url('/patterns/kalamkari-pattern.svg')`,
               backgroundSize: "120px 120px",
@@ -1529,7 +1529,7 @@ export default function HomePage() {
                     key={r.id}
                     className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]"
                   >
-                    <figure className="flex h-full flex-col rounded-xl border border-[hsl(var(--brand-gold)/0.25)] bg-white/85 p-5 shadow-[0_2px_12px_rgba(26,21,18,0.05)] backdrop-blur-sm dark:bg-[#1a0f0a]/70 md:p-6">
+                    <figure className="flex h-full flex-col rounded-xl border border-[hsl(var(--brand-gold)/0.25)] bg-white p-5 shadow-[0_4px_16px_rgba(26,21,18,0.07)] dark:bg-[#1a0f0a]/70 md:p-6">
                       <div className="mb-3 flex items-center gap-1">
                         {[0, 1, 2, 3, 4].map((i) => (
                           <Star
