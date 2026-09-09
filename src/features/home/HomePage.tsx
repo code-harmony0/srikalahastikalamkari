@@ -803,8 +803,8 @@ export default function HomePage() {
         {/* CUSTOM DESIGN CTA — Immediate WhatsApp Inquiry                 */}
         {/* ═══════════════════════════════════════════════════════════════ */}
         <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#F6F2EA] via-[#F2EDE3] to-[#EDE7DB] border-y border-[hsl(var(--brand-gold)/0.35)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-14px_28px_-22px_rgba(26,21,18,0.28)]">
-          <div className="absolute inset-0 opacity-[0.09] pointer-events-none">
-            <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-ink))]" />
+          <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+            <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-gold))]" />
           </div>
           <div className="max-w-[1300px] mx-auto px-6 lg:px-12 py-8 md:py-10 relative z-10">
             <div className="grid lg:grid-cols-[1fr_auto] gap-7 lg:gap-10 items-center">
@@ -1488,13 +1488,9 @@ export default function HomePage() {
             stand in only until the dashboard has some. Kept compact so it
             supports the page rather than becoming a second page of its own. */}
         <section className="w-full py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#221A15] via-[#1A1512] to-[#150F0C] border-y border-[hsl(var(--brand-gold)/0.3)]">
-          <div
-            className="absolute inset-0 opacity-[0.07] mix-blend-screen pointer-events-none"
-            style={{
-              backgroundImage: `url('/patterns/kalamkari-pattern.svg')`,
-              backgroundSize: "120px 120px",
-            }}
-          />
+          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
+            <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-gold))]" />
+          </div>
 
           <div className="max-w-6xl mx-auto px-5 sm:px-6 md:px-8 relative z-10">
             <AnimatedElement className="text-center" delay={0}>
