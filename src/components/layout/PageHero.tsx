@@ -15,7 +15,7 @@ export interface PageHeroProps {
   eyebrow?: string
   /** Leading text of the title, rendered in uppercase serif */
   titleStart: string
-  /** Emphasized accent word, rendered in italic gold lowercase serif */
+  /** Emphasised accent word, rendered in the theme gold */
   titleAccent: string
   /** Trailing text of the title (optional) */
   titleEnd?: string
@@ -198,7 +198,7 @@ export function PageHero({
         {/* Signature H1 Title */}
         <h1 className="font-serif text-[26px] sm:text-[34px] md:text-[42px] font-bold text-white tracking-wide leading-tight uppercase drop-shadow-sm">
           {titleStart}{" "}
-          <span className={cn("italic font-normal lowercase font-serif", t.accentText)}>
+          <span className={cn("font-serif font-bold", t.accentText)}>
             {titleAccent}
           </span>
           {titleEnd && ` ${titleEnd}`}
