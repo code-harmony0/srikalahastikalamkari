@@ -802,8 +802,8 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* CUSTOM DESIGN CTA — Immediate WhatsApp Inquiry                 */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full overflow-hidden bg-[#F7F6F3] border-y border-[hsl(var(--brand-gold)/0.25)]">
-          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
+        <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#F6F2EA] via-[#F2EDE3] to-[#EDE7DB] border-y border-[hsl(var(--brand-gold)/0.35)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-14px_28px_-22px_rgba(26,21,18,0.28)]">
+          <div className="absolute inset-0 opacity-[0.09] pointer-events-none">
             <DecorativePattern className="absolute inset-0 text-[hsl(var(--brand-ink))]" />
           </div>
           <div className="max-w-[1300px] mx-auto px-6 lg:px-12 py-8 md:py-10 relative z-10">
@@ -841,8 +841,12 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.65, delay: 0.1, ease: "easeOut" }}
-                className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-3 lg:items-stretch"
+                className="w-full lg:w-auto rounded-xl border border-[hsl(var(--brand-gold)/0.35)] bg-white/70 p-4 shadow-[0_10px_28px_-16px_rgba(26,21,18,0.4)] backdrop-blur-[2px]"
               >
+                <p className="mb-3 font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[hsl(var(--brand-gold-deep))]">
+                  Start your commission
+                </p>
+                <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-3 lg:items-stretch">
                 <a
                   href={customDesignWhatsAppUrl}
                   target="_blank"
@@ -859,6 +863,10 @@ export default function HomePage() {
                   View Custom Designs
                   <ArrowRight className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]" />
                 </Link>
+                </div>
+                <p className="mt-3 font-sans text-[12px] text-[hsl(var(--brand-ink)/0.6)]">
+                  No obligation — we share fabric options, price and timeline first.
+                </p>
               </motion.div>
             </div>
 
@@ -1479,9 +1487,9 @@ export default function HomePage() {
         {/* VOICES OF HERITAGE — reads real approved reviews; the samples below
             stand in only until the dashboard has some. Kept compact so it
             supports the page rather than becoming a second page of its own. */}
-        <section className="w-full py-14 md:py-20 relative overflow-hidden bg-gradient-to-b from-[#F8F7F4] to-[#F4F3EF] border-y border-[hsl(var(--brand-gold)/0.18)] dark:from-[#120905] dark:to-[#1b0e08]">
+        <section className="w-full py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#221A15] via-[#1A1512] to-[#150F0C] border-y border-[hsl(var(--brand-gold)/0.3)]">
           <div
-            className="absolute inset-0 opacity-[0.018] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none"
+            className="absolute inset-0 opacity-[0.07] mix-blend-screen pointer-events-none"
             style={{
               backgroundImage: `url('/patterns/kalamkari-pattern.svg')`,
               backgroundSize: "120px 120px",
@@ -1490,7 +1498,7 @@ export default function HomePage() {
 
           <div className="max-w-6xl mx-auto px-5 sm:px-6 md:px-8 relative z-10">
             <AnimatedElement className="text-center" delay={0}>
-              <h2 className="font-serif text-[26px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))]">
+              <h2 className="font-serif text-[26px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-white">
                 Voices of Heritage
               </h2>
 
@@ -1503,20 +1511,20 @@ export default function HomePage() {
                       className="h-[15px] w-[15px] fill-[hsl(var(--brand-gold))] text-[hsl(var(--brand-gold))]"
                     />
                   ))}
-                  <span className="ml-1 font-sans text-[14px] font-bold text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))]">
+                  <span className="ml-1 font-sans text-[14px] font-bold text-white">
                     {reviewStats ? reviewStats.average.toFixed(1) : "5.0"}
                   </span>
                 </span>
-                <span className="hidden h-3 w-px bg-[hsl(var(--brand-ink)/0.2)] sm:block" />
-                <span className="font-sans text-[13px] text-[hsl(var(--brand-ink)/0.7)] dark:text-[hsl(var(--brand-cream)/0.7)]">
+                <span className="hidden h-3 w-px bg-white/25 sm:block" />
+                <span className="font-sans text-[13px] text-white/70">
                   {reviewStats
                     ? reviewStats.count === 1
                       ? "1 customer review"
                       : `${reviewStats.count} customer reviews`
                     : "Loved by customers across India"}
                 </span>
-                <span className="hidden h-3 w-px bg-[hsl(var(--brand-ink)/0.2)] sm:block" />
-                <span className="font-sans text-[13px] text-[hsl(var(--brand-ink)/0.7)] dark:text-[hsl(var(--brand-cream)/0.7)]">
+                <span className="hidden h-3 w-px bg-white/25 sm:block" />
+                <span className="font-sans text-[13px] text-white/70">
                   100% hand-painted
                 </span>
               </div>
@@ -1529,7 +1537,7 @@ export default function HomePage() {
                     key={r.id}
                     className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]"
                   >
-                    <figure className="flex h-full flex-col rounded-xl border border-[hsl(var(--brand-gold)/0.25)] bg-white p-5 shadow-[0_4px_16px_rgba(26,21,18,0.07)] dark:bg-[#1a0f0a]/70 md:p-6">
+                    <figure className="flex h-full flex-col rounded-xl border border-[hsl(var(--brand-gold)/0.22)] bg-white p-5 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] md:p-6">
                       <div className="mb-3 flex items-center gap-1">
                         {[0, 1, 2, 3, 4].map((i) => (
                           <Star
@@ -1544,7 +1552,7 @@ export default function HomePage() {
                         ))}
                       </div>
 
-                      <blockquote className="font-serif text-[16px] leading-[1.55] text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))] md:text-[17px]">
+                      <blockquote className="font-serif text-[16px] leading-[1.55] text-[hsl(var(--brand-ink))] md:text-[17px]">
                         {r.content}
                       </blockquote>
 
@@ -1561,16 +1569,16 @@ export default function HomePage() {
                             .toUpperCase()}
                         </span>
                         <span className="min-w-0">
-                          <span className="block truncate font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] dark:text-[hsl(var(--brand-cream))]">
+                          <span className="block truncate font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))]">
                             {r.customer_name}
                           </span>
                           {r.city && (
-                            <span className="mt-0.5 block font-sans text-[12px] text-[hsl(var(--brand-ink)/0.55)] dark:text-[hsl(var(--brand-cream)/0.55)]">
+                            <span className="mt-0.5 block font-sans text-[12px] text-[hsl(var(--brand-ink)/0.55)]">
                               {r.city}
                             </span>
                           )}
                           {r.is_verified_purchase && (
-                            <span className="mt-0.5 inline-flex items-center gap-1 font-sans text-[12px] text-[hsl(var(--brand-ink)/0.55)] dark:text-[hsl(var(--brand-cream)/0.55)]">
+                            <span className="mt-0.5 inline-flex items-center gap-1 font-sans text-[12px] text-[hsl(var(--brand-ink)/0.55)]">
                               <BadgeCheck className="h-3.5 w-3.5 text-[hsl(var(--brand-gold-deep))]" />
                               Verified purchase
                             </span>
