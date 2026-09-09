@@ -408,14 +408,19 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto min-w-[200px] h-12 px-8 bg-gradient-to-r from-[#1A1512] via-[#2A1E17] to-[#1A1512] hover:from-[#854D0E] hover:to-[#A16207] text-[#FBFAF8] font-sans font-bold text-[12px] uppercase tracking-[0.18em] rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2.5 group border border-[#C19A5B]/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                    style={{ color: "#ffffff" }}
+                    className="w-full sm:w-auto min-w-[200px] h-12 px-8 bg-gradient-to-r from-[#1A1512] via-[#2D1F17] to-[#1A1512] hover:from-[#854D0E] hover:to-[#A16207] text-white !text-white font-sans font-bold text-[12px] uppercase tracking-[0.18em] rounded-xl shadow-[0_4px_14px_rgba(26,21,18,0.2)] hover:shadow-[0_6px_20px_rgba(193,154,91,0.3)] transition-all duration-300 flex items-center justify-center gap-2.5 group border border-[#C19A5B]/40 hover:border-[#C19A5B] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {isSubmitting ? (
-                      <span>Sending Message...</span>
+                      <span className="text-white !text-white font-bold" style={{ color: "#ffffff" }}>
+                        Sending Message...
+                      </span>
                     ) : (
                       <>
-                        <span>Send Message</span>
-                        <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#C19A5B] group-hover:text-white" />
+                        <span className="text-white !text-white font-bold" style={{ color: "#ffffff" }}>
+                          Send Message
+                        </span>
+                        <Send className="w-4 h-4 text-[#E2BD7A] group-hover:text-white group-hover:translate-x-1 transition-all duration-300 shrink-0" />
                       </>
                     )}
                   </button>
