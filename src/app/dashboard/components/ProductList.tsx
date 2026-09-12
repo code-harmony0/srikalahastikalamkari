@@ -1,5 +1,6 @@
 // @ts-nocheck
 "use client";
+import { getStockQuantity } from "@/shared/lib/inventory";
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -257,8 +258,10 @@ const ProductList = () => {
     }
   };
 
-  const lowStockCount = (contextProducts || []).filter(
-    (p) => (p.quantity || 0) < 5,
+  // Most pieces are one-of-a-kind with a stock of 1, so "fewer than 5" flagged
+  // almost the whole catalogue. Out of stock is the number that needs action.
+  const outOfStockCount = (contextProducts || []).filter(
+    (p) => getStockQuantity(p) <= 0,
   ).length;
   const totalValue = (contextProducts || []).reduce(
     (acc, p) => acc + (p.price || 0) * (p.quantity || 0),
@@ -326,10 +329,10 @@ const ProductList = () => {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500">
-              Low Stock Items
+              Out of Stock
             </p>
             <h3 className="text-2xl font-bold text-slate-900">
-              {lowStockCount}
+              {outOfStockCount}
             </h3>
           </div>
         </div>

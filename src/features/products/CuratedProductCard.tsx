@@ -97,12 +97,32 @@ export const CuratedProductCard = memo(
         <Link href={productUrl} className="flex flex-col h-full">
           {/* IMAGE AREA - Inside card, max 55-60% height */}
           <div className="relative aspect-[4/5] overflow-hidden bg-[#FAFAF8]">
+            {/* Secondary Image (Hover) */}
+            {product.images && product.images.length > 1 && (
+              <OptimizedImage
+                src={
+                  getImageTier(product?.images, "medium", 1) ||
+                  "/images/products/product-placeholder.png"
+                }
+                alt={`${productData.name} alternate`}
+                fill
+                className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
+                imageType="productHero"
+                priority={false}
+                loading="lazy"
+              />
+            )}
+
             <OptimizedImage
               src={productData.image}
               alt={productData.name}
               fill
               className={cn(
                 "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]",
+                product.images && product.images.length > 1
+                  ? "group-hover:opacity-0"
+                  : "",
                 madeToOrder && "grayscale-[30%] brightness-95"
               )}
               imageType="productHero"
@@ -133,15 +153,39 @@ export const CuratedProductCard = memo(
               </div>
             )}
 
+            {/* Desktop Slide-up Quick Add Bar */}
+            <div className="hidden sm:block absolute bottom-0 left-0 right-0 z-20 p-2.5 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none group-hover:pointer-events-auto">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCart();
+                }}
+                className={cn(
+                  "w-full h-9 rounded-md text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all duration-200 active:scale-[0.98]",
+                  madeToOrder
+                    ? "bg-[#1A1512] text-white hover:bg-[#A07840]"
+                    : "bg-white/95 text-[#1A1512] hover:bg-[#1A1512] hover:text-white"
+                )}
+                aria-label={madeToOrder ? "Preorder made-to-order item" : "Add to cart"}
+              >
+                <ShoppingBag className="w-3.5 h-3.5" />
+                {madeToOrder ? "Preorder" : "Quick Add"}
+              </button>
+            </div>
+
+            {/* Mobile Touch Quick Add Button */}
             <button
-              onClick={handleAddToCart}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddToCart();
+              }}
               className={cn(
-                "absolute bottom-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center",
+                "sm:hidden absolute bottom-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center",
                 "before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']",
                 "bg-white text-[#1A1512] shadow-md",
-                "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
-                "transition-all duration-300",
-                "hover:bg-[#C19A5B] hover:text-white"
+                "transition-all duration-300 hover:bg-[#C19A5B] hover:text-white"
               )}
               aria-label={madeToOrder ? "Preorder made-to-order item" : "Add to cart"}
             >
@@ -152,7 +196,7 @@ export const CuratedProductCard = memo(
           {/* CONTENT AREA - Padded, structured */}
           <div className="flex flex-col flex-1 p-4">
             {/* PRODUCT TITLE - PRIMARY, visually dominant */}
-            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 min-h-[2.6em] mb-2 group-hover:text-[hsl(var(--brand-gold-deep))] transition-colors duration-200">
+            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 min-h-[2.6em] mb-2">
               {productData.name}
             </h3>
 

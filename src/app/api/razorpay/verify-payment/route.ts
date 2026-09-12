@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/client";
+import { getServiceClient } from "@/lib/supabase/service";
 import environment from "@/shared/config/environment";
 
 export async function POST(req: NextRequest) {
@@ -15,6 +16,7 @@ export async function POST(req: NextRequest) {
       formData,
       cartItems,
       totalAmount,
+      couponCode,
       userId,
       customerPhone,
     } = await req.json();
@@ -27,6 +29,13 @@ export async function POST(req: NextRequest) {
 
     if (expectedSignature !== razorpay_signature) {
       return NextResponse.json({ error: "Payment verification failed" }, { status: 400 });
+    }
+
+    // An order without its items tells the shop nothing about what to pack.
+    // Refuse before writing anything, and log the payment so it can be matched by hand.
+    if (!Array.isArray(cartItems) || cartItems.length === 0) {
+      console.error("verify-payment: paid order arrived with no items", { razorpay_order_id, razorpay_payment_id });
+      return NextResponse.json({ error: "Order items missing" }, { status: 400 });
     }
 
     // Save order to Supabase
@@ -72,6 +81,27 @@ export async function POST(req: NextRequest) {
       .insert(orderItems);
 
     if (itemsError) throw itemsError;
+
+    // Count the coupon use so the usage limit set in the admin panel actually
+    // applies. A failure here must not undo an order that has been paid for.
+    if (typeof couponCode === "string" && couponCode.trim()) {
+      try {
+        const db = getServiceClient();
+        const { data: coupon } = await db
+          .from("coupons")
+          .select("id, used_count")
+          .eq("code", couponCode.trim().toUpperCase())
+          .maybeSingle();
+        if (coupon) {
+          await db
+            .from("coupons")
+            .update({ used_count: (coupon.used_count ?? 0) + 1 })
+            .eq("id", coupon.id);
+        }
+      } catch (couponError) {
+        console.error("Coupon usage count failed:", couponError);
+      }
+    }
 
     return NextResponse.json({ success: true, orderId: order.id });
   } catch (error) {

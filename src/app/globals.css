@@ -826,3 +826,31 @@ body [role="dialog"].auth-modal-dialog > button {
     font-size: 0.625rem;
   }
 }
+
+/* A docked purchase bar owns the bottom edge of the viewport, so the floating
+   chat and admin widgets step up out of its way while it is showing. They are
+   framer-motion nodes with inline transforms, so this shifts `bottom`, which
+   framer never writes. */
+.floating-dock {
+  transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body[data-buy-bar="on"] .floating-dock--chat {
+  bottom: 6.5rem;
+}
+
+body[data-buy-bar="on"] .floating-dock--admin {
+  bottom: 11rem;
+}
+
+@media (min-width: 768px) {
+  body[data-buy-bar="on"] .floating-dock--admin {
+    bottom: 11.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-dock {
+    transition: none;
+  }
+}

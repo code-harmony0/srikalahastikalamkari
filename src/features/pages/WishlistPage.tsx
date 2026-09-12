@@ -1,224 +1,160 @@
 "use client";
 
-
-import { useMemo, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { useAllProducts } from "@/shared/hooks/use-products";
+import { ArrowRight, Heart, ShoppingBag, X } from "lucide-react";
+import { toast } from "sonner";
+import { useProductsByIds } from "@/shared/hooks/use-products";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
 import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action";
 import { useAuth } from "@/shared/contexts/AuthContext";
-import {
-  Heart,
-  ShoppingBag,
-  Trash2,
-  ArrowLeft,
-  ArrowRight,
-  PackageOpen,
-} from "lucide-react";
-import { toast } from "sonner";
-import { cn, formatPrice } from "@/shared/utils";
-import { PageHero } from "@/components/layout/PageHero";
+import { formatPrice } from "@/shared/utils";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
 import {
   MADE_TO_ORDER_DAYS,
   getPurchasableQuantityLimit,
-  getStockQuantity,
   isMadeToOrder,
 } from "@/shared/lib/inventory";
+import type { Product } from "@/shared/types";
 
 export default function WishlistPage() {
-  const router = useRouter()
-  const { user: firebaseUser } = useAuth()
-  const { data: products = [], isLoading } = useAllProducts();
+  const router = useRouter();
+  const { user: firebaseUser } = useAuth();
   const wishlist = useWishlistStore();
   const cart = useCartStore();
   const hasHydrated = useWishlistStore((s) => s._hasHydrated);
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (firebaseUser === null) {
-      router.push("/login")
+      router.push("/login");
     }
-  }, [firebaseUser, router])
+  }, [firebaseUser, router]);
 
-  // 🛍 Merge Wishlist Items with Product Data
+  // Exactly the saved products, not a lookup in a partial catalogue list.
+  const {
+    data: products = [],
+    isLoading,
+    isSuccess,
+    isFetching,
+    isPlaceholderData,
+  } = useProductsByIds(wishlist.items);
+
   const wishlistItems = useMemo(
-    () => {
-      if (!products.length) return [];
-      return wishlist.items
-        .map((item) => products.find((p: any) => p.id === item))
-        .filter((p): p is NonNullable<typeof p> => Boolean(p));
-    },
+    () =>
+      wishlist.items
+        .map((id) => products.find((p) => p.id === id))
+        .filter((p): p is Product => Boolean(p)),
     [wishlist.items, products],
   );
 
-  // 🧹 CLEANUP: Remove stale IDs from store that don't exist in DB
+  // Drop saved products that were deleted or hidden, judged only against a
+  // settled result for the current list.
   useEffect(() => {
-    if (!isLoading && products.length > 0 && wishlist.items.length > 0) {
-      const validIds = new Set(products.map((p: any) => p.id));
-      wishlist.items.forEach((id) => {
-        if (!validIds.has(id)) {
-          wishlist.removeItem(id);
-        }
-      });
-    }
-  }, [isLoading, products, wishlist]);
+    if (!isSuccess || isFetching || isPlaceholderData) return;
+    const found = new Set(products.map((p) => p.id));
+    wishlist.items.forEach((id) => {
+      if (!found.has(id)) wishlist.removeItem(id);
+    });
+  }, [products, isSuccess, isFetching, isPlaceholderData, wishlist]);
 
-  // Handlers
   const handleRemove = (id: string, name: string) => {
     wishlist.removeItem(id);
-    toast("Removed from wishlist 💔", {
-      description: `${name} has been removed.`,
-    });
+    toast(`${name} removed from your wishlist`);
   };
 
-  const handleAddToCart = useAuthGuardedAction((e, product: any) => {
-    const madeToOrder = isMadeToOrder(product);
-    cart.addItem(product, 1);
-    wishlist.removeItem(product.id);
-    toast.success("Moved to cart", {
-      description: madeToOrder
-        ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
-        : undefined,
-    });
-  });
+  const handleMoveToCart = useAuthGuardedAction(
+    (_event: unknown, product?: Product) => {
+      if (!product) return;
+      cart.addItem(product, 1);
+      wishlist.removeItem(product.id);
+      toast.success("Moved to cart", {
+        description: isMadeToOrder(product)
+          ? `Made to order. Ready in ${MADE_TO_ORDER_DAYS}.`
+          : undefined,
+      });
+    },
+  );
 
-  const handleAddAll = useAuthGuardedAction(() => {
-    let count = 0;
-    wishlistItems.forEach((p) => {
-      cart.addItem(p, 1);
-      count++;
-    });
+  const handleMoveAll = useAuthGuardedAction(() => {
+    const count = wishlistItems.length;
+    wishlistItems.forEach((product) => cart.addItem(product, 1));
     wishlist.clearWishlist();
-    if (count > 0) {
-      toast.success(`Moved ${count} items to cart`);
-    } else {
-      toast.error("No items to move");
-    }
+    toast.success(`Moved ${count} ${count === 1 ? "item" : "items"} to cart`);
   });
 
-  // 🌀 LOADING STATE — wait for Zustand to rehydrate from localStorage
   if (!hasHydrated || isLoading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center bg-background kalamkari-static-background silk-fabric-texture">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-2 border-[#C19A5B]/30 border-t-[#1A1512] rounded-full animate-spin" />
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[hsl(var(--brand-ink)/0.15)] border-t-[hsl(var(--brand-ink))]" />
       </div>
     );
   }
 
-  // 🪶 EMPTY STATE
   if (wishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex flex-col items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-md"
+      <div className="flex min-h-[70vh] flex-col items-center justify-center bg-background px-4 text-center text-[hsl(var(--brand-ink))]">
+        <Heart
+          className="h-10 w-10 text-[hsl(var(--brand-gold-deep))]"
+          strokeWidth={1.25}
+        />
+        <h1 className="mt-5 font-serif text-[30px] font-semibold leading-tight">
+          Your wishlist is empty
+        </h1>
+        <Link
+          href="/products?category=Sarees"
+          className="mt-7 inline-flex h-[52px] items-center gap-2.5 rounded-full bg-[hsl(var(--brand-ink))] px-8 text-[12px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--brand-paper))] transition-colors hover:bg-[hsl(var(--brand-ink-soft))]"
         >
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/30 shadow-sm">
-            <Heart className="w-8 h-8 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
-          </div>
-
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1A1512] mb-3">
-            Your wishlist is empty
-          </h1>
-          <p className="font-sans text-[#1A1512]/60 mb-8 leading-relaxed text-base">
-            Discover our handcrafted collections and save your favorites here.
-          </p>
-
-          <Link href="/products">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-3 bg-[#1A1512] text-white hover:bg-[#C19A5B] hover:text-white rounded-[4px] font-sans font-bold tracking-widest text-[11px] uppercase transition-all duration-300 shadow-md flex items-center gap-2 mx-auto"
-            >
-              Explore Collection <ArrowRight className="w-4 h-4" />
-            </motion.button>
-          </Link>
-        </motion.div>
+          Shop sarees
+          <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
-      {/* 🏛 SIGNATURE HEADER SECTION */}
-      <PageHero
-        compact
-        eyebrow="Saved Treasures"
-        titleStart="My"
-        titleAccent="wishlist"
-        description="Your curated collection of beautiful handcrafted Srikalahasti Kalamkari sarees"
-      />
-
-      {/* 📦 MAIN CONTENT */}
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
-        {/* ACTION BAR */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-          <Link
-            href="/products"
-            className="group flex items-center gap-2 text-[hsl(var(--brand-gold-deep))] font-sans text-sm font-semibold hover:text-[#1A1512] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="border-b border-transparent group-hover:border-[#C19A5B]">
-              Continue Shopping
+    <div className="min-h-screen bg-background text-[hsl(var(--brand-ink))]">
+      <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-8 sm:px-6 lg:px-8 lg:pt-12">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-baseline gap-3">
+            <h1 className="font-serif text-[30px] font-semibold leading-tight sm:text-[36px]">
+              Your wishlist
+            </h1>
+            <span className="text-[14px] tabular-nums text-[hsl(var(--brand-ink)/0.6)]">
+              {wishlistItems.length}{" "}
+              {wishlistItems.length === 1 ? "item" : "items"}
             </span>
-          </Link>
-
-          <button
-            onClick={handleAddAll}
-            className="w-full sm:w-auto px-6 py-2.5 bg-[#1A1512] text-white hover:bg-[#C19A5B] rounded-[4px] font-sans text-xs font-bold uppercase tracking-widest shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            Add All to Cart
-          </button>
+          </div>
+          {wishlistItems.length > 1 && (
+            <button
+              onClick={handleMoveAll}
+              className="inline-flex h-11 items-center gap-2 rounded-full px-6 text-[12px] font-semibold uppercase tracking-[0.14em] ring-1 ring-[hsl(var(--brand-ink)/0.35)] transition-colors hover:bg-[hsl(var(--brand-ink)/0.05)]"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Move all to cart
+            </button>
+          )}
         </div>
 
-        {/* WISHLIST GRID */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.08 },
-            },
-          }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          <AnimatePresence mode="popLayout">
-            {wishlistItems.map((product) => {
-              const stockQuantity = getStockQuantity(product);
-              const madeToOrder = isMadeToOrder(product);
-              const purchasableLimit = getPurchasableQuantityLimit(product);
-              const cartItem = cart.items.find((item) => item.productId === product.id);
-              const atLimit = (cartItem?.quantity ?? 0) >= purchasableLimit;
+        <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-4">
+          {wishlistItems.map((product) => {
+            const name = product.name || product.title || "Product";
+            const price = product.price || 0;
+            const originalPrice = product.original_price;
+            const href = `/products/${product.slug || product.id}`;
+            const madeToOrder = isMadeToOrder(product);
+            const inCart =
+              cart.items.find((item) => item.productId === product.id)?.quantity ?? 0;
+            const atLimit = inCart >= getPurchasableQuantityLimit(product);
 
-              return (
-                <motion.div
-                  key={product.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.9,
-                    transition: { duration: 0.2 },
-                  }}
-                  className="group bg-white rounded-[12px] border border-[#C19A5B]/20 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:border-[#C19A5B]/60 hover:shadow-[0_8px_24px_rgba(26,21,18,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden"
-                >
-                  {/* Image Container */}
+            return (
+              <li key={product.id} className="flex flex-col">
+                <div className="relative">
                   <Link
-                    href={`/products/${product.slug || product.id}`}
-                    className="relative block aspect-[3/4] bg-[#FDFCFB] overflow-hidden border-b border-[#C19A5B]/10"
+                    href={href}
+                    className="relative block aspect-[4/5] overflow-hidden rounded-lg bg-[hsl(var(--brand-paper))] ring-1 ring-[hsl(var(--brand-ink)/0.08)]"
                   >
                     <OptimizedImage
                       src={
@@ -227,90 +163,57 @@ export default function WishlistPage() {
                         product.image ||
                         null
                       }
-                      alt={product.title || product.name || "Product"}
+                      alt={name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="object-cover"
                       imageType="productCard"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      sizes="(max-width: 1024px) 50vw, 25vw"
                       placeholder="empty"
                     />
-
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-[#1A1512]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                    {/* Remove Button */}
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleRemove(
-                          product.id,
-                          product.title || product.name || "Unknown Product",
-                        );
-                      }}
-                      className="absolute top-3 right-3 w-9 h-9 bg-white/95 rounded-full flex items-center justify-center text-[#1A1512]/60 border border-[#C19A5B]/20 shadow-sm hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all z-20 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-200"
-                      title="Remove from wishlist"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove(product.id, name)}
+                    aria-label={`Remove ${name} from wishlist`}
+                    className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-[hsl(var(--brand-paper)/0.95)] text-[hsl(var(--brand-ink)/0.7)] shadow-[0_1px_4px_rgba(26,21,18,0.15)]"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
 
-                  {/* Content */}
-                  <div className="p-4 flex flex-col flex-1">
-                    <Link
-                      href={`/products/${product.slug || product.id}`}
-                      className="block mb-1"
-                    >
-                      <h3 className="font-serif font-bold text-[#1A1512] text-[16px] leading-tight line-clamp-1 group-hover:text-[hsl(var(--brand-gold-deep))] transition-colors">
-                        {product.title || product.name}
-                      </h3>
-                    </Link>
-                    <p className="font-sans text-[#1A1512]/60 text-xs line-clamp-1 mb-4">
-                      {product.description || "Hand-painted natural dyes"}
-                    </p>
+                <Link href={href} className="mt-3 block">
+                  <h2 className="line-clamp-2 min-h-[2.7em] text-[14px] font-semibold leading-snug">
+                    {name}
+                  </h2>
+                </Link>
+                <div className="mt-1 flex items-baseline gap-2">
+                  <span className="text-[15px] font-semibold tabular-nums">
+                    {formatPrice(price)}
+                  </span>
+                  {originalPrice && originalPrice > price && (
+                    <span className="text-[12.5px] tabular-nums text-[hsl(var(--brand-ink)/0.45)] line-through">
+                      {formatPrice(originalPrice)}
+                    </span>
+                  )}
+                </div>
+                {madeToOrder && (
+                  <p className="mt-1 text-[12.5px] text-[hsl(var(--brand-gold-deep))]">
+                    Made to order · ready in {MADE_TO_ORDER_DAYS}
+                  </p>
+                )}
 
-                    <div className="mt-auto space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-sans font-bold text-[#1A1512] text-[16px]">
-                          {formatPrice(product.price || 0)}
-                        </span>
-
-                        <span
-                          className={cn(
-                            "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm border",
-                            !madeToOrder
-                              ? "bg-green-50 text-green-700 border-green-200"
-                              : "bg-[#FDFBF6] text-[#A07840] border-[#C19A5B]/30",
-                          )}
-                        >
-                          {!madeToOrder ? `${stockQuantity} In Stock` : "Made to Order"}
-                        </span>
-                      </div>
-                      {madeToOrder && (
-                        <p className="text-[11px] font-semibold text-[#A07840]">
-                          Recreated and delivered in {MADE_TO_ORDER_DAYS}
-                        </p>
-                      )}
-
-                      <button
-                        onClick={(e) => handleAddToCart(e, product)}
-                        disabled={atLimit}
-                        className={cn(
-                          "w-full h-10 rounded-[4px] font-sans text-[11px] font-bold uppercase tracking-wider transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm",
-                          madeToOrder
-                            ? "bg-[#A07840] text-white hover:bg-[#1A1512]"
-                            : "bg-[#1A1512] text-white hover:bg-[#C19A5B]",
-                        )}
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        {atLimit ? "Limit Reached" : madeToOrder ? "Preorder" : "Add to Cart"}
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
+                <button
+                  onClick={(e) => handleMoveToCart(e, product)}
+                  disabled={atLimit}
+                  className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[hsl(var(--brand-ink))] text-[12px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-paper))] transition-colors hover:bg-[hsl(var(--brand-ink-soft))] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  {atLimit ? "In your cart" : "Move to cart"}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );

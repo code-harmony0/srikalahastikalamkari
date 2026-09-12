@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/shared/utils";
 import { useFilterCategories } from "@/shared/hooks/use-filter-categories";
+import AnnouncementBar from "./AnnouncementBar";
 
 // A nav panel is a map of the catalogue, not the catalogue itself. Longer
 // category lists spill to the category page rather than growing the menu.
@@ -207,6 +208,7 @@ export default function Header() {
 
   return (
     <>
+      <AnnouncementBar />
       <header
         className="sticky top-0 z-50 flex h-14 w-full items-center border-b border-[hsl(var(--brand-ink)/0.05)] bg-[hsl(var(--brand-paper))]/[0.98] shadow-[0_1px_3px_rgba(26,21,18,0.04)] backdrop-blur-md md:h-[72px]"
       >
@@ -235,9 +237,6 @@ export default function Header() {
             <div className="hidden sm:flex flex-col min-w-0">
               <span className="font-serif font-bold text-[13px] lg:text-[15px] text-[hsl(var(--brand-ink))] leading-none tracking-wide uppercase group-hover:text-[hsl(var(--brand-gold-deep))] transition-colors truncate">
                 Srikalahasti Kalamkari
-              </span>
-              <span className="hidden sm:block font-serif italic text-[11px] lg:text-[12px] text-[hsl(var(--brand-ink)/0.55)] leading-none tracking-[0.18em] mt-1.5 truncate">
-                Heritage Art
               </span>
             </div>
           </Link>

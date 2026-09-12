@@ -16,12 +16,16 @@ jest.mock('@/shared/cart-store', () => ({
   }),
 }))
 
+// The drawer now asks only for the products in the cart, so the mock answers
+// the same way the real hook does: with the requested ids that exist.
+const mockCatalogue = [
+  { id: 'p1', name: 'Kalamkari Saree', slug: 'kalamkari-saree', price: 8500, images: [] },
+  { id: 'p2', name: 'Cotton Dupatta', slug: 'cotton-dupatta', price: 1500, images: [] },
+]
+
 jest.mock('@/shared/hooks/use-products', () => ({
-  useAllProducts: () => ({
-    data: [
-      { id: 'p1', name: 'Kalamkari Saree', slug: 'kalamkari-saree', price: 8500, images: [] },
-      { id: 'p2', name: 'Cotton Dupatta', slug: 'cotton-dupatta', price: 1500, images: [] },
-    ],
+  useProductsByIds: (ids: string[]) => ({
+    data: mockCatalogue.filter((product) => ids.includes(product.id)),
   }),
 }))
 

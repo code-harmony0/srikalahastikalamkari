@@ -33,6 +33,18 @@ export function useAllProducts() {
   })
 }
 
+/** The products for a known set of ids — for carts, wishlists and checkout. */
+export function useProductsByIds(ids: string[]) {
+  const key = [...ids].sort()
+  return useQuery({
+    queryKey: ["products", "by-ids", key],
+    queryFn: () => productsService.getByIds(key),
+    enabled: key.length > 0,
+    staleTime: 60 * 1000,
+    placeholderData: (previousData) => previousData,
+  })
+}
+
 export function useFeaturedProducts() {
   return useQuery({
     queryKey: ["products", "featured"],

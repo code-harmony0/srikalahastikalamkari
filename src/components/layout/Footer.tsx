@@ -55,9 +55,6 @@ export default function Footer() {
                 <h3 className="font-serif font-bold text-base sm:text-lg tracking-wider text-white uppercase">
                   SRIKALAHASTI KALAMKARI
                 </h3>
-                <p className="font-serif italic text-xs tracking-widest text-[#E2BD7A]">
-                  SACRED TEMPLE ART · EST. 1999
-                </p>
               </div>
             </div>
 
@@ -96,10 +93,9 @@ export default function Footer() {
             <ul className="space-y-2.5 text-[13.5px]">
               {[
                 { label: "Kalamkari Sarees", category: "Sarees" },
-                { label: "Handcrafted Dupattas", category: "Dupattas" },
+                { label: "Handcrafted Dupattas", category: "Duppatta" },
                 { label: "Dress Materials", category: "Fabrics" },
-                { label: "Wall Paintings", category: "Wall Paintings" },
-                { label: "Canvas Paintings", category: "Canvas Paintings" },
+                { label: "Wall Art", category: "wall-paintings" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link
@@ -121,8 +117,8 @@ export default function Footer() {
             <ul className="space-y-2.5 text-[13.5px]">
               {[
                 { label: "Shipping Policy", href: "/shipping" },
-                { label: "Returns & Exchanges", href: "/returns" },
-                { label: "Natural Textile Care", href: "/textile" },
+                { label: "Refund Policy", href: "/returns" },
+                { label: "Track Orders", href: "/orders" },
                 { label: "Artisan Craft FAQs", href: "/faqs" },
                 { label: "Contact Us", href: "/contact" },
               ].map((item) => (
@@ -220,7 +216,7 @@ export default function Footer() {
         {/* ── Bottom Utility Bar ── */}
         <div className="py-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12.5px] text-[#A89F91] pb-24 sm:pb-6 sm:pr-28">
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-center sm:text-left">
-            <span>© 1999–2026 Srikalahasti Kalamkari</span>
+            <span>© 2026 Srikalahasti Kalamkari</span>
             <span className="text-white/20">|</span>
             <Link href="/privacy" className="hover:text-[#E2BD7A] transition-colors">Privacy Policy</Link>
             <span className="text-white/20">·</span>

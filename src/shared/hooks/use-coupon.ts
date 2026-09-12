@@ -43,10 +43,11 @@ export function useCoupon(): UseCouponReturn {
       if (coupon.max_discount_amount && discount > coupon.max_discount_amount) {
         discount = coupon.max_discount_amount;
       }
-      return Math.round(discount * 100) / 100; // Round to 2 decimals
+      // Whole rupees, exactly as the server prices the order.
+      return Math.min(Math.round(discount), orderTotal);
     } else {
       // Fixed discount
-      return Math.min(coupon.discount_value, orderTotal);
+      return Math.min(Math.round(coupon.discount_value), orderTotal);
     }
   }, []);
 
@@ -133,28 +134,4 @@ export function useCoupon(): UseCouponReturn {
     removeCoupon,
     calculateDiscount,
   };
-}
-
-/**
- * Increment coupon usage count after successful order
- */
-export async function incrementCouponUsage(couponId: string): Promise<void> {
-  try {
-    // Using raw update with increment - types will be regenerated
-    const { data, error } = await supabase
-      .from("coupons" as any)
-      .select("used_count")
-      .eq("id", couponId)
-      .single();
-    
-    if (!error && data) {
-      const currentCount = (data as any).used_count || 0;
-      await supabase
-        .from("coupons" as any)
-        .update({ used_count: currentCount + 1 } as any)
-        .eq("id", couponId);
-    }
-  } catch (error) {
-    console.error("Failed to increment coupon usage:", error);
-  }
 }

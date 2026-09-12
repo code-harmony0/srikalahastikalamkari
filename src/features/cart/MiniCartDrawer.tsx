@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react"
 import { useCartStore } from "@/shared/cart-store"
 import { useMiniCartStore } from "@/shared/mini-cart-store"
-import { useAllProducts } from "@/shared/hooks/use-products"
+import { useProductsByIds } from "@/shared/hooks/use-products"
 import { getImageTier } from "@/lib/image-tiers"
 import { formatPrice } from "@/shared/utils"
 
@@ -19,7 +19,10 @@ import { formatPrice } from "@/shared/utils"
 export default function MiniCartDrawer() {
   const { isOpen, lastAddedId, close } = useMiniCartStore()
   const cart = useCartStore()
-  const { data: products = [] } = useAllProducts()
+  // Exactly the products in the cart, so an older piece that was just added
+  // still shows up in its own confirmation drawer.
+  const cartIds = useMemo(() => cart.items.map((item) => item.productId), [cart.items])
+  const { data: products = [] } = useProductsByIds(cartIds)
   const panelRef = useRef<HTMLDivElement | null>(null)
 
   const lines = useMemo(() => {
@@ -206,12 +209,12 @@ export default function MiniCartDrawer() {
                     <span className="font-sans text-[13px] uppercase tracking-[0.12em] text-[#1A1512]/60">
                       Subtotal
                     </span>
-                    <span className="font-serif text-[20px] font-bold text-[#1A1512]">
+                    <span className="text-[20px] font-semibold tabular-nums text-[#1A1512]">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
                   <p className="mb-3.5 font-sans text-[12px] text-[#1A1512]/50">
-                    Shipping and taxes calculated at checkout.
+                    Free shipping. Prices include all taxes.
                   </p>
 
                   <div className="flex flex-col gap-2.5">

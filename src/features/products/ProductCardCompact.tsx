@@ -215,7 +215,7 @@ export const ProductCardCompact = memo(
           )}
 
           {/* Product Name - Primary visual anchor, max 2 lines */}
-          <h3 className="font-inter font-semibold text-foreground text-[11.5px] sm:text-[13px] leading-[1.15] sm:leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+          <h3 className="font-inter font-semibold text-foreground text-[11.5px] sm:text-[13px] leading-[1.15] sm:leading-tight line-clamp-2">
             {productData.name}
           </h3>
 

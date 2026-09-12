@@ -74,11 +74,12 @@ const Sidebar = () => {
         .select("*", { count: "exact", head: true })
         .in("status", ["pending", "paid"])
 
-      // Low stock products
+      // Out-of-stock products. Most pieces are one-of-a-kind with a stock of 1,
+      // so the old "fewer than 5" rule flagged almost the whole catalogue.
       const { count: stockCount } = await supabase
         .from("products")
         .select("*", { count: "exact", head: true })
-        .lt("stock_quantity", 5)
+        .lte("stock_quantity", 0)
 
       // Pending reviews (not approved)
       // @ts-ignore - reviews table exists but not in generated types
@@ -87,12 +88,13 @@ const Sidebar = () => {
         .select("*", { count: "exact", head: true })
         .eq("is_approved", false)
 
-      // New inquiries (unread or pending)
-      // @ts-ignore - inquiries table exists but not in generated types
+      // New contact messages. The contact form writes to `contact_inquiries`
+      // with status "new"; this used to query a table named `inquiries` that
+      // does not exist, so every admin page logged a 404 and the badge stayed 0.
       const { count: inquiriesCount } = await (supabase as any)
-        .from("inquiries")
+        .from("contact_inquiries")
         .select("*", { count: "exact", head: true })
-        .eq("status", "pending")
+        .eq("status", "new")
 
       // Active coupons - count all active coupons (with no expiry or future expiry)
       // @ts-ignore - coupons table exists but not in generated types

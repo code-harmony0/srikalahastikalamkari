@@ -342,7 +342,7 @@ const Orders = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Total Orders</p>
-              <p className="text-2xl font-bold text-slate-900">{Number(stats.total) || 0}</p>
+              <p className="text-2xl font-bold text-slate-900">{Number(stats.total_orders) || 0}</p>
             </div>
           </div>
 
@@ -362,7 +362,7 @@ const Orders = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-800">Pending Action</p>
-              <p className="text-2xl font-bold text-slate-900">{(Number(stats.paid) || 0) + (Number(stats.inPacking) || 0)}</p>
+              <p className="text-2xl font-bold text-slate-900">{(Number(stats.pending_orders) || 0) + (Number(stats.processing_orders) || 0)}</p>
             </div>
           </div>
 

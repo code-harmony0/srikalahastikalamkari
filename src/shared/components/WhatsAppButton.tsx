@@ -86,7 +86,7 @@ export function WhatsAppButton({
   return (
     <motion.button
       onClick={handleClick}
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full shadow-lg flex items-center justify-center hover:bg-[#20BD5B] transition-colors group"
+      className="floating-dock floating-dock--chat fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full shadow-lg flex items-center justify-center hover:bg-[#20BD5B] transition-colors group"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       initial={{ scale: 0, opacity: 0 }}

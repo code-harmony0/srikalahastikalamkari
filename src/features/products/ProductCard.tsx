@@ -225,6 +225,29 @@ export const ProductCard = memo(
               />
             </button>
           )}
+
+          {/* Desktop Slide-up Quick Add Bar (Grid view) */}
+          {!isList && !inquiryOnly && (
+            <div className="hidden sm:block absolute bottom-0 left-0 right-0 z-20 p-2.5 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none group-hover:pointer-events-auto">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCart(e);
+                }}
+                className={cn(
+                  "w-full h-9 rounded-md text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all duration-200 active:scale-[0.98]",
+                  madeToOrder
+                    ? "bg-[#1A1512] text-white hover:bg-[#A07840]"
+                    : "bg-white/95 text-[#1A1512] hover:bg-[#1A1512] hover:text-white"
+                )}
+                aria-label={madeToOrder ? "Preorder made-to-order item" : "Add to cart"}
+              >
+                <ShoppingBag className="w-3.5 h-3.5" />
+                {madeToOrder ? "Preorder" : "Quick Add"}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* 2️⃣ CONTENT SECTION */}
@@ -241,7 +264,7 @@ export const ProductCard = memo(
 
               <h3
                 className={cn(
-                  "font-inter font-bold text-[#1A1512] leading-tight group-hover/text:text-[hsl(var(--brand-gold-deep))] transition-colors",
+                  "font-inter font-bold text-[#1A1512] leading-tight",
                   isList
                     ? "text-[15px] line-clamp-1"
                     : "text-[14px] line-clamp-2",

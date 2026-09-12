@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import DashboardLayout from "@/app/dashboard/components/DashboardLayout";
+import { InventoryProvider } from "@/shared/contexts/InventoryContext";
 import {
   ADMIN_SESSION_COOKIE,
   verifyAdminSessionToken,
@@ -22,5 +23,11 @@ export default async function AdminDashboardLayout({
     redirect("/admin/login?redirect=/dashboard");
   }
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  // The full product inventory is an admin concern; loading it here instead of
+  // in the root layout keeps it off every storefront page.
+  return (
+    <InventoryProvider>
+      <DashboardLayout>{children}</DashboardLayout>
+    </InventoryProvider>
+  );
 }

@@ -117,7 +117,8 @@ export async function getOrderStatistics(): Promise<OrderStats> {
     // Calculate stats
     const stats: OrderStats = {
       total_orders: totalOrders || 0,
-      total_revenue: ordersByStatus.reduce(
+      // Cancelled orders are not revenue.
+      total_revenue: ordersByStatus.filter((o) => o.status !== "cancelled").reduce(
         (sum, order) => sum + (order.total_amount || 0),
         0,
       ),
@@ -131,7 +132,7 @@ export async function getOrderStatistics(): Promise<OrderStats> {
       cancelled_orders: ordersByStatus.filter((o) => o.status === "cancelled")
         .length,
       todayCount: todayOrders.length,
-      todayRevenue: todayOrders.reduce((sum, order) => sum + (order.total_amount || 0), 0),
+      todayRevenue: todayOrders.filter((o) => o.status !== "cancelled").reduce((sum, order) => sum + (order.total_amount || 0), 0),
       recent_orders: [],
     }
 

@@ -69,10 +69,15 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
   const { count: productCount } = await supabaseAdmin
     .from("products")
     .select("*", { count: "exact", head: true })
+    // Shown as "Products in Stock": visible to customers and actually in stock.
+    .eq("is_visible", true)
+    .gt("stock_quantity", 0)
 
   const orders = allOrders || []
   const totalOrders = orders.length
-  const totalRevenue = orders.reduce((sum, o) => sum + (o.total_amount || 0), 0)
+  // Cancelled orders are not revenue.
+  const earningOrders = orders.filter(o => o.status !== "cancelled")
+  const totalRevenue = earningOrders.reduce((sum, o) => sum + (o.total_amount || 0), 0)
 
   // Status breakdown
   const pending = orders.filter(o => o.status === "pending" || o.status === "paid").length
@@ -89,8 +94,8 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
     o => new Date(o.created_at) >= lastMonthStart && new Date(o.created_at) <= lastMonthEnd
   )
 
-  const currentMonthRevenue = currentMonthOrders.reduce((s, o) => s + (o.total_amount || 0), 0)
-  const lastMonthRevenue = lastMonthOrders.reduce((s, o) => s + (o.total_amount || 0), 0)
+  const currentMonthRevenue = currentMonthOrders.filter(o => o.status !== "cancelled").reduce((s, o) => s + (o.total_amount || 0), 0)
+  const lastMonthRevenue = lastMonthOrders.filter(o => o.status !== "cancelled").reduce((s, o) => s + (o.total_amount || 0), 0)
 
   const revenueGrowth = lastMonthRevenue > 0
     ? ((currentMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
@@ -116,7 +121,7 @@ export async function getDashboardKPIs(): Promise<DashboardKPIs> {
     revenue_growth: revenueGrowth,
     orders_growth: ordersGrowth,
     completion_rate_growth: completionRateGrowth,
-    avg_order_value: totalOrders > 0 ? totalRevenue / totalOrders : 0,
+    avg_order_value: earningOrders.length > 0 ? totalRevenue / earningOrders.length : 0,
     pending_orders: pending,
     processing_orders: processing,
     shipped_orders: shipped,
@@ -207,7 +212,7 @@ export async function getTopCategoriesBySales(limit: number = 6): Promise<Catego
       quantity,
       products!inner (
         category_id,
-        categories!inner (
+        categories!products_category_id_fkey!inner (
           name
         )
       )

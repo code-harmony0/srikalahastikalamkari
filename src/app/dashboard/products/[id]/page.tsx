@@ -1,4 +1,5 @@
 "use client"
+import { getStockQuantity } from "@/shared/lib/inventory";
 
 import React, { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
@@ -447,9 +448,9 @@ const ProductDetails = () => {
                     Status
                   </p>
                   <p
-                    className={`text-xl font-bold ${(product.quantity || 0) > 5 ? "text-emerald-600" : "text-slate-600"}`}
+                    className={`text-xl font-bold ${getStockQuantity(product) > 0 ? "text-emerald-600" : "text-slate-600"}`}
                   >
-                    {(product.quantity || 0) > 5 ? "Healthy" : "Low Stock"}
+                    {getStockQuantity(product) > 0 ? "In stock" : "Out of stock"}
                   </p>
                 </div>
               </div>

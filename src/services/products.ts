@@ -1135,10 +1135,64 @@ export const productsService = {
       inStock: (p.stock_quantity ?? 0) > 0,
     })) as unknown as Product[];
   },
+  // Visible, non-custom products under the named top-level categories, newest
+  // first. Categories are resolved by name at query time so the UI never
+  // carries database ids that differ between environments.
+  async getVisibleInTopCategories(categoryNames: string[]): Promise<Product[]> {
+    const { data: categories, error: categoryError } = await supabase
+      .from("categories")
+      .select("id")
+      .is("parent_id", null)
+      .in("name", categoryNames);
+    if (categoryError) {
+      console.warn("getVisibleInTopCategories categories error:", categoryError.message);
+      return [];
+    }
+    if (!categories?.length) return [];
+
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, name, slug, price, original_price, images, stock_quantity, is_featured, category_id, sub_category_id, created_at, categories:category_id(name)")
+      .eq("is_visible", true)
+      .not("is_custom_design", "is", true)
+      .in("category_id", categories.map((c) => c.id))
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.warn("getVisibleInTopCategories error:", error.message);
+      return [];
+    }
+
+    return ((data || []) as any[]).map((p) => ({
+      ...p,
+      categoryName: p.categories?.name ?? undefined,
+      in_stock: (p.stock_quantity ?? 0) > 0,
+      inStock: (p.stock_quantity ?? 0) > 0,
+    })) as unknown as Product[];
+  },
+
   async getFeatured(): Promise<Product[]> {
     const { data } = await getProducts();
     return ((data || []) as Product[]).filter((p: any) => p.isFeatured);
   },
+  // Exactly the products a cart, wishlist or checkout refers to. Those pages used
+  // to look items up in a partial product list, so anything outside it vanished:
+  // the cart deleted it and checkout priced it at ₹0. Errors throw, so a failed
+  // request is never mistaken for "these products no longer exist".
+  async getByIds(ids: string[]): Promise<Product[]> {
+    if (!ids.length) return [];
+    const { data, error } = await supabase
+      .from("products")
+      .select("*, categories:category_id(id, name)")
+      .in("id", ids)
+      .eq("is_visible", true);
+    if (error) throw error;
+    return ((data || []) as any[]).map((p) => ({
+      ...p,
+      in_stock: (p.stock_quantity ?? 0) > 0,
+      inStock: (p.stock_quantity ?? 0) > 0,
+    })) as unknown as Product[];
+  },
+
   async getById(id: string): Promise<Product | null> {
     const { data } = await getProductById(id);
     return data;

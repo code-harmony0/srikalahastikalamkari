@@ -415,7 +415,7 @@ export default function AdminLoginPage() {
                 color: "#C19A5B",
                 marginBottom: 14,
               }}>
-                Est. 1999 · Heritage Artisans
+                Authentic Heritage Artisans
               </div>
               <h1 style={{
                 fontFamily: "'Cormorant Garamond', serif",

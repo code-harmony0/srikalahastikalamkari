@@ -3,7 +3,6 @@ import { Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
 import { Providers } from "@/shared/providers"
 import AppWrapper from "./AppWrapper"
-import { InventoryProvider } from "@/shared/contexts/InventoryContext"
 import { ThemeProvider } from "@/components/providers/ThemeProvider"
 
 import { SITE_OFFLINE } from "@/shared/config/site-status";
@@ -244,9 +243,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <Providers>
-            <InventoryProvider>
-              <AppWrapper>{children}</AppWrapper>
-            </InventoryProvider>
+            <AppWrapper>{children}</AppWrapper>
           </Providers>
         </ThemeProvider>
       </body>

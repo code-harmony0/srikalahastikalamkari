@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react"
 import { ProductCard } from "./ProductCard"
+import { PRICE_BANDS, type PriceBandId } from "./price-bands"
 import { ProductCardCompact, ProductCardCompactSkeleton } from "./ProductCardCompact"
 import { PageHero } from "@/components/layout/PageHero"
 import dynamic from "next/dynamic"
@@ -78,8 +79,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   // Filter states
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000])
-  const [inStockOnly, setInStockOnly] = useState(false)
+  const [priceBand, setPriceBand] = useState<PriceBandId | null>(null)
   const [sortBy, setSortBy] = useState("default")
 
   // Pagination State
@@ -185,6 +185,8 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       : ["00000000-0000-0000-0000-000000000000"]
   }, [selectedCategories, filterCategories, categoriesLoading])
 
+  const selectedBand = PRICE_BANDS.find((band) => band.id === priceBand)
+
   // Prepare filters for React Query
   const filters = useMemo(
     () => ({
@@ -193,9 +195,10 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       search: searchQuery || undefined,
       category_id:
         categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
-      price_min: priceRange[0],
-      price_max: priceRange[1],
-      in_stock: !isCustomDesignMode && inStockOnly ? true : undefined,
+      // Price is only constrained once a band is chosen. Every request used to
+      // send price_max 50,000, which hid anything priced above it.
+      price_min: selectedBand?.min,
+      price_max: selectedBand?.max,
       out_of_stock: undefined,
       is_custom_design: isCustomDesignMode ? true : false,
       is_visible: true,
@@ -206,8 +209,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       itemsPerPage,
       searchQuery,
       categoryIds,
-      priceRange,
-      inStockOnly,
+      selectedBand,
       sortBy,
       isCustomDesignMode,
     ],
@@ -284,13 +286,6 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
     }
   }, [filters, currentPage, totalCount, itemsPerPage, queryClient])
 
-  // Compute product counts for sidebar (client side approximation or separate API)
-  // Since we are paginating, we can't count purely on client.
-  // For now, we'll retain the old logic if we had all products, but since we don't,
-  // we might pass empty counts or fetch counts separately.
-  // For this step, we'll pass empty object or implement a reliable count later.
-  const productCounts = {}
-
   // Pagination
   const totalPages = Math.ceil(totalCount / itemsPerPage)
   const pageNumbers = getPageNumbers(currentPage, totalPages)
@@ -301,9 +296,8 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   }, [
     searchQuery,
     selectedCategories,
-    priceRange,
+    priceBand,
     sortBy,
-    inStockOnly,
     itemsPerPage,
   ])
 
@@ -316,8 +310,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   const clearAllFilters = useCallback(() => {
     setSearchQuery("")
     setSelectedCategories([])
-    setPriceRange([0, 50000])
-    setInStockOnly(false)
+    setPriceBand(null)
     setCurrentPage(1)
   }, [])
 
@@ -325,8 +318,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
     let count = 0
     if (searchQuery) count++
     if (selectedCategories.length > 0) count += selectedCategories.length
-    if (priceRange[0] > 0 || priceRange[1] < 50000) count++
-    if (inStockOnly) count++
+    if (priceBand) count++
     return count
   }
 
@@ -334,29 +326,22 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
   // Filter bar props shared between mobile and desktop sidebar
   const filterProps = {
-    searchQuery,
-    setSearchQuery,
     selectedCategories,
     setSelectedCategories,
-    priceRange,
-    setPriceRange: (range: [number, number]) => setPriceRange(range),
-    inStockOnly,
-    setInStockOnly,
+    priceBand,
+    setPriceBand,
     clearFilters: clearAllFilters,
-    hideAvailabilityFilter: isCustomDesignMode,
     availableCategoryNames: customAvailableFilters.categoryNames,
     availableSubCategoryNames: customAvailableFilters.subCategoryNames,
     availableSubCategoryNamesByCategory:
       customAvailableFilters.subCategoryNamesByCategory,
     restrictToAvailableFilters: isCustomDesignMode,
     availableFiltersLoading: isCustomDesignMode && isLoading,
-    productCounts,
-    totalProducts: totalCount,
+    resultCount: totalCount,
   }
 
   const heroCopy = isCustomDesignMode
     ? {
-        eyebrow: "Custom Design Gallery",
         titleStart: "Custom",
         titleAccent: "design",
         titleEnd: "gallery",
@@ -365,12 +350,11 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
         scrollLabel: "View Designs",
       }
     : {
-        eyebrow: "Heritage Collective",
-        titleStart: "The Artisan's",
-        titleAccent: "gallery",
+        titleStart: "Shop",
+        titleAccent: "Kalamkari",
         titleEnd: "",
         description:
-          "Explore hand-painted sarees and heritage textiles crafted with five centuries of Srikalahasti tradition.",
+          "Hand-painted sarees, dupattas and fabrics from Srikalahasti.",
         scrollLabel: "Explore Collection",
       }
 
@@ -379,7 +363,6 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       {/* Hero Overview */}
       {/* Signature Hero Overview */}
       <PageHero
-        eyebrow={heroCopy.eyebrow}
         titleStart={heroCopy.titleStart}
         titleAccent={heroCopy.titleAccent}
         titleEnd={heroCopy.titleEnd}
@@ -438,7 +421,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                   <div className="flex items-center gap-2 sm:gap-3 flex-wrap lg:hidden">
                     <div className="flex flex-wrap gap-1.5 flex-1">
                       {searchQuery && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[12.5px] font-medium">
                           &ldquo;{searchQuery}&rdquo;
                           <button onClick={() => setSearchQuery("")} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
@@ -448,7 +431,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       {selectedCategories.map((cat) => (
                         <span
                           key={cat}
-                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold"
+                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[12.5px] font-medium"
                         >
                           {cat}
                           <button
@@ -463,18 +446,10 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                           </button>
                         </span>
                       ))}
-                      {(priceRange[0] > 0 || priceRange[1] < 50000) && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
-                          Price filtered
-                          <button onClick={() => setPriceRange([0, 50000])} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </span>
-                      )}
-                      {inStockOnly && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[10px] sm:text-[10px] font-semibold">
-                          In Stock
-                          <button onClick={() => setInStockOnly(false)} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
+                      {selectedBand && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[12.5px] font-medium">
+                          {selectedBand.label}
+                          <button onClick={() => setPriceBand(null)} aria-label="Remove price filter" className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
                             <X className="w-3 h-3" />
                           </button>
                         </span>

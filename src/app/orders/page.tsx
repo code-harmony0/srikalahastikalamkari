@@ -482,7 +482,7 @@ export default function OrdersPage() {
                                 </div>
                                 <div className="flex justify-between pt-2 border-t border-[#C19A5B]/10">
                                   <span className="text-sm font-semibold text-[#1A1512] font-inter">Total</span>
-                                  <span className="text-lg font-bold text-[hsl(var(--brand-gold-deep))] font-playfair">
+                                  <span className="text-lg font-semibold tabular-nums text-[#1A1512] font-inter">
                                     {formatPrice(order.total_amount)}
                                   </span>
                                 </div>

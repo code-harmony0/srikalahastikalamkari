@@ -4,9 +4,9 @@ import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useProducts } from "@/shared/hooks/use-products";
+import { useProductsByIds } from "@/shared/hooks/use-products";
 import { useCartStore } from "@/shared/cart-store";
-import { useCoupon, incrementCouponUsage } from "@/shared/hooks/use-coupon";
+import { useCoupon } from "@/shared/hooks/use-coupon";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { useAuthModalStore } from "@/shared/auth-modal-store";
 import {
@@ -14,7 +14,6 @@ import {
   CheckCircle2,
   Wallet,
   Lock,
-  ShieldCheck,
   CreditCard,
   Tag,
   X,
@@ -22,8 +21,7 @@ import {
 } from "lucide-react";
 import { formatPrice, cn } from "@/shared/utils";
 import { toast } from "sonner";
-import { PageHero } from "@/components/layout/PageHero";
-import { ShippingWidget } from "./ShippingWidget";
+import { getOrderTotals } from "@/shared/lib/order-totals";
 import environment from "@/shared/config/environment";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
@@ -104,9 +102,17 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { user: firebaseUser, loading: authLoading } = useAuth();
   const { openModal } = useAuthModalStore();
-  const { data: productsData } = useProducts();
-  const products = productsData?.data || [];
   const cart = useCartStore();
+  const hasHydrated = useCartStore((s) => s._hasHydrated);
+  // Exactly the products in the cart. Checkout used to read only the first page
+  // of the catalogue (12 products), so anything older was priced at ₹0 and left
+  // out of the Razorpay order.
+  const cartIds = useMemo(
+    () => cart.items.map((item) => item.productId),
+    [cart.items],
+  );
+  const { data: products = [], isLoading: productsLoading } =
+    useProductsByIds(cartIds);
 
   useEffect(() => {
     if (!authLoading && !firebaseUser) {
@@ -147,9 +153,10 @@ export default function CheckoutPage() {
     () => cart.getTotalPrice(products),
     [cart, products],
   );
-  const discount = appliedCoupon?.discountAmount || 0;
-  const shipping = 0;
-  const total = subtotal - discount + shipping;
+  const { discount, shipping, total } = getOrderTotals({
+    subtotal,
+    discount: appliedCoupon?.discountAmount || 0,
+  });
   const hasMadeToOrderItems = cartItems.some(({ product }) => isMadeToOrder(product));
 
   // Handle coupon apply
@@ -157,7 +164,7 @@ export default function CheckoutPage() {
     if (!couponCode.trim()) return;
     const success = await applyCoupon(couponCode, subtotal);
     if (success) {
-      toast.success("Coupon applied!", { description: `You saved ₹${discount}` });
+      toast.success("Coupon applied");
     }
   };
 
@@ -220,7 +227,11 @@ const handleSubmit = async (e: React.FormEvent) => {
       const orderRes = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: total }),
+        // Only what is being bought — the server prices it from the database.
+        body: JSON.stringify({
+          items: cart.items.map(({ productId, quantity }) => ({ productId, quantity })),
+          couponCode: appliedCoupon?.code ?? null,
+        }),
       })
 
       const orderData = await orderRes.json()
@@ -267,6 +278,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               formData,
               cartItems: cartPayload,
               totalAmount: total,
+              couponCode: appliedCoupon?.code ?? null,
               userId: firebaseUser?.uid || null,
               customerPhone: firebaseUser?.phoneNumber || null,
             }),
@@ -316,6 +328,15 @@ const handleSubmit = async (e: React.FormEvent) => {
     return null;
   }
 
+  // Wait for the stored cart and its products before deciding it is empty.
+  if (!hasHydrated || productsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-10 h-10 border-2 border-[#1A1512]/15 border-t-[#1A1512] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   // --- Empty State ---
   if (cartItems.length === 0) {
     return (
@@ -340,16 +361,13 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   return (
     <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
-      {/* 🏛 Page Hero */}
-      <PageHero
-        eyebrow="Secure Checkout"
-        titleStart="Finalize"
-        titleAccent="order"
-        description="Almost there — confirm your delivery details and proceed to secure payment."
-      />
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-8 lg:pt-12">
+        <h1 className="font-serif text-[30px] sm:text-[36px] font-semibold leading-tight text-[#1A1512]">
+          Checkout
+        </h1>
+      </div>
 
-      {/* 📦 Main Content */}
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-12">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-8 pb-40 lg:pb-16">
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12"
@@ -458,9 +476,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                     maxLength={6}
                   />
                 </div>
-                <p className="text-xs text-[#1A1512]/50 italic mt-2 flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3" /> We currently deliver
-                  across India and selected international regions.
+                <p className="mt-2 text-[13px] text-[#1A1512]/60">
+                  We deliver within India only, free on every order.
                 </p>
               </div>
             </motion.div>
@@ -504,12 +521,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#1A1512]/60 bg-[#1A1512]/5 py-2 rounded-md border border-[#C19A5B]/10">
-                <Lock className="w-3 h-3" />
-                <span>
-                  Payments are encrypted and secured with 256-bit SSL.
-                </span>
-              </div>
+              <p className="mt-4 flex items-center gap-2 text-[13px] text-[#1A1512]/60">
+                <Lock className="h-3.5 w-3.5" />
+                Payment is processed securely by Razorpay.
+              </p>
             </motion.div>
           </div>
 
@@ -680,10 +695,10 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
                   <div className="flex justify-between items-center pt-4 border-t border-[#C19A5B]/20 mt-2">
-                    <span className="font-playfair font-bold text-lg text-[#1A1512]">
+                    <span className="text-[15px] font-semibold text-[#1A1512]">
                       Total
                     </span>
-                    <span className="font-playfair font-bold text-2xl text-[hsl(var(--brand-gold-deep))]">
+                    <span className="text-[24px] font-semibold tabular-nums text-[#1A1512]">
                       {formatPrice(total)}
                     </span>
                   </div>
@@ -712,10 +727,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </p>
               </motion.div>
 
-              {/* Shipping Widget - Now Inside Sticky Container */}
-              <div className="relative z-0">
-                <ShippingWidget subtotal={subtotal} />
-              </div>
             </div>
           </div>
         </form>
@@ -724,8 +735,8 @@ const handleSubmit = async (e: React.FormEvent) => {
       {/* Mobile Sticky CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[#C19A5B]/20 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40">
         <div className="flex justify-between items-center mb-3 px-1">
-          <span className="font-playfair font-bold text-[#1A1512]">Total</span>
-          <span className="font-playfair font-bold text-xl text-[hsl(var(--brand-gold-deep))]">
+          <span className="text-[15px] font-semibold text-[#1A1512]">Total</span>
+          <span className="text-[20px] font-semibold tabular-nums text-[#1A1512]">
             {formatPrice(total)}
           </span>
         </div>

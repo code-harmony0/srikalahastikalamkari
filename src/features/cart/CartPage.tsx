@@ -1,32 +1,28 @@
 "use client";
 
-import { useMemo, useEffect, useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { useAllProducts } from "@/shared/hooks/use-products";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Minus,
+  Plus,
+  ShoppingBag,
+  Trash2,
+} from "lucide-react";
+import { toast } from "sonner";
+import { useProductsByIds } from "@/shared/hooks/use-products";
 import { useCartStore } from "@/shared/cart-store";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import { useAuthModalStore } from "@/shared/auth-modal-store";
-import {
-  Minus,
-  Plus,
-  Trash2,
-  ShoppingBag,
-  ArrowRight,
-  Truck,
-} from "lucide-react";
 import { formatPrice } from "@/shared/utils";
-import { toast } from "sonner";
-import { cn } from "@/shared/utils";
-import { ShippingWidget } from "./ShippingWidget";
-import { PageHero } from "@/components/layout/PageHero";
+import { getOrderTotals } from "@/shared/lib/order-totals";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
 import {
   MADE_TO_ORDER_DAYS,
   getPurchasableQuantityLimit,
-  getStockQuantity,
   isMadeToOrder,
 } from "@/shared/lib/inventory";
 
@@ -34,371 +30,295 @@ export default function CartPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const { openModal } = useAuthModalStore();
-  const { data: products = [], isLoading: productsLoading } = useAllProducts();
   const cart = useCartStore();
   const hasHydrated = useCartStore((s) => s._hasHydrated);
 
-  // Auth Guard
+  // Fetch exactly the products in the cart. Looking them up in a partial
+  // catalogue list made older products vanish from customers' carts.
+  const cartIds = useMemo(
+    () => cart.items.map((item) => item.productId),
+    [cart.items],
+  );
+  const {
+    data: products = [],
+    isLoading: productsLoading,
+    isSuccess,
+    isFetching,
+    isPlaceholderData,
+  } = useProductsByIds(cartIds);
+
   useEffect(() => {
     if (!authLoading && !user) {
       openModal("/cart");
     }
   }, [user, authLoading, openModal]);
 
-  // 🛍 Merge Cart Items with Product Data
-  const cartItems = useMemo(() => {
-    if (!products.length) return [];
-    return cart.items
-      .map((item) => {
-        const product = products.find((p: any) => p.id === item.productId);
-        return { ...item, product };
-      })
-      .filter(
-        (
-          item,
-        ): item is typeof item & {
-          product: NonNullable<typeof item.product>;
-        } => Boolean(item.product),
-      );
-  }, [cart.items, products]);
+  const cartItems = useMemo(
+    () =>
+      cart.items
+        .map((item) => ({
+          ...item,
+          product: products.find((p) => p.id === item.productId),
+        }))
+        .filter(
+          (
+            item,
+          ): item is typeof item & {
+            product: NonNullable<typeof item.product>;
+          } => Boolean(item.product),
+        ),
+    [cart.items, products],
+  );
 
-  // 🧹 CLEANUP: Remove stale IDs from store that don't exist in DB
+  // Remove items whose product was deleted or hidden — judged only against a
+  // settled result for the current cart, never a stale or failed request.
   useEffect(() => {
-    if (products.length > 0 && cart.items.length > 0) {
-      const validIds = new Set(products.map((p: any) => p.id));
-      cart.items.forEach((item) => {
-        if (!validIds.has(item.productId)) {
-          cart.removeItem(item.productId);
-        }
-      });
-    }
-  }, [products, cart]);
+    if (!isSuccess || isFetching || isPlaceholderData) return;
+    const found = new Set(products.map((p) => p.id));
+    cart.items.forEach((item) => {
+      if (!found.has(item.productId)) cart.removeItem(item.productId);
+    });
+  }, [products, isSuccess, isFetching, isPlaceholderData, cart]);
 
-  // 💰 Calculations
-  const subtotal = useMemo(() => {
-    return cartItems.reduce((total, item) => {
-      return total + (item.product.price || 0) * item.quantity;
-    }, 0);
-  }, [cartItems]);
+  const subtotal = useMemo(
+    () =>
+      cartItems.reduce(
+        (sum, item) => sum + (item.product.price || 0) * item.quantity,
+        0,
+      ),
+    [cartItems],
+  );
+  const { shipping, total } = getOrderTotals({ subtotal });
+  const itemCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+  const hasMadeToOrder = cartItems.some(({ product }) => isMadeToOrder(product));
 
-  // Free shipping logic for the summary
-  const shipping = 0;
-  const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + shipping + tax;
-
-  // Handlers
   const handleUpdateQuantity = (
     productId: string,
-    newQuantity: number,
-    maxQuantity: number,
-    madeToOrder = false,
+    nextQuantity: number,
+    limit: number,
+    madeToOrder: boolean,
   ) => {
-    if (newQuantity < 1) return;
-    if (newQuantity > maxQuantity) {
+    if (nextQuantity < 1) return;
+    if (nextQuantity > limit) {
       toast.error(
         madeToOrder
-          ? `Made-to-order quantity is limited to ${maxQuantity}`
-          : `Only ${maxQuantity} items available in stock`,
+          ? `Made-to-order quantity is limited to ${limit}`
+          : `Only ${limit} in stock`,
       );
       return;
     }
-    cart.updateQuantity(productId, newQuantity);
+    cart.updateQuantity(productId, nextQuantity);
   };
 
   const handleRemoveItem = (productId: string, name: string) => {
     cart.removeItem(productId);
-    toast("Removed from cart 🗑️", {
-      description: `${name} has been removed.`,
-    });
+    toast(`${name} removed from your cart`);
   };
 
-  // 🌀 LOADING STATE — wait for Zustand to rehydrate from localStorage + products
+  const goToCheckout = () => {
+    if (!authLoading && !user) {
+      openModal("/checkout");
+      return;
+    }
+    router.push("/checkout");
+  };
+
   if (!hasHydrated || productsLoading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center bg-background kalamkari-static-background silk-fabric-texture">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-2 border-[#C19A5B]/30 border-t-[#1A1512] rounded-full animate-spin" />
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[hsl(var(--brand-ink)/0.15)] border-t-[hsl(var(--brand-ink))]" />
       </div>
     );
   }
 
-  // 🎶 EMPTY STATE
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex flex-col items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-md"
+      <div className="flex min-h-[70vh] flex-col items-center justify-center bg-background px-4 text-center text-[hsl(var(--brand-ink))]">
+        <ShoppingBag
+          className="h-10 w-10 text-[hsl(var(--brand-gold-deep))]"
+          strokeWidth={1.25}
+        />
+        <h1 className="mt-5 font-serif text-[30px] font-semibold leading-tight">
+          Your cart is empty
+        </h1>
+        <Link
+          href="/products?category=Sarees"
+          className="mt-7 inline-flex h-[52px] items-center gap-2.5 rounded-full bg-[hsl(var(--brand-ink))] px-8 text-[12px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--brand-paper))] transition-colors hover:bg-[hsl(var(--brand-ink-soft))]"
         >
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/30 shadow-sm">
-            <ShoppingBag className="w-8 h-8 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
-          </div>
-
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1A1512] mb-3">
-            Your cart is empty
-          </h1>
-          <p className="font-sans text-[#1A1512]/60 mb-8 leading-relaxed text-base">
-            Explore our handcrafted collections to find your favorite pieces.
-          </p>
-
-          <Link href="/products">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-3 bg-[#1A1512] text-white hover:bg-[#C19A5B] hover:text-white rounded-[4px] font-sans font-bold tracking-widest text-[11px] uppercase transition-all duration-300 shadow-md flex items-center gap-2 mx-auto"
-            >
-              Browse Collection <ArrowRight className="w-4 h-4" />
-            </motion.button>
-          </Link>
-        </motion.div>
+          Shop sarees
+          <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
-      {/* 🏛 SIGNATURE HEADER SECTION */}
-      <PageHero
-        compact
-        eyebrow="Your Selection"
-        titleStart="Shopping"
-        titleAccent="cart"
-        description={`${cartItems.length} ${cartItems.length === 1 ? "item" : "items"} ready for checkout`}
-      />
+    <div className="min-h-screen bg-background text-[hsl(var(--brand-ink))]">
+      <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-8 sm:px-6 lg:px-8 lg:pt-12">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h1 className="font-serif text-[30px] font-semibold leading-tight sm:text-[36px]">
+            Your cart
+          </h1>
+          <p className="text-[14px] tabular-nums text-[hsl(var(--brand-ink)/0.6)]">
+            {itemCount} {itemCount === 1 ? "item" : "items"}
+          </p>
+        </div>
 
-      {/* 🛍 CART GRID */}
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT: Product List */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-2 space-y-6"
-          >
-            <AnimatePresence mode="popLayout">
-              {cartItems.map(({ productId, quantity, product }) => {
-                const imageRef =
-                  getImageTier(product.images, "thumb", 0) ||
-                  product.image ||
-                  product.mainImage ||
-                  null;
-                const productName = product.name || "Unknown Product";
-                const stock = getStockQuantity(product);
-                const madeToOrder = isMadeToOrder(product);
-                const purchasableLimit = getPurchasableQuantityLimit(product);
-                const productLink = `/products/${product.slug || product.id}`;
-                const originalPrice = product.original_price;
+        <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
+          {/* Items */}
+          <ul className="divide-y divide-[hsl(var(--brand-ink)/0.1)] border-y border-[hsl(var(--brand-ink)/0.1)] lg:col-span-7">
+            {cartItems.map(({ productId, quantity, product }) => {
+              const name = product.name || "Product";
+              const price = product.price || 0;
+              const originalPrice = product.original_price;
+              const madeToOrder = isMadeToOrder(product);
+              const limit = getPurchasableQuantityLimit(product);
+              const href = `/products/${product.slug || product.id}`;
+              const imageRef =
+                getImageTier(product.images, "thumb", 0) ||
+                product.image ||
+                product.mainImage ||
+                null;
 
-                return (
-                  <motion.div
-                    key={productId}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.4 }}
-                    className="group bg-white rounded-[12px] border border-[#C19A5B]/20 p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:border-[#C19A5B]/60 hover:shadow-[0_4px_12px_rgba(26,21,18,0.06)] transition-all duration-300 flex flex-col sm:flex-row gap-5 items-start sm:items-center"
+              return (
+                <li key={productId} className="flex gap-4 py-5 sm:gap-5">
+                  <Link
+                    href={href}
+                    className="relative h-[120px] w-[90px] shrink-0 overflow-hidden rounded-lg bg-[hsl(var(--brand-paper))] ring-1 ring-[hsl(var(--brand-ink)/0.08)]"
                   >
-                    {/* Image */}
-                    <Link href={productLink} className="relative shrink-0">
-                      <div className="relative w-24 h-24 rounded-[10px] overflow-hidden border border-[#EAD6C3] bg-[#FDFCFB]">
-                        <OptimizedImage
-                          src={imageRef}
-                          alt={productName}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          imageType="cartItem"
-                          sizes="96px"
-                          loading="lazy"
-                          placeholder="empty"
-                        />
-                      </div>
-                    </Link>
+                    <OptimizedImage
+                      src={imageRef}
+                      alt={name}
+                      fill
+                      className="object-cover"
+                      imageType="cartItem"
+                      sizes="90px"
+                      loading="lazy"
+                      placeholder="empty"
+                    />
+                  </Link>
 
-                    {/* Info */}
-                    <div className="flex-1 w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                      <div className="space-y-1">
-                        <Link href={productLink}>
-                          <h3 className="font-serif font-bold text-[#1A1512] text-[15px] leading-tight hover:text-[hsl(var(--brand-gold-deep))] transition-colors">
-                            {productName}
-                          </h3>
-                        </Link>
-                        <p className="font-sans text-[#1A1512]/60 text-xs line-clamp-1 max-w-[200px]">
-                          {product.description || "Hand-painted Srikalahasti Kalamkari"}
-                        </p>
-                        {madeToOrder && (
-                          <p className="text-[11px] font-semibold text-[#A07840] mt-1">
-                            Made to order · delivery in {MADE_TO_ORDER_DAYS}
-                          </p>
-                        )}
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="flex items-start justify-between gap-3">
+                      <Link href={href} className="min-w-0">
+                        <h2 className="line-clamp-2 text-[15px] font-semibold leading-snug">
+                          {name}
+                        </h2>
+                      </Link>
+                      <p className="shrink-0 text-[15px] font-semibold tabular-nums">
+                        {formatPrice(price * quantity)}
+                      </p>
+                    </div>
 
-                        <div className="flex items-center gap-2 pt-1">
-                          <p className="font-sans text-[#1A1512] font-bold text-[15px]">
-                            {formatPrice(product.price || 0)}
-                          </p>
-                          {originalPrice &&
-                            originalPrice > (product.price || 0) && (
-                              <p className="font-sans text-[#1A1512]/40 text-[12px] line-through decoration-[#1A1512]/50">
-                                {formatPrice(originalPrice)}
-                              </p>
-                            )}
-                        </div>
-                      </div>
+                    <p className="mt-1 text-[13px] tabular-nums text-[hsl(var(--brand-ink)/0.6)]">
+                      {formatPrice(price)}
+                      {originalPrice && originalPrice > price && (
+                        <span className="ml-2 text-[hsl(var(--brand-ink)/0.4)] line-through">
+                          {formatPrice(originalPrice)}
+                        </span>
+                      )}
+                    </p>
 
-                      {/* Controls Row */}
-                      <div className="flex items-center justify-between w-full sm:w-auto gap-6">
-                        {/* Quantity */}
-                        <div className="flex items-center bg-white rounded-[4px] border border-[#C19A5B]/30 h-9">
-                          <button
-                            onClick={() =>
-                              handleUpdateQuantity(
-                                productId,
-                                quantity - 1,
-                                purchasableLimit,
-                                madeToOrder,
-                              )
-                            }
-                            disabled={quantity <= 1}
-                            className="w-8 h-full flex items-center justify-center text-[#1A1512] hover:bg-[#C19A5B]/10 disabled:opacity-30 rounded-l-[4px] transition-colors"
-                          >
-                            <Minus className="w-3.5 h-3.5" />
-                          </button>
-                          <span className="w-8 text-center font-sans font-semibold text-[#1A1512] text-sm">
-                            {quantity}
-                          </span>
-                          <button
-                            onClick={() =>
-                              handleUpdateQuantity(
-                                productId,
-                                quantity + 1,
-                                purchasableLimit,
-                                madeToOrder,
-                              )
-                            }
-                            disabled={quantity >= purchasableLimit}
-                            className="w-8 h-full flex items-center justify-center text-[#1A1512] hover:bg-[#C19A5B]/10 disabled:opacity-30 rounded-r-[4px] transition-colors"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
+                    {madeToOrder && (
+                      <p className="mt-1 text-[12.5px] text-[hsl(var(--brand-gold-deep))]">
+                        Made to order · ready in {MADE_TO_ORDER_DAYS}
+                      </p>
+                    )}
 
-                        {/* Remove */}
+                    <div className="mt-auto flex items-center justify-between gap-3 pt-3">
+                      <div className="flex h-10 items-center rounded-full ring-1 ring-[hsl(var(--brand-ink)/0.15)]">
                         <button
                           onClick={() =>
-                            handleRemoveItem(productId, productName)
+                            handleUpdateQuantity(productId, quantity - 1, limit, madeToOrder)
                           }
-                          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#C19A5B]/20 text-[#1A1512]/60 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all duration-200"
-                          title="Remove Item"
+                          disabled={quantity <= 1}
+                          aria-label={`Decrease quantity of ${name}`}
+                          className="flex h-full w-10 items-center justify-center rounded-l-full hover:bg-[hsl(var(--brand-ink)/0.05)] disabled:opacity-25 disabled:hover:bg-transparent"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Minus className="h-3.5 w-3.5" />
+                        </button>
+                        <span className="w-7 text-center text-[14px] font-semibold tabular-nums">
+                          {quantity}
+                        </span>
+                        <button
+                          onClick={() =>
+                            handleUpdateQuantity(productId, quantity + 1, limit, madeToOrder)
+                          }
+                          disabled={quantity >= limit}
+                          aria-label={`Increase quantity of ${name}`}
+                          className="flex h-full w-10 items-center justify-center rounded-r-full hover:bg-[hsl(var(--brand-ink)/0.05)] disabled:opacity-25 disabled:hover:bg-transparent"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
+
+                      <button
+                        onClick={() => handleRemoveItem(productId, name)}
+                        className="inline-flex h-10 items-center gap-1.5 text-[13px] text-[hsl(var(--brand-ink)/0.6)] underline-offset-4 hover:underline"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Remove
+                      </button>
                     </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
 
-            <div className="pt-4">
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 text-[hsl(var(--brand-gold-deep))] font-sans text-sm font-semibold hover:text-[#1A1512] transition-colors group"
-              >
-                <ArrowRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
-                Continue Shopping
-              </Link>
-            </div>
-          </motion.div>
+          {/* Summary */}
+          <aside className="lg:col-span-5">
+            <div className="rounded-lg bg-[hsl(var(--brand-paper))] p-6 ring-1 ring-[hsl(var(--brand-ink)/0.08)] lg:sticky lg:top-24">
+              <h2 className="font-serif text-[22px] font-semibold">Order summary</h2>
 
-          {/* RIGHT: Order Summary & Shipping Widget */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-1 space-y-6"
-          >
-            {/* 1. Order Summary Card */}
-            <div className="bg-white rounded-[12px] border border-[#C19A5B]/20 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 md:p-7 z-10">
-              <h2 className="font-serif font-bold text-[#1A1512] text-xl mb-6">
-                Order Summary
-              </h2>
-
-              <div className="space-y-4 mb-6 pb-6 border-b border-[#C19A5B]/20">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-sans text-[#1A1512]/70">Subtotal</span>
-                  <span className="font-sans font-medium text-[#1A1512]">
-                    {formatPrice(subtotal)}
-                  </span>
+              <dl className="mt-5 space-y-3 text-[14px]">
+                <div className="flex justify-between">
+                  <dt className="text-[hsl(var(--brand-ink)/0.65)]">Subtotal</dt>
+                  <dd className="font-medium tabular-nums">{formatPrice(subtotal)}</dd>
                 </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-sans text-[#1A1512]/70">Shipping</span>
-                  <span
-                    className={cn(
-                      "font-sans font-medium",
-                      shipping === 0 ? "text-green-600" : "text-[#1A1512]",
-                    )}
-                  >
+                <div className="flex justify-between">
+                  <dt className="text-[hsl(var(--brand-ink)/0.65)]">Shipping</dt>
+                  <dd className="font-medium">
                     {shipping === 0 ? "Free" : formatPrice(shipping)}
-                  </span>
+                  </dd>
                 </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-sans text-[#1A1512]/70">GST (5%)</span>
-                  <span className="font-sans font-medium text-[#1A1512]">
-                    {formatPrice(tax)}
-                  </span>
-                </div>
-              </div>
+              </dl>
 
-              {shipping === 0 && (
-                <div className="bg-[#EBF7EF] border border-green-200/50 rounded-[4px] p-3 mb-6 flex items-center gap-2.5 text-green-700">
-                  <Truck className="w-4 h-4" />
-                  <span className="text-xs font-semibold">
-                    Free shipping unlocked!
-                  </span>
-                </div>
-              )}
-
-              {cartItems.some(({ product }) => isMadeToOrder(product)) && (
-                <div className="bg-[#FDFBF6] border border-[#C19A5B]/30 rounded-[4px] p-3 mb-6 text-[#1A1512]">
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#A07840]">
-                    Made-to-order item included
-                  </p>
-                  <p className="text-xs text-[#1A1512]/70 mt-1 leading-relaxed">
-                    Custom-request pieces can still be ordered and will be delivered in {MADE_TO_ORDER_DAYS}.
-                  </p>
-                </div>
-              )}
-
-              <div className="flex justify-between items-center mb-8">
-                <span className="font-serif font-bold text-[#1A1512] text-lg">
-                  Total
-                </span>
-                <span className="font-serif font-bold text-[hsl(var(--brand-gold-deep))] text-2xl">
+              <div className="mt-5 flex items-baseline justify-between border-t border-[hsl(var(--brand-ink)/0.1)] pt-5">
+                <span className="text-[15px] font-semibold">Total</span>
+                <span className="text-[24px] font-semibold tabular-nums">
                   {formatPrice(total)}
                 </span>
               </div>
+              <p className="mt-1 text-[12.5px] text-[hsl(var(--brand-ink)/0.55)]">
+                Prices include all taxes.
+              </p>
+
+              {hasMadeToOrder && (
+                <p className="mt-4 rounded-md bg-[hsl(var(--brand-cream))] px-3 py-2.5 text-[13px] leading-relaxed">
+                  Includes a made-to-order piece, ready in {MADE_TO_ORDER_DAYS}.
+                </p>
+              )}
 
               <button
-                onClick={() => {
-                  if (!authLoading && !user) {
-                    openModal("/checkout");
-                    return;
-                  }
-                  router.push("/checkout");
-                }}
-                className="w-full bg-[#1A1512] text-white hover:bg-[#C19A5B] py-3.5 rounded-[4px] font-sans font-bold text-xs uppercase tracking-widest shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={goToCheckout}
+                className="mt-6 h-[52px] w-full rounded-full bg-[hsl(var(--brand-ink))] text-[12px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--brand-paper))] transition-colors hover:bg-[hsl(var(--brand-ink-soft))]"
               >
-                Proceed to Checkout
+                Checkout
               </button>
+              <p className="mt-3 text-center text-[12px] text-[hsl(var(--brand-ink)/0.55)]">
+                Secure online payment · UPI, cards, net banking, wallets
+              </p>
             </div>
 
-            {/* 2. 🆕 New Shipping Widget (Placed Below) */}
-            <ShippingWidget subtotal={subtotal} />
-          </motion.div>
+            <Link
+              href="/products"
+              className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-medium underline-offset-4 hover:underline"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Continue shopping
+            </Link>
+          </aside>
         </div>
       </div>
     </div>

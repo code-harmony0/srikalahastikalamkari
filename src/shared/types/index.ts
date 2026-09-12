@@ -41,6 +41,7 @@ export interface Product {
   in_stock?: boolean
   slug?: string
   category_id?: string
+  sub_category_id?: string | null
   categoryName?: string
   subCategoryName?: string
   specifications?: Record<string, string>

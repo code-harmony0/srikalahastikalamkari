@@ -57,7 +57,7 @@ export default function FAQsPage() {
       questions: [
         {
           q: "Do you ship internationally?",
-          a: "Yes, we ship worldwide. International shipping takes 10-15 business days, and costs are calculated based on weight and destination.",
+          a: "No. We currently ship within India only, and delivery is free on every order.",
         },
         {
           q: "How is my order packaged?",
@@ -65,11 +65,11 @@ export default function FAQsPage() {
         },
         {
           q: "Can I track my order?",
-          a: "Yes! Once your order ships, you'll receive an email with tracking details. You can monitor your package's journey through our shipping partner's website.",
+          a: "Yes. Once your order ships, the courier name and tracking number appear on your Orders page, where you can follow the delivery with the courier.",
         },
         {
           q: "What if my order arrives damaged?",
-          a: "Please inspect your package upon arrival and contact us within 24 hours if you notice any damage. Send us photos of the damage, and we'll arrange for a replacement or appropriate solution.",
+          a: "All sales are final, and we do not offer returns, refunds or replacements. Every piece is checked and packed carefully before it leaves us. If you have a question about your delivery, please contact us.",
         },
       ],
     },
@@ -103,11 +103,7 @@ export default function FAQsPage() {
         },
         {
           q: "Can I cancel or modify my order?",
-          a: "Orders can be cancelled or modified within 24 hours of placement. After that, as our artisans begin work, changes may not be possible. Please contact us immediately if you need to make changes.",
-        },
-        {
-          q: "Do you offer gift wrapping?",
-          a: "Yes! We offer beautiful traditional gift wrapping for a small additional charge. Your Kalamkari piece will be wrapped in eco-friendly materials with a personal touch.",
+          a: "No. Orders are paid online at checkout and cannot be cancelled or changed once payment has been made. Please check your size, colour and address before you pay.",
         },
         {
           q: "Are there any discounts for bulk orders?",
