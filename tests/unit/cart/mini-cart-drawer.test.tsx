@@ -51,7 +51,7 @@ describe('MiniCartDrawer', () => {
     expect(screen.getByText('Kalamkari Saree')).toBeInTheDocument()
     // Issue 08 requires both "continue shopping" and "checkout"
     expect(screen.getByRole('button', { name: /continue shopping/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /proceed to checkout/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /go to checkout/i })).toBeInTheDocument()
   })
 
   it('shows the subtotal for the quantity held', () => {
