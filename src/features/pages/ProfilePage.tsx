@@ -1,23 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Package,
-  Heart,
-  Edit2,
-  LogOut,
-  ChevronRight,
-  Clock,
-  CheckCircle2,
-  ShoppingBag,
-} from "lucide-react"
-import { cn, formatPrice } from "@/shared/utils"
+import { ChevronRight, Edit2, Heart, LogOut, Mail, MapPin, Package, Phone, User } from "lucide-react"
+import { cn } from "@/shared/utils"
 
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/shared/contexts/AuthContext"
@@ -25,6 +11,20 @@ import { toast } from "sonner"
 
 import { useUserProfileStore } from "@/shared/user-profile-store"
 import { PageHero } from "@/components/layout/PageHero"
+
+// Colour roles as on the home page: charcoal text, midnight main button,
+// white outline second button, gold for lines only, royal blue for focus rings.
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+const primaryButton = `inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[hsl(var(--brand-midnight))] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[hsl(var(--brand-midnight-hover))] ${focusRing}`
+const secondaryButton = `inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[hsl(var(--brand-ink)/0.75)] bg-white px-6 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-turmeric-tint))] ${focusRing}`
+const panel = "rounded-sm border border-[hsl(var(--brand-gold)/0.45)] bg-white"
+
+const navLinks = [
+  { href: "/profile", icon: User, label: "My profile", active: true },
+  { href: "/orders", icon: Package, label: "My orders", active: false },
+  { href: "/wishlist", icon: Heart, label: "Wishlist", active: false },
+]
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -49,262 +49,127 @@ export default function ProfilePage() {
   const handleSignOut = async () => {
     try {
       await signOut()
-      toast.success("Signed out successfully")
+      toast.success("Signed out")
       router.push("/login")
     } catch (error) {
-      toast.error("Failed to sign out")
+      toast.error("Could not sign out. Please try again.")
     }
   }
 
-  // Mock Orders Data
-  const recentOrders: any[] = []
-
-  // --- Helper Components ---
-
-  const SidebarLink = ({ href, icon: Icon, label, active = false }: any) => (
-    <Link
-      href={href}
-      className={cn(
-        "flex items-center gap-3 px-4 py-3.5 rounded-[10px] transition-all duration-200 group border",
-        active
-          ? "bg-[#C19A5B]/10 border-[#C19A5B]/30 shadow-sm"
-          : "bg-white/40 border-[#C19A5B]/10 hover:bg-[#C19A5B]/5 hover:border-[#C19A5B]/20",
-      )}
-    >
-      <div
-        className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center transition-colors border",
-          active
-            ? "bg-[#1A1512] border-[#C19A5B]/30 text-[#C19A5B]"
-            : "bg-white border-[#C19A5B]/10 text-[#1A1512] group-hover:bg-[#1A1512] group-hover:text-[#C19A5B]",
-        )}
-      >
-        <Icon className="w-4 h-4" />
-      </div>
-      <span
-        className={cn(
-          "font-sans text-sm font-medium transition-colors",
-          active
-            ? "text-[#1A1512] font-bold"
-            : "text-[#1A1512]/80 group-hover:text-[#1A1512]",
-        )}
-      >
-        {label}
-      </span>
-      <ChevronRight
-        className={cn(
-          "w-4 h-4 ml-auto transition-transform duration-200",
-          active
-            ? "text-[hsl(var(--brand-gold-deep))]"
-            : "text-[hsl(var(--brand-gold-deep))]/40 group-hover:text-[hsl(var(--brand-gold-deep))] group-hover:translate-x-1",
-        )}
-      />
-    </Link>
-  )
-
-  const InfoRow = ({ icon: Icon, label, value }: any) => (
-    <div className="flex items-start gap-4 p-4 rounded-[12px] bg-white/60 border border-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-colors">
-      <div className="w-10 h-10 rounded-full bg-[#1A1512] flex items-center justify-center shrink-0 border border-[#C19A5B]/20 text-[#C19A5B]">
-        <Icon className="w-5 h-5" strokeWidth={1.5} />
-      </div>
-      <div>
-        <p className="text-[11px] font-sans font-bold text-[#1A1512]/60 uppercase tracking-wide mb-1">
-          {label}
-        </p>
-        <p className="font-sans font-semibold text-[#1A1512] text-sm leading-snug">
-          {value}
-        </p>
-      </div>
-    </div>
-  )
+  const details = [
+    { icon: User, label: "Full name", value: user.name },
+    { icon: Mail, label: "Email", value: user.email },
+    { icon: Phone, label: "Mobile number", value: user.phone },
+    { icon: MapPin, label: "Delivery address", value: user.address },
+  ]
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
-      {/* ─────────────────────────────────────────────
-          🌅 HERO SECTION (Unified Signature Luxury PageHero)
-      ────────────────────────────────────────────── */}
+    <div className="min-h-screen bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))]">
       <PageHero
-        eyebrow="Customer Dashboard"
         titleStart="My"
         titleAccent="profile"
-        description="Manage your orders, preferences, and personal details."
+        description="Your details, orders and wishlist in one place."
       />
 
-      {/* ─────────────────────────────────────────────
-          📦 MAIN CONTENT GRID
-      ────────────────────────────────────────────── */}
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT: Sidebar Navigation */}
+      <div className="mx-auto max-w-[1120px] px-4 py-12 md:px-8 md:py-16">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {/* Left: who is signed in, and the account menu */}
           <div className="space-y-6">
-            {/* Profile Summary Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-8 text-center shadow-[0_4px_20px_rgba(0,0,0,0.02)]"
-            >
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#1A1512] to-[#C19A5B] p-[3px] shadow-lg shadow-[#1A1512]/10">
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center border-[3px] border-white overflow-hidden">
-                  <User className="w-10 h-10 text-[hsl(var(--brand-gold-deep))]" />
-                </div>
+            <section className={cn(panel, "p-6 text-center md:p-7")}>
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-[hsl(var(--brand-gold-ornament))] bg-[hsl(var(--brand-indigo-tint))]">
+                <User className="h-9 w-9 text-[hsl(var(--brand-ink))]" strokeWidth={1.5} aria-hidden="true" />
               </div>
-              <h2 className="font-serif text-xl font-bold text-[#1A1512] mb-1">
-                {user.name}
-              </h2>
-              <p className="font-sans text-sm text-[#1A1512]/60 mb-6">
-                {user.email}
-              </p>
-
-              <Link
-                href="/editPage"
-                className="w-full py-2.5 border border-[#C19A5B]/40 rounded-[8px] text-[#1A1512] font-sans text-xs font-bold uppercase tracking-widest hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <Edit2 className="w-3.5 h-3.5" /> Edit Profile
+              <h2 className="mt-4 font-serif text-[22px] leading-tight">{user.name || "Welcome"}</h2>
+              {user.email && (
+                <p className="mt-1 break-all font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">{user.email}</p>
+              )}
+              <Link href="/editPage" className={cn(secondaryButton, "mt-5 w-full")}>
+                <Edit2 className="h-4 w-4" aria-hidden="true" />
+                Edit profile
               </Link>
-            </motion.div>
+            </section>
 
-            {/* Navigation Menu */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-1"
-            >
-              <SidebarLink
-                href="/profile"
-                icon={User}
-                label="Personal Info"
-                active
-              />
-              <SidebarLink href="/orders" icon={Package} label="My Orders" />
-              <SidebarLink href="/wishlist" icon={Heart} label="Wishlist" />
-
-              <div className="h-px bg-[#C19A5B]/20 my-2 mx-4" />
-
-              <button 
+            <nav aria-label="Account" className={cn(panel, "p-2")}>
+              <ul>
+                {navLinks.map(({ href, icon: Icon, label, active }) => (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "flex min-h-[48px] items-center gap-3 rounded-sm px-4 font-sans text-[15px] transition-colors",
+                        focusRing,
+                        active
+                          ? "bg-[hsl(var(--brand-indigo-tint))] font-semibold"
+                          : "hover:bg-[hsl(var(--brand-indigo-tint)/0.6)]",
+                      )}
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
+                      {label}
+                      <ChevronRight className="ml-auto h-4 w-4 text-[hsl(var(--brand-ink-soft))]" aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="mx-4 my-1 h-px bg-[hsl(var(--brand-gold)/0.45)]" />
+              <button
+                type="button"
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-[10px] text-red-700 hover:bg-red-500/10 hover:text-red-700 transition-colors group"
+                className={cn(
+                  "flex min-h-[48px] w-full items-center gap-3 rounded-sm px-4 font-sans text-[15px] transition-colors hover:bg-[hsl(var(--brand-indigo-tint)/0.6)]",
+                  focusRing,
+                )}
               >
-                <LogOut className="w-4 h-4" />
-                <span className="font-sans text-sm font-medium">Sign Out</span>
+                <LogOut className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
+                Sign out
               </button>
-            </motion.div>
+            </nav>
           </div>
 
-          {/* RIGHT: Content Area */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* 1. Personal Information */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-serif text-2xl font-bold text-[#1A1512]">
-                  Personal Information
-                </h3>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InfoRow icon={User} label="Full Name" value={user.name} />
-                <InfoRow icon={Mail} label="Email Address" value={user.email} />
-                <InfoRow icon={Phone} label="Phone Number" value={user.phone} />
-                <InfoRow
-                  icon={MapPin}
-                  label="Shipping Address"
-                  value={user.address}
-                />
-              </div>
-            </motion.div>
-
-            {/* 2. Recent Orders */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-serif text-2xl font-bold text-[#1A1512]">
-                  Recent Orders
-                </h3>
-                <Link
-                  href="/orders"
-                  className="text-[hsl(var(--brand-gold-deep))] text-sm font-sans font-medium hover:text-[#1A1512] transition-colors hover:underline decoration-[#C19A5B]/30 underline-offset-4"
-                >
-                  View All
-                </Link>
-              </div>
-
-              <div className="space-y-4">
-                {recentOrders.length === 0 ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-[14px] border border-dashed border-[#C19A5B]/40 p-12 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#1A1512]/5 flex items-center justify-center text-[#C19A5B]/50">
-                      <ShoppingBag className="w-8 h-8" />
+          {/* Right: details and orders */}
+          <div className="space-y-8 lg:col-span-2">
+            <section aria-labelledby="personal-details" className={cn(panel, "p-6 md:p-8")}>
+              <h2 id="personal-details" className="font-serif text-[24px] leading-tight">
+                Personal details
+              </h2>
+              <dl className="mt-5 grid grid-cols-1 border-t border-[hsl(var(--brand-gold)/0.35)] sm:grid-cols-2 sm:gap-x-8">
+                {details.map(({ icon: Icon, label, value }) => (
+                  <div
+                    key={label}
+                    className="flex gap-3 border-b border-[hsl(var(--brand-gold-ornament)/0.3)] py-4"
+                  >
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                    <div className="min-w-0 font-sans">
+                      <dt className="text-[14px] text-[hsl(var(--brand-ink-soft))]">{label}</dt>
+                      <dd
+                        className={cn(
+                          "mt-0.5 break-words text-[15px]",
+                          value ? "font-medium text-[hsl(var(--brand-ink))]" : "text-[hsl(var(--brand-muted))]",
+                        )}
+                      >
+                        {value || "Not added yet"}
+                      </dd>
                     </div>
-                    <h4 className="font-serif text-lg font-bold text-[#1A1512]">No orders yet</h4>
-                    <p className="text-sm text-[#1A1512]/60 mt-1 mb-6">Your recent purchases will appear here.</p>
-                    <Link 
-                      href="/shop"
-                      className="px-6 py-2 bg-[#1A1512] text-white rounded-full text-sm font-bold hover:bg-[#C19A5B] transition-colors inline-block"
-                    >
-                      Start Shopping
-                    </Link>
                   </div>
-                ) : (
-                  recentOrders.map((order) => (
-                    <Link
-                      key={order.id}
-                      href={`/orders/${order.id}`}
-                      className="group bg-white/80 backdrop-blur-sm rounded-[14px] border border-[#C19A5B]/30 p-5 hover:border-[#C19A5B]/60 hover:shadow-[0_4px_20px_rgba(193,154,91,0.08)] transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer"
-                    >
-                      <div className="flex items-center gap-4">
-                        {/* Handcrafted Icon Box */}
-                        <div className="w-12 h-12 bg-white rounded-[10px] border border-[#C19A5B]/20 flex items-center justify-center group-hover:bg-[#1A1512] transition-colors">
-                          <Package
-                            className="w-6 h-6 text-[hsl(var(--brand-gold-deep))]"
-                            strokeWidth={1.5}
-                          />
-                        </div>
-                        <div>
-                          <p className="font-sans font-bold text-[#1A1512] text-sm mb-0.5">
-                            {order.id}
-                          </p>
-                          <div className="font-sans text-xs text-[#1A1512]/60 flex items-center gap-2">
-                            <span>{order.date}</span>
-                            <span className="w-1 h-1 rounded-full bg-[#C19A5B]/30" />
-                            <span>{order.items} Items</span>
-                          </div>
-                        </div>
-                      </div>
+                ))}
+              </dl>
+            </section>
 
-                      <div className="flex items-center justify-between w-full sm:w-auto gap-6 pl-16 sm:pl-0">
-                        <p className="font-sans font-bold text-[#1A1512] text-[15px]">
-                          {formatPrice(order.total)}
-                        </p>
-
-                        <div
-                          className={cn(
-                            "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 border transition-colors",
-                            order.status === "Shipped"
-                              ? "bg-green-500/10 text-green-700 border-green-500/20"
-                              : "bg-[#C19A5B]/10 text-[hsl(var(--brand-gold-deep))] border-[#C19A5B]/20",
-                          )}
-                        >
-                          {order.status === "Shipped" ? (
-                            <CheckCircle2 className="w-3 h-3" />
-                          ) : (
-                            <Clock className="w-3 h-3" />
-                          )}
-                          {order.status}
-                        </div>
-
-                        <ChevronRight className="w-4 h-4 text-[hsl(var(--brand-gold-deep))]/40 group-hover:text-[#1A1512] group-hover:translate-x-1 transition-all" />
-                      </div>
-                    </Link>
-                  ))
-                )}
-              </div>
-            </motion.div>
+            <section
+              aria-labelledby="your-orders"
+              className="rounded-sm border border-[hsl(var(--brand-gold)/0.55)] bg-[hsl(var(--brand-turmeric-tint))] p-6 md:p-8"
+            >
+              <h2 id="your-orders" className="font-serif text-[24px] leading-tight">
+                Your orders
+              </h2>
+              <p className="mt-2 font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+                See what you have ordered and where each order is.
+              </p>
+              <Link href="/orders" className={cn(primaryButton, "mt-5")}>
+                <Package className="h-4 w-4" aria-hidden="true" />
+                View my orders
+              </Link>
+            </section>
           </div>
         </div>
       </div>

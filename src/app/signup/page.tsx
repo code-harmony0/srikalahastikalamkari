@@ -85,11 +85,11 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex items-center justify-center px-4 py-12 text-[#1A1512]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture flex items-center justify-center px-4 py-12 text-[hsl(var(--brand-ink))]">
       {/* Decorative Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#C19A5B] opacity-5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1A1512] opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[hsl(var(--brand-gold))] opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[hsl(var(--brand-ink))] opacity-5 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative w-full max-w-md">
@@ -98,22 +98,22 @@ export default function SignUpPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-[#C19A5B]/20"
+          className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-[hsl(var(--brand-gold)/0.2)]"
         >
           {/* Header */}
-          <div className="bg-[#1A1512] p-8 text-center relative">
-            <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="bg-[hsl(var(--brand-midnight))] p-8 text-center relative">
+            <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.3)] to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.3)] to-transparent" />
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="w-20 h-20 mx-auto mb-4 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-[#C19A5B]/20"
+              className="w-20 h-20 mx-auto mb-4 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-[hsl(var(--brand-gold)/0.2)]"
             >
               {step === 'details' ? (
-                <User className="w-10 h-10 text-[hsl(var(--brand-gold-deep))]" />
+                <User className="w-10 h-10 text-[hsl(var(--brand-gold-soft))]" />
               ) : (
-                <CheckCircle className="w-10 h-10 text-[hsl(var(--brand-gold-deep))]" />
+                <CheckCircle className="w-10 h-10 text-[hsl(var(--brand-gold-soft))]" />
               )}
             </motion.div>
             <h1 className="text-3xl font-serif font-normal text-white mb-2">
@@ -131,54 +131,54 @@ export default function SignUpPage() {
             {step === 'details' ? (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-[#1A1512]/80 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-[hsl(var(--brand-ink))] mb-2">
                     Full Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-gold-deep))]/70" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-ink-soft))]" />
                     <input
                       id="name"
                       type="text"
                       placeholder="Enter your full name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FAFAF8]/30 text-[#1A1512]"
+                      className="w-full pl-11 pr-4 py-3 border border-[hsl(var(--brand-gold)/0.3)] rounded-xl focus:outline-none focus:border-[hsl(var(--brand-gold))] focus:ring-1 focus:ring-[hsl(var(--brand-gold)/0.4)] transition-all bg-[hsl(var(--brand-paper)/0.3)] text-[hsl(var(--brand-ink))]"
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-[#1A1512]/80 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-[hsl(var(--brand-ink))] mb-2">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-gold-deep))]/70" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-ink-soft))]" />
                     <input
                       id="email"
                       type="email"
                       placeholder="your@email.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FAFAF8]/30 text-[#1A1512]"
+                      className="w-full pl-11 pr-4 py-3 border border-[hsl(var(--brand-gold)/0.3)] rounded-xl focus:outline-none focus:border-[hsl(var(--brand-gold))] focus:ring-1 focus:ring-[hsl(var(--brand-gold)/0.4)] transition-all bg-[hsl(var(--brand-paper)/0.3)] text-[hsl(var(--brand-ink))]"
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-[#1A1512]/80 mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium text-[hsl(var(--brand-ink))] mb-2">
                     Phone Number
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-gold-deep))]/70" />
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--brand-ink-soft))]" />
                     <input
                       id="phone"
                       type="tel"
                       placeholder="+91 98765 43210"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all bg-[#FAFAF8]/30 text-[#1A1512]"
+                      className="w-full pl-11 pr-4 py-3 border border-[hsl(var(--brand-gold)/0.3)] rounded-xl focus:outline-none focus:border-[hsl(var(--brand-gold))] focus:ring-1 focus:ring-[hsl(var(--brand-gold)/0.4)] transition-all bg-[hsl(var(--brand-paper)/0.3)] text-[hsl(var(--brand-ink))]"
                       required
                     />
                   </div>
@@ -188,7 +188,7 @@ export default function SignUpPage() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   type="submit"
-                  className="w-full bg-[#1A1512] text-white py-3 rounded-xl font-bold uppercase tracking-wider hover:bg-[#C19A5B] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+                  className="w-full bg-[hsl(var(--brand-midnight))] text-white py-3 rounded-xl font-bold uppercase tracking-wider hover:bg-[hsl(var(--brand-midnight-hover))] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
                   disabled={loading}
                 >
                   {loading ? (
@@ -207,7 +207,7 @@ export default function SignUpPage() {
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-6">
                 <div>
-                  <p className="text-sm text-[#1A1512]/70 mb-4 text-center">
+                  <p className="text-sm text-[hsl(var(--brand-ink-soft))] mb-4 text-center">
                     Enter the 6-digit code sent to <strong>{formData.email}</strong>
                   </p>
                   <input
@@ -215,7 +215,7 @@ export default function SignUpPage() {
                     placeholder="000000"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="w-full px-4 py-3 border border-[#C19A5B]/30 rounded-xl focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all text-center text-2xl tracking-widest font-mono text-[#1A1512] bg-[#FAFAF8]/30"
+                    className="w-full px-4 py-3 border border-[hsl(var(--brand-gold)/0.3)] rounded-xl focus:outline-none focus:border-[hsl(var(--brand-gold))] focus:ring-1 focus:ring-[hsl(var(--brand-gold)/0.4)] transition-all text-center text-2xl tracking-widest font-mono text-[hsl(var(--brand-ink))] bg-[hsl(var(--brand-paper)/0.3)]"
                     maxLength={6}
                     required
                   />
@@ -225,7 +225,7 @@ export default function SignUpPage() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   type="submit"
-                  className="w-full bg-[#1A1512] text-white py-3 rounded-xl font-bold uppercase tracking-wider hover:bg-[#C19A5B] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-[hsl(var(--brand-midnight))] text-white py-3 rounded-xl font-bold uppercase tracking-wider hover:bg-[hsl(var(--brand-midnight-hover))] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   disabled={loading}
                 >
                   {loading ? (
@@ -244,7 +244,7 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={() => setStep('details')}
-                  className="w-full text-sm text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
+                  className="w-full text-sm text-[hsl(var(--brand-ink-soft))] hover:text-[hsl(var(--brand-ink))] transition-colors"
                   disabled={loading}
                 >
                   ← Back to Details
@@ -255,10 +255,10 @@ export default function SignUpPage() {
             {/* Divider */}
             <div className="relative my-8">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#C19A5B]/20"></div>
+                <div className="w-full border-t border-[hsl(var(--brand-gold)/0.2)]"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-[#1A1512]/60">or</span>
+                <span className="px-4 bg-white text-[hsl(var(--brand-ink-soft))]">or</span>
               </div>
             </div>
 
@@ -266,7 +266,7 @@ export default function SignUpPage() {
             <div className="space-y-3">
               <Link
                 href="/"
-                className="flex items-center justify-center gap-2 w-full py-3 border border-[#C19A5B]/20 rounded-xl text-[#1A1512] hover:bg-[#C19A5B]/10 hover:border-[#C19A5B]/40 transition-all font-medium"
+                className="flex items-center justify-center gap-2 w-full py-3 border border-[hsl(var(--brand-gold)/0.2)] rounded-xl text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-gold)/0.1)] hover:border-[hsl(var(--brand-gold)/0.4)] transition-all font-medium"
               >
                 <ShoppingBag className="w-5 h-5" />
                 Continue Shopping
@@ -274,9 +274,9 @@ export default function SignUpPage() {
             </div>
 
             {/* Sign In Link */}
-            <p className="mt-6 text-center text-sm text-[#1A1512]/60">
+            <p className="mt-6 text-center text-sm text-[hsl(var(--brand-ink-soft))]">
               Already have an account?{" "}
-              <Link href="/login" className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] font-semibold transition-colors">
+              <Link href="/login" className="text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] font-semibold transition-colors">
                 Sign In
               </Link>
             </p>
@@ -288,7 +288,7 @@ export default function SignUpPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-6 text-center text-sm text-[#1A1512]/50"
+          className="mt-6 text-center text-sm text-[hsl(var(--brand-muted))]"
         >
           <p>Secure registration • We respect your privacy</p>
         </motion.div>

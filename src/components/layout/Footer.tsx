@@ -10,65 +10,57 @@ import {
   Mail,
   MessageCircle,
   Clock,
-  ShieldCheck,
 } from "lucide-react"
 import { CONTACT, mailtoHref, telHref, whatsAppHref } from "@/shared/config/contact"
+import { KalamkariMandala } from "@/shared/ui/heritage-ornaments"
+
+const linkClass =
+  "inline-flex min-h-[40px] items-center text-[#DCE6F2] transition-colors duration-200 hover:text-[hsl(var(--brand-gold-soft))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
+
+const headingClass =
+  "font-sans text-[12px] font-bold uppercase tracking-[0.18em] text-[hsl(var(--brand-gold))]"
 
 export default function Footer() {
   return (
     <footer
-      className="relative overflow-hidden bg-gradient-to-b from-[#1C1613] via-[#140F0D] to-[#0D0907] text-[#FAFAF8] border-t border-[#C19A5B]/35 font-sans"
+      className="relative overflow-hidden border-t-2 border-[hsl(var(--brand-gold))] bg-[hsl(var(--brand-midnight))] font-sans text-white"
       aria-label="Site Footer"
     >
-      {/* ── Sacred Background Watermark Crest (Emblem Only, No Text) ── */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0 select-none">
-        <Image
-          src="/images/srikalahasti-crest-only.png"
-          alt=""
-          width={465}
-          height={359}
-          aria-hidden="true"
-          className="h-[280px] w-auto object-contain opacity-[0.05] saturate-50 md:h-[360px] lg:h-[420px] pointer-events-none"
-        />
+      {/* Kalamkari Mandala watermark */}
+      <div className="pointer-events-none absolute inset-0 z-0 flex select-none items-center justify-center overflow-hidden">
+        <KalamkariMandala className="pointer-events-none h-[400px] w-auto object-contain opacity-[0.04] text-[hsl(var(--brand-gold))] md:h-[500px] lg:h-[600px] xl:h-[800px]" />
       </div>
 
-      {/* ── Soft Heritage Radial Glow ── */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(193,154,91,0.08),transparent_70%)] z-0" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        {/* ── Main 4-Column Grid ── */}
-        <div className="py-14 sm:py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          
-          {/* Column 1: Brand (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-xl flex shrink-0 items-center justify-center bg-[#0D0907] overflow-hidden shadow-md ring-1 ring-[#C19A5B]/40 p-1">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 items-start gap-10 py-14 sm:py-16 md:grid-cols-2 lg:grid-cols-12 lg:gap-12 lg:py-20">
+          {/* Brand */}
+          <div className="space-y-4 lg:col-span-4">
+            <div className="flex items-center gap-5">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/5 p-2 shadow-sm ring-2 ring-[hsl(var(--brand-gold))]">
                 <Image
                   src="/images/srikalahasti-crest-only.png"
                   alt="Srikalahasti Kalamkari"
-                  width={44}
-                  height={44}
-                  className="w-full h-full object-contain"
+                  width={80}
+                  height={80}
+                  className="h-full w-full object-contain"
                 />
               </div>
-              <div>
-                <h3 className="font-serif font-bold text-base sm:text-lg tracking-wider text-white uppercase">
-                  SRIKALAHASTI KALAMKARI
-                </h3>
-              </div>
+              <h3 className="font-sans text-xl font-semibold tracking-normal text-white sm:text-2xl">
+                Srikalahasti Kalamkari
+              </h3>
             </div>
 
-            <p className="text-[#D6CBC0] text-[13.5px] leading-relaxed max-w-sm">
-              Authentic GI-certified hand-drawn bamboo pen artistry and 100% natural vegetable dyes on pure handloom textiles.
+            <p className="max-w-sm text-[13.5px] leading-relaxed text-[#DCE6F2]">
+              GI-registered Srikalahasti Kalamkari, drawn by hand with a bamboo kalam and coloured with natural dyes.
             </p>
 
-            <div className="text-[12.5px] text-[#A89F91] space-y-1 pt-1">
+            <div className="space-y-1 pt-1 text-[12.5px] text-white/70">
               <p>
-                <span className="text-[#E2BD7A] font-medium">GI Registered:</span> Application No. 28
+                <span className="font-medium text-[hsl(var(--brand-gold-soft))]">GI Registered:</span> Application No. 28
               </p>
               <p>
-                <span className="text-[#E2BD7A] font-medium">GSTIN:</span>{" "}
-                <span className="font-mono text-[#D6CBC0]">{CONTACT.gstin}</span>
+                <span className="font-medium text-[hsl(var(--brand-gold-soft))]">GSTIN:</span>{" "}
+                <span className="font-mono text-white/85">{CONTACT.gstin}</span>
               </p>
             </div>
 
@@ -77,31 +69,26 @@ export default function Footer() {
                 href="https://www.instagram.com/srikalahasti_kalamkari_offical"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[13px] text-[#D6CBC0] hover:text-[#E2BD7A] transition-colors group"
+                className={`${linkClass} inline-flex items-center gap-2 text-[13px]`}
               >
-                <Instagram className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] group-hover:scale-110 transition-transform" />
+                <Instagram className="h-4 w-4 text-[hsl(var(--brand-gold-soft))]" />
                 <span>@srikalahasti_kalamkari_offical</span>
               </a>
             </div>
           </div>
 
-          {/* Column 2: Collections (2 cols) */}
-          <div className="lg:col-span-2 space-y-3.5">
-            <h4 className="font-serif text-[12px] font-bold uppercase tracking-[0.2em] text-[#E2BD7A]">
-              Collections
-            </h4>
-            <ul className="space-y-2.5 text-[13.5px]">
+          {/* Collections */}
+          <div className="space-y-3.5 lg:col-span-2">
+            <h4 className={headingClass}>Collections</h4>
+            <ul className="space-y-0.5 text-[13.5px]">
               {[
                 { label: "Kalamkari Sarees", category: "Sarees" },
-                { label: "Handcrafted Dupattas", category: "Duppatta" },
-                { label: "Dress Materials", category: "Fabrics" },
-                { label: "Wall Art", category: "wall-paintings" },
+                { label: "Dupattas", category: "Duppatta" },
+                { label: "Fabrics", category: "Fabrics" },
+                { label: "Wall Paintings", category: "Wall Paintings" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link
-                    href={`/products?category=${encodeURIComponent(item.category)}`}
-                    className="text-[#D6CBC0] hover:text-[#E2BD7A] hover:translate-x-1 transition-all duration-200 inline-block py-0.5"
-                  >
+                  <Link href={`/products?category=${encodeURIComponent(item.category)}`} className={linkClass}>
                     {item.label}
                   </Link>
                 </li>
@@ -109,12 +96,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Customer Care (2 cols) */}
-          <div className="lg:col-span-2 space-y-3.5">
-            <h4 className="font-serif text-[12px] font-bold uppercase tracking-[0.2em] text-[#E2BD7A]">
-              Client Care
-            </h4>
-            <ul className="space-y-2.5 text-[13.5px]">
+          {/* Customer care */}
+          <div className="space-y-3.5 lg:col-span-2">
+            <h4 className={headingClass}>Client Care</h4>
+            <ul className="space-y-0.5 text-[13.5px]">
               {[
                 { label: "Shipping Policy", href: "/shipping" },
                 { label: "Refund Policy", href: "/returns" },
@@ -123,10 +108,7 @@ export default function Footer() {
                 { label: "Contact Us", href: "/contact" },
               ].map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-[#D6CBC0] hover:text-[#E2BD7A] hover:translate-x-1 transition-all duration-200 inline-block py-0.5"
-                  >
+                  <Link href={item.href} className={linkClass}>
                     {item.label}
                   </Link>
                 </li>
@@ -134,59 +116,49 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Atelier & Inquiries (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-serif text-[12px] font-bold uppercase tracking-[0.2em] text-[#E2BD7A]">
-              Atelier & Inquiries
-            </h4>
+          {/* Atelier & inquiries */}
+          <div className="space-y-4 lg:col-span-4">
+            <h4 className={headingClass}>Atelier & Inquiries</h4>
 
             <div className="space-y-3 text-[13.5px]">
-              {/* Helplines */}
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                 <a
                   href={telHref(CONTACT.phones[0])}
-                  className="inline-flex items-center gap-2 text-white hover:text-[#E2BD7A] font-semibold transition-colors"
+                  className="inline-flex items-center gap-2 font-semibold tabular-nums text-white transition-colors hover:text-[hsl(var(--brand-gold-soft))]"
                 >
-                  <Phone className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))]" />
+                  <Phone className="h-3.5 w-3.5 text-[hsl(var(--brand-gold-soft))]" />
                   <span>{CONTACT.phones[0]}</span>
                 </a>
-                <span className="text-white/20">·</span>
+                <span className="text-white/50">·</span>
                 <a
                   href={whatsAppHref("Hello! I would like to inquire about authentic Kalamkari collections.")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                  className="inline-flex items-center gap-1.5 font-semibold text-emerald-300 transition-colors hover:text-emerald-200"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
+                  <MessageCircle className="h-3.5 w-3.5" />
                   <span>WhatsApp</span>
                 </a>
               </div>
 
-              {/* Email */}
               <div>
-                <a
-                  href={mailtoHref()}
-                  className="inline-flex items-center gap-2 text-[#D6CBC0] hover:text-white transition-colors break-all"
-                >
-                  <Mail className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))] shrink-0" />
+                <a href={mailtoHref()} className={`${linkClass} inline-flex items-center gap-2 break-all`}>
+                  <Mail className="h-3.5 w-3.5 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <span>{CONTACT.email}</span>
                 </a>
               </div>
 
-              {/* Locations - Clean & Uncluttered */}
-              <div className="pt-2 border-t border-white/10 space-y-3 text-[13px]">
-                {/* Srikalahasti */}
+              <div className="space-y-3 border-t border-white/10 pt-2 text-[13px]">
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] shrink-0 mt-0.5" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <div>
                     <div className="font-semibold text-white">Srikalahasti Atelier</div>
-                    <div className="text-[#D6CBC0] leading-snug">#17-68, Bharathi Nagar, Tirupati Main Rd</div>
+                    <div className="leading-snug text-white/75">#17-68, Bharathi Nagar, Tirupati Main Rd</div>
                   </div>
                 </div>
 
-                {/* Tirupati */}
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[hsl(var(--brand-gold-deep))] shrink-0 mt-0.5" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <div>
                     <div className="font-semibold text-white">
                       Tirupati Store{" "}
@@ -194,38 +166,36 @@ export default function Footer() {
                         href="https://maps.app.goo.gl/tABoSwfoUcmEQjgJA"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-[#E2BD7A] hover:underline ml-1"
+                        className="ml-1 inline-flex items-center gap-1 text-[11px] font-bold text-[hsl(var(--brand-gold-soft))] hover:underline"
                       >
-                        Map <ExternalLink className="w-3 h-3" />
+                        Map <ExternalLink className="h-3 w-3" />
                       </a>
                     </div>
-                    <div className="text-[#D6CBC0] leading-snug">#6-8-1126, NGOs Colony</div>
+                    <div className="leading-snug text-white/75">#6-8-1126, NGOs Colony</div>
                   </div>
                 </div>
 
-                {/* Timings */}
-                <div className="flex items-center gap-2 text-[12.5px] text-[#A89F91] pt-0.5">
-                  <Clock className="w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))] shrink-0" />
-                  <span>Mon – Sat: 10:00 AM – 8:00 PM</span>
+                <div className="flex items-center gap-2 pt-0.5 text-[12.5px] text-white/70">
+                  <Clock className="h-3.5 w-3.5 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
+                  <span className="tabular-nums">Mon – Sat: 10:00 AM – 8:00 PM</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── Bottom Utility Bar ── */}
-        <div className="py-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12.5px] text-[#A89F91] pb-24 sm:pb-6 sm:pr-28">
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-center sm:text-left">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 pb-24 text-[12.5px] text-white/70 sm:flex-row sm:pb-6 sm:pr-28">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center sm:justify-start sm:text-left">
             <span>© 2026 Srikalahasti Kalamkari</span>
-            <span className="text-white/20">|</span>
-            <Link href="/privacy" className="hover:text-[#E2BD7A] transition-colors">Privacy Policy</Link>
-            <span className="text-white/20">·</span>
-            <Link href="/terms" className="hover:text-[#E2BD7A] transition-colors">Terms of Service</Link>
-            <span className="text-white/20">·</span>
-            <Link href="/shipping" className="hover:text-[#E2BD7A] transition-colors">Shipping</Link>
+            <span className="text-white/50">|</span>
+            <Link href="/privacy" className="transition-colors hover:text-[hsl(var(--brand-gold-soft))]">Privacy Policy</Link>
+            <span className="text-white/50">·</span>
+            <Link href="/terms" className="transition-colors hover:text-[hsl(var(--brand-gold-soft))]">Terms of Service</Link>
+            <span className="text-white/50">·</span>
+            <Link href="/shipping" className="transition-colors hover:text-[hsl(var(--brand-gold-soft))]">Shipping</Link>
           </div>
 
-          <div className="font-serif italic text-[12px] text-[hsl(var(--brand-gold-deep))] tracking-wide">
+          <div className="font-sans text-[13px] tracking-wide text-[hsl(var(--brand-gold-soft))]">
             Crafted with Devotion in Srikalahasti
           </div>
         </div>
@@ -233,4 +203,3 @@ export default function Footer() {
     </footer>
   )
 }
-

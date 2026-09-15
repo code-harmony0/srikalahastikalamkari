@@ -17,11 +17,20 @@ import {
   LayoutGrid,
   List as ListIcon,
   X,
+  MessageCircle,
 } from "lucide-react"
 import { ProductCard } from "./ProductCard"
 import { PRICE_BANDS, type PriceBandId } from "./price-bands"
 import { ProductCardCompact, ProductCardCompactSkeleton } from "./ProductCardCompact"
-import { PageHero } from "@/components/layout/PageHero"
+import Link from "next/link"
+import { cn } from "@/shared/utils"
+import {
+  CornerFlorals,
+  KalashDivider,
+  TempleBellsDivider,
+  TempleTowerDivider,
+} from "@/shared/ui/heritage-ornaments"
+import { STORE_WHATSAPP_NUMBER } from "@/shared/lib/whatsapp"
 import dynamic from "next/dynamic"
 
 const FilterSidebar = dynamic(
@@ -33,13 +42,31 @@ const FilterSidebar = dynamic(
         {[1, 2, 3, 4, 5].map((i) => (
           <div
             key={i}
-            className="h-10 bg-[#C19A5B]/10 rounded-lg animate-pulse"
+            className="h-10 bg-[hsl(var(--brand-ink)/0.06)] rounded-md animate-pulse"
           />
         ))}
       </div>
     ),
   },
 )
+
+const CUSTOM_WHATSAPP_URL = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  "Hello, I need help with a custom Srikalahasti Kalamkari design. Please share fabric, motif, price and timeline details.",
+)}`
+
+// Shared control styles (colour roles as on the home page: charcoal text,
+// midnight for the main action, royal blue only for focus rings).
+const focusRingClass =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
+const selectClass =
+  "h-12 appearance-none cursor-pointer truncate rounded-full border border-[hsl(var(--brand-ink)/0.2)] bg-white pl-4 pr-9 font-sans text-[14px] text-[hsl(var(--brand-ink))] hover:border-[hsl(var(--brand-ink)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
+const chipClass =
+  "inline-flex items-center gap-1 rounded-full border border-[hsl(var(--brand-ink)/0.2)] bg-white py-1 pl-3 pr-1 font-sans text-[13px] font-medium text-[hsl(var(--brand-ink))]"
+const chipCloseClass = `flex h-7 w-7 items-center justify-center rounded-full text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-indigo-tint))] hover:text-[hsl(var(--brand-ink))] ${focusRingClass}`
+const textLinkClass = `rounded-sm px-1 font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[6px] hover:decoration-[hsl(var(--brand-ink))] ${focusRingClass}`
+const primaryButtonClass =
+  "inline-flex h-12 items-center justify-center rounded-full bg-[hsl(var(--brand-midnight))] px-8 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[hsl(var(--brand-midnight-hover))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+const pagerEdgeClass = `flex h-10 w-10 items-center justify-center gap-1.5 rounded-full border border-[hsl(var(--brand-ink)/0.3)] bg-white font-sans text-[14px] font-medium text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint))] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white sm:h-11 sm:w-auto sm:px-4 ${focusRingClass}`
 
 // Pagination helper: generates page numbers with ellipsis
 function getPageNumbers(current: number, total: number): (number | "...")[] {
@@ -114,6 +141,17 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
   const { categories: filterCategories, isLoading: categoriesLoading } =
     useFilterCategories()
+
+  // Keep the chosen category pill in view when the row scrolls sideways on phones.
+  const pillRowRef = useRef<HTMLUListElement>(null)
+  useEffect(() => {
+    const row = pillRowRef.current
+    const active = row?.querySelector<HTMLElement>('[aria-pressed="true"]')
+    if (!row || !active) return
+    const rowBox = row.getBoundingClientRect()
+    const pillBox = active.getBoundingClientRect()
+    row.scrollLeft += pillBox.left - rowBox.left - (rowBox.width - pillBox.width) / 2
+  }, [selectedCategories, filterCategories])
 
   useEffect(() => {
     if (categoriesLoading || !filterCategories.length || !selectedCategories.length)
@@ -342,35 +380,80 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
   const heroCopy = isCustomDesignMode
     ? {
-        titleStart: "Custom",
-        titleAccent: "design",
-        titleEnd: "gallery",
+        title: "Custom design gallery",
         description:
-          "Browse Kalamkari designs available for custom requests. Open any piece for details or send the exact design to our team on WhatsApp.",
-        scrollLabel: "View Designs",
+          "Designs we can paint for you. Open any piece to see it closely, or send it to us on WhatsApp.",
       }
     : {
-        titleStart: "Shop",
-        titleAccent: "Kalamkari",
-        titleEnd: "",
-        description:
-          "Hand-painted sarees, dupattas and fabrics from Srikalahasti.",
-        scrollLabel: "Explore Collection",
+        title: "Shop Kalamkari",
+        description: "Hand-painted sarees, dupattas and fabrics from Srikalahasti.",
       }
 
+  const firstShown = Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)
+  const lastShown = Math.min(currentPage * itemsPerPage, totalCount)
+  const gridClass =
+    viewMode === "grid"
+      ? "grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 md:grid-cols-3 lg:gap-x-6 lg:gap-y-12 xl:grid-cols-4"
+      : "grid grid-cols-1 gap-6 max-w-4xl mx-auto"
+
   return (
-    <div className="w-full min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512] overflow-hidden">
-      {/* Hero Overview */}
-      {/* Signature Hero Overview */}
-      <PageHero
-        titleStart={heroCopy.titleStart}
-        titleAccent={heroCopy.titleAccent}
-        titleEnd={heroCopy.titleEnd}
-        description={heroCopy.description}
-      />
+    <div className="w-full min-h-screen bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))] overflow-hidden">
+      {/* Page band: pale indigo, temple tower divider and corner temple drawings */}
+      <section className="relative overflow-hidden bg-[hsl(var(--brand-indigo-tint))]">
+        <CornerFlorals className="absolute left-2 top-3 h-14 w-14 opacity-70 md:left-4 md:h-24 md:w-24" />
+        <CornerFlorals
+          className={cn(
+            "absolute bottom-3 right-2 h-14 w-14 rotate-180 opacity-70 md:right-4 md:h-24 md:w-24",
+            !isCustomDesignMode && "hidden lg:block",
+          )}
+        />
+        <div className="relative mx-auto max-w-2xl px-6 py-10 text-center md:py-14">
+          <h1 className="text-balance font-serif text-[32px] leading-tight text-[hsl(var(--brand-ink))] md:text-[46px]">
+            {heroCopy.title}
+          </h1>
+          <TempleTowerDivider className="mt-3" />
+          <p className="mx-auto mt-3 max-w-xl text-pretty font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))] md:text-[16px]">
+            {heroCopy.description}
+          </p>
+
+          {/* One-tap categories for phones and tablets; desktop has them in the sidebar */}
+          {!isCustomDesignMode && filterCategories.length > 0 && (
+            <ul
+              ref={pillRowRef}
+              aria-label="Categories"
+              className="scrollbar-hide -mx-6 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 sm:flex-wrap sm:justify-center lg:hidden"
+            >
+              {[{ id: "all", name: "All" }, ...filterCategories].map((cat) => {
+                const isAll = cat.id === "all"
+                const active = isAll
+                  ? selectedCategories.length === 0
+                  : selectedCategories.length === 1 && selectedCategories[0] === cat.name
+                return (
+                  <li key={cat.id} className="shrink-0">
+                    <button
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setSelectedCategories(isAll ? [] : [cat.name])}
+                      className={cn(
+                        "inline-flex h-10 items-center rounded-full border px-4 font-sans text-[14px] font-medium transition-colors",
+                        focusRingClass,
+                        active
+                          ? "border-[hsl(var(--brand-midnight))] bg-[hsl(var(--brand-midnight))] text-white"
+                          : "border-[hsl(var(--brand-ink)/0.25)] bg-white text-[hsl(var(--brand-ink))] hover:border-[hsl(var(--brand-ink))]",
+                      )}
+                    >
+                      {cat.name}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
+      </section>
 
       {/* Main Content */}
-      <div className="relative bg-transparent min-h-screen">
+      <div className="relative min-h-screen">
         {/* Mobile Filter Drawer */}
         <AnimatePresence>
           {showFilters && (
@@ -380,14 +463,17 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setShowFilters(false)}
-                className="fixed inset-0 bg-[#1A1512]/60 backdrop-blur-sm z-[100] lg:hidden"
+                className="fixed inset-0 bg-[hsl(var(--brand-ink)/0.5)] z-[100] lg:hidden"
               />
               <motion.div
                 initial={{ x: "-100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed inset-y-0 left-0 w-[320px] max-w-[85vw] bg-white z-[110] lg:hidden shadow-2xl overflow-y-auto scrollbar-hide border-r border-[#C19A5B]/20"
+                transition={{ type: "spring", damping: 28, stiffness: 240 }}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Filters"
+                className="fixed inset-y-0 left-0 w-[320px] max-w-[85vw] bg-white z-[110] lg:hidden shadow-2xl overflow-y-auto scrollbar-hide border-r border-[hsl(var(--brand-gold)/0.45)]"
               >
                 <FilterSidebar
                   {...filterProps}
@@ -401,220 +487,192 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
         <div
           ref={gridRef}
-          className="max-w-[120rem] mx-auto px-4 sm:px-6 md:px-10 py-8 sm:py-12 relative z-10"
+          className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-12 relative z-10 scroll-mt-24"
           id="product-grid-start"
         >
-          <div className="flex flex-col md:flex-row gap-8 sm:gap-12 lg:gap-16 w-full">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
             {/* Desktop Filter Sidebar */}
-            <aside className="hidden lg:block w-[280px] flex-shrink-0">
-              <div className="sticky top-6">
+            <aside className="hidden lg:block w-[272px] flex-shrink-0">
+              <div className="sticky top-24">
                 <FilterSidebar {...filterProps} />
               </div>
             </aside>
 
             {/* Main Product Area */}
-            <main className="flex-1">
-              {/* Toolbar Row */}
-              <div className="flex flex-col gap-3 sm:gap-4 mb-5 sm:mb-6 border-b border-[#C19A5B]/10 pb-4 sm:pb-5">
-                {/* Applied Filters Summary Bar */}
+            <main className="min-w-0 flex-1">
+              {/* Toolbar */}
+              <div className="mb-7 border-b border-[hsl(var(--brand-gold)/0.45)] pb-5 md:mb-10">
+                {/* Chosen filters, shown on phones and tablets where the sidebar is closed */}
                 {hasActiveFilters && (
-                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap lg:hidden">
-                    <div className="flex flex-wrap gap-1.5 flex-1">
-                      {searchQuery && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[12.5px] font-medium">
-                          &ldquo;{searchQuery}&rdquo;
-                          <button onClick={() => setSearchQuery("")} className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </span>
-                      )}
-                      {selectedCategories.map((cat) => (
-                        <span
-                          key={cat}
-                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[12.5px] font-medium"
+                  <div className="mb-3 flex flex-wrap items-center gap-2 lg:hidden">
+                    {searchQuery && (
+                      <span className={chipClass}>
+                        &ldquo;{searchQuery}&rdquo;
+                        <button type="button" onClick={() => setSearchQuery("")} aria-label="Remove search" className={chipCloseClass}>
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </span>
+                    )}
+                    {selectedCategories.map((cat) => (
+                      <span key={cat} className={chipClass}>
+                        {cat}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setSelectedCategories(selectedCategories.filter((c) => c !== cat))
+                          }
+                          aria-label={`Remove ${cat}`}
+                          className={chipCloseClass}
                         >
-                          {cat}
-                          <button
-                            onClick={() =>
-                              setSelectedCategories(
-                                selectedCategories.filter((c) => c !== cat),
-                              )
-                            }
-                            className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </span>
-                      ))}
-                      {selectedBand && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-[#C19A5B]/10 border border-[#C19A5B]/20 text-[#1A1512] text-[12.5px] font-medium">
-                          {selectedBand.label}
-                          <button onClick={() => setPriceBand(null)} aria-label="Remove price filter" className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={clearAllFilters}
-                      className="text-[10px] sm:text-[10px] font-bold text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] uppercase tracking-[0.16em] sm:tracking-widest whitespace-nowrap transition-colors"
-                    >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </span>
+                    ))}
+                    {selectedBand && (
+                      <span className={cn(chipClass, "tabular-nums")}>
+                        {selectedBand.label}
+                        <button type="button" onClick={() => setPriceBand(null)} aria-label="Remove price filter" className={chipCloseClass}>
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </span>
+                    )}
+                    <button type="button" onClick={clearAllFilters} className={cn(textLinkClass, "ml-1 h-9")}>
                       Clear all
                     </button>
                   </div>
                 )}
- 
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
-                  {/* Left: Counts & Mobile Filter */}
-                  <div className="flex items-center gap-5 w-full sm:w-auto">
-                    <button
-                      onClick={() => setShowFilters(true)}
-                      className="lg:hidden flex-1 sm:flex-none flex min-h-[44px] items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-[#C19A5B]/30 text-[10px] sm:text-[10px] font-bold tracking-[0.16em] sm:tracking-[0.2em] uppercase text-[#1A1512] bg-white/90 hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300 shadow-sm"
-                    >
-                      <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--brand-gold-deep))]" />
-                      Filters
-                      {getActiveFiltersCount() > 0 && (
-                        <span className="w-4.5 h-4.5 flex items-center justify-center rounded-full bg-[#1A1512] text-[#C19A5B] text-[11px] font-bold px-1.5">
-                          {getActiveFiltersCount()}
-                        </span>
-                      )}
-                    </button>
-                  </div>
- 
-                  {/* Right: Search, Sort, View Toggle, Items per page */}
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:flex-1 justify-end">
-                    {/* Search - sits with the grid controls so it is reachable
-                        without opening the filter drawer */}
-                    <div className="relative order-first w-full sm:order-none sm:flex-1 sm:min-w-[240px] sm:max-w-[520px] sm:mr-auto">
-                      <LucideSearch
-                        aria-hidden="true"
-                        className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[hsl(var(--brand-gold-deep))]"
-                      />
-                      <input
-                        type="search"
-                        value={searchQuery}
-                        onChange={(e) => {
-                          setSearchQuery(e.target.value)
+
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Search sits with the grid controls so it is reachable without opening the filter drawer */}
+                  <div className="relative w-full md:w-auto md:min-w-[240px] md:max-w-[420px] md:flex-1">
+                    <LucideSearch
+                      aria-hidden="true"
+                      className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[hsl(var(--brand-ink-soft))]"
+                    />
+                    <input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value)
+                        setCurrentPage(1)
+                      }}
+                      placeholder="Search sarees, dupattas, fabrics..."
+                      aria-label="Search products"
+                      className="h-12 w-full rounded-full border border-[hsl(var(--brand-ink)/0.2)] bg-white pl-11 pr-11 font-sans text-[15px] text-[hsl(var(--brand-ink))] placeholder:text-[hsl(var(--brand-muted))] focus:border-[hsl(var(--brand-ink)/0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("")
                           setCurrentPage(1)
                         }}
-                        placeholder="Search sarees, dupattas, fabrics..."
-                        aria-label="Search products"
-                        className="h-12 w-full rounded-lg border border-[#C19A5B]/25 bg-white pl-11 pr-10 text-[15px] text-[#1A1512] shadow-sm placeholder:text-[#1A1512]/40 focus:border-[#C19A5B] focus:outline-none focus:ring-2 focus:ring-[#C19A5B]/25"
-                      />
-                      {searchQuery && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSearchQuery("")
-                            setCurrentPage(1)
-                          }}
-                          aria-label="Clear search"
-                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#1A1512]/40 hover:bg-[#1A1512]/5 hover:text-[#1A1512] transition-colors"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      )}
-                    </div>
+                        aria-label="Clear search"
+                        className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-indigo-tint))] hover:text-[hsl(var(--brand-ink))] transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
 
-                    {/* View Toggle */}
-                    <div className="hidden sm:flex items-center gap-1 bg-white/90 p-1 rounded-lg border border-[#C19A5B]/20 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => setShowFilters(true)}
+                    className="lg:hidden flex h-12 w-[calc(50%-6px)] min-w-0 md:w-auto items-center justify-center gap-2 rounded-full border border-[hsl(var(--brand-ink)/0.75)] bg-white px-5 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+                    Filters
+                    {getActiveFiltersCount() > 0 && (
+                      <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[hsl(var(--brand-midnight))] px-1.5 text-[12px] font-semibold tracking-normal text-white tabular-nums">
+                        {getActiveFiltersCount()}
+                      </span>
+                    )}
+                  </button>
+
+                  <p
+                    aria-live="polite"
+                    className="order-last w-full font-sans text-[14px] text-[hsl(var(--brand-ink-soft))] tabular-nums md:order-none md:mr-auto md:w-auto"
+                  >
+                    {isLoading
+                      ? " "
+                      : `${totalCount} ${totalCount === 1 ? "piece" : "pieces"}`}
+                  </p>
+
+                  {/* View Toggle */}
+                  <div className="hidden sm:flex items-center gap-1 rounded-full border border-[hsl(var(--brand-ink)/0.2)] bg-white p-1">
+                    {[
+                      { mode: "grid" as const, label: "Grid view", Icon: LayoutGrid },
+                      { mode: "list" as const, label: "List view", Icon: ListIcon },
+                    ].map(({ mode: m, label, Icon }) => (
                       <button
-                        onClick={() => setViewMode("grid")}
-                        className={`p-2 rounded-md transition-all ${
-                          viewMode === "grid"
-                            ? "bg-[#1A1512] text-[#C19A5B] shadow-sm"
-                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[hsl(var(--brand-gold-deep))]"
-                        }`}
-                        title="Grid View"
+                        key={m}
+                        type="button"
+                        onClick={() => setViewMode(m)}
+                        aria-pressed={viewMode === m}
+                        aria-label={label}
+                        title={label}
+                        className={cn(
+                          "flex h-9 w-9 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]",
+                          viewMode === m
+                            ? "bg-[hsl(var(--brand-midnight))] text-white"
+                            : "text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-indigo-tint))] hover:text-[hsl(var(--brand-ink))]",
+                        )}
                       >
-                        <LayoutGrid className="w-3.5 h-3.5" />
+                        <Icon className="h-4 w-4" />
                       </button>
-                      <button
-                        onClick={() => setViewMode("list")}
-                        className={`p-2 rounded-md transition-all ${
-                          viewMode === "list"
-                            ? "bg-[#1A1512] text-[#C19A5B] shadow-sm"
-                            : "text-[#1A1512]/40 hover:bg-[#C19A5B]/10 hover:text-[hsl(var(--brand-gold-deep))]"
-                        }`}
-                        title="List View"
-                      >
-                        <ListIcon className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
- 
-                    {/* Items per page */}
-                    <div className="relative hidden sm:block">
-                      <select
-                        value={itemsPerPage}
-                        onChange={(e) =>
-                          setItemsPerPage(Number(e.target.value))
-                        }
-                        className="appearance-none min-h-[44px] pl-3 pr-8 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white text-[11px] font-bold text-[#3B2C23] uppercase tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/30 cursor-pointer shadow-sm"
-                      >
-                        <option value={12}>12 / page</option>
-                        <option value={24}>24 / page</option>
-                        <option value={48}>48 / page</option>
-                      </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[hsl(var(--brand-gold-deep))] pointer-events-none" />
-                    </div>
- 
-                    {/* Sort */}
-                    <div className="relative w-full sm:w-[190px]">
-                      <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="w-full appearance-none min-h-[44px] pl-3 sm:pl-4 pr-9 sm:pr-10 py-2.5 rounded-lg border border-[#C19A5B]/20 bg-white/90 backdrop-blur-sm text-[10px] sm:text-[10px] font-bold text-[#1A1512] uppercase tracking-[0.12em] sm:tracking-wider focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20 hover:border-[#C19A5B]/40 transition-all cursor-pointer shadow-sm"
-                      >
-                        <option value="default">Sort: Recommended</option>
-                        <option value="latest">Sort: Newest</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                      </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-3.5 sm:h-3.5 text-[hsl(var(--brand-gold-deep))] pointer-events-none" />
-                    </div>
+                    ))}
+                  </div>
+
+                  {/* Items per page */}
+                  <div className="relative hidden sm:block">
+                    <select
+                      value={itemsPerPage}
+                      onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                      aria-label="Pieces per page"
+                      className={cn(selectClass, "w-[148px]")}
+                    >
+                      <option value={12}>12 per page</option>
+                      <option value={24}>24 per page</option>
+                      <option value={48}>48 per page</option>
+                    </select>
+                    <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[hsl(var(--brand-ink-soft))]" />
+                  </div>
+
+                  {/* Sort */}
+                  <div className="relative w-[calc(50%-6px)] min-w-0 md:w-[210px]">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      aria-label="Sort pieces"
+                      className={cn(selectClass, "w-full")}
+                    >
+                      <option value="default">Recommended</option>
+                      <option value="latest">Newest</option>
+                      <option value="price-asc">Lowest price</option>
+                      <option value="price-desc">Highest price</option>
+                    </select>
+                    <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[hsl(var(--brand-ink-soft))]" />
                   </div>
                 </div>
               </div>
 
               {/* Product Grid / List */}
               {isLoading ? (
-                <div
-                  className={
-                    viewMode === "grid"
-                      ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"
-                      : "grid grid-cols-1 gap-6 max-w-4xl mx-auto"
-                  }
-                >
+                <div className={gridClass}>
                   {[...Array(itemsPerPage)].map((_, i) =>
                     viewMode === "grid" ? (
                       <ProductCardCompactSkeleton key={i} />
                     ) : (
                       <div
                         key={i}
-                        className="bg-white/80 backdrop-blur-sm h-[180px] rounded-xl animate-pulse border border-[#C19A5B]/10 shadow-sm"
+                        className="h-[180px] rounded-sm bg-[hsl(var(--brand-ink)/0.06)] animate-pulse"
                       />
                     ),
                   )}
                 </div>
               ) : products.length > 0 ? (
                 <>
-                  <motion.div
-                    layout
-                    variants={{
-                      hidden: { opacity: 0 },
-                      visible: {
-                        opacity: 1,
-                        transition: { staggerChildren: 0.03 },
-                      },
-                    }}
-                    initial="hidden"
-                    animate="visible"
-                    className={
-                      viewMode === "grid"
-                        ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"
-                        : "grid grid-cols-1 gap-6 max-w-4xl mx-auto"
-                    }
-                  >
+                  <motion.div layout className={gridClass}>
                     <AnimatePresence mode="popLayout">
                       {products.map((product: any, index: number) =>
                         viewMode === "grid" ? (
@@ -623,11 +681,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                             product={product}
                             index={index}
                             priority={index < 8}
-                            actionMode={
-                              isCustomDesignMode
-                                ? "whatsapp-inquiry"
-                                : "commerce"
-                            }
+                            actionMode={isCustomDesignMode ? "whatsapp-inquiry" : "commerce"}
                           />
                         ) : (
                           <ProductCard
@@ -636,47 +690,35 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                             index={index}
                             viewMode="list"
                             priority={index < 8}
-                            actionMode={
-                              isCustomDesignMode
-                                ? "whatsapp-inquiry"
-                                : "commerce"
-                            }
+                            actionMode={isCustomDesignMode ? "whatsapp-inquiry" : "commerce"}
                           />
                         ),
                       )}
                     </AnimatePresence>
                   </motion.div>
 
-                  {/* Pagination Footer - Dashboard Style */}
-                  <div className="mt-8 sm:mt-12 px-4 sm:px-6 py-3 sm:py-4 border-t border-[#C19A5B]/10 bg-[#1A1512]/5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-                    <div className="text-xs sm:text-sm text-[#1A1512]/60">
-                      Showing{" "}
-                      <span className="font-semibold text-[hsl(var(--brand-gold-deep))]">
-                        {Math.min(
-                          (currentPage - 1) * itemsPerPage + 1,
-                          totalCount,
-                        )}
-                        -{Math.min(currentPage * itemsPerPage, totalCount)}
-                      </span>{" "}
-                      of{" "}
-                      <span className="font-semibold text-[#1A1512]">
-                        {totalCount}
-                      </span>{" "}
-                      products
-                    </div>
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <button
-                        onClick={() => goToPage(Math.max(1, currentPage - 1))}
-                        disabled={currentPage === 1 || isFetching}
-                        className="flex items-center gap-1 h-11 sm:h-9 px-3 sm:px-4 text-[10px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
-                      >
-                        <ChevronLeft className="w-3.5 h-3.5" />
-                        <span>Prev</span>
-                      </button>
-                      <div className="flex items-center gap-1">
-                        {Array.from(
-                          { length: Math.min(5, totalPages) },
-                          (_, i) => {
+                  {/* Pagination */}
+                  <nav
+                    aria-label="Pages"
+                    className="mt-12 flex flex-col items-center gap-4 border-t border-[hsl(var(--brand-gold)/0.45)] pt-6 sm:flex-row sm:justify-between md:mt-16"
+                  >
+                    <p className="font-sans text-[14px] text-[hsl(var(--brand-ink-soft))] tabular-nums">
+                      Showing {firstShown}–{lastShown} of {totalCount} pieces
+                    </p>
+                    {totalPages > 1 && (
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <button
+                          type="button"
+                          onClick={() => goToPage(Math.max(1, currentPage - 1))}
+                          disabled={currentPage === 1 || isFetching}
+                          aria-label="Previous page"
+                          className={pagerEdgeClass}
+                        >
+                          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                          <span className="hidden sm:inline">Previous</span>
+                        </button>
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                             let pNum = i + 1
                             if (totalPages > 5) {
                               if (currentPage <= 3) {
@@ -689,75 +731,109 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                             }
                             if (pNum > totalPages) return null
 
+                            const current = currentPage === pNum
                             return (
                               <button
                                 key={pNum}
+                                type="button"
                                 onClick={() => goToPage(pNum)}
                                 disabled={isFetching}
-                                className={`h-11 w-11 sm:h-9 sm:w-9 rounded-lg text-xs font-medium transition-colors ${
-                                  currentPage === pNum
-                                    ? "bg-[#C19A5B] text-white shadow-md shadow-[#C19A5B]/20"
-                                    : "text-[#1A1512]/60 hover:bg-[#C19A5B]/10 hover:text-[hsl(var(--brand-gold-deep))]"
-                                }`}
+                                aria-current={current ? "page" : undefined}
+                                aria-label={`Page ${pNum}`}
+                                className={cn(
+                                  "flex h-10 w-10 items-center justify-center rounded-full font-sans text-[14px] tabular-nums transition-colors sm:h-11 sm:w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]",
+                                  current
+                                    ? "bg-[hsl(var(--brand-midnight))] font-semibold text-white"
+                                    : "text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-indigo-tint))]",
+                                )}
                               >
                                 {pNum}
                               </button>
                             )
-                          },
-                        )}
+                          })}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
+                          disabled={currentPage >= totalPages || isFetching}
+                          aria-label="Next page"
+                          className={pagerEdgeClass}
+                        >
+                          <span className="hidden sm:inline">Next</span>
+                          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                        </button>
                       </div>
-                      <button
-                        onClick={() =>
-                          goToPage(Math.min(totalPages, currentPage + 1))
-                        }
-                        disabled={currentPage >= totalPages || isFetching}
-                        className="flex items-center gap-1 h-11 sm:h-9 px-3 sm:px-4 text-[10px] sm:text-[10px] font-bold uppercase tracking-[0.14em] sm:tracking-widest border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all duration-300"
-                      >
-                        <span>Next</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
+                    )}
+                  </nav>
                 </>
               ) : (
                 /* Empty State */
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="relative text-center py-20 bg-white/40 backdrop-blur-sm rounded-xl border border-[#C19A5B]/20 shadow-sm overflow-hidden"
-                >
-                  {/* Decorative corners */}
-                  <div className="absolute inset-3 pointer-events-none border border-[#C19A5B]/10">
-                    <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t border-l border-[#C19A5B]/40" />
-                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t border-r border-[#C19A5B]/40" />
-                    <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b border-l border-[#C19A5B]/40" />
-                    <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b border-r border-[#C19A5B]/40" />
-                  </div>
-                  
-                  <div className="max-w-md mx-auto px-6 relative z-10">
-                    <div className="w-16 h-16 bg-[#1A1512]/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C19A5B]/25">
-                      <LucideSearch className="w-6 h-6 text-[hsl(var(--brand-gold-deep))]" />
-                    </div>
-                    <h3 className="font-serif text-2xl text-[#1A1512] font-semibold mb-3 tracking-wide">
-                      No masterpieces found
-                    </h3>
-                    <div className="h-px w-16 bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mx-auto mb-4" />
-                    <p className="font-sans text-[#1A1512]/60 mb-8 leading-relaxed text-[13px] font-light max-w-sm mx-auto">
-                      Our curators couldn't find any Srikalahasti Kalamkari artwork matching these precise refinements.
-                    </p>
-                    <button
-                      onClick={clearAllFilters}
-                      className="px-8 py-3 bg-[#1A1512] text-white border border-[#C19A5B]/30 rounded-lg font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-[#C19A5B] hover:text-white transition-all duration-300 shadow-sm"
-                    >
-                      Clear All Filters
+                <div className="mx-auto max-w-xl rounded-sm border border-[hsl(var(--brand-gold)/0.55)] bg-white px-6 py-14 text-center">
+                  <h2 className="text-balance font-serif text-[26px] leading-tight text-[hsl(var(--brand-ink))] md:text-[30px]">
+                    {hasActiveFilters ? "No pieces match these filters" : "No pieces to show right now"}
+                  </h2>
+                  <TempleBellsDivider className="mt-3" />
+                  <p className="mx-auto mt-4 max-w-sm font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+                    {hasActiveFilters
+                      ? "Try another category or price, or clear the filters to see everything."
+                      : "Please check again soon, or message us on WhatsApp."}
+                  </p>
+                  {hasActiveFilters ? (
+                    <button type="button" onClick={clearAllFilters} className={cn(primaryButtonClass, "mt-8")}>
+                      Clear filters
                     </button>
-                  </div>
-                </motion.div>
+                  ) : (
+                    <a
+                      href={CUSTOM_WHATSAPP_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-8 inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#1F7A4D] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#17603C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+                    >
+                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                      Message on WhatsApp
+                    </a>
+                  )}
+                </div>
               )}
             </main>
           </div>
         </div>
       </div>
+
+      {/* Closing band (shop only): custom work, same words as the home page */}
+      {!isCustomDesignMode && (
+        <section aria-labelledby="shop-custom" className="relative overflow-hidden bg-[hsl(var(--brand-turmeric-tint))]">
+          <CornerFlorals className="absolute left-2 top-3 h-16 w-16 opacity-70 md:left-4 md:h-24 md:w-24" />
+          <CornerFlorals className="absolute bottom-3 right-2 h-16 w-16 rotate-180 opacity-70 md:right-4 md:h-24 md:w-24" />
+          <div className="relative mx-auto max-w-2xl px-8 py-14 text-center md:py-20">
+            <h2 id="shop-custom" className="text-balance font-serif text-[28px] leading-tight text-[hsl(var(--brand-ink))] md:text-[40px]">
+              Want something made just for you?
+            </h2>
+            <KalashDivider className="mt-3" />
+            <p className="mx-auto mt-4 max-w-lg text-pretty font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))] md:text-[16px]">
+              We make custom designs for everything we paint: sarees, dupattas, fabrics, men&apos;s wear and more. Send us your
+              idea, colours or a photo.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+              <a
+                href={CUSTOM_WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1F7A4D] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:bg-[#17603C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2 sm:w-auto"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                Message on WhatsApp
+              </a>
+              <Link
+                href="/custom-design"
+                className="inline-flex h-12 w-full items-center justify-center rounded-full border border-[hsl(var(--brand-ink)/0.75)] bg-white px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] transition-colors duration-300 hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2 sm:w-auto"
+              >
+                See custom designs
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

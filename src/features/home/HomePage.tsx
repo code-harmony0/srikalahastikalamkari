@@ -3,414 +3,527 @@
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, BadgeCheck, MessageCircle, Star } from "lucide-react"
-import { cn, formatPrice } from "@/shared/utils"
-import { useAllReviews, type Review } from "@/shared/hooks/use-reviews"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { ArrowRight, BadgeCheck, MessageCircle, Pause, Play, Star } from "lucide-react"
 import { productsService } from "@/services/products"
-import { getSubCategories } from "@/services/categories"
 import { Product } from "@/shared/types"
-import { OptimizedImage } from "@/components/shared/OptimizedImage"
+import { cn } from "@/shared/utils"
+import { useAllReviews, type Review } from "@/shared/hooks/use-reviews"
 import { getImageTier } from "@/lib/image-tiers"
-import {
-  CuratedProductCard,
-  CuratedProductCardSkeleton,
-} from "@/features/products/CuratedProductCard"
-import {
-  ParcelMark,
-  LockMark,
-  LotusSealMark,
-} from "@/shared/ui/craft-marks"
-import { buildSareeShowcase, type ShowcaseSubCategory } from "./saree-showcase"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
+import { CuratedProductCard, CuratedProductCardSkeleton } from "@/features/products/CuratedProductCard"
+import { CornerFlorals, FloralDivider, JharokhaFrame } from "@/shared/ui/heritage-ornaments"
+import { getCategories } from "@/services/categories"
+import { CategoryShowcase } from "./CategoryShowcase"
+import { pickGalleryPieces } from "./gallery-pieces"
 
-// The two top-level categories that hold sarees. The service resolves them by
-// name, so they always match what the shop filter opens.
+/*
+ * Colour roles on this page (PRODUCT.md, 2026-09-15):
+ *  - charcoal text everywhere; never blue or brown text, never gold text on light
+ *  - midnight navy for the primary action; white + charcoal outline for secondary
+ *  - pale natural-dye bands: indigo (categories, closing), turmeric (story), madder (gallery)
+ *  - gold only as frames, rules and floral line art
+ */
+
+const HERO_IMAGES = [
+  { src: "/images/brand-models/model-saree-03.jpeg", alt: "Model wearing a cream floral Srikalahasti Kalamkari saree with a hand-painted story border" },
+  { src: "/images/brand-models/model-saree-01.jpeg", alt: "Model wearing a purple Kalamkari saree with narrative pallu artwork" },
+  { src: "/images/brand-models/model-saree-07.jpeg", alt: "Model wearing a blue Kalamkari saree with traditional painted motifs" },
+  { src: "/images/brand-models/model-saree-10.jpeg", alt: "Model in a black and gold Kalamkari saree with hand-painted motifs" },
+]
+
+const PROCESS_STEPS = [
+  { title: "Prepare the cloth", text: "Cotton or silk is washed and soaked so it will take the dye." },
+  { title: "Draw with the kalam", text: "Every outline is drawn freehand with a bamboo pen." },
+  { title: "Fill the colours", text: "Natural dyes are painted in by hand, one colour at a time." },
+  { title: "Wash and fix", text: "The cloth is washed so the colours set into the fabric." },
+  { title: "Check and send", text: "Each piece is checked before it leaves Srikalahasti." },
+]
+
+const FACTS = [
+  "GI registered · Application No. 28",
+  "Made in Srikalahasti",
+  "Painted with natural dyes",
+  "Sold directly by the makers",
+]
+
+type GalleryPiece = Omit<Product, "image"> & { image: string | null; categoryName?: string }
+
 const SAREE_CATEGORIES = ["Sarees", "Pure Silk Sarees"]
-const PRIMARY_SAREE_CATEGORY = "Sarees"
 
-const categoryHref = (name: string) =>
-  `/products?category=${encodeURIComponent(name)}`
+// Gallery block, 4 columns on computers and 2 on phones:
+//   big big tall small      phones: big big / big big / tall small / tall small / small small / wide wide
+//   big big tall small
+//   small small wide wide
+const GALLERY_LAYOUT = ["col-span-2 row-span-2", "row-span-2", "", "", "", "", "col-span-2"]
 
-// Brand photography is shot as full-length 2:3 portraits. Shown whole, a buyer
-// sees the pallu and border — the parts that sell a Kalamkari saree — instead
-// of the torso slice a full-width landscape banner crops them to.
-const HERO_SAREES = [
-  {
-    src: "/images/brand-models/model-saree-03.jpeg",
-    alt: "Model in a cream Srikalahasti Kalamkari saree with a hand-painted floral body and a story pallu",
-  },
-  {
-    src: "/images/brand-models/model-saree-01.jpeg",
-    alt: "Model in a purple Kalamkari saree with a pallu of painted figures and horses",
-  },
-  {
-    src: "/images/brand-models/model-saree-10.jpeg",
-    alt: "Model in a black and gold Kalamkari saree painted with horses and elephants",
-  },
+const STORY_LINKS = [
+  { label: "Sarees", category: "Sarees" },
+  { label: "Dupattas", category: "Duppatta" },
+  { label: "Fabrics", category: "Fabrics" },
+  { label: "Wall paintings", category: "Wall Paintings" },
 ]
 
-// Only what checkout actually does: every order ships free within India, and
-// payment is online through Razorpay. There is no cash on delivery and no
-// returns or refunds, so neither is claimed.
-const TRUST = [
-  { Mark: ParcelMark, label: "Free shipping across India" },
-  { Mark: LockMark, label: "Secure online payment" },
-  { Mark: LotusSealMark, label: "GI certified" },
-]
-
-const customDesignWhatsAppUrl =
+const WHATSAPP_URL =
   "https://wa.me/917288848881?text=Hello%2C%20I%20need%20help%20with%20a%20custom%20Srikalahasti%20Kalamkari%20design.%20Please%20share%20fabric%2C%20motif%2C%20price%20and%20timeline%20details."
 
+const categoryHref = (name: string) => `/products?category=${encodeURIComponent(name)}`
+
+// Shared styles: outline secondary button and gold-underlined text link.
+const secondaryButton =
+  "inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-[hsl(var(--brand-ink)/0.75)] bg-white px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] transition-colors duration-300 hover:bg-[hsl(var(--brand-turmeric-tint))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+const textLink =
+  "inline-flex items-center gap-1.5 font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[6px] transition-colors hover:decoration-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] rounded-sm"
+
+function SectionHeading({ title, intro, onDark = false }: { title: string; intro?: string; onDark?: boolean }) {
+  return (
+    <div className="mx-auto max-w-2xl text-center">
+      <h2
+        className={cn(
+          "text-balance font-serif text-[30px] leading-tight md:text-[42px]",
+          onDark ? "text-white" : "text-[hsl(var(--brand-ink))]",
+        )}
+      >
+        {title}
+      </h2>
+      <FloralDivider className={cn("mt-4", onDark && "text-[hsl(var(--brand-gold))]")} />
+      {intro && (
+        <p
+          className={cn(
+            "mx-auto mt-4 max-w-xl text-pretty font-sans text-[15px] leading-relaxed md:text-[16px]",
+            onDark ? "text-[#DCE6F2]" : "text-[hsl(var(--brand-ink-soft))]",
+          )}
+        >
+          {intro}
+        </p>
+      )}
+    </div>
+  )
+}
+
 export default function HomePage() {
-  const [sarees, setSarees] = useState<Product[]>([])
-  const [subCategories, setSubCategories] = useState<ShowcaseSubCategory[]>([])
+  const reduceMotion = useReducedMotion()
+  const [featured, setFeatured] = useState<Product[]>([])
+  const [customPiece, setCustomPiece] = useState<Product | null>(null)
+  const [gallery, setGallery] = useState<GalleryPiece[]>([])
   const [loading, setLoading] = useState(true)
+  const [heroIndex, setHeroIndex] = useState(0)
+  const [heroPaused, setHeroPaused] = useState(false)
+
+  const { reviews: allReviews } = useAllReviews()
+  const reviews = useMemo(
+    () =>
+      (allReviews || [])
+        .filter((r: Review) => r.is_approved && r.rating >= 4 && typeof r.content === "string" && r.content.trim().length > 20)
+        .sort((a: Review, b: Review) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 6),
+    [allReviews],
+  )
 
   useEffect(() => {
     let cancelled = false
-    Promise.all([
-      productsService.getVisibleInTopCategories(SAREE_CATEGORIES),
-      getSubCategories(),
-    ])
-      .then(([products, subs]) => {
+    const load = async () => {
+      try {
+        const [customRows, topCategories] = await Promise.all([
+          productsService.getVisibleInTopCategories(["Customisations"]).catch(() => [] as Product[]),
+          getCategories().catch(() => ({ data: null, error: null })),
+        ])
+        const names = (topCategories.data ?? []).map((c: { name: string }) => c.name)
+        const everyPiece = names.length ? await productsService.getVisibleInTopCategories(names) : []
         if (cancelled) return
-        setSarees(products)
-        setSubCategories(
-          (subs.data ?? []).map((sub) => ({ id: sub.id, name: sub.name })),
+
+        const withPhoto = everyPiece.filter((p) => getImageTier(p.images, "medium", 0))
+        // Featured: pieces marked featured in admin first, then the newest sarees.
+        const sarees = withPhoto.filter((p) => SAREE_CATEGORIES.includes((p as { categoryName?: string }).categoryName ?? ""))
+        const featuredRows = [...withPhoto.filter((p) => p.is_featured), ...sarees.filter((p) => !p.is_featured)].slice(0, 6)
+        setFeatured(featuredRows)
+
+        const customWithPhoto = customRows.filter((p) => getImageTier(p.images, "medium", 0))
+        setCustomPiece(customWithPhoto.find((p) => !/wall|painting|frame/i.test(p.name || "")) ?? customWithPhoto[0] ?? null)
+
+        const picked = pickGalleryPieces(
+          withPhoto.map((p) => ({ ...p, image: getImageTier(p.images, "medium", 0) })),
+          { limit: 7, exclude: featuredRows.map((p) => p.id) },
         )
-      })
-      .catch((error) => console.error("Error loading sarees:", error))
-      .finally(() => {
+        const wideIndex = picked.findIndex((p) => p.categoryName === "Wall Paintings")
+        if (wideIndex > 0 && wideIndex !== picked.length - 1) {
+          const [painting] = picked.splice(wideIndex, 1)
+          picked.push(painting)
+        }
+        setGallery(picked)
+      } catch (error) {
+        console.error("Home data failed to load:", error)
+      } finally {
         if (!cancelled) setLoading(false)
-      })
+      }
+    }
+    load()
     return () => {
       cancelled = true
     }
   }, [])
 
-  const showcase = useMemo(
-    () => buildSareeShowcase(sarees, subCategories),
-    [sarees, subCategories],
-  )
+  // Slow crossfade; stopped for reduced motion or when the visitor pauses it.
+  useEffect(() => {
+    if (reduceMotion || heroPaused) return
+    const timer = setInterval(() => setHeroIndex((i) => (i + 1) % HERO_IMAGES.length), 7000)
+    return () => clearInterval(timer)
+  }, [reduceMotion, heroPaused])
 
-  // The hero's count and price describe exactly the page its button opens.
-  const primary = useMemo(
-    () =>
-      buildSareeShowcase(
-        sarees.filter((p) => p.categoryName === PRIMARY_SAREE_CATEGORY),
-        [],
-      ),
-    [sarees],
-  )
-
-  // Only real, approved reviews. The page previously fell back to invented
-  // customers with five-star ratings whenever none existed.
-  const { reviews: allReviews } = useAllReviews()
-  const reviews = useMemo(
-    () =>
-      (allReviews || [])
-        .filter(
-          (r: Review) =>
-            r.is_approved &&
-            r.rating >= 4 &&
-            typeof r.content === "string" &&
-            r.content.trim().length > 20,
-        )
-        .sort(
-          (a: Review, b: Review) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-        )
-        .slice(0, 6),
-    [allReviews],
-  )
-
-  const reviewStats = useMemo(() => {
-    const approved = (allReviews || []).filter((r: Review) => r.is_approved)
-    if (!approved.length) return null
-    return {
-      average:
-        approved.reduce((sum: number, r: Review) => sum + r.rating, 0) /
-        approved.length,
-      count: approved.length,
-    }
-  }, [allReviews])
+  const customImage = customPiece ? getImageTier(customPiece.images, "medium", 0) : null
 
   return (
-    <main className="w-full kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
-      {/* ── Hero: three whole sarees and one way in ─────────────────── */}
+    <main className="w-full overflow-hidden bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))]">
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section
-        aria-labelledby="home-hero-title"
-        className="border-b border-[hsl(var(--brand-gold)/0.15)] bg-[hsl(var(--brand-cream))]"
+        aria-label="Srikalahasti Kalamkari"
+        className="relative flex min-h-[calc(88svh-96px)] w-full items-center justify-center overflow-hidden bg-[hsl(var(--brand-midnight))] sm:min-h-[640px] lg:min-h-[calc(100svh-112px)]"
       >
-        <div className="mx-auto grid max-w-[1440px] items-center gap-8 px-4 py-8 sm:px-6 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-14">
-          <div className="grid grid-cols-2 items-start gap-2.5 sm:grid-cols-3 sm:gap-3 lg:col-span-7">
-            {HERO_SAREES.map((photo, index) => (
-              <div
-                key={photo.src}
-                className={cn(
-                  "relative aspect-[2/3] overflow-hidden rounded-lg ring-1 ring-[hsl(var(--brand-ink)/0.08)]",
-                  index === 1 && "sm:mt-10",
-                  index === 2 && "hidden sm:block",
-                )}
-              >
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  priority={index === 0}
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                  className="object-cover"
-                />
-              </div>
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={heroIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 1.6, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={HERO_IMAGES[heroIndex].src}
+              alt={HERO_IMAGES[heroIndex].alt}
+              fill
+              priority={heroIndex === 0}
+              sizes="100vw"
+              className="object-cover object-[center_40%]"
+            />
+          </motion.div>
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,16,32,0.55)_0%,rgba(8,16,32,0.35)_45%,rgba(8,16,32,0.78)_100%)]" />
+
+        <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-5 py-16 text-center">
+          <Image
+            src="/images/srikalahasti-crest-only.png"
+            alt="Srikalahasti Kalamkari"
+            width={220}
+            height={236}
+            priority
+            className="h-24 w-auto drop-shadow-[0_14px_30px_rgba(0,0,0,0.5)] sm:h-32 md:h-40"
+          />
+          <h1 className="mt-6 text-balance font-serif text-[34px] leading-[1.08] text-white sm:text-[46px] md:text-[60px]">
+            Srikalahasti Kalamkari
+          </h1>
+          <p className="mt-4 max-w-xl text-pretty font-sans text-[15px] leading-relaxed text-white/90 md:text-[18px]">
+            Sarees, dupattas and fabrics, drawn with a bamboo kalam and natural dyes.
+          </p>
+          <div className="mt-8 flex flex-col items-center gap-5 sm:flex-row sm:gap-7">
+            <Link
+              href={categoryHref("Sarees")}
+              className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-white px-8 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] shadow-[0_12px_30px_-12px_rgba(0,0,0,0.6)] transition-colors duration-300 hover:bg-[hsl(var(--brand-turmeric-tint))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >
+              Shop sarees
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <Link
+              href="/about"
+              className="font-sans text-[14px] font-semibold text-white underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[7px] transition-colors hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))] rounded-sm"
+            >
+              Discover the craft
+            </Link>
+          </div>
+          <p className="mt-9 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-sans text-[13px] font-medium text-white">
+            <span>Free shipping across India</span>
+            <span aria-hidden="true" className="h-1.5 w-1.5 rotate-45 bg-[hsl(var(--brand-gold))]" />
+            <span>GI-registered craft</span>
+          </p>
+        </div>
+
+        {/* Slide position + pause */}
+        <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3">
+          <div className="flex items-center gap-1.5" aria-hidden="true">
+            {HERO_IMAGES.map((image, i) => (
+              <span
+                key={image.src}
+                className={cn("h-1 rounded-full transition-all duration-500", i === heroIndex ? "w-6 bg-white" : "w-2 bg-white/50")}
+              />
             ))}
           </div>
-
-          <div className="lg:col-span-5">
-            <h1
-              id="home-hero-title"
-              className="font-serif text-[34px] font-semibold leading-[1.06] tracking-[-0.02em] text-balance sm:text-[44px] lg:text-[54px]"
+          {!reduceMotion && (
+            <button
+              type="button"
+              onClick={() => setHeroPaused((p) => !p)}
+              aria-label={heroPaused ? "Play slideshow" : "Pause slideshow"}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-white/85 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))]"
             >
-              Hand-painted Kalamkari sarees
-            </h1>
-            <p className="mt-4 max-w-[40ch] text-[15px] leading-[1.7] text-[hsl(var(--brand-ink)/0.72)] sm:text-[16px]">
-              Drawn with a bamboo <em>kalam</em> and natural dyes by the
-              artisans of Srikalahasti.
-            </p>
-            <p className="mt-5 min-h-[1.5em] text-[15px] font-semibold tabular-nums">
-              {primary.startingPrice !== null &&
-                `${primary.total} sarees · from ${formatPrice(primary.startingPrice)}`}
-            </p>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <Link
-                href={categoryHref(PRIMARY_SAREE_CATEGORY)}
-                className="inline-flex h-[52px] items-center gap-2.5 rounded-full bg-[hsl(var(--brand-ink))] px-8 text-[12px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--brand-paper))] shadow-[0_2px_12px_rgba(26,21,18,0.18)] transition-colors hover:bg-[hsl(var(--brand-ink-soft))]"
-              >
-                Shop sarees
-                <ArrowRight className="h-4 w-4" />
+              {heroPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+            </button>
+          )}
+        </div>
+      </section>
+
+      {/* ── SHOP BY CATEGORY (pale indigo band) ─────────────────────────── */}
+      <CategoryShowcase />
+
+      {/* ── FEATURED PIECES (white) ─────────────────────────────────────── */}
+      {(loading || featured.length > 0) && (
+        <section aria-labelledby="featured-pieces" className="bg-white py-16 md:py-24">
+          <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+            <div id="featured-pieces">
+              <SectionHeading title="Featured pieces" intro="New sarees from our workshop." />
+            </div>
+            <div className="mt-10 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:mt-12 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
+              {loading
+                ? Array.from({ length: 6 }, (_, i) => <CuratedProductCardSkeleton key={i} />)
+                : featured.slice(0, 6).map((product, i) => (
+                    <CuratedProductCard key={product.id} product={product} index={i} showDiscount={false} />
+                  ))}
+            </div>
+            <div className="mt-12 text-center">
+              <Link href="/products" className={secondaryButton}>
+                Shop all pieces
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <Link
-                href={categoryHref("Pure Silk Sarees")}
-                className="text-[14px] font-medium underline decoration-[hsl(var(--brand-ink)/0.3)] underline-offset-4 transition-colors hover:decoration-[hsl(var(--brand-ink))]"
-              >
-                Pure silk sarees
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── THE CRAFT (pale turmeric band) ──────────────────────────────── */}
+      <section aria-labelledby="the-craft" className="relative bg-[hsl(var(--brand-turmeric-tint))] py-16 md:py-24">
+        <CornerFlorals className="absolute left-3 top-4 h-20 w-20 opacity-70 md:h-28 md:w-28" />
+        <CornerFlorals className="absolute bottom-4 right-3 h-20 w-20 rotate-180 opacity-70 md:h-28 md:w-28" />
+        <div className="relative mx-auto grid max-w-[1120px] items-center gap-12 px-5 sm:px-8 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:gap-16">
+          <div className="mx-auto w-full max-w-[380px] pt-6">
+            <JharokhaFrame>
+              <Image
+                src="/images/brand-models/model-saree-05.jpeg"
+                alt="Model wearing a hand-painted Srikalahasti Kalamkari dupatta"
+                fill
+                sizes="(max-width: 768px) 80vw, 380px"
+                className="object-cover"
+              />
+            </JharokhaFrame>
+          </div>
+          <div>
+            <h2 id="the-craft" className="text-balance font-serif text-[30px] leading-tight md:text-[44px]">
+              Drawn by hand, not printed
+            </h2>
+            <FloralDivider className="ml-0 mt-4" />
+            <div className="mt-6 max-w-[34rem] space-y-4 font-sans text-[16px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+              <p>
+                Kalamkari means pen-work. In Srikalahasti every outline is drawn freehand with a bamboo kalam, then filled
+                with natural dyes, colour by colour. No blocks, no machines.
+              </p>
+              <p>
+                We paint sarees, dupattas, fabrics and more in the village, and sell them to you directly.
+              </p>
+            </div>
+            <ul className="mt-7 flex flex-wrap gap-2.5">
+              {STORY_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={categoryHref(link.category)}
+                    className="inline-flex h-10 items-center rounded-full border border-[hsl(var(--brand-ink)/0.25)] bg-white/70 px-4 font-sans text-[14px] font-medium text-[hsl(var(--brand-ink))] transition-colors hover:border-[hsl(var(--brand-ink))] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8">
+              <Link href="/about" className={textLink}>
+                Read our story
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Trust: the four reasons to buy here, in one line ────────── */}
-      <section
-        aria-label="Shopping with us"
-        className="border-b border-[hsl(var(--brand-gold)/0.15)] bg-[hsl(var(--brand-paper))]"
-      >
-        <ul className="mx-auto grid max-w-[1440px] grid-cols-1 gap-y-2.5 px-4 py-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {TRUST.map(({ Mark, label }) => (
-            <li
-              key={label}
-              className="flex items-center justify-center gap-2.5 text-[13px] text-[hsl(var(--brand-ink)/0.75)]"
-            >
-              <Mark className="h-5 w-5 shrink-0 text-[hsl(var(--brand-gold-deep))]" />
-              {label}
-            </li>
-          ))}
-        </ul>
+      {/* ── THE PROCESS (midnight band) ─────────────────────────────────── */}
+      <section aria-labelledby="the-process" className="relative bg-[hsl(var(--brand-midnight))] py-16 md:py-24">
+        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+          <div id="the-process">
+            <SectionHeading onDark title="From cloth to kalam" intro="How a Srikalahasti Kalamkari piece is made." />
+          </div>
+          <ol className="relative mt-12 grid grid-cols-2 gap-x-4 gap-y-9 md:mt-16 lg:grid-cols-5 lg:gap-6">
+            <span
+              aria-hidden="true"
+              className="absolute left-[10%] right-[10%] top-[26px] hidden border-t border-dashed border-[hsl(var(--brand-gold)/0.55)] lg:block"
+            />
+            {PROCESS_STEPS.map((step, i) => (
+              <li key={step.title} className={cn("relative flex flex-col items-center text-center", i === PROCESS_STEPS.length - 1 && "col-span-2 lg:col-span-1")}>
+                <span className="relative z-10 flex h-[52px] w-[52px] items-center justify-center rounded-full border border-[hsl(var(--brand-gold))] bg-[hsl(var(--brand-midnight))] font-sans text-[16px] font-semibold tabular-nums text-[hsl(var(--brand-gold-soft))]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-4 font-serif text-[20px] leading-snug text-white">{step.title}</h3>
+                <p className="mt-2 max-w-[15rem] font-sans text-[14px] leading-relaxed text-[#DCE6F2]">{step.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
-      {/* ── Fabrics: live collections, largest first ────────────────── */}
-      {(loading || showcase.collections.length > 0) && (
-        <section
-          aria-labelledby="home-fabrics-title"
-          className="mx-auto max-w-[1440px] px-4 pt-12 sm:px-6 lg:px-8 lg:pt-16"
-        >
-          <h2
-            id="home-fabrics-title"
-            className="font-serif text-[26px] font-semibold leading-tight sm:text-[32px]"
-          >
-            Shop sarees by fabric
-          </h2>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-            {loading
-              ? Array.from({ length: 4 }, (_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-[3/4] animate-pulse rounded-lg bg-[hsl(var(--brand-ink)/0.06)]"
-                  />
-                ))
-              : showcase.collections.map((collection, index) => (
-                  <Link
-                    key={collection.id}
-                    href={categoryHref(collection.name)}
-                    className="group block"
-                  >
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[hsl(var(--brand-paper))] ring-1 ring-[hsl(var(--brand-ink)/0.08)]">
-                      <OptimizedImage
-                        src={
-                          getImageTier(collection.cover.images, "medium", 0) ||
-                          "/images/products/product-placeholder.png"
-                        }
-                        alt={collection.cover.name}
-                        fill
-                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                        sizes="(max-width: 1024px) 50vw, 25vw"
-                        imageType="productCard"
-                        priority={index < 2}
-                      />
-                    </div>
-                    <div className="mt-3 flex items-baseline justify-between gap-3">
-                      <h3 className="text-[15px] font-semibold leading-snug">
-                        {collection.label}
-                      </h3>
-                      <span className="shrink-0 text-[13px] tabular-nums text-[hsl(var(--brand-ink)/0.55)]">
-                        {collection.count} sarees
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── New sarees ──────────────────────────────────────────────── */}
-      {(loading || showcase.newest.length > 0) && (
-        <section
-          aria-labelledby="home-new-title"
-          className="mx-auto max-w-[1440px] px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20"
-        >
-          <div className="flex items-end justify-between gap-4">
-            <h2
-              id="home-new-title"
-              className="font-serif text-[26px] font-semibold leading-tight sm:text-[32px]"
-            >
-              {showcase.newest.some((saree) => saree.is_featured)
-                ? "Featured and new sarees"
-                : "New sarees"}
-            </h2>
-            <Link
-              href={categoryHref(PRIMARY_SAREE_CATEGORY)}
-              className="inline-flex shrink-0 items-center gap-1.5 text-[14px] font-medium underline-offset-4 hover:underline"
-            >
-              View all
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 lg:grid-cols-4">
-            {loading
-              ? Array.from({ length: 8 }, (_, i) => (
-                  <CuratedProductCardSkeleton key={i} />
-                ))
-              : showcase.newest.map((product, index) => (
-                  <CuratedProductCard
-                    key={product.id}
-                    product={product}
-                    index={index}
-                  />
-                ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Reviews: shown only once real customers have written them ── */}
-      {reviews.length > 0 && (
-        <section
-          aria-labelledby="home-reviews-title"
-          className="mx-auto max-w-[1440px] px-4 pt-16 sm:px-6 lg:px-8 lg:pt-20"
-        >
-          <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
-            <h2
-              id="home-reviews-title"
-              className="font-serif text-[26px] font-semibold leading-tight sm:text-[32px]"
-            >
-              What customers say
-            </h2>
-            {reviewStats && (
-              <p className="inline-flex items-center gap-2 text-[14px] tabular-nums text-[hsl(var(--brand-ink)/0.7)]">
-                <Star className="h-4 w-4 fill-[hsl(var(--brand-gold))] text-[hsl(var(--brand-gold))]" />
-                <span className="font-semibold text-[hsl(var(--brand-ink))]">
-                  {reviewStats.average.toFixed(1)}
-                </span>
-                from {reviewStats.count}{" "}
-                {reviewStats.count === 1 ? "review" : "reviews"}
-              </p>
-            )}
-          </div>
-
-          <ul className="mt-6 -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {reviews.map((r: Review) => (
-              <li
-                key={r.id}
-                className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]"
-              >
-                <figure className="flex h-full flex-col rounded-lg bg-[hsl(var(--brand-paper))] p-5 ring-1 ring-[hsl(var(--brand-ink)/0.08)] md:p-6">
-                  <div className="flex items-center gap-0.5" aria-label={`${r.rating} out of 5`}>
-                    {[0, 1, 2, 3, 4].map((i) => (
-                      <Star
-                        key={i}
-                        className={cn(
-                          "h-3.5 w-3.5",
-                          i < r.rating
-                            ? "fill-[hsl(var(--brand-gold))] text-[hsl(var(--brand-gold))]"
-                            : "text-[hsl(var(--brand-ink)/0.2)]",
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <blockquote className="mt-3 text-[15px] leading-[1.65] text-[hsl(var(--brand-ink)/0.85)]">
-                    {r.content}
-                  </blockquote>
-                  <figcaption className="mt-auto pt-5 text-[13px]">
-                    <span className="block font-semibold">{r.customer_name}</span>
-                    {r.is_verified_purchase && (
-                      <span className="mt-0.5 inline-flex items-center gap-1 text-[hsl(var(--brand-ink)/0.55)]">
-                        <BadgeCheck className="h-3.5 w-3.5 text-[hsl(var(--brand-gold-deep))]" />
-                        Verified purchase
-                      </span>
-                    )}
-                  </figcaption>
-                </figure>
+      {/* ── FACT STRIP (replaces the promise cards) ─────────────────────── */}
+      <section aria-label="About the craft" className="bg-white">
+        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+          <ul className="grid grid-cols-1 border-y-2 border-dotted border-[hsl(var(--brand-gold-ornament)/0.7)] py-6 sm:grid-cols-2 lg:grid-cols-4">
+            {FACTS.map((fact) => (
+              <li key={fact} className="flex items-center justify-center gap-3 px-3 py-2.5 text-center font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))]">
+                <span aria-hidden="true" className="h-2 w-2 shrink-0 rotate-45 bg-[hsl(var(--brand-gold))]" />
+                {fact}
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* ── GALLERY OF OUR WORK (pale madder band) ─────────────────────── */}
+      {(loading || gallery.length > 0) && (
+        <section aria-labelledby="our-work" className="bg-[hsl(var(--brand-madder-tint))] py-16 md:py-24">
+          <div className="mx-auto max-w-[1200px] px-4 sm:px-8">
+            <div id="our-work">
+              <SectionHeading
+                title="Gallery of our work"
+                intro="Sarees, dupattas, fabrics and custom work, all painted by hand in Srikalahasti."
+              />
+            </div>
+            {/* A neat block: one big tile, one tall, one wide, the rest small. Straight edges on every side. */}
+            <ul className="mt-10 grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[190px] md:mt-12 md:grid-cols-4 md:auto-rows-[200px] md:gap-4 lg:auto-rows-[230px]">
+              {loading
+                ? GALLERY_LAYOUT.map((layout, i) => (
+                    <li key={i} className={cn("animate-pulse rounded-sm bg-white/70", layout)} />
+                  ))
+                : gallery.slice(0, GALLERY_LAYOUT.length).map((piece, i) => (
+                    <li key={piece.id} className={GALLERY_LAYOUT[i]}>
+                      <Link
+                        href={`/products/${piece.slug || piece.id}`}
+                        title={piece.name}
+                        className="group relative block h-full w-full overflow-hidden rounded-sm bg-white shadow-[0_18px_34px_-26px_rgba(60,20,10,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-4 focus-visible:ring-offset-[hsl(var(--brand-madder-tint))]"
+                      >
+                        {piece.image && (
+                          <OptimizedImage
+                            src={piece.image}
+                            alt={piece.name}
+                            fill
+                            sizes={i === 0 ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
+                            imageType="productCard"
+                            className="object-cover object-[center_20%] transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                          />
+                        )}
+                        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.7)_0%,rgba(0,0,0,0.22)_30%,transparent_52%)]" />
+                        <span aria-hidden="true" className="pointer-events-none absolute inset-[6px] rounded-[2px] border border-white/70" />
+                        <span className="absolute inset-x-0 bottom-0 p-3.5 md:p-4">
+                          <span className="block font-sans text-[13px] font-semibold text-white md:text-[14px]">
+                            {piece.categoryName}
+                          </span>
+                          <span
+                            className={cn(
+                              "mt-0.5 hidden md:block",
+                              i !== 0 && "md:opacity-0 md:transition-opacity md:duration-300 md:group-hover:opacity-100",
+                            )}
+                          >
+                            <span className={cn("font-serif leading-snug text-white/95 line-clamp-1", i === 0 ? "text-[18px]" : "text-[15px]")}>
+                              {piece.name}
+                            </span>
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+            </ul>
+            <div className="mt-10 text-center">
+              <Link href="/products" className={textLink}>
+                See all pieces in the shop
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
         </section>
       )}
 
-      {/* ── Custom commissions: one compact row ─────────────────────── */}
-      <section className="mx-auto max-w-[1440px] px-4 pb-16 pt-16 sm:px-6 lg:px-8 lg:pb-20 lg:pt-20">
-        <div className="flex flex-col items-center gap-6 rounded-lg bg-[hsl(var(--brand-cream))] p-6 ring-1 ring-[hsl(var(--brand-gold)/0.2)] sm:p-8 md:flex-row md:gap-10">
-          <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg sm:h-28 sm:w-28">
-            <Image
-              src="/images/brand-models/model-saree-12.jpeg"
-              alt="A custom Kalamkari saree commission"
-              fill
-              className="object-cover"
-              sizes="112px"
-            />
+      {/* ── REAL REVIEWS (hidden until approved reviews exist) ─────────── */}
+      {reviews.length > 0 && (
+        <section aria-labelledby="reviews" className="bg-white py-16 md:py-20">
+          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+            <div id="reviews">
+              <SectionHeading title="From our customers" />
+            </div>
+            <ul className="mt-10 grid gap-5 md:grid-cols-3">
+              {reviews.slice(0, 3).map((r: Review & { customer_name?: string; city?: string; is_verified_purchase?: boolean }) => (
+                <li key={r.id} className="rounded-lg border border-[hsl(var(--border))] bg-white p-6">
+                  <div className="flex gap-1" aria-label={`${r.rating} out of 5`}>
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <Star key={i} className={cn("h-4 w-4", i < r.rating ? "fill-[hsl(var(--brand-gold))] text-[hsl(var(--brand-gold))]" : "text-[hsl(var(--brand-ink)/0.2)]")} />
+                    ))}
+                  </div>
+                  <blockquote className="mt-3 font-serif text-[17px] leading-relaxed">{r.content}</blockquote>
+                  <p className="mt-4 font-sans text-[14px] font-semibold">{r.customer_name}</p>
+                  {r.is_verified_purchase && (
+                    <p className="mt-1 inline-flex items-center gap-1 font-sans text-[13px] text-[hsl(var(--brand-muted))]">
+                      <BadgeCheck className="h-4 w-4" /> Verified purchase
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="flex-1 text-center md:text-left">
-            <h2 className="font-serif text-[22px] font-semibold leading-tight sm:text-[26px]">
-              Want a custom design?
+        </section>
+      )}
+
+      {/* ── CUSTOM STUDIO (closing band, pale indigo) ───────────────────── */}
+      <section aria-labelledby="custom-studio" className="relative bg-[hsl(var(--brand-cream))]">
+        <div className="relative mx-auto grid max-w-[1120px] items-center gap-12 px-5 py-16 sm:px-8 md:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] md:gap-16 md:py-24">
+          <div className="order-2 md:order-1">
+            <h2 id="custom-studio" className="text-balance font-serif text-[30px] leading-tight md:text-[44px]">
+              Want something made just for you?
             </h2>
-            <p className="mt-2 text-[14px] leading-[1.6] text-[hsl(var(--brand-ink)/0.7)] sm:text-[15px]">
-              Choose your fabric, motifs and colours — our artisans paint it
-              for you.
+            <FloralDivider className="ml-0 mt-4" />
+            <p className="mt-6 max-w-[34rem] font-sans text-[16px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+              We make custom designs for everything we paint: sarees, dupattas, fabrics, men's wear and more. Send us your
+              idea, colours or a photo.
             </p>
+            <p className="mt-3 font-sans text-[14px] text-[hsl(var(--brand-muted))]">
+              No obligation. We share fabric options, price and timeline first.
+            </p>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#1F7A4D] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:bg-[#17603C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                Message on WhatsApp
+              </a>
+              <Link href="/custom-design" className={cn(secondaryButton, "hover:bg-white/80")}>
+                See custom designs
+              </Link>
+            </div>
           </div>
-          <div className="flex w-full shrink-0 flex-col gap-2.5 sm:flex-row md:w-auto">
-            <a
-              href={customDesignWhatsAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[hsl(var(--brand-ink))] px-6 text-[12px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-paper))] transition-colors hover:bg-[hsl(var(--brand-ink-soft))]"
-            >
-              <MessageCircle className="h-4 w-4" />
-              WhatsApp us
-            </a>
-            <Link
-              href="/custom-design"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-full px-6 text-[12px] font-semibold uppercase tracking-[0.14em] ring-1 ring-[hsl(var(--brand-ink)/0.3)] transition-colors hover:bg-[hsl(var(--brand-ink)/0.05)]"
-            >
-              Details
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+          <div className="order-1 mx-auto w-full max-w-[340px] pt-6 md:order-2">
+            <JharokhaFrame>
+              {customImage ? (
+                <OptimizedImage
+                  src={customImage}
+                  alt={customPiece?.name ? `Commissioned piece: ${customPiece.name}` : "A commissioned Kalamkari piece"}
+                  fill
+                  sizes="(max-width: 768px) 80vw, 340px"
+                  imageType="productCard"
+                  className="object-cover"
+                />
+              ) : (
+                <Image
+                  src="/images/brand-models/model-saree-08.jpeg"
+                  alt="Hand-painted Srikalahasti Kalamkari saree"
+                  fill
+                  sizes="(max-width: 768px) 80vw, 340px"
+                  className="object-cover"
+                />
+              )}
+            </JharokhaFrame>
+            {customPiece?.name && (
+              <p className="mt-3 text-center font-sans text-[13px] text-[hsl(var(--brand-muted))]">{customPiece.name}</p>
+            )}
           </div>
         </div>
       </section>

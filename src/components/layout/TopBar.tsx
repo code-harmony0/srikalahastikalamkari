@@ -49,7 +49,7 @@ export function TopBar({ onMenuClick, className }: TopBarProps) {
           {/* Search - collapses at ≤1280px */}
           <div className="hidden xl:block">
             <div className="relative w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[hsl(var(--brand-muted))]" />
               <input
                 type="text"
                 placeholder="Search..."
@@ -60,7 +60,7 @@ export function TopBar({ onMenuClick, className }: TopBarProps) {
 
           {/* Search Icon Only (≤1280px) */}
           <button
-            className="xl:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
+            className="xl:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-[hsl(var(--brand-muted))] hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
             aria-label="Search"
           >
             <Search className="h-5 w-5" />
@@ -68,7 +68,7 @@ export function TopBar({ onMenuClick, className }: TopBarProps) {
 
           {/* Notifications - gray scale only */}
           <button
-            className="relative inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
+            className="relative inline-flex items-center justify-center w-10 h-10 rounded-lg text-[hsl(var(--brand-muted))] hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
             aria-label="Notifications"
           >
             <Bell className="h-5 w-5" />
@@ -78,7 +78,7 @@ export function TopBar({ onMenuClick, className }: TopBarProps) {
 
           {/* User Menu */}
           <button
-            className="inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-lg text-[hsl(var(--brand-muted))] hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
             aria-label="User menu"
           >
             <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">

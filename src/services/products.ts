@@ -1178,6 +1178,22 @@ export const productsService = {
   // to look items up in a partial product list, so anything outside it vanished:
   // the cart deleted it and checkout priced it at ₹0. Errors throw, so a failed
   // request is never mistaken for "these products no longer exist".
+  /**
+   * Just enough about every visible product to count and illustrate categories
+   * on the home page. Deliberately light: no descriptions or variants.
+   */
+  async getVisibleCategoryIndex(): Promise<
+    Array<Pick<Product, "id" | "images" | "created_at"> & { category_id: string | null; sub_category_id: string | null }>
+  > {
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, category_id, sub_category_id, images, created_at")
+      .eq("is_visible", true);
+
+    if (error) throw error;
+    return data || [];
+  },
+
   async getByIds(ids: string[]): Promise<Product[]> {
     if (!ids.length) return [];
     const { data, error } = await supabase

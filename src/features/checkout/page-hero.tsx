@@ -21,8 +21,8 @@ export function PageHero({
     <section
       className={cn(
         "relative h-[200px] md:h-[240px] w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden",
-        "bg-[#1A1512]", // Deep Charcoal/Espresso Background
-        "border-b border-[#C19A5B]/20",
+        "bg-[hsl(var(--brand-midnight))]", // Midnight band, as the site footer
+        "border-b border-[hsl(var(--brand-gold)/0.2)]",
         className,
       )}
     >
@@ -30,7 +30,7 @@ export function PageHero({
       <div
         className="absolute inset-0 opacity-[0.08] pointer-events-none mix-blend-overlay"
         style={{
-          backgroundImage: "radial-gradient(#C19A5B 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(#F2B705 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />
@@ -46,19 +46,19 @@ export function PageHero({
       >
         {/* Icon */}
         {Icon && (
-          <div className="mb-4 p-3 rounded-full bg-[#FAFAF8]/10 border border-[#FAFAF8]/20 backdrop-blur-sm shadow-sm">
-            <Icon className="w-6 h-6 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
+          <div className="mb-4 p-3 rounded-full bg-[hsl(var(--brand-paper)/0.1)] border border-[hsl(var(--brand-paper)/0.2)] backdrop-blur-sm shadow-sm">
+            <Icon className="w-6 h-6 text-[hsl(var(--brand-gold-soft))]" strokeWidth={1.5} />
           </div>
         )}
 
         {/* Title */}
-        <h1 className="font-playfair text-3xl md:text-[40px] font-bold text-[#FAFAF8] tracking-wide leading-tight mb-3 drop-shadow-sm">
+        <h1 className="font-playfair text-3xl md:text-[40px] font-bold text-white tracking-wide leading-tight mb-3 drop-shadow-sm">
           {title}
         </h1>
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="font-inter text-[#FAFAF8]/80 text-sm md:text-[16px] font-light tracking-wide leading-relaxed max-w-xl">
+          <p className="font-inter text-white/80 text-sm md:text-[16px] font-light tracking-wide leading-relaxed max-w-xl">
             {subtitle}
           </p>
         )}
@@ -68,7 +68,7 @@ export function PageHero({
           initial={{ width: 0, opacity: 0 }}
           animate={{ width: 64, opacity: 0.8 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="h-[2px] bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mt-6 rounded-full"
+          className="h-[2px] bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold))] to-transparent mt-6 rounded-full"
         />
       </motion.div>
     </section>

@@ -22,7 +22,7 @@ const FormSection = ({
   children: React.ReactNode
 }) => (
   <div className="mb-10">
-    <h3 className="font-playfair text-xl font-bold text-[#1A1512] mb-6 border-b border-[#C19A5B]/30 pb-2">
+    <h3 className="font-playfair text-xl font-bold text-[hsl(var(--brand-ink))] mb-6 border-b border-[hsl(var(--brand-gold)/0.3)] pb-2">
       {title}
     </h3>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">{children}</div>
@@ -49,8 +49,8 @@ const InputField = ({
   fullWidth?: boolean
 }) => (
   <div className={cn("space-y-1.5", fullWidth && "md:col-span-2")}>
-    <label className="block text-[13px] font-inter font-semibold text-[#1A1512]/80 uppercase tracking-wider">
-      {label} {required && <span className="text-[hsl(var(--brand-gold-deep))]">*</span>}
+    <label className="block text-[13px] font-inter font-semibold text-[hsl(var(--brand-ink))] uppercase tracking-wider">
+      {label} {required && <span className="text-[hsl(var(--brand-madder))]">*</span>}
     </label>
     <input
       type={type}
@@ -61,11 +61,11 @@ const InputField = ({
       disabled={disabled}
       className={cn(
         "w-full h-[48px] px-4 rounded-[6px] border bg-white/70 font-inter text-[15px] transition-all",
-        "text-[#1A1512] placeholder:text-[#1A1512]/40",
-        "focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/20",
+        "text-[hsl(var(--brand-ink))] placeholder:text-[hsl(var(--brand-muted))]",
+        "focus:outline-none focus:border-[hsl(var(--brand-gold))] focus:ring-1 focus:ring-[hsl(var(--brand-gold)/0.2)]",
         disabled
-          ? "bg-[#1A1512]/5 border-[#1A1512]/10 text-[#1A1512]/60 cursor-not-allowed"
-          : "border-[#C19A5B]/20",
+          ? "bg-[hsl(var(--brand-ink)/0.05)] border-[hsl(var(--brand-ink)/0.1)] text-[hsl(var(--brand-ink-soft))] cursor-not-allowed"
+          : "border-[hsl(var(--brand-gold)/0.2)]",
       )}
     />
   </div>
@@ -127,7 +127,7 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
       {/* 🏛 Page Hero */}
       <PageHero
         eyebrow="Account Settings"
@@ -222,11 +222,11 @@ export default function EditProfilePage() {
               </FormSection>
 
               {/* ACTIONS */}
-              <div className="pt-6 border-t border-[#C19A5B]/20 flex flex-col-reverse sm:flex-row items-center justify-end gap-4">
+              <div className="pt-6 border-t border-[hsl(var(--brand-gold)/0.2)] flex flex-col-reverse sm:flex-row items-center justify-end gap-4">
                 <Link href="/profile" className="w-full sm:w-auto">
                   <button
                     type="button"
-                    className="w-full sm:w-auto px-6 h-[48px] rounded-[6px] border border-[#C19A5B]/30 bg-white/40 text-[#1A1512] font-inter font-medium text-[15px] hover:bg-white hover:text-[hsl(var(--brand-gold-deep))] hover:border-[#C19A5B]/50 transition-all"
+                    className="w-full sm:w-auto px-6 h-[48px] rounded-[6px] border border-[hsl(var(--brand-gold)/0.3)] bg-white/40 text-[hsl(var(--brand-ink))] font-inter font-medium text-[15px] hover:bg-white hover:text-[hsl(var(--brand-ink))] hover:border-[hsl(var(--brand-gold)/0.5)] transition-all"
                   >
                     Cancel
                   </button>
@@ -235,7 +235,7 @@ export default function EditProfilePage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="w-full sm:w-auto px-8 h-[48px] bg-[#1A1512] text-white rounded-[6px] font-inter font-medium text-[15px] hover:bg-[#C19A5B] hover:text-[#1A1512] border border-[#C19A5B]/20 shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-8 h-[48px] bg-[hsl(var(--brand-midnight))] text-white rounded-[6px] font-inter font-medium text-[15px] hover:bg-[hsl(var(--brand-midnight-hover))] hover:text-white border border-[hsl(var(--brand-gold)/0.2)] shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSaving ? (
                     <>
@@ -250,7 +250,7 @@ export default function EditProfilePage() {
               </div>
 
               {/* TRUST SIGNAL */}
-              <div className="mt-8 flex items-center justify-center gap-2 text-[#1A1512]/60">
+              <div className="mt-8 flex items-center justify-center gap-2 text-[hsl(var(--brand-ink-soft))]">
                 <Lock className="w-3 h-3" />
                 <span className="text-[12px] font-inter">
                   Your information is securely stored and never shared.

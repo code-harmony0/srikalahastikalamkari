@@ -89,18 +89,18 @@ export function ReviewSubmissionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-white border border-[#C19A5B]/20">
+      <DialogContent className="sm:max-w-[500px] bg-white border border-[hsl(var(--brand-gold)/0.2)]">
         <DialogHeader>
-          <DialogTitle className="font-playfair text-2xl font-bold text-[#1A1512]">
+          <DialogTitle className="font-playfair text-2xl font-bold text-[hsl(var(--brand-ink))]">
             Write a Review
           </DialogTitle>
-          <DialogDescription className="text-[#1A1512]/60">
+          <DialogDescription className="text-[hsl(var(--brand-ink-soft))]">
             Share your experience with this product
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex items-center gap-4 py-4 border-b border-[#C19A5B]/10 mb-4">
-          <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#C19A5B]/20">
+        <div className="flex items-center gap-4 py-4 border-b border-[hsl(var(--brand-gold)/0.1)] mb-4">
+          <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-[hsl(var(--brand-gold)/0.2)]">
             <OptimizedImage
               src={productImage}
               alt={productName}
@@ -112,17 +112,17 @@ export function ReviewSubmissionDialog({
             />
           </div>
           <div>
-            <h4 className="font-medium text-[#1A1512] line-clamp-1">
+            <h4 className="font-medium text-[hsl(var(--brand-ink))] line-clamp-1">
               {productName}
             </h4>
-            <p className="text-xs text-[#1A1512]/60">Verified Purchase</p>
+            <p className="text-xs text-[hsl(var(--brand-ink-soft))]">Verified Purchase</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Rating */}
-          <div className="flex flex-col items-center py-2 bg-white rounded-xl border border-[#C19A5B]/20">
-            <label className="text-sm font-medium text-[#1A1512]/80 mb-2">
+          <div className="flex flex-col items-center py-2 bg-white rounded-xl border border-[hsl(var(--brand-gold)/0.2)]">
+            <label className="text-sm font-medium text-[hsl(var(--brand-ink))] mb-2">
               Rate this product
             </label>
             <StarRating
@@ -136,7 +136,7 @@ export function ReviewSubmissionDialog({
           {/* Name & Title */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1A1512]/80 mb-1">
+              <label className="block text-sm font-medium text-[hsl(var(--brand-ink))] mb-1">
                 Your Name *
               </label>
               <input
@@ -144,19 +144,19 @@ export function ReviewSubmissionDialog({
                 value={formData.customer_name}
                 onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
                 required
-                className="w-full px-3 py-2 border border-[#C19A5B]/20 rounded-lg focus:outline-none focus:border-[#C19A5B] bg-white text-sm text-[#1A1512]"
+                className="w-full px-3 py-2 border border-[hsl(var(--brand-gold)/0.2)] rounded-lg focus:outline-none focus:border-[hsl(var(--brand-gold))] bg-white text-sm text-[hsl(var(--brand-ink))]"
                 placeholder="Name"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1A1512]/80 mb-1">
+              <label className="block text-sm font-medium text-[hsl(var(--brand-ink))] mb-1">
                 Review Title
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-3 py-2 border border-[#C19A5B]/20 rounded-lg focus:outline-none focus:border-[#C19A5B] bg-white text-sm text-[#1A1512]"
+                className="w-full px-3 py-2 border border-[hsl(var(--brand-gold)/0.2)] rounded-lg focus:outline-none focus:border-[hsl(var(--brand-gold))] bg-white text-sm text-[hsl(var(--brand-ink))]"
                 placeholder="Title"
               />
             </div>
@@ -164,14 +164,14 @@ export function ReviewSubmissionDialog({
 
           {/* Content */}
           <div>
-            <label className="block text-sm font-medium text-[#1A1512]/80 mb-1">
+            <label className="block text-sm font-medium text-[hsl(var(--brand-ink))] mb-1">
               Your Review
             </label>
             <textarea
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               rows={4}
-              className="w-full px-3 py-2 border border-[#C19A5B]/20 rounded-lg focus:outline-none focus:border-[#C19A5B] bg-white resize-none text-sm text-[#1A1512]"
+              className="w-full px-3 py-2 border border-[hsl(var(--brand-gold)/0.2)] rounded-lg focus:outline-none focus:border-[hsl(var(--brand-gold))] bg-white resize-none text-sm text-[hsl(var(--brand-ink))]"
               placeholder="What did you like or dislike?"
             />
           </div>
@@ -180,14 +180,14 @@ export function ReviewSubmissionDialog({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-[#C19A5B]/20 text-[#1A1512] rounded-lg hover:bg-[#C19A5B]/10 text-sm font-medium"
+              className="px-4 py-2 border border-[hsl(var(--brand-gold)/0.2)] text-[hsl(var(--brand-ink))] rounded-lg hover:bg-[hsl(var(--brand-gold)/0.1)] text-sm font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2 bg-[#1A1512] text-white rounded-lg hover:bg-[#C19A5B] disabled:opacity-50 flex items-center gap-2 text-sm font-medium"
+              className="px-6 py-2 bg-[hsl(var(--brand-midnight))] text-white rounded-lg hover:bg-[hsl(var(--brand-midnight-hover))] disabled:opacity-50 flex items-center gap-2 text-sm font-medium"
             >
               {submitting ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

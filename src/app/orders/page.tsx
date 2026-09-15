@@ -142,13 +142,13 @@ export default function OrdersPage() {
   const getStatusConfig = (status: string) => {
     switch (status) {
       case "paid":
-        return { label: "Confirmed", color: "text-blue-600", bgColor: "bg-blue-50", icon: CheckCircle2 }
+        return { label: "Confirmed", color: "text-[hsl(var(--brand-midnight))]", bgColor: "bg-[hsl(var(--brand-indigo-tint))]", icon: CheckCircle2 }
       case "in_packing":
         return { label: "Packing", color: "text-purple-600", bgColor: "bg-purple-50", icon: Box }
       case "packed":
         return { label: "Ready", color: "text-orange-600", bgColor: "bg-orange-50", icon: PackageCheck }
       case "shipped":
-        return { label: "Shipped", color: "text-green-600", bgColor: "bg-green-50", icon: Truck }
+        return { label: "Shipped", color: "text-green-700", bgColor: "bg-green-50", icon: Truck }
       case "cancelled":
         return { label: "Cancelled", color: "text-red-600", bgColor: "bg-red-50", icon: XCircle }
       default:
@@ -182,17 +182,17 @@ export default function OrdersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512] flex items-center justify-center">
-        <div className="text-center bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-[#C19A5B]/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-          <Loader2 className="w-8 h-8 animate-spin text-[hsl(var(--brand-gold-deep))] mx-auto mb-4" />
-          <p className="text-[#1A1512]/60 font-inter text-sm">Loading your orders...</p>
+      <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))] flex items-center justify-center">
+        <div className="text-center bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-[hsl(var(--brand-gold)/0.2)] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+          <Loader2 className="w-8 h-8 animate-spin text-[hsl(var(--brand-ink))] mx-auto mb-4" />
+          <p className="text-[hsl(var(--brand-ink-soft))] font-inter text-sm">Loading your orders...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
       {/* Hero Section */}
       <PageHero
         eyebrow="Purchase History"
@@ -205,24 +205,24 @@ export default function OrdersPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] transition-colors mb-6 font-inter text-sm"
+          className="inline-flex items-center gap-2 text-[hsl(var(--brand-ink-soft))] hover:text-[hsl(var(--brand-ink))] transition-colors mb-6 font-inter text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
 
         {orders.length === 0 ? (
-          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-xl border border-[#C19A5B]/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-            <Package className="w-16 h-16 text-[hsl(var(--brand-gold-deep))] mx-auto mb-4" />
-            <h3 className="font-serif text-xl font-bold text-[#1A1512] mb-2 italic">
+          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-xl border border-[hsl(var(--brand-gold)/0.2)] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+            <Package className="w-16 h-16 text-[hsl(var(--brand-ink))] mx-auto mb-4" />
+            <h3 className="font-serif text-xl font-bold text-[hsl(var(--brand-ink))] mb-2 italic">
               No orders yet
             </h3>
-            <p className="text-[#1A1512]/60 font-inter mb-6 text-sm">
+            <p className="text-[hsl(var(--brand-ink-soft))] font-inter mb-6 text-sm">
               Start shopping to see your orders here
             </p>
             <Link
               href="/products"
-              className="inline-block px-8 py-3 bg-[#1A1512] text-white border border-transparent rounded-full font-bold text-[11px] uppercase tracking-widest hover:bg-[#C19A5B] hover:text-white transition-all duration-300 shadow-sm"
+              className="inline-block px-8 py-3 bg-[hsl(var(--brand-midnight))] text-white border border-transparent rounded-full font-bold text-[11px] uppercase tracking-widest hover:bg-[hsl(var(--brand-midnight-hover))] hover:text-white transition-all duration-300 shadow-sm"
             >
               Browse Products
             </Link>
@@ -241,19 +241,19 @@ export default function OrdersPage() {
                   key={order.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white/80 backdrop-blur-sm rounded-lg border border-[#C19A5B]/20 overflow-hidden hover:border-[#C19A5B] hover:shadow-md transition-all"
+                  className="bg-white/80 backdrop-blur-sm rounded-lg border border-[hsl(var(--brand-gold)/0.2)] overflow-hidden hover:border-[hsl(var(--brand-gold))] hover:shadow-md transition-all"
                 >
                   {/* Order List Item - Always Visible */}
                   <button
                     onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
-                    className="w-full p-4 flex items-center gap-4 text-left hover:bg-[#FAFAF8]/80 transition-colors"
+                    className="w-full p-4 flex items-center gap-4 text-left hover:bg-[hsl(var(--brand-paper)/0.8)] transition-colors"
                   >
                     {/* Product Images Preview */}
                     <div className="flex -space-x-2">
                       {order.order_items?.slice(0, 2).map((item, idx) => (
                         <div
                           key={item.id}
-                          className="relative w-12 h-12 bg-[#1A1512]/5 rounded-lg border-2 border-white shadow-sm flex-shrink-0 overflow-hidden"
+                          className="relative w-12 h-12 bg-[hsl(var(--brand-ink)/0.05)] rounded-lg border-2 border-white shadow-sm flex-shrink-0 overflow-hidden"
                         >
                           {item.products?.images?.[0] ? (
                             <OptimizedImage
@@ -266,13 +266,13 @@ export default function OrdersPage() {
                               placeholder="empty"
                             />
                           ) : (
-                            <Package className="w-5 h-5 text-[hsl(var(--brand-gold-deep))] absolute inset-0 m-auto" />
+                            <Package className="w-5 h-5 text-[hsl(var(--brand-ink))] absolute inset-0 m-auto" />
                           )}
                         </div>
                       ))}
                       {order.order_items && order.order_items.length > 2 && (
-                        <div className="relative w-12 h-12 bg-[#1A1512]/10 rounded-lg border-2 border-white shadow-sm flex items-center justify-center">
-                          <span className="text-xs font-semibold text-[#1A1512]/70">
+                        <div className="relative w-12 h-12 bg-[hsl(var(--brand-ink)/0.1)] rounded-lg border-2 border-white shadow-sm flex items-center justify-center">
+                          <span className="text-xs font-semibold text-[hsl(var(--brand-ink-soft))]">
                             +{order.order_items.length - 2}
                           </span>
                         </div>
@@ -282,14 +282,14 @@ export default function OrdersPage() {
                     {/* Order Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-inter font-semibold text-sm text-[#1A1512]">
+                        <h3 className="font-inter font-semibold text-sm text-[hsl(var(--brand-ink))]">
                           #{order.id.slice(0, 8).toUpperCase()}
                         </h3>
                         <span className={cn(
                           "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border",
-                          order.status === "paid" ? "text-blue-700 bg-blue-50/70 border-blue-200/50" :
+                          order.status === "paid" ? "text-[hsl(var(--brand-midnight))] bg-[hsl(var(--brand-indigo-tint))] border-[hsl(var(--brand-midnight)/0.2)]" :
                           order.status === "in_packing" ? "text-purple-700 bg-purple-50/70 border-purple-200/50" :
-                          order.status === "packed" ? "text-[#1A1512] bg-[#C19A5B]/15 border-[#C19A5B]/20" :
+                          order.status === "packed" ? "text-[hsl(var(--brand-ink))] bg-[hsl(var(--brand-gold)/0.15)] border-[hsl(var(--brand-gold)/0.2)]" :
                           order.status === "shipped" ? "text-emerald-700 bg-emerald-50/70 border-emerald-200/50" :
                           order.status === "cancelled" ? "text-red-700 bg-red-50/70 border-red-200/50" :
                           "text-stone-600 bg-stone-50 border-stone-200/50"
@@ -298,7 +298,7 @@ export default function OrdersPage() {
                           {statusConfig.label}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-[#1A1512]/60 font-inter">
+                      <div className="flex items-center gap-3 text-xs text-[hsl(var(--brand-ink-soft))] font-inter">
                         <span>
                           {new Date(order.created_at).toLocaleDateString("en-US", {
                             month: "short",
@@ -309,7 +309,7 @@ export default function OrdersPage() {
                         <span>•</span>
                         <span>{order.order_items?.length || 0} items</span>
                         <span>•</span>
-                        <span className="font-semibold text-[hsl(var(--brand-gold-deep))]">
+                        <span className="font-semibold text-[hsl(var(--brand-ink))]">
                           {formatPrice(order.total_amount)}
                         </span>
                       </div>
@@ -318,9 +318,9 @@ export default function OrdersPage() {
                     {/* Expand Icon */}
                     <div className="flex-shrink-0">
                       {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-[#1A1512]/60" />
+                        <ChevronUp className="w-5 h-5 text-[hsl(var(--brand-ink-soft))]" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-[#1A1512]/60" />
+                        <ChevronDown className="w-5 h-5 text-[hsl(var(--brand-ink-soft))]" />
                       )}
                     </div>
                   </button>
@@ -333,19 +333,19 @@ export default function OrdersPage() {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="border-t border-[#C19A5B]/20"
+                        className="border-t border-[hsl(var(--brand-gold)/0.2)]"
                       >
                         <div className="p-4 space-y-5">
                           {/* Status Journey */}
                           <div>
-                            <h4 className="text-xs font-semibold text-[#1A1512] font-inter uppercase tracking-wide mb-3">
+                            <h4 className="text-xs font-semibold text-[hsl(var(--brand-ink))] font-inter uppercase tracking-wide mb-3">
                               Order Status
                             </h4>
                             <div className="flex items-center justify-between relative px-2">
                               {/* Progress Line */}
-                              <div className="absolute top-4 left-4 right-4 h-0.5 bg-[#1A1512]/10" style={{ zIndex: 0 }} />
+                              <div className="absolute top-4 left-4 right-4 h-0.5 bg-[hsl(var(--brand-ink)/0.1)]" style={{ zIndex: 0 }} />
                               <div 
-                                className="absolute top-4 left-4 h-0.5 bg-[#C19A5B] transition-all duration-500" 
+                                className="absolute top-4 left-4 h-0.5 bg-[hsl(var(--brand-gold))] transition-all duration-500" 
                                 style={{ 
                                   width: `${(journey.findIndex(s => s.active) / (journey.length - 1)) * 92}%`,
                                   zIndex: 1 
@@ -360,14 +360,14 @@ export default function OrdersPage() {
                                     <div className={cn(
                                       "w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all",
                                       step.completed || step.active
-                                        ? "bg-[#1A1512] border-[#C19A5B] text-[#C19A5B]"
-                                        : "bg-white border-[#1A1512]/10 text-[#1A1512]/30"
+                                        ? "bg-[hsl(var(--brand-midnight))] border-[hsl(var(--brand-midnight))] text-white"
+                                        : "bg-white border-[hsl(var(--brand-ink)/0.1)] text-[hsl(var(--brand-ink)/0.3)]"
                                     )}>
                                       <StepIcon className="w-4 h-4" />
                                     </div>
                                     <span className={cn(
                                       "text-[10px] font-inter mt-1.5 text-center",
-                                      step.completed || step.active ? "text-[#1A1512] font-semibold" : "text-[#1A1512]/40"
+                                      step.completed || step.active ? "text-[hsl(var(--brand-ink))] font-semibold" : "text-[hsl(var(--brand-muted))]"
                                     )}>
                                       {step.label}
                                     </span>
@@ -379,13 +379,13 @@ export default function OrdersPage() {
 
                           {/* Order Items */}
                           <div>
-                            <h4 className="text-xs font-semibold text-[#1A1512] font-inter uppercase tracking-wide mb-3">
+                            <h4 className="text-xs font-semibold text-[hsl(var(--brand-ink))] font-inter uppercase tracking-wide mb-3">
                               Items
                             </h4>
                             <div className="space-y-2">
                               {order.order_items?.map((item) => (
-                                <div key={item.id} className="flex gap-3 p-2 rounded-lg hover:bg-[#FAFAF8]/80">
-                                  <div className="relative w-14 h-14 bg-[#1A1512]/5 rounded-lg border border-[#C19A5B]/20 flex-shrink-0 overflow-hidden">
+                                <div key={item.id} className="flex gap-3 p-2 rounded-lg hover:bg-[hsl(var(--brand-paper)/0.8)]">
+                                  <div className="relative w-14 h-14 bg-[hsl(var(--brand-ink)/0.05)] rounded-lg border border-[hsl(var(--brand-gold)/0.2)] flex-shrink-0 overflow-hidden">
                                     {item.products?.images?.[0] ? (
                                       <OptimizedImage
                                         src={getImageTier(item.products.images, "thumb", 0)}
@@ -397,19 +397,19 @@ export default function OrdersPage() {
                                         placeholder="empty"
                                       />
                                     ) : (
-                                      <Package className="w-5 h-5 text-[hsl(var(--brand-gold-deep))] absolute inset-0 m-auto" />
+                                      <Package className="w-5 h-5 text-[hsl(var(--brand-ink))] absolute inset-0 m-auto" />
                                     )}
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <h5 className="font-inter text-sm font-medium text-[#1A1512] line-clamp-1">
+                                    <h5 className="font-inter text-sm font-medium text-[hsl(var(--brand-ink))] line-clamp-1">
                                       {item.products?.name || "Product"}
                                     </h5>
-                                    <p className="text-xs text-[#1A1512]/60 font-inter">
+                                    <p className="text-xs text-[hsl(var(--brand-ink-soft))] font-inter">
                                       Qty: {item.quantity} × {formatPrice(item.price_at_purchase)}
                                     </p>
                                   </div>
                                   <div className="text-right">
-                                    <p className="font-inter text-sm font-semibold text-[hsl(var(--brand-gold-deep))]">
+                                    <p className="font-inter text-sm font-semibold text-[hsl(var(--brand-ink))]">
                                       {formatPrice(item.price_at_purchase * item.quantity)}
                                     </p>
                                     {(order.status === 'shipped' || order.status === 'paid') && (
@@ -421,7 +421,7 @@ export default function OrdersPage() {
                                           productImage:
                                             getImageTier(item.products?.images, "thumb", 0) || "",
                                         })}
-                                        className="mt-2 text-xs font-medium text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] flex items-center justify-end gap-1 transition-colors"
+                                        className="mt-2 text-xs font-medium text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] flex items-center justify-end gap-1 transition-colors"
                                       >
                                         <Star className="w-3 h-3" />
                                         Write Review
@@ -434,16 +434,16 @@ export default function OrdersPage() {
                           </div>
 
                           {/* Shipping & Total */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-[#C19A5B]/20">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-[hsl(var(--brand-gold)/0.2)]">
                             {/* Shipping Address */}
                             <div>
-                              <h4 className="text-xs font-semibold text-[#1A1512] font-inter uppercase tracking-wide mb-2 flex items-center gap-1">
+                              <h4 className="text-xs font-semibold text-[hsl(var(--brand-ink))] font-inter uppercase tracking-wide mb-2 flex items-center gap-1">
                                 <MapPin className="w-3 h-3" />
                                 Delivery Address
                               </h4>
-                              <div className="text-xs text-[#1A1512]/70 font-inter space-y-0.5 bg-[#1A1512]/5 p-3 rounded-lg border border-[#C19A5B]/10">
+                              <div className="text-xs text-[hsl(var(--brand-ink-soft))] font-inter space-y-0.5 bg-[hsl(var(--brand-ink)/0.05)] p-3 rounded-lg border border-[hsl(var(--brand-gold)/0.1)]">
                                 {shippingAddr.firstName && (
-                                  <p className="font-medium text-[#1A1512]">
+                                  <p className="font-medium text-[hsl(var(--brand-ink))]">
                                     {shippingAddr.firstName} {shippingAddr.lastName}
                                   </p>
                                 )}
@@ -452,7 +452,7 @@ export default function OrdersPage() {
                                   <p>{shippingAddr.city}, {shippingAddr.state} {shippingAddr.pincode}</p>
                                 )}
                                 {shippingAddr.phone && (
-                                  <p className="flex items-center gap-1 mt-1.5 pt-1.5 border-t border-[#C19A5B]/10">
+                                  <p className="flex items-center gap-1 mt-1.5 pt-1.5 border-t border-[hsl(var(--brand-gold)/0.1)]">
                                     <Phone className="w-3 h-3" />
                                     {shippingAddr.phone}
                                   </p>
@@ -468,21 +468,21 @@ export default function OrdersPage() {
 
                             {/* Order Summary */}
                             <div>
-                              <h4 className="text-xs font-semibold text-[#1A1512] font-inter uppercase tracking-wide mb-2">
+                              <h4 className="text-xs font-semibold text-[hsl(var(--brand-ink))] font-inter uppercase tracking-wide mb-2">
                                 Order Summary
                               </h4>
-                              <div className="bg-[#1A1512]/5 p-3 rounded-lg border border-[#C19A5B]/10 space-y-2">
+                              <div className="bg-[hsl(var(--brand-ink)/0.05)] p-3 rounded-lg border border-[hsl(var(--brand-gold)/0.1)] space-y-2">
                                 <div className="flex justify-between text-xs font-inter">
-                                  <span className="text-[#1A1512]/60">Subtotal</span>
-                                  <span className="text-[#1A1512] font-medium">{formatPrice(order.order_items.reduce((sum, item) => sum + item.price_at_purchase * item.quantity, 0))}</span>
+                                  <span className="text-[hsl(var(--brand-ink-soft))]">Subtotal</span>
+                                  <span className="text-[hsl(var(--brand-ink))] font-medium">{formatPrice(order.order_items.reduce((sum, item) => sum + item.price_at_purchase * item.quantity, 0))}</span>
                                 </div>
                                 <div className="flex justify-between text-xs font-inter">
-                                  <span className="text-[#1A1512]/60">Shipping</span>
+                                  <span className="text-[hsl(var(--brand-ink-soft))]">Shipping</span>
                                   <span className="text-emerald-700 font-medium">Free</span>
                                 </div>
-                                <div className="flex justify-between pt-2 border-t border-[#C19A5B]/10">
-                                  <span className="text-sm font-semibold text-[#1A1512] font-inter">Total</span>
-                                  <span className="text-lg font-semibold tabular-nums text-[#1A1512] font-inter">
+                                <div className="flex justify-between pt-2 border-t border-[hsl(var(--brand-gold)/0.1)]">
+                                  <span className="text-sm font-semibold text-[hsl(var(--brand-ink))] font-inter">Total</span>
+                                  <span className="text-lg font-semibold tabular-nums text-[hsl(var(--brand-ink))] font-inter">
                                     {formatPrice(order.total_amount)}
                                   </span>
                                 </div>
@@ -491,19 +491,19 @@ export default function OrdersPage() {
                           </div>
 
                           {/* Delivery Information */}
-                          <div className="pt-3 border-t border-[#C19A5B]/20">
-                            <h4 className="text-xs font-semibold text-[#1A1512] font-inter uppercase tracking-wide mb-3 flex items-center gap-1">
+                          <div className="pt-3 border-t border-[hsl(var(--brand-gold)/0.2)]">
+                            <h4 className="text-xs font-semibold text-[hsl(var(--brand-ink))] font-inter uppercase tracking-wide mb-3 flex items-center gap-1">
                               <Info className="w-3 h-3" />
                               Delivery Information
                             </h4>
                             
-                            <div className="bg-[#1A1512]/5 p-3 rounded-lg border border-[#C19A5B]/10 space-y-2">
+                            <div className="bg-[hsl(var(--brand-ink)/0.05)] p-3 rounded-lg border border-[hsl(var(--brand-gold)/0.1)] space-y-2">
                               {/* Estimated Delivery */}
                               {(order.status === 'paid' || order.status === 'in_packing' || order.status === 'packed') && (
                                 <div className="flex items-center gap-2 text-xs font-inter">
-                                  <Calendar className="w-3 h-3 text-[hsl(var(--brand-gold-deep))]" />
-                                  <span className="text-[#1A1512]/60">Expected by:</span>
-                                  <span className="font-medium text-[#1A1512]">
+                                  <Calendar className="w-3 h-3 text-[hsl(var(--brand-ink))]" />
+                                  <span className="text-[hsl(var(--brand-ink-soft))]">Expected by:</span>
+                                  <span className="font-medium text-[hsl(var(--brand-ink))]">
                                     {calculateEstimatedDelivery(new Date(order.created_at)).estimatedDate.toLocaleDateString("en-US", {
                                       month: "short",
                                       day: "numeric",
@@ -514,7 +514,7 @@ export default function OrdersPage() {
                               )}
                               
                               {/* Delivery Message */}
-                              <div className="text-xs text-[#1A1512]/70 font-inter">
+                              <div className="text-xs text-[hsl(var(--brand-ink-soft))] font-inter">
                                 {getDeliveryMessage(order.status, order.shipping_company, order.tracking_id)}
                               </div>
                               
@@ -523,17 +523,17 @@ export default function OrdersPage() {
                                 (() => {
                                   const trackingUrl = getTrackingUrl(order.shipping_company, order.tracking_id);
                                   return trackingUrl ? (
-                                    <div className="pt-2 border-t border-[#C19A5B]/10">
+                                    <div className="pt-2 border-t border-[hsl(var(--brand-gold)/0.1)]">
                                       <div className="flex items-center justify-between">
                                         <div>
-                                          <p className="text-xs text-[#1A1512]/60 font-inter">Tracking ID</p>
-                                          <p className="text-xs font-mono font-medium text-[#1A1512]">{order.tracking_id}</p>
+                                          <p className="text-xs text-[hsl(var(--brand-ink-soft))] font-inter">Tracking ID</p>
+                                          <p className="text-xs font-mono font-medium text-[hsl(var(--brand-ink))]">{order.tracking_id}</p>
                                         </div>
                                         <a
                                           href={trackingUrl}
                                           target="_blank"
                                           rel="noopener noreferrer"
-                                          className="inline-flex items-center gap-1 text-xs text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] font-medium transition-colors"
+                                          className="inline-flex items-center gap-1 text-xs text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] font-medium transition-colors"
                                         >
                                           Track Order
                                           <ExternalLink className="w-3 h-3" />
@@ -557,15 +557,15 @@ export default function OrdersPage() {
 
         {/* Pagination Footer */}
         {orders.length > 0 && totalCount > 0 && (
-          <div className="mt-6 px-6 py-4 border border-[#C19A5B]/20 bg-white/80 backdrop-blur-sm rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-[#1A1512]/60">
-              Showing <span className="font-semibold text-[hsl(var(--brand-gold-deep))]">{Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)}-{Math.min(currentPage * itemsPerPage, totalCount)}</span> of <span className="font-semibold text-[#1A1512]">{totalCount}</span> orders
+          <div className="mt-6 px-6 py-4 border border-[hsl(var(--brand-gold)/0.2)] bg-white/80 backdrop-blur-sm rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-[hsl(var(--brand-ink-soft))]">
+              Showing <span className="font-semibold text-[hsl(var(--brand-ink))]">{Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)}-{Math.min(currentPage * itemsPerPage, totalCount)}</span> of <span className="font-semibold text-[hsl(var(--brand-ink))]">{totalCount}</span> orders
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1 || loading}
-                className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#1A1512]/80 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all"
+                className="h-8 px-4 text-xs font-medium rounded-lg border border-[hsl(var(--brand-gold)/0.2)] bg-white text-[hsl(var(--brand-ink))] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[hsl(var(--brand-midnight))] hover:text-white hover:border-transparent transition-all"
               >
                 Previous
               </button>
@@ -591,8 +591,8 @@ export default function OrdersPage() {
                       disabled={loading}
                       className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
                         currentPage === pNum 
-                          ? 'bg-[#1A1512] text-[#C19A5B] border border-[#C19A5B]/30 shadow-md shadow-[#1A1512]/10' 
-                          : 'text-[#1A1512]/60 hover:bg-[#1A1512]/10 hover:text-[#1A1512]'
+                          ? 'bg-[hsl(var(--brand-midnight))] text-white border border-transparent' 
+                          : 'text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-ink)/0.1)] hover:text-[hsl(var(--brand-ink))]'
                       }`}
                     >
                       {pNum}
@@ -603,7 +603,7 @@ export default function OrdersPage() {
               <button
                 onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / itemsPerPage), p + 1))}
                 disabled={currentPage >= Math.ceil(totalCount / itemsPerPage) || loading}
-                className="h-8 px-4 text-xs font-medium rounded-lg border border-[#C19A5B]/20 bg-white text-[#1A1512]/80 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1A1512] hover:text-[#C19A5B] hover:border-transparent transition-all"
+                className="h-8 px-4 text-xs font-medium rounded-lg border border-[hsl(var(--brand-gold)/0.2)] bg-white text-[hsl(var(--brand-ink))] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[hsl(var(--brand-midnight))] hover:text-white hover:border-transparent transition-all"
               >
                 Next
               </button>

@@ -27,6 +27,9 @@ interface FilterSidebarProps {
   availableFiltersLoading?: boolean;
 }
 
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]";
+
 function ChoiceRow({
   label,
   checked,
@@ -47,8 +50,10 @@ function ChoiceRow({
       aria-checked={checked}
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-3 rounded-md py-2 pr-2 text-left text-[14px] text-[hsl(var(--brand-ink)/0.85)] hover:bg-[hsl(var(--brand-ink)/0.03)]",
-        indent ? "pl-7" : "pl-1",
+        "flex min-h-[40px] w-full items-center gap-3 rounded-md py-2 pr-2 text-left font-sans text-[14px] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint)/0.7)]",
+        focusRing,
+        indent ? "pl-8" : "pl-1.5",
+        checked && "font-medium",
       )}
     >
       <span
@@ -57,13 +62,13 @@ function ChoiceRow({
           "flex h-[18px] w-[18px] shrink-0 items-center justify-center ring-1 ring-inset transition-colors",
           radio ? "rounded-full" : "rounded-[4px]",
           checked
-            ? "bg-[hsl(var(--brand-ink))] text-[hsl(var(--brand-paper))] ring-[hsl(var(--brand-ink))]"
-            : "bg-[hsl(var(--brand-paper))] ring-[hsl(var(--brand-ink)/0.3)]",
+            ? "bg-[hsl(var(--brand-midnight))] text-white ring-[hsl(var(--brand-midnight))]"
+            : "bg-white ring-[hsl(var(--brand-ink)/0.4)]",
         )}
       >
         {checked &&
           (radio ? (
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--brand-paper))]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
           ) : (
             <Check className="h-3 w-3" strokeWidth={3} />
           ))}
@@ -134,24 +139,29 @@ const FilterSidebar = ({
   ]);
 
   const loadingCategories = isLoading || availableFiltersLoading;
+  const sectionClass = "mt-5 border-t border-[hsl(var(--brand-gold)/0.45)] pt-5";
+  const sectionTitleClass = "font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))]";
 
   return (
     <aside
       className={cn(
-        "bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))]",
+        "bg-white text-[hsl(var(--brand-ink))]",
         showMobile
           ? "flex min-h-full flex-col px-5 pt-5"
-          : "rounded-lg p-5 ring-1 ring-[hsl(var(--brand-ink)/0.08)]",
+          : "rounded-sm border border-[hsl(var(--brand-gold)/0.55)] p-5",
       )}
     >
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-[16px] font-semibold">Filters</h2>
+      <div className="flex min-h-[36px] items-center justify-between gap-3">
+        <h2 className="font-serif text-[22px] leading-none text-[hsl(var(--brand-ink))]">Filters</h2>
         <div className="flex items-center gap-1">
           {hasActiveFilters && (
             <button
               type="button"
               onClick={clearFilters}
-              className="h-9 px-2 text-[13px] font-medium underline underline-offset-4"
+              className={cn(
+                "h-9 rounded-sm px-2 font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[6px] hover:decoration-[hsl(var(--brand-ink))]",
+                focusRing,
+              )}
             >
               Clear all
             </button>
@@ -161,7 +171,10 @@ const FilterSidebar = ({
               type="button"
               onClick={onCloseMobile}
               aria-label="Close filters"
-              className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-[hsl(var(--brand-ink)/0.05)]"
+              className={cn(
+                "flex h-11 w-11 items-center justify-center rounded-full text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-indigo-tint))]",
+                focusRing,
+              )}
             >
               <X className="h-5 w-5" />
             </button>
@@ -170,8 +183,8 @@ const FilterSidebar = ({
       </div>
 
       <div className="flex-1">
-        <section className="mt-5 border-t border-[hsl(var(--brand-ink)/0.1)] pt-5">
-          <h3 className="text-[13px] font-semibold">Category</h3>
+        <section className={sectionClass}>
+          <h3 className={sectionTitleClass}>Category</h3>
           <div className="mt-2">
             {loadingCategories && (
               <div className="space-y-2 py-1">
@@ -184,12 +197,12 @@ const FilterSidebar = ({
               </div>
             )}
             {!loadingCategories && error && (
-              <p className="py-2 text-[13px] text-[hsl(var(--brand-madder))]">
+              <p className="py-2 font-sans text-[14px] text-[hsl(var(--brand-madder))]">
                 Categories could not be loaded.
               </p>
             )}
             {!loadingCategories && !error && visibleCategories.length === 0 && (
-              <p className="py-2 text-[13px] text-[hsl(var(--brand-ink)/0.6)]">
+              <p className="py-2 font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">
                 No categories available right now.
               </p>
             )}
@@ -220,7 +233,10 @@ const FilterSidebar = ({
                           onClick={() =>
                             setExpanded((current) => ({ ...current, [category.id]: !open }))
                           }
-                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-[hsl(var(--brand-ink)/0.55)] hover:bg-[hsl(var(--brand-ink)/0.04)]"
+                          className={cn(
+                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-indigo-tint)/0.7)]",
+                            focusRing,
+                          )}
                         >
                           <ChevronDown
                             className={cn("h-4 w-4 transition-transform", open && "rotate-180")}
@@ -244,11 +260,11 @@ const FilterSidebar = ({
           </div>
         </section>
 
-        <section className="mt-5 border-t border-[hsl(var(--brand-ink)/0.1)] pt-5">
-          <h3 id="price-filter-label" className="text-[13px] font-semibold">
+        <section className={sectionClass}>
+          <h3 id="price-filter-label" className={sectionTitleClass}>
             Price
           </h3>
-          <div role="radiogroup" aria-labelledby="price-filter-label" className="mt-2">
+          <div role="radiogroup" aria-labelledby="price-filter-label" className="mt-2 tabular-nums">
             {PRICE_BANDS.map((band) => (
               <ChoiceRow
                 key={band.id}
@@ -263,15 +279,18 @@ const FilterSidebar = ({
       </div>
 
       {showMobile && (
-        <div className="sticky bottom-0 -mx-5 mt-6 border-t border-[hsl(var(--brand-ink)/0.1)] bg-[hsl(var(--brand-paper))] px-5 py-4">
+        <div className="sticky bottom-0 -mx-5 mt-6 border-t border-[hsl(var(--brand-gold)/0.45)] bg-white px-5 py-4">
           <button
             type="button"
             onClick={onCloseMobile}
-            className="h-12 w-full rounded-full bg-[hsl(var(--brand-ink))] text-[12px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-paper))]"
+            className={cn(
+              "h-12 w-full rounded-full bg-[hsl(var(--brand-midnight))] font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white tabular-nums transition-colors hover:bg-[hsl(var(--brand-midnight-hover))]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2",
+            )}
           >
             {resultCount !== undefined
-              ? `Show ${resultCount} ${resultCount === 1 ? "result" : "results"}`
-              : "Show results"}
+              ? `Show ${resultCount} ${resultCount === 1 ? "piece" : "pieces"}`
+              : "Show pieces"}
           </button>
         </div>
       )}

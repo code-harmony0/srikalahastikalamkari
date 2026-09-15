@@ -11,24 +11,24 @@ export const revalidate = 3600
 
 export default function TextileCarePage() {
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
       <PageHero
         eyebrow="Preservation Guide"
         titleStart="Textile"
         titleAccent="care"
-        titleEnd="Guide"
+        titleEnd="guide"
         description="Preserving your authentic handcrafted Kalamkari textiles and organic natural dyes for generations."
       />
       <div className="max-w-4xl mx-auto px-6 py-12 md:py-16">
-        <div className="bg-white/95 rounded-[14px] border border-[#C19A5B]/20 shadow-sm p-8 md:p-12 backdrop-blur-sm">
+        <div className="bg-white/95 rounded-[14px] border border-[hsl(var(--brand-gold)/0.2)] shadow-sm p-8 md:p-12 backdrop-blur-sm">
 
-          <div className="space-y-8 text-[#1A1512]">
+          <div className="space-y-8 text-[hsl(var(--brand-ink))]">
             <p className="font-inter text-[15px] leading-relaxed">
               Authentic Srikalahasti Kalamkari is a labor of love, crafted entirely by hand using natural dyes extracted from roots, leaves, and minerals. Because of these traditional organic processes, your Kalamkari pieces require gentle and specific care to maintain their vibrancy and longevity.
             </p>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 1. Washing Instructions
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -41,7 +41,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 2. Drying
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -53,7 +53,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 3. Ironing
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -64,7 +64,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 4. Storage
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -75,7 +75,7 @@ export default function TextileCarePage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 Understanding Natural Dyes
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">

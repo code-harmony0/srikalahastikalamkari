@@ -23,11 +23,11 @@ export default function ReturnsPolicyPage() {
         description="All sales are final."
       />
       <div className="mx-auto max-w-[68ch] px-4 py-10 sm:px-6 md:py-14">
-        <p className="text-[13px] text-[hsl(var(--brand-ink)/0.55)]">
+        <p className="text-[13px] text-[hsl(var(--brand-muted))]">
           Last updated: September 2026
         </p>
 
-        <div className="mt-6 space-y-9 text-[15px] leading-[1.75] text-[hsl(var(--brand-ink)/0.85)]">
+        <div className="mt-6 space-y-9 text-[15px] leading-[1.75] text-[hsl(var(--brand-ink))]">
           <section>
             <h2 className="font-serif text-[22px] font-semibold leading-snug text-[hsl(var(--brand-ink))]">
               No returns, exchanges or refunds

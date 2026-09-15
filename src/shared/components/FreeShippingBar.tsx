@@ -13,7 +13,7 @@ export function FreeShippingBar() {
       className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center gap-2"
     >
       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-        <Truck className="w-4 h-4 text-green-600" />
+        <Truck className="w-4 h-4 text-green-700" />
       </div>
       <div>
         <p className="text-sm font-medium text-green-700">

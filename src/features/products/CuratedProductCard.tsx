@@ -2,8 +2,7 @@
 
 import React, { memo, useMemo } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Star, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { useCartStore } from "@/shared/cart-store";
 import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action";
 import { toast } from "sonner";
@@ -21,10 +20,16 @@ import {
 interface CuratedProductCardProps {
   product: Product;
   index?: number;
+  /** The home page shows the price only; discounts stay on shop and product pages. */
+  showDiscount?: boolean;
 }
 
+/**
+ * Home page product card, in the page's own style: no box, the photo in a thin
+ * gold frame (like the fabric arches), name and price centred underneath.
+ */
 export const CuratedProductCard = memo(
-  ({ product, index = 0 }: CuratedProductCardProps) => {
+  ({ product, showDiscount = true }: CuratedProductCardProps) => {
     const cart = useCartStore();
 
     const productData = useMemo(
@@ -32,12 +37,13 @@ export const CuratedProductCard = memo(
         name: product.name || product.title || "Unnamed Product",
         price: product.price || 0,
         originalPrice: product.original_price || product.originalPrice || null,
-        slug: product.slug,
+        category: (product as { categoryName?: string }).categoryName ?? null,
         image:
           getImageTier(product?.images, "medium", 0) ||
           product.image ||
           product.mainImage ||
           "/images/products/product-placeholder.png",
+        hoverImage: product.images && product.images.length > 1 ? getImageTier(product.images, "medium", 1) : null,
       }),
       [product]
     );
@@ -60,189 +66,102 @@ export const CuratedProductCard = memo(
       }
       cart.addItem(product, 1);
       toast.success("Added to cart", {
-        description: madeToOrder
-          ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.`
-          : undefined,
+        description: madeToOrder ? `Made to order. Delivery in ${MADE_TO_ORDER_DAYS}.` : undefined,
       });
     });
 
-    // Determine badge type
-    const getBadge = () => {
-      if (product.is_featured || product.isFeatured) return "Curated";
-      const salesRank = (product as any).salesRank;
-      if (salesRank && salesRank <= 10) return "Popular";
-      return null;
-    };
-
-    const badge = getBadge();
+    const hasDiscount = showDiscount && !!productData.originalPrice && productData.originalPrice > productData.price;
 
     return (
-      <motion.article
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-30px" }}
-        transition={{ duration: 0.4, delay: index * 0.06 }}
-        whileHover={{ y: -6, boxShadow: "0 12px 28px rgba(59, 44, 35, 0.12)" }}
-        className={cn(
-          "group relative flex flex-col",
-          // CARD CONTAINER - Solid background, subtle border, rounded corners
-          "w-full",
-          "bg-card border border-[#C19A5B]/20",
-          "rounded-xl overflow-hidden",
-          "shadow-[0_2px_8px_rgba(26,21,18,0.06)]",
-          "transition-shadow duration-300"
-        )}
-      >
-        {/* Entire card is clickable */}
-        <Link href={productUrl} className="flex flex-col h-full">
-          {/* IMAGE AREA - Inside card, max 55-60% height */}
-          <div className="relative aspect-[4/5] overflow-hidden bg-[#FAFAF8]">
-            {/* Secondary Image (Hover) */}
-            {product.images && product.images.length > 1 && (
+      <article className="group flex w-full flex-col">
+        <div className="relative">
+          <Link
+            href={productUrl}
+            className="block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-4"
+          >
+            <span className="relative block aspect-[4/5] overflow-hidden rounded-sm bg-[hsl(var(--brand-paper))] shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)]">
+              {productData.hoverImage && (
+                <OptimizedImage
+                  src={productData.hoverImage}
+                  alt=""
+                  fill
+                  className="z-10 object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 360px"
+                  imageType="productHero"
+                  loading="lazy"
+                />
+              )}
               <OptimizedImage
-                src={
-                  getImageTier(product?.images, "medium", 1) ||
-                  "/images/products/product-placeholder.png"
-                }
-                alt={`${productData.name} alternate`}
+                src={productData.image}
+                alt={productData.name}
                 fill
-                className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                 imageType="productHero"
-                priority={false}
+                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 360px"
                 loading="lazy"
               />
+              {/* Thin gold inner frame, the same line the fabric arches use. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-[7px] z-20 rounded-[2px] border border-[hsl(var(--brand-gold-soft)/0.9)]"
+              />
+            </span>
+          </Link>
+
+          {/* Add to cart: one round midnight button in the photo corner; always shown on touch screens. */}
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className={cn(
+              "absolute bottom-3.5 right-3.5 z-30 flex h-10 w-10 items-center justify-center rounded-full",
+              "bg-[hsl(var(--brand-midnight))] text-white shadow-[0_8px_18px_-8px_rgba(11,42,85,0.8)]",
+              "transition-[background-color,opacity] duration-300 hover:bg-[hsl(var(--brand-midnight-hover))]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2",
+              "sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100",
             )}
+            aria-label={madeToOrder ? `Preorder ${productData.name}` : `Add ${productData.name} to cart`}
+          >
+            <ShoppingBag className="h-4 w-4" />
+          </button>
+        </div>
 
-            <OptimizedImage
-              src={productData.image}
-              alt={productData.name}
-              fill
-              className={cn(
-                "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]",
-                product.images && product.images.length > 1
-                  ? "group-hover:opacity-0"
-                  : "",
-                madeToOrder && "grayscale-[30%] brightness-95"
-              )}
-              imageType="productHero"
-              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
-              loading="lazy"
-            />
-
-            {/* Made-to-order indicator */}
-            {madeToOrder && (
-              <>
-                <div className="absolute inset-0 bg-[#1A1512]/15 z-15 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-                  <div className="bg-[#1A1512]/80 backdrop-blur-[2px] py-1.5 flex items-center justify-center">
-                    <span className="text-[hsl(var(--brand-gold-deep))] text-[10px] font-semibold tracking-[0.12em] uppercase">
-                      Made to Order · {MADE_TO_ORDER_DAYS}
-                    </span>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Badges - top-left (only when in stock) */}
-            {badge && !madeToOrder && (
-              <div className="absolute top-3 left-3 z-10">
-                <span className="bg-[#1A1512] text-white text-[11px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase shadow-sm border border-white/10">
-                  {badge}
-                </span>
-              </div>
-            )}
-
-            {/* Desktop Slide-up Quick Add Bar */}
-            <div className="hidden sm:block absolute bottom-0 left-0 right-0 z-20 p-2.5 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none group-hover:pointer-events-auto">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleAddToCart();
-                }}
-                className={cn(
-                  "w-full h-9 rounded-md text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all duration-200 active:scale-[0.98]",
-                  madeToOrder
-                    ? "bg-[#1A1512] text-white hover:bg-[#A07840]"
-                    : "bg-white/95 text-[#1A1512] hover:bg-[#1A1512] hover:text-white"
-                )}
-                aria-label={madeToOrder ? "Preorder made-to-order item" : "Add to cart"}
-              >
-                <ShoppingBag className="w-3.5 h-3.5" />
-                {madeToOrder ? "Preorder" : "Quick Add"}
-              </button>
-            </div>
-
-            {/* Mobile Touch Quick Add Button */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAddToCart();
-              }}
-              className={cn(
-                "sm:hidden absolute bottom-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center",
-                "before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']",
-                "bg-white text-[#1A1512] shadow-md",
-                "transition-all duration-300 hover:bg-[#C19A5B] hover:text-white"
-              )}
-              aria-label={madeToOrder ? "Preorder made-to-order item" : "Add to cart"}
-            >
-              <ShoppingBag className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* CONTENT AREA - Padded, structured */}
-          <div className="flex flex-col flex-1 p-4">
-            {/* PRODUCT TITLE - PRIMARY, visually dominant */}
-            <h3 className="font-playfair font-semibold text-[16px] md:text-[17px] leading-snug text-[#1A1512] line-clamp-2 min-h-[2.6em] mb-2">
-              {productData.name}
-            </h3>
-
-            {/* PRICE - Secondary to title */}
-            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-2">
-              <span className="font-inter font-semibold text-[15px] text-[#1A1512]">
-                ₹{productData.price.toLocaleString()}
+        <Link href={productUrl} tabIndex={-1} className="mt-4 block px-1 text-center">
+          {productData.category && (
+            <span className="block font-sans text-[12px] font-medium text-[hsl(var(--brand-muted))]">
+              {productData.category}
+            </span>
+          )}
+          <span className="mt-1 font-serif text-[16px] leading-snug text-[hsl(var(--brand-ink))] line-clamp-2 md:text-[18px]">
+            {productData.name}
+          </span>
+          <span className="mt-2 flex flex-wrap items-baseline justify-center gap-x-2 font-sans tabular-nums">
+            <span className="text-[15px] font-semibold text-[hsl(var(--brand-ink))]">
+              ₹{productData.price.toLocaleString("en-IN")}
+            </span>
+            {hasDiscount && (
+              <span className="text-[13px] text-[hsl(var(--brand-muted))] line-through">
+                ₹{productData.originalPrice!.toLocaleString("en-IN")}
               </span>
-              {productData.originalPrice &&
-                productData.originalPrice > productData.price && (
-                  <>
-                    <span className="text-[12px] text-[#1A1512]/40 line-through">
-                      ₹{productData.originalPrice.toLocaleString()}
-                    </span>
-                    <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
-                      -{Math.round(((productData.originalPrice - productData.price) / productData.originalPrice) * 100)}%
-                    </span>
-                  </>
-                )}
-            </div>
-            {madeToOrder && (
-              <p className="text-[11px] font-medium text-[#A07840] mb-2">
-                Recreated in {MADE_TO_ORDER_DAYS}
-              </p>
             )}
-
-          </div>
+          </span>
+          {madeToOrder && (
+            <span className="mt-1 block font-sans text-[12px] text-[hsl(var(--brand-muted))]">
+              Made to order · {MADE_TO_ORDER_DAYS}
+            </span>
+          )}
         </Link>
-      </motion.article>
+      </article>
     );
   }
 );
 
 CuratedProductCard.displayName = "CuratedProductCard";
 
-// Skeleton Loader - Matches card structure
 export const CuratedProductCardSkeleton = () => (
-  <div className="flex flex-col w-full bg-card border border-[#E8DDD0] rounded-xl overflow-hidden animate-pulse">
-    <div className="aspect-[4/5] bg-[#E8DDD0]/40" />
-    <div className="p-4 space-y-3">
-      <div className="h-5 bg-[#E8DDD0]/50 rounded w-full" />
-      <div className="h-4 bg-[#E8DDD0]/50 rounded w-3/4" />
-      <div className="h-4 bg-[#E8DDD0]/40 rounded w-1/2 mt-1" />
-      <div className="pt-2 border-t border-[#E8DDD0]/40">
-        <div className="h-3 bg-[#E8DDD0]/40 rounded w-2/5" />
-      </div>
-    </div>
+  <div className="flex w-full animate-pulse flex-col">
+    <div className="aspect-[4/5] rounded-sm bg-[hsl(var(--border)/0.45)]" />
+    <div className="mx-auto mt-4 h-3 w-1/3 rounded bg-[hsl(var(--border)/0.5)]" />
+    <div className="mx-auto mt-2 h-4 w-3/4 rounded bg-[hsl(var(--border)/0.5)]" />
+    <div className="mx-auto mt-2 h-4 w-1/4 rounded bg-[hsl(var(--border)/0.45)]" />
   </div>
 );

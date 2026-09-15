@@ -21,12 +21,12 @@ export default function TermsAndConditionsPage() {
         description="Guidelines and agreements governing your use of Srikalahasti Kalamkari services."
       />
       <div className="max-w-4xl mx-auto px-5 sm:px-6 py-10 md:py-14">
-        <div className="bg-white/95 dark:bg-[#1E1510] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
-          <p className="text-[hsl(var(--brand-gold-deep))] dark:text-[hsl(var(--brand-gold))] mb-6 font-sans text-xs font-bold uppercase tracking-wider">
+        <div className="bg-white/95 dark:bg-[hsl(var(--brand-midnight))] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
+          <p className="text-[hsl(var(--brand-ink-soft))] mb-6 font-sans text-[14px]">
             Last updated: November 2025
           </p>
 
-          <div className="space-y-8 text-[#1A1512] max-w-[68ch]">
+          <div className="space-y-8 text-[hsl(var(--brand-ink))] max-w-[68ch]">
             <p className="font-inter text-[15px] leading-relaxed">
               Welcome to our website. By accessing or using this website, you
               agree to be bound by these Terms and Conditions. Please read them
@@ -35,7 +35,7 @@ export default function TermsAndConditionsPage() {
             </p>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 1. Acceptance of Terms
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -48,7 +48,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 2. Use of the Website
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -69,7 +69,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 3. Intellectual Property Rights
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -84,7 +84,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 4. User Accounts
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -99,7 +99,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 5. Limitation of Liability
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -114,7 +114,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 6. Third-Party Links
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -127,7 +127,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 7. Termination of Access
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -140,7 +140,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 8. Changes to Terms
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -154,7 +154,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 9. Governing Law
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -168,7 +168,7 @@ export default function TermsAndConditionsPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 10. Contact Us
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -177,7 +177,7 @@ export default function TermsAndConditionsPage() {
                   contact us at{" "}
                   <a
                     href="mailto:srikalahastikalamkari.sk@gmail.com"
-                    className="text-[hsl(var(--brand-gold-deep))] hover:underline"
+                    className="font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))]"
                   >
                     srikalahastikalamkari.sk@gmail.com
                   </a>

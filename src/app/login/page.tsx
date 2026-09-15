@@ -125,12 +125,12 @@ export default function UserLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[#1A1512]">
+    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
       {/* 🏛 MERGED HERO SECTION (Premium Dark Charcoal Hero) */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[180px] md:h-[220px] bg-[#1A1512]">
+      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden h-[180px] md:h-[220px] bg-[hsl(var(--brand-midnight))]">
         <div className="absolute inset-0 z-[6] pointer-events-none">
-          <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#C19A5B]/30 to-transparent" />
+          <div className="absolute top-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.3)] to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold)/0.3)] to-transparent" />
         </div>
 
         <motion.div
@@ -139,12 +139,12 @@ export default function UserLoginPage() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="relative z-10 flex flex-col items-center max-w-2xl mx-auto"
         >
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[hsl(var(--brand-gold-deep))] mb-2">
+          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase text-[hsl(var(--brand-gold-soft))] mb-2">
             Authentication
           </span>
 
           <h1 className="font-serif text-[32px] md:text-[40px] font-bold text-white tracking-wide leading-tight mb-2 uppercase">
-            Welcome <span className="italic text-[hsl(var(--brand-gold-deep))] font-normal lowercase">back</span>
+            Welcome <span className="italic text-[hsl(var(--brand-gold-soft))] font-normal lowercase">back</span>
           </h1>
 
           <p className="font-sans text-white/70 text-[13px] md:text-[14px] font-light tracking-wide max-w-[600px] leading-relaxed">
@@ -162,17 +162,17 @@ export default function UserLoginPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-[420px] bg-white rounded-[14px] border border-[#C19A5B]/30 shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden"
+          className="w-full max-w-[420px] bg-white rounded-[14px] border border-[hsl(var(--brand-gold)/0.3)] shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden"
         >
           {/* Card Header */}
           <div className="pt-10 px-8 pb-6 text-center">
-            <div className="w-14 h-14 bg-[#1A1512] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-[#1A1512]/10 border border-[#C19A5B]/30">
-              <User className="w-7 h-7 text-[hsl(var(--brand-gold-deep))]" />
+            <div className="w-14 h-14 bg-[hsl(var(--brand-indigo-tint))] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-[hsl(var(--brand-ink)/0.1)] border border-[hsl(var(--brand-gold)/0.3)]">
+              <User className="w-7 h-7 text-[hsl(var(--brand-ink))]" />
             </div>
-            <h2 className="font-playfair text-2xl md:text-3xl font-bold text-[#1A1512] mb-2">
+            <h2 className="font-playfair text-2xl md:text-3xl font-bold text-[hsl(var(--brand-ink))] mb-2">
               {step === "phone" ? "Sign In" : "Verify Phone"}
             </h2>
-            <p className="font-inter text-[#1A1512]/60 text-sm md:text-base">
+            <p className="font-inter text-[hsl(var(--brand-ink-soft))] text-sm md:text-base">
               {step === "phone"
                 ? "Enter your mobile number to continue."
                 : `Enter the 6-digit code sent to +91 ${phoneNumber}`}
@@ -193,7 +193,7 @@ export default function UserLoginPage() {
                   className="space-y-6"
                 >
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#1A1512]/60 font-medium border-r border-[#C19A5B]/20 pr-3">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[hsl(var(--brand-ink-soft))] font-medium border-r border-[hsl(var(--brand-gold)/0.2)] pr-3">
                       <Phone className="w-4 h-4" /> <span>+91</span>
                     </div>
                     <input
@@ -203,7 +203,7 @@ export default function UserLoginPage() {
                         const val = e.target.value.replace(/\D/g, "")
                         if (val.length <= 10) setPhoneNumber(val)
                       }}
-                      className="w-full pl-24 pr-4 py-3.5 bg-[#FAFAF8]/30 border border-[#C19A5B]/20 rounded-[8px] focus:outline-none focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 transition-all font-inter text-lg text-[#1A1512] tracking-wide placeholder:text-[#1A1512]/20"
+                      className="w-full pl-24 pr-4 py-3.5 bg-[hsl(var(--brand-paper)/0.3)] border border-[hsl(var(--brand-gold)/0.2)] rounded-[8px] focus:outline-none focus:border-[hsl(var(--brand-gold))] focus:ring-1 focus:ring-[hsl(var(--brand-gold)/0.4)] transition-all font-inter text-lg text-[hsl(var(--brand-ink))] tracking-wide placeholder:text-[hsl(var(--brand-ink)/0.2)]"
                       placeholder="98765 43210"
                       autoFocus
                     />
@@ -212,7 +212,7 @@ export default function UserLoginPage() {
                   <button
                     type="submit"
                     disabled={loading || phoneNumber.length !== 10}
-                    className="w-full py-3.5 bg-[#1A1512] text-white rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest hover:bg-[#C19A5B] shadow-[0_4px_12px_rgba(26,21,18,0.15)] hover:shadow-[0_6px_16px_rgba(26,21,18,0.25)] transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full py-3.5 bg-[hsl(var(--brand-midnight))] text-white rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest hover:bg-[hsl(var(--brand-midnight-hover))] shadow-[0_4px_12px_rgba(14,34,64,0.15)] hover:shadow-[0_6px_16px_rgba(14,34,64,0.25)] transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading ? "Sending..." : "Send Verification Code"}
                     {!loading && <ArrowRight className="w-4 h-4" />}
@@ -237,7 +237,7 @@ export default function UserLoginPage() {
                       renderInput={(props) => (
                         <input
                           {...props}
-                          className="!w-10 !h-12 sm:!w-12 sm:!h-14 border border-[#C19A5B]/20 rounded-[8px] text-center text-xl font-bold bg-[#FAFAF8]/30 focus:border-[#C19A5B] focus:ring-1 focus:ring-[#C19A5B]/40 outline-none transition-all text-[#1A1512]"
+                          className="!w-10 !h-12 sm:!w-12 sm:!h-14 border border-[hsl(var(--brand-gold)/0.2)] rounded-[8px] text-center text-xl font-bold bg-[hsl(var(--brand-paper)/0.3)] focus:border-[hsl(var(--brand-gold))] focus:ring-1 focus:ring-[hsl(var(--brand-gold)/0.4)] outline-none transition-all text-[hsl(var(--brand-ink))]"
                         />
                       )}
                       shouldAutoFocus
@@ -248,7 +248,7 @@ export default function UserLoginPage() {
                   <button
                     type="submit"
                     disabled={loading || otp.length !== 6}
-                    className="w-full py-3.5 bg-[#1A1512] text-white rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest hover:bg-[#C19A5B] shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                    className="w-full py-3.5 bg-[hsl(var(--brand-midnight))] text-white rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest hover:bg-[hsl(var(--brand-midnight-hover))] shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
                   >
                     {loading ? "Verifying..." : "Verify & Sign In"}
                     {!loading && <CheckCircle2 className="w-4 h-4" />}
@@ -258,19 +258,19 @@ export default function UserLoginPage() {
                     <button
                       type="button"
                       onClick={() => setStep("phone")}
-                      className="text-[#1A1512]/60 hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
+                      className="text-[hsl(var(--brand-ink-soft))] hover:text-[hsl(var(--brand-ink))] transition-colors"
                     >
                       Change Number
                     </button>
                     {resendTimer > 0 ? (
-                      <span className="text-[#1A1512]/40">
+                      <span className="text-[hsl(var(--brand-muted))]">
                         Resend in {resendTimer}s
                       </span>
                     ) : (
                       <button
                         type="button"
                         onClick={handleResendOtp}
-                        className="text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512] transition-colors font-bold uppercase tracking-wide"
+                        className="text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] transition-colors font-bold uppercase tracking-wide"
                       >
                         Resend Code
                       </button>
@@ -283,10 +283,10 @@ export default function UserLoginPage() {
             {/* Divider */}
             <div className="relative my-8">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#C19A5B]/20"></div>
+                <div className="w-full border-t border-[hsl(var(--brand-gold)/0.2)]"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="px-3 bg-white text-xs text-[#1A1512]/40 font-medium">
+                <span className="px-3 bg-white text-xs text-[hsl(var(--brand-muted))] font-medium">
                   OR
                 </span>
               </div>
@@ -296,14 +296,14 @@ export default function UserLoginPage() {
             <Link href="/" className="block">
               <button
                 type="button"
-                className="w-full py-3 border border-[#C19A5B]/20 rounded-[8px] text-[#1A1512] font-inter font-medium text-sm flex items-center justify-center gap-2 hover:bg-[#C19A5B]/10 hover:border-[#C19A5B]/40 transition-colors"
+                className="w-full py-3 border border-[hsl(var(--brand-gold)/0.2)] rounded-[8px] text-[hsl(var(--brand-ink))] font-inter font-medium text-sm flex items-center justify-center gap-2 hover:bg-[hsl(var(--brand-gold)/0.1)] hover:border-[hsl(var(--brand-gold)/0.4)] transition-colors"
               >
                 <ShoppingBag className="w-4 h-4" /> Continue Shopping
               </button>
             </Link>
 
             {/* Footer Text */}
-            <p className="mt-6 text-center text-xs text-[#1A1512]/50 flex items-center justify-center gap-1.5">
+            <p className="mt-6 text-center text-xs text-[hsl(var(--brand-muted))] flex items-center justify-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5" /> Your information is
               encrypted and secure.
             </p>

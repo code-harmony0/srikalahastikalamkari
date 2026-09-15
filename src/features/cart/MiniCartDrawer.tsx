@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react"
 import Link from "next/link"
-import Image from "next/image"
+import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { AnimatePresence, motion } from "framer-motion"
 import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react"
 import { useCartStore } from "@/shared/cart-store"
@@ -74,7 +74,7 @@ export default function MiniCartDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={close}
-            className="fixed inset-0 z-[60] bg-[#1A1512]/50 backdrop-blur-[2px]"
+            className="fixed inset-0 z-[60] bg-[hsl(var(--brand-ink)/0.5)] backdrop-blur-[2px]"
             aria-hidden="true"
           />
 
@@ -90,14 +90,14 @@ export default function MiniCartDrawer() {
             transition={{ type: "tween", ease: [0.22, 1, 0.36, 1], duration: 0.32 }}
             className="fixed right-0 top-0 z-[61] flex h-[100dvh] w-full max-w-[420px] flex-col bg-white shadow-2xl outline-none"
           >
-            <header className="flex items-center justify-between border-b border-[#C19A5B]/20 px-5 py-4">
+            <header className="flex items-center justify-between border-b border-[hsl(var(--brand-gold)/0.45)] px-5 py-4">
               <div className="flex items-center gap-2.5">
-                <ShoppingBag className="h-5 w-5 text-[hsl(var(--brand-gold-deep))]" strokeWidth={1.5} />
-                <h2 className="font-serif text-[18px] font-bold text-[#1A1512]">
-                  Your Cart
+                <ShoppingBag className="h-5 w-5 text-[hsl(var(--brand-ink))]" strokeWidth={1.5} aria-hidden="true" />
+                <h2 className="font-serif text-[20px] text-[hsl(var(--brand-ink))]">
+                  Your cart
                 </h2>
                 {itemCount > 0 && (
-                  <span className="rounded-full bg-[#1A1512] px-2 py-0.5 text-[11px] font-bold text-[#C19A5B]">
+                  <span className="rounded-full bg-[hsl(var(--brand-midnight))] px-2 py-0.5 font-sans text-[12px] font-semibold tabular-nums text-white">
                     {itemCount}
                   </span>
                 )}
@@ -105,7 +105,7 @@ export default function MiniCartDrawer() {
               <button
                 onClick={close}
                 aria-label="Close cart"
-                className="flex h-10 w-10 items-center justify-center rounded-full text-[#1A1512]/50 transition-colors hover:bg-[#1A1512]/5 hover:text-[#1A1512] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C19A5B]"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -113,69 +113,70 @@ export default function MiniCartDrawer() {
 
             {lines.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-                <ShoppingBag className="h-10 w-10 text-[hsl(var(--brand-gold-deep))]/40" strokeWidth={1.25} />
-                <p className="font-sans text-[15px] text-[#1A1512]/60">
+                <ShoppingBag className="h-10 w-10 text-[hsl(var(--brand-ink))]" strokeWidth={1.25} aria-hidden="true" />
+                <p className="font-sans text-[15px] text-[hsl(var(--brand-ink-soft))]">
                   Your cart is empty.
                 </p>
                 <Link
                   href="/products"
                   onClick={close}
-                  className="rounded-lg bg-[#1A1512] px-5 py-3 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[#C19A5B]"
+                  className="inline-flex h-12 items-center rounded-full bg-[hsl(var(--brand-midnight))] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[hsl(var(--brand-midnight-hover))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
                 >
-                  Browse Collection
+                  Shop now
                 </Link>
               </div>
             ) : (
               <>
-                <ul className="flex-1 divide-y divide-[#C19A5B]/12 overflow-y-auto overscroll-contain px-5">
+                <ul className="flex-1 divide-y divide-[hsl(var(--brand-gold-ornament)/0.3)] overflow-y-auto overscroll-contain px-5">
                   {lines.map((line) => {
                     const p: any = line.product
-                    const img = getImageTier(p.images, "thumb", 0) || p.mainImage
+                    const img = getImageTier(p.images, "thumb", 0) || p.image || p.mainImage || null
                     const isNew = line.productId === lastAddedId
                     const max = line.maxStock ?? 99
                     return (
                       <li
                         key={`${line.productId}-${line.variant ?? ""}`}
-                        className={`flex gap-3.5 py-4 ${isNew ? "-mx-2 rounded-lg bg-[#C19A5B]/8 px-2" : ""}`}
+                        className={`flex gap-3.5 py-4 ${isNew ? "-mx-2 rounded-md bg-[hsl(var(--brand-turmeric-tint))] px-2" : ""}`}
                       >
-                        <div className="relative h-[86px] w-[68px] shrink-0 overflow-hidden rounded-md bg-[#1A1512]/5">
-                          {img && (
-                            <Image
-                              src={img}
-                              alt={p.name || p.title || "Product"}
-                              fill
-                              sizes="68px"
-                              className="object-cover"
-                              unoptimized
-                            />
-                          )}
+                        <div className="relative h-[86px] w-[68px] shrink-0 overflow-hidden rounded-sm bg-white ring-1 ring-[hsl(var(--brand-gold)/0.5)]">
+                          {/* Same image component as the cart page, which loads these photos */}
+                          <OptimizedImage
+                            src={img}
+                            alt={p.name || p.title || "Product"}
+                            fill
+                            className="object-cover"
+                            imageType="cartItem"
+                            sizes="68px"
+                            placeholder="empty"
+                          />
+
                         </div>
 
                         <div className="flex min-w-0 flex-1 flex-col">
                           <Link
                             href={`/products/${p.slug || p.id}`}
                             onClick={close}
-                            className="line-clamp-2 font-sans text-[14px] font-semibold leading-snug text-[#1A1512] hover:text-[hsl(var(--brand-gold-deep))]"
+                            className="line-clamp-2 rounded-sm font-sans text-[14px] font-semibold leading-snug text-[hsl(var(--brand-ink))] decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
                           >
                             {p.name || p.title}
                           </Link>
-                          <span className="mt-1 font-sans text-[14px] font-bold text-[hsl(var(--brand-gold-deep))]">
+                          <span className="mt-1 font-sans text-[14px] font-semibold tabular-nums text-[hsl(var(--brand-ink))]">
                             {formatPrice(Number(p.price) || 0)}
                           </span>
 
                           <div className="mt-auto flex items-center justify-between pt-2">
-                            <div className="flex items-center rounded-md border border-[#C19A5B]/25">
+                            <div className="flex items-center rounded-full border border-[hsl(var(--brand-ink)/0.25)] bg-white">
                               <button
                                 onClick={() =>
                                   cart.updateQuantity(line.productId, line.quantity - 1)
                                 }
                                 aria-label={`Decrease quantity of ${p.name || p.title}`}
-                                className="flex h-9 w-9 items-center justify-center text-[#1A1512]/60 transition-colors hover:bg-[#1A1512]/5 hover:text-[#1A1512] disabled:opacity-40"
+                                className="flex h-9 w-9 items-center justify-center text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))] disabled:opacity-40"
                                 disabled={line.quantity <= 1}
                               >
                                 <Minus className="h-3.5 w-3.5" />
                               </button>
-                              <span className="min-w-[30px] text-center font-sans text-[14px] font-semibold text-[#1A1512]">
+                              <span className="min-w-[30px] text-center font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))]">
                                 {line.quantity}
                               </span>
                               <button
@@ -183,7 +184,7 @@ export default function MiniCartDrawer() {
                                   cart.updateQuantity(line.productId, line.quantity + 1)
                                 }
                                 aria-label={`Increase quantity of ${p.name || p.title}`}
-                                className="flex h-9 w-9 items-center justify-center text-[#1A1512]/60 transition-colors hover:bg-[#1A1512]/5 hover:text-[#1A1512] disabled:opacity-40"
+                                className="flex h-9 w-9 items-center justify-center text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))] disabled:opacity-40"
                                 disabled={line.quantity >= max}
                               >
                                 <Plus className="h-3.5 w-3.5" />
@@ -193,7 +194,7 @@ export default function MiniCartDrawer() {
                             <button
                               onClick={() => cart.removeItem(line.productId)}
                               aria-label={`Remove ${p.name || p.title} from cart`}
-                              className="flex h-9 w-9 items-center justify-center rounded-md text-[#1A1512]/35 transition-colors hover:bg-red-50 hover:text-red-600"
+                              className="flex h-10 w-10 items-center justify-center rounded-full text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint))] hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -204,16 +205,16 @@ export default function MiniCartDrawer() {
                   })}
                 </ul>
 
-                <footer className="border-t border-[#C19A5B]/20 px-5 py-4">
+                <footer className="border-t border-[hsl(var(--brand-gold)/0.45)] px-5 py-4">
                   <div className="mb-3 flex items-baseline justify-between">
-                    <span className="font-sans text-[13px] uppercase tracking-[0.12em] text-[#1A1512]/60">
+                    <span className="font-sans text-[15px] font-semibold text-[hsl(var(--brand-ink))]">
                       Subtotal
                     </span>
-                    <span className="text-[20px] font-semibold tabular-nums text-[#1A1512]">
+                    <span className="text-[20px] font-semibold tabular-nums text-[hsl(var(--brand-ink))]">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
-                  <p className="mb-3.5 font-sans text-[12px] text-[#1A1512]/50">
+                  <p className="mb-3.5 font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">
                     Free shipping. Prices include all taxes.
                   </p>
 
@@ -221,20 +222,20 @@ export default function MiniCartDrawer() {
                     <Link
                       href="/checkout"
                       onClick={close}
-                      className="flex h-12 items-center justify-center rounded-lg bg-[#1A1512] text-[12px] font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#C19A5B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C19A5B]"
+                      className="flex h-12 items-center justify-center rounded-full bg-[hsl(var(--brand-midnight))] font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[hsl(var(--brand-midnight-hover))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
                     >
-                      Proceed to Checkout
+                      Go to checkout
                     </Link>
                     <button
                       onClick={close}
-                      className="flex h-11 items-center justify-center rounded-lg border border-[#C19A5B]/35 text-[12px] font-bold uppercase tracking-[0.16em] text-[#1A1512] transition-colors hover:bg-[#C19A5B]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C19A5B]"
+                      className="flex h-12 items-center justify-center rounded-full border border-[hsl(var(--brand-ink)/0.75)] bg-white font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-turmeric-tint))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
                     >
-                      Continue Shopping
+                      Continue shopping
                     </button>
                     <Link
                       href="/cart"
                       onClick={close}
-                      className="text-center font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-gold-deep))] hover:text-[#1A1512]"
+                      className="mx-auto rounded-sm py-1 text-center font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[6px] hover:decoration-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
                     >
                       View full cart
                     </Link>

@@ -99,7 +99,7 @@ export function RatingDistribution({ distribution, total }: RatingDistributionPr
 
         return (
           <div key={rating} className="flex items-center gap-2 text-sm">
-            <span className="w-3 text-slate-500">{rating}</span>
+            <span className="w-3 text-[hsl(var(--brand-muted))]">{rating}</span>
             <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
               <div
@@ -107,7 +107,7 @@ export function RatingDistribution({ distribution, total }: RatingDistributionPr
                 style={{ width: `${percentage}%` }}
               />
             </div>
-            <span className="w-8 text-xs text-slate-400 text-right">{count}</span>
+            <span className="w-8 text-xs text-[hsl(var(--brand-muted))] text-right">{count}</span>
           </div>
         );
       })}

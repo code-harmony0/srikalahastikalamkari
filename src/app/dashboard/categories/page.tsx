@@ -59,6 +59,7 @@ import { OptimizedImage } from "@/components/shared/OptimizedImage"
 const Categories = () => {
   const [categories, setCategories] = useState<any[]>([])
   const [subCategories, setSubCategories] = useState<any[]>([])
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const [hoveredImage, setHoveredImage] = useState<{ url: string; name: string } | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -158,6 +159,9 @@ const Categories = () => {
     if (!itemToDelete) return
 
     if (itemToDelete.type === "category") {
+      if (selectedCategoryId === itemToDelete.id) {
+        setSelectedCategoryId(null)
+      }
       await handleDeleteCategory(itemToDelete.id)
     } else {
       await handleDeleteSubCategory(itemToDelete.id)
@@ -247,7 +251,10 @@ const Categories = () => {
       setSubCategoryImagePreview(subCategory.image_url ?? null)
     } else {
       setEditingSubCategory(null)
-      setSubCategoryForm(defaultSubCategoryForm)
+      setSubCategoryForm({
+        ...defaultSubCategoryForm,
+        category_id: selectedCategoryId ? String(selectedCategoryId) : "",
+      })
       setSubCategoryImageFile(null)
       setSubCategoryImagePreview(null)
     }
@@ -390,6 +397,12 @@ const Categories = () => {
     return categories.find((c) => String(c.id) === String(categoryId))?.name || "Unknown"
   }
 
+  const filteredSubCategories = selectedCategoryId
+    ? subCategories.filter(
+        (subCat) => String(subCat.category_id) === String(selectedCategoryId)
+      )
+    : subCategories
+
   return (
     <div className="min-h-screen bg-[#f8fafc] p-4 md:p-6 font-sans space-y-6">
       <div className="flex items-center justify-between">
@@ -411,12 +424,25 @@ const Categories = () => {
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Categories</h3>
                 <p className="text-sm text-slate-500 mt-1">
-                  Main product categories
+                  {selectedCategoryId ? (
+                    <span className="flex items-center gap-1.5 text-xs text-blue-600 font-medium">
+                      Filtered &middot;{" "}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCategoryId(null)}
+                        className="underline hover:text-blue-800"
+                      >
+                        Show all
+                      </button>
+                    </span>
+                  ) : (
+                    "Select a category to filter"
+                  )}
                 </p>
               </div>
               <Button
                 onClick={() => openCategoryDialog()}
-                className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-10 px-4"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl h-10 px-4"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Category
@@ -452,36 +478,90 @@ const Categories = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  categories.map((cat) => (
-                    <TableRow
-                      key={cat.id}
-                      className="hover:bg-slate-50/50 border-slate-100"
-                    >
-                      <TableCell className="font-medium text-slate-900">
-                        {cat.name}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-1 justify-end">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => openCategoryDialog(cat)}
-                            className="h-8 w-8 hover:bg-slate-100 rounded-lg"
+                  categories.map((cat) => {
+                    const isSelected = selectedCategoryId === cat.id
+                    const subCount = subCategories.filter(
+                      (s) => String(s.category_id) === String(cat.id)
+                    ).length
+
+                    return (
+                      <TableRow
+                        key={cat.id}
+                        onClick={() =>
+                          setSelectedCategoryId((prev) =>
+                            prev === cat.id ? null : cat.id
+                          )
+                        }
+                        className={`cursor-pointer transition-all duration-200 border-slate-100 ${
+                          isSelected
+                            ? "bg-blue-50/50"
+                            : "hover:bg-slate-50/70"
+                        }`}
+                      >
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-3">
+                            {isSelected && (
+                              <div className="w-1 h-6 bg-blue-500 rounded-r-full absolute left-0" />
+                            )}
+                            <span
+                              className={`transition-colors ${
+                                isSelected
+                                  ? "text-blue-700 font-bold"
+                                  : "text-slate-700 font-medium"
+                              }`}
+                            >
+                              {cat.name}
+                            </span>
+                            <span
+                              className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
+                                isSelected
+                                  ? "bg-blue-100 text-blue-700 font-semibold"
+                                  : "bg-slate-100 text-slate-500 font-medium"
+                              }`}
+                            >
+                              {subCount}
+                            </span>
+                            {isSelected && (
+                              <span className="text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200">
+                                ACTIVE
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div
+                            className="flex gap-1 justify-end"
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            <Pencil className="h-4 w-4 text-slate-600" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => confirmDeleteCategory(cat.id)}
-                            className="h-8 w-8 hover:bg-red-50 rounded-lg"
-                          >
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => openCategoryDialog(cat)}
+                              className={`h-8 w-8 rounded-lg transition-colors ${
+                                isSelected
+                                  ? "text-blue-600 hover:text-blue-800 hover:bg-blue-100"
+                                  : "text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                              }`}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => confirmDeleteCategory(cat.id)}
+                              className={`h-8 w-8 rounded-lg transition-colors ${
+                                isSelected
+                                  ? "text-red-500 hover:text-red-700 hover:bg-red-50"
+                                  : "text-slate-400 hover:text-red-600 hover:bg-red-50"
+                              }`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
                 )}
               </TableBody>
             </Table>
@@ -491,23 +571,50 @@ const Categories = () => {
         {/* SubCategories Card */}
         <div className="md:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
           <div className="p-4 border-b border-slate-100">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">
-                  Subcategories
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-slate-900">
+                    Subcategories
+                  </h3>
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                    {filteredSubCategories.length}{" "}
+                    {filteredSubCategories.length === 1 ? "item" : "items"}
+                  </span>
+                </div>
                 <p className="text-sm text-slate-500 mt-1">
-                  Product subcategories
+                  {selectedCategoryId ? (
+                    <span>
+                      Showing subcategories for{" "}
+                      <span className="font-semibold text-slate-900">
+                        {getCategoryName(selectedCategoryId)}
+                      </span>
+                    </span>
+                  ) : (
+                    "Product subcategories across all categories"
+                  )}
                 </p>
               </div>
-              <Button
-                onClick={() => openSubCategoryDialog()}
-                disabled={categories.length === 0}
-                className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-10 px-4 disabled:opacity-50"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Subcategory
-              </Button>
+              <div className="flex items-center gap-2 flex-wrap">
+                {selectedCategoryId && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedCategoryId(null)}
+                    className="h-10 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-100 text-xs"
+                  >
+                    Show All ({subCategories.length})
+                  </Button>
+                )}
+                <Button
+                  onClick={() => openSubCategoryDialog()}
+                  disabled={categories.length === 0}
+                  className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-10 px-4 disabled:opacity-50"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Subcategory
+                </Button>
+              </div>
             </div>
           </div>
           <div className="p-4 flex-1 overflow-auto">
@@ -529,20 +636,41 @@ const Categories = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {subCategories.length === 0 ? (
+                {filteredSubCategories.length === 0 ? (
                   <TableRow>
                      <TableCell colSpan={4} className="text-center py-12 text-slate-400">
                        <div className="flex flex-col items-center gap-3">
                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
                            <Plus className="h-5 w-5 text-slate-400" />
                          </div>
-                         <p className="text-sm">No subcategories found</p>
-                         <p className="text-xs text-slate-400">Add a subcategory to organize products</p>
+                         {selectedCategoryId ? (
+                           <>
+                             <p className="text-sm font-medium text-slate-700">
+                               No subcategories for "{getCategoryName(selectedCategoryId)}"
+                             </p>
+                             <p className="text-xs text-slate-400">
+                               Click "Add Subcategory" to add one to this category
+                             </p>
+                             <Button
+                               variant="outline"
+                               size="sm"
+                               onClick={() => setSelectedCategoryId(null)}
+                               className="mt-2 text-xs rounded-xl"
+                             >
+                               View all subcategories
+                             </Button>
+                           </>
+                         ) : (
+                           <>
+                             <p className="text-sm">No subcategories found</p>
+                             <p className="text-xs text-slate-400">Add a subcategory to organize products</p>
+                           </>
+                         )}
                        </div>
                      </TableCell>
                   </TableRow>
                 ) : (
-                  subCategories.map((subCat) => (
+                  filteredSubCategories.map((subCat) => (
                     <TableRow
                       key={subCat.id}
                       className="hover:bg-slate-50/50 border-slate-100"

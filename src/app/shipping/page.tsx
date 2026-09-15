@@ -19,18 +19,18 @@ export default function ShippingPolicyPage() {
         description="Processing times, delivery within India and order tracking."
       />
       <div className="max-w-4xl mx-auto px-5 sm:px-6 py-10 md:py-14">
-        <div className="bg-white/95 dark:bg-[#1E1510] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
-          <p className="text-[hsl(var(--brand-gold-deep))] dark:text-[hsl(var(--brand-gold))] mb-6 font-sans text-xs font-bold uppercase tracking-wider">
+        <div className="bg-white/95 dark:bg-[hsl(var(--brand-midnight))] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
+          <p className="text-[hsl(var(--brand-ink-soft))] mb-6 font-sans text-[14px]">
             Last updated: September 2026
           </p>
 
-          <div className="space-y-8 text-[#1A1512] max-w-[68ch]">
+          <div className="space-y-8 text-[hsl(var(--brand-ink))] max-w-[68ch]">
             <p className="font-inter text-[15px] leading-relaxed">
               At Srikalahasti Kalamkari, we take immense pride in ensuring that your handcrafted authentic pieces reach you safely and securely. Please read our shipping policy below.
             </p>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 Processing time
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -41,7 +41,7 @@ export default function ShippingPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 Delivery within India
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -52,7 +52,7 @@ export default function ShippingPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 Tracking your order
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -63,7 +63,7 @@ export default function ShippingPolicyPage() {
             </section>
 
             <section>
-              <h2 className="font-playfair text-2xl font-semibold text-[#1A1512] dark:text-white mb-4">
+              <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
                 Contact us
               </h2>
               <div className="space-y-4 font-inter text-[15px] leading-relaxed">
@@ -71,7 +71,7 @@ export default function ShippingPolicyPage() {
                   If you have any questions or concerns regarding your order's shipping status, please contact us at{" "}
                   <a
                     href="mailto:srikalahastikalamkari.sk@gmail.com"
-                    className="text-[hsl(var(--brand-gold-deep))] hover:underline"
+                    className="font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))]"
                   >
                     srikalahastikalamkari.sk@gmail.com
                   </a>

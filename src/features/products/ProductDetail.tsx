@@ -36,11 +36,13 @@ import {
   ChevronLeft,
   ChevronRight,
   ShoppingBag,
+  ArrowRight,
+  MessageCircle,
 } from "lucide-react"
 import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
-import { hasSelectableColors, parseColorEntry } from "@/shared/lib/color-swatch"
-import { getResponsiveSizes } from "@/lib/image-utils"
+import { parseColorEntry } from "@/shared/lib/color-swatch"
+import { STORE_WHATSAPP_NUMBER } from "@/shared/lib/whatsapp"
 import { getImageTier } from "@/lib/image-tiers"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import {
@@ -48,6 +50,7 @@ import {
   LockMark,
   LotusSealMark,
 } from "@/shared/ui/craft-marks"
+import { CuratedProductCard } from "./CuratedProductCard"
 import { ProductReviews } from "./ProductReviews"
 import { useReviews } from "@/shared/hooks/use-reviews"
 import {
@@ -56,6 +59,16 @@ import {
   getStockQuantity,
   isMadeToOrder,
 } from "@/shared/lib/inventory"
+
+// Colour roles as on the home page: charcoal text, midnight main button,
+// white outline second button, gold for lines only, royal blue for focus rings.
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+const primaryButton = `inline-flex items-center justify-center gap-2 rounded-full bg-[hsl(var(--brand-midnight))] font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[hsl(var(--brand-midnight-hover))] ${focusRing}`
+const secondaryButton = `inline-flex items-center justify-center gap-2 rounded-full border border-[hsl(var(--brand-ink)/0.75)] bg-white font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-turmeric-tint))] ${focusRing}`
+const textLink = `inline-flex items-center gap-1.5 rounded-sm font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[6px] transition-colors hover:decoration-[hsl(var(--brand-ink))] ${focusRing}`
+const crumbLink = `rounded-sm underline decoration-transparent decoration-2 underline-offset-[5px] transition-colors hover:text-[hsl(var(--brand-ink))] hover:decoration-[hsl(var(--brand-gold))] ${focusRing}`
+const iconButton = `flex h-11 w-11 items-center justify-center rounded-full text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint))] ${focusRing}`
 
 export default function ProductDetail() {
   const params = useParams()
@@ -87,7 +100,11 @@ export default function ProductDetail() {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
-  const [selectedColor, setSelectedColor] = useState<string | null>(null)
+  // Swipe on the main photo (phones): a sideways drag changes the photo
+  // and must not also open the zoom view.
+  const swipeStartRef = useRef<{ x: number; y: number } | null>(null)
+  const swipedRef = useRef(false)
+  const [pageUrl, setPageUrl] = useState("")
 
   // Docked purchase bar: shown once the main buy block has scrolled past.
   const buyBlockRef = useRef<HTMLDivElement | null>(null)
@@ -411,16 +428,6 @@ export default function ProductDetail() {
     }
   })
 
-  // Quick add straight from a recommendation card, without leaving the page.
-  const handleQuickAdd = useAuthGuardedAction(
-    (_event: unknown, relProduct?: (typeof relatedProducts)[number]) => {
-      if (!relProduct) return
-      cart.addItem(relProduct, 1)
-      openMiniCart(relProduct.id)
-      toast.success(`${relProduct.name || relProduct.title} added to cart`)
-    },
-  )
-
   // BUY NOW = Add item and immediately redirect to checkout
   const handleBuyNow = useAuthGuardedAction(() => {
     if (!product) return
@@ -447,10 +454,13 @@ export default function ProductDetail() {
 
   const handleShare = () => {
     if (navigator.share) {
-      navigator.share({
-        title: product?.name || product?.title,
-        url: window.location.href,
-      })
+      // Closing the share sheet rejects the promise; that is not an error.
+      navigator
+        .share({
+          title: product?.name || product?.title,
+          url: window.location.href,
+        })
+        .catch(() => {})
     } else {
       navigator.clipboard.writeText(window.location.href)
       toast.success("Link copied")
@@ -475,6 +485,11 @@ export default function ProductDetail() {
       window.removeEventListener("resize", update)
     }
   }, [product?.id])
+
+  // The real page address (with domain) for the WhatsApp question.
+  useEffect(() => {
+    setPageUrl(window.location.href)
+  }, [slug])
 
   // The docked bar owns the bottom edge; lift the floating widgets clear of it.
   useEffect(() => {
@@ -508,6 +523,10 @@ export default function ProductDetail() {
 
     // True of every piece the workshop makes, so safe to state without data.
     push("Dyes", "Natural botanical and mineral dyes")
+    // Care for anything worn or used as cloth; wall paintings are not washed.
+    if (!/wall|painting/i.test(product?.categoryName ?? "")) {
+      push("Care", "Dry clean only, at a professional cleaner.\nDo not hand wash or machine wash.")
+    }
     // Dispatch time for ready pieces isn't confirmed, so only made-to-order
     // pieces state a timeline.
     if (madeToOrder) {
@@ -515,30 +534,46 @@ export default function ProductDetail() {
     }
 
     return rows
-  }, [product?.specifications, madeToOrder])
+  }, [product?.specifications, product?.categoryName, madeToOrder])
 
   if (isLoading) {
+    // Same shape as the loaded page, so nothing jumps when the piece arrives.
+    const block = "animate-pulse rounded-sm bg-[hsl(var(--brand-ink)/0.07)]"
     return (
-      <div className="min-h-[80vh] flex items-center justify-center bg-background">
-        <div className="w-8 h-8 rounded-full border-2 border-[hsl(var(--brand-ink)/0.15)] border-t-[hsl(var(--brand-ink))] animate-spin" />
+      <div
+        aria-busy="true"
+        aria-label="Loading this piece"
+        className="min-h-screen bg-[hsl(var(--brand-paper))]"
+      >
+        <div className="h-[49px] border-b border-[hsl(var(--brand-gold)/0.45)] bg-[hsl(var(--brand-indigo-tint))]" />
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 py-7 sm:px-6 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-10">
+          <div className={cn(block, "aspect-[4/5] lg:col-span-6 lg:ml-[84px]")} />
+          <div className="space-y-4 lg:col-span-6">
+            <div className={cn(block, "h-10 w-4/5")} />
+            <div className={cn(block, "h-4 w-1/3")} />
+            <div className={cn(block, "mt-8 h-9 w-2/5")} />
+            <div className={cn(block, "h-4 w-1/2")} />
+            <div className="flex gap-3 pt-6">
+              <div className={cn(block, "h-[52px] flex-[40] rounded-full")} />
+              <div className={cn(block, "h-[52px] flex-[60] rounded-full")} />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 text-center">
+      <div className="min-h-screen bg-[hsl(var(--brand-paper))] flex flex-col items-center justify-center px-4 text-center">
         <Package
-          className="h-10 w-10 text-[hsl(var(--brand-gold-deep))] mb-4"
+          className="h-10 w-10 text-[hsl(var(--brand-ink))] mb-4"
           strokeWidth={1.25}
         />
-        <h1 className="font-serif text-[22px] font-semibold text-[hsl(var(--brand-ink))]">
+        <h1 className="font-serif text-[28px] text-[hsl(var(--brand-ink))]">
           We couldn&apos;t find that piece
         </h1>
-        <Link
-          href="/products"
-          className="mt-5 inline-flex items-center h-11 px-7 rounded-full bg-[hsl(var(--brand-ink))] text-[hsl(var(--brand-paper))] text-[12px] font-semibold uppercase tracking-[0.16em] hover:bg-[hsl(var(--brand-ink-soft))] transition-colors"
-        >
+        <Link href="/products" className={cn(primaryButton, "mt-6 h-12 px-8")}>
           Back to shop
         </Link>
       </div>
@@ -555,56 +590,72 @@ export default function ProductDetail() {
       : 0
 
   const productName = product.name || product.title || "Product"
+  const categoryName = product.categoryName || null
+  const askOnWhatsAppUrl = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    ["Hello, I have a question about this piece:", productName, pageUrl].filter(Boolean).join("\n"),
+  )}`
+  const pieceColours = (product.colors ?? []).filter(
+    (color): color is string => typeof color === "string" && color.trim().length > 0,
+  )
+  const diamond = (
+    <span aria-hidden className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-[hsl(var(--brand-ink-soft))]" />
+  )
 
   return (
-    <div className="min-h-screen bg-background kalamkari-static-background silk-fabric-texture text-[hsl(var(--brand-ink))]">
-      {/* ── Breadcrumb ─────────────────────────────────────────── */}
-      <div className="border-b border-[hsl(var(--brand-gold)/0.14)] bg-[hsl(var(--brand-paper)/0.55)]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <div className="min-h-screen bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))]">
+      {/* ── Breadcrumb: pale indigo strip with a gold line, like the shop band ── */}
+      <div className="border-b border-[hsl(var(--brand-gold)/0.45)] bg-[hsl(var(--brand-indigo-tint))]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-[11px] text-[hsl(var(--brand-ink)/0.55)]"
+            className="flex items-center gap-2.5 font-sans text-[13px] text-[hsl(var(--brand-ink-soft))]"
           >
-            <Link
-              href="/"
-              className="hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
-            >
+            <Link href="/" className={crumbLink}>
               Home
             </Link>
-            <span aria-hidden className="opacity-40">/</span>
-            <Link
-              href="/products"
-              className="hover:text-[hsl(var(--brand-gold-deep))] transition-colors"
-            >
+            <span aria-hidden className="text-[hsl(var(--brand-muted))]">/</span>
+            <Link href="/products" className={crumbLink}>
               Shop
             </Link>
-            <span aria-hidden className="opacity-40">/</span>
-            <span className="text-[hsl(var(--brand-ink)/0.9)] truncate max-w-[220px]">
+            <span aria-hidden className="text-[hsl(var(--brand-muted))]">/</span>
+            {categoryName && (
+              <>
+                <Link
+                  href={`/products?category=${encodeURIComponent(categoryName)}`}
+                  className={cn(crumbLink, "shrink-0")}
+                >
+                  {categoryName}
+                </Link>
+                <span aria-hidden className="text-[hsl(var(--brand-muted))]">/</span>
+              </>
+            )}
+            <span aria-current="page" className="min-w-0 truncate font-medium text-[hsl(var(--brand-ink))] sm:max-w-md">
               {productName}
             </span>
           </nav>
         </div>
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-28">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 lg:pb-16">
         {/* ── Buy block: gallery + purchase column ──────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 py-7 lg:py-10 items-start">
           {/* Gallery */}
           <div className="lg:col-span-6 flex flex-col-reverse lg:flex-row gap-3 lg:gap-4">
             {product?.images && product.images.length > 1 && (
-              <div className="flex lg:flex-col gap-2.5 overflow-x-auto lg:overflow-visible scrollbar-hide shrink-0">
+              <div className="hidden lg:flex lg:flex-col gap-3 shrink-0 p-1">
                 {product.images.map((_, idx) => (
                   <button
                     key={idx}
+                    type="button"
                     onClick={() => setSelectedImageIndex(idx)}
                     aria-label={`Show image ${idx + 1}`}
                     aria-current={selectedImageIndex === idx}
                     className={cn(
-                      "relative w-[58px] h-[73px] rounded-lg overflow-hidden shrink-0 transition-all duration-200",
-                      "ring-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-deep))] focus-visible:ring-offset-2",
+                      "relative w-[60px] h-[76px] rounded-sm overflow-hidden shrink-0 transition-shadow duration-200",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2",
                       selectedImageIndex === idx
-                        ? "ring-[hsl(var(--brand-ink))] opacity-100"
-                        : "ring-[hsl(var(--brand-ink)/0.12)] opacity-60 hover:opacity-100",
+                        ? "ring-2 ring-[hsl(var(--brand-midnight))] ring-offset-2 ring-offset-[hsl(var(--brand-paper))]"
+                        : "ring-1 ring-[hsl(var(--brand-gold)/0.5)] hover:ring-[hsl(var(--brand-ink)/0.5)]",
                     )}
                   >
                     <OptimizedImage
@@ -627,8 +678,30 @@ export default function ProductDetail() {
 
             {/* Main image — height-capped so the whole buy column stays above the fold */}
             <div
-              onClick={handleOpenZoomModal}
-              className="group relative flex-1 min-w-0 w-full aspect-[4/5] bg-[hsl(var(--brand-paper))] rounded-lg overflow-hidden ring-1 ring-[hsl(var(--brand-ink)/0.08)] cursor-zoom-in select-none"
+              onClick={() => {
+                if (swipedRef.current) {
+                  swipedRef.current = false
+                  return
+                }
+                handleOpenZoomModal()
+              }}
+              onTouchStart={(e) => {
+                const touch = e.touches[0]
+                swipeStartRef.current = { x: touch.clientX, y: touch.clientY }
+              }}
+              onTouchEnd={(e) => {
+                const start = swipeStartRef.current
+                swipeStartRef.current = null
+                const total = product?.images?.length || 0
+                if (!start || total <= 1) return
+                const touch = e.changedTouches[0]
+                const dx = touch.clientX - start.x
+                const dy = touch.clientY - start.y
+                if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return
+                swipedRef.current = true
+                setSelectedImageIndex((prev) => (prev + (dx < 0 ? 1 : -1) + total) % total)
+              }}
+              className="group relative flex-1 min-w-0 w-full aspect-[4/5] bg-[hsl(var(--brand-indigo-tint))] rounded-sm overflow-hidden shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)] cursor-zoom-in select-none touch-pan-y"
             >
               <OptimizedImage
                 src={mainProductImage}
@@ -639,6 +712,34 @@ export default function ProductDetail() {
                 sizes="(max-width: 1024px) 100vw, 55vw"
                 imageType="productDetail"
               />
+              {/* Thin gold inner frame, the same line the home cards use */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-[10px] z-[5] rounded-[2px] border border-[hsl(var(--brand-gold-soft)/0.9)]"
+              />
+
+              {/* Phones: swipe with dots instead of a thumbnail row, so the name and price come up sooner */}
+              {product?.images && product.images.length > 1 && (
+                <>
+                  <p className="sr-only" aria-live="polite">
+                    Photo {selectedImageIndex + 1} of {product.images.length}
+                  </p>
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center gap-1.5 lg:hidden"
+                  >
+                    {product.images.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={cn(
+                          "h-1.5 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.5)] transition-all duration-300",
+                          idx === selectedImageIndex ? "w-5" : "w-1.5 opacity-70",
+                        )}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
 
               {product?.images && product.images.length > 1 && (
                 <>
@@ -650,7 +751,10 @@ export default function ProductDetail() {
                       setSelectedImageIndex((prev) => (prev - 1 + total) % total)
                     }}
                     aria-label="Previous image"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-[hsl(var(--brand-paper)/0.92)] text-[hsl(var(--brand-ink))] shadow-[0_2px_10px_rgba(26,21,18,0.14)] flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-200 active:scale-95"
+                    className={cn(
+                      "absolute left-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/95 text-[hsl(var(--brand-ink))] shadow-[0_6px_14px_-8px_rgba(33,30,36,0.6)] flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-200 active:scale-95",
+                      focusRing,
+                    )}
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -662,16 +766,30 @@ export default function ProductDetail() {
                       setSelectedImageIndex((prev) => (prev + 1) % total)
                     }}
                     aria-label="Next image"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-[hsl(var(--brand-paper)/0.92)] text-[hsl(var(--brand-ink))] shadow-[0_2px_10px_rgba(26,21,18,0.14)] flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-200 active:scale-95"
+                    className={cn(
+                      "absolute right-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/95 text-[hsl(var(--brand-ink))] shadow-[0_6px_14px_-8px_rgba(33,30,36,0.6)] flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-200 active:scale-95",
+                      focusRing,
+                    )}
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </>
               )}
 
-              <span className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-[hsl(var(--brand-ink)/0.72)] text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                <Maximize2 className="w-3.5 h-3.5" />
-              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleOpenZoomModal()
+                }}
+                aria-label="View larger photo"
+                className={cn(
+                  "absolute bottom-4 right-4 z-10 w-11 h-11 rounded-full bg-[hsl(var(--brand-midnight))] text-white flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200 hover:bg-[hsl(var(--brand-midnight-hover))]",
+                  focusRing,
+                )}
+              >
+                <Maximize2 className="w-4 h-4" aria-hidden="true" />
+              </button>
             </div>
           </div>
 
@@ -682,17 +800,18 @@ export default function ProductDetail() {
           <div className="lg:col-span-6 lg:sticky lg:top-24">
             {/* Title + secondary actions */}
             <div className="flex items-start justify-between gap-3">
-              <h1 className="font-serif text-[26px] md:text-[31px] leading-[1.15] font-semibold text-[hsl(var(--brand-ink))] tracking-[-0.01em]">
+              <h1 className="text-balance font-serif text-[20px] md:text-[24px] leading-snug text-[hsl(var(--brand-ink))]">
                 {productName}
               </h1>
               <div className="flex items-center shrink-0 -mr-2 -mt-1">
                 <button
+                  type="button"
                   onClick={handleToggleWishlist}
                   aria-label={
                     isInWishlist ? "Remove from wishlist" : "Save to wishlist"
                   }
                   aria-pressed={isInWishlist}
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-[hsl(var(--brand-ink)/0.55)] hover:text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-ink)/0.05)] transition-colors"
+                  className={iconButton}
                 >
                   <Heart
                     className={cn(
@@ -703,9 +822,10 @@ export default function ProductDetail() {
                   />
                 </button>
                 <button
+                  type="button"
                   onClick={handleShare}
                   aria-label="Share this product"
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-[hsl(var(--brand-ink)/0.55)] hover:text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-ink)/0.05)] transition-colors"
+                  className={iconButton}
                 >
                   <Share2 className="w-[18px] h-[18px]" />
                 </button>
@@ -713,14 +833,14 @@ export default function ProductDetail() {
             </div>
 
             {/* Provenance + rating, one line */}
-            <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2 text-[12px] text-[hsl(var(--brand-ink)/0.6)]">
+            <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2 font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">
               <span>Hand-painted in Srikalahasti</span>
               {totalReviews > 0 && (
                 <>
-                  <span aria-hidden className="opacity-35">·</span>
+                  <span aria-hidden className="h-1.5 w-1.5 rotate-45 bg-[hsl(var(--brand-gold-ornament))]" />
                   <a
                     href="#reviews-section"
-                    className="flex items-center gap-1.5 hover:text-[hsl(var(--brand-ink))] transition-colors"
+                    className={cn("flex items-center gap-1.5 rounded-sm hover:text-[hsl(var(--brand-ink))] transition-colors", focusRing)}
                   >
                     <span className="flex items-center gap-0.5">
                       {[...Array(5)].map((_, i) => (
@@ -735,7 +855,7 @@ export default function ProductDetail() {
                         />
                       ))}
                     </span>
-                    <span className="underline underline-offset-2 decoration-[hsl(var(--brand-ink)/0.25)]">
+                    <span className="underline underline-offset-4 decoration-[hsl(var(--brand-gold))]">
                       {totalReviews}
                     </span>
                   </a>
@@ -743,292 +863,293 @@ export default function ProductDetail() {
               )}
             </div>
 
-            {/* Price */}
-            <div className="mt-5 flex items-baseline flex-wrap gap-x-3 gap-y-1">
-              <span className="text-[30px] leading-none font-semibold text-[hsl(var(--brand-ink))] tabular-nums tracking-[-0.01em]">
+            {/* Price: plain sans figures */}
+            <div className="mt-4 flex items-baseline flex-wrap gap-x-3 gap-y-2 font-sans">
+              <span className="text-[24px] leading-none font-semibold text-[hsl(var(--brand-ink))] tabular-nums">
                 {formatPrice(product.price || 0)}
               </span>
               {savePercent > 0 && (
                 <>
-                  <span className="text-[15px] text-[hsl(var(--brand-ink)/0.4)] line-through tabular-nums">
+                  <span className="text-[16px] text-[hsl(var(--brand-muted))] line-through tabular-nums">
                     {formatPrice(product.original_price || 0)}
                   </span>
-                  <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-[hsl(var(--brand-madder))] bg-[hsl(var(--brand-madder)/0.08)] border border-[hsl(var(--brand-madder)/0.22)] rounded-full px-2 py-0.5">
-                    Save {savePercent}%
+                  <span className="self-center rounded-full border border-[hsl(var(--brand-gold-ornament)/0.7)] bg-white px-2.5 py-0.5 text-[13px] font-semibold text-[hsl(var(--brand-ink))] tabular-nums">
+                    {savePercent}% off
                   </span>
                 </>
               )}
             </div>
-            <p className="mt-1.5 text-[12px] text-[hsl(var(--brand-ink)/0.55)]">
-              Tax included. Free shipping across India.
+            <p className="mt-2 font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">
+              Price includes all taxes.
             </p>
 
             {/* Availability — one line, low stock wins */}
-            <p className="mt-3 flex items-center gap-2 text-[12.5px] font-medium">
+            <p className="mt-3 flex items-center gap-2 font-sans text-[14px] font-medium">
               <span
                 aria-hidden
                 className={cn(
-                  "w-1.5 h-1.5 rounded-full shrink-0",
-                  inStock
-                    ? "bg-[hsl(var(--brand-gold-deep))]"
-                    : "bg-[hsl(var(--brand-ink)/0.35)]",
+                  "w-2 h-2 rounded-full shrink-0",
+                  !inStock
+                    ? "bg-[hsl(var(--brand-midnight))]"
+                    : stockQuantity <= 5
+                      ? "bg-[#8E2A1B]"
+                      : "bg-[hsl(var(--brand-midnight))]",
                 )}
               />
               {!inStock ? (
-                <span className="text-[hsl(var(--brand-ink)/0.7)]">
+                <span className="text-[hsl(var(--brand-ink))]">
                   Made to order · ready in {MADE_TO_ORDER_DAYS}
                 </span>
               ) : stockQuantity <= 5 ? (
-                <span className="text-[hsl(var(--brand-madder))]">
+                <span className="text-[#8E2A1B]">
                   Only {stockQuantity} left
                 </span>
               ) : (
-                <span className="text-[hsl(var(--brand-ink)/0.7)]">
+                <span className="text-[hsl(var(--brand-ink))]">
                   In stock
                 </span>
               )}
             </p>
 
-            {/* Colour */}
-            {hasSelectableColors(product.colors) && (
+            {/* Colours painted in this piece. Shown as facts, not a picker:
+                each piece is hand-painted once and the cart has no colour choice. */}
+            {pieceColours.length > 0 && (
               <div className="mt-6">
-                <p className="text-[12px] text-[hsl(var(--brand-ink)/0.6)]">
-                  Colour:{" "}
-                  <span className="text-[hsl(var(--brand-ink))] font-medium">
-                    {selectedColor
-                      ? parseColorEntry(selectedColor).name
-                      : "Select"}
-                  </span>
+                <p className="font-sans text-[14px] font-medium text-[hsl(var(--brand-ink))]">
+                  Colours in this piece
                 </p>
-                <div className="flex flex-wrap gap-2.5 mt-2.5">
-                  {(product.colors ?? []).map((color: string) => {
+                <ul className="mt-2.5 flex flex-wrap gap-2">
+                  {pieceColours.map((color) => {
                     const { name, hex } = parseColorEntry(color)
-                    const isSelected = selectedColor === color
                     return (
-                      <button
+                      <li
                         key={color}
-                        type="button"
-                        onClick={() => setSelectedColor(color)}
-                        aria-pressed={isSelected}
-                        aria-label={name}
-                        title={name}
-                        className={cn(
-                          "w-8 h-8 rounded-full transition-all",
-                          "ring-1 ring-inset ring-[hsl(var(--brand-ink)/0.15)]",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-deep))]",
-                          isSelected &&
-                            "ring-2 ring-[hsl(var(--brand-ink))] ring-offset-2 ring-offset-[hsl(var(--brand-paper))]",
-                        )}
-                        style={{ backgroundColor: hex || "#D1D5DB" }}
-                      />
+                        className="inline-flex h-9 items-center gap-2 rounded-full border border-[hsl(var(--brand-ink)/0.15)] bg-white pl-1.5 pr-3.5 font-sans text-[14px] text-[hsl(var(--brand-ink))]"
+                      >
+                        <span
+                          aria-hidden
+                          className="h-6 w-6 rounded-full ring-1 ring-inset ring-[hsl(var(--brand-ink)/0.2)]"
+                          style={{ backgroundColor: hex || "#D1D5DB" }}
+                        />
+                        {name}
+                      </li>
                     )
                   })}
-                </div>
+                </ul>
               </div>
             )}
 
-            {/* Quantity + actions */}
+            {/* Quantity: only when more than one can be bought */}
+            {purchasableLimit > 1 && (
             <div className="mt-6 flex items-center gap-3">
-              <span className="text-[12px] text-[hsl(var(--brand-ink)/0.6)]">
-                Qty
+              <span className="font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">
+                Quantity
               </span>
-              <div className="flex items-center h-11 rounded-full ring-1 ring-[hsl(var(--brand-ink)/0.15)]">
+              <div className="flex items-center h-12 rounded-full border border-[hsl(var(--brand-ink)/0.25)] bg-white">
                 <button
+                  type="button"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={quantity <= 1}
                   aria-label="Decrease quantity"
-                  className="w-10 h-full flex items-center justify-center rounded-l-full text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-ink)/0.05)] disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
+                  className={cn("w-11 h-full flex items-center justify-center rounded-l-full text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-indigo-tint))] disabled:text-[hsl(var(--brand-ink)/0.3)] disabled:hover:bg-transparent transition-colors", focusRing)}
                 >
-                  <Minus className="w-3.5 h-3.5" />
+                  <Minus className="w-4 h-4" />
                 </button>
-                <span className="w-8 text-center text-[14px] font-semibold tabular-nums">
+                <span className="w-8 text-center font-sans text-[15px] font-semibold tabular-nums">
                   {quantity}
                 </span>
                 <button
+                  type="button"
                   onClick={() =>
                     setQuantity(Math.min(purchasableLimit, quantity + 1))
                   }
                   disabled={quantity >= purchasableLimit}
                   aria-label="Increase quantity"
-                  className="w-10 h-full flex items-center justify-center rounded-r-full text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-ink)/0.05)] disabled:opacity-25 disabled:hover:bg-transparent transition-colors"
+                  className={cn("w-11 h-full flex items-center justify-center rounded-r-full text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-indigo-tint))] disabled:text-[hsl(var(--brand-ink)/0.3)] disabled:hover:bg-transparent transition-colors", focusRing)}
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
             </div>
+            )}
 
-            <div ref={buyBlockRef} className="mt-5">
-              <div className="flex gap-2.5">
+            <div ref={buyBlockRef} className="mt-6">
+              <div className="flex gap-3">
                 <button
+                  type="button"
                   onClick={handleAddToCart}
-                  className="h-[52px] flex-[38] min-w-0 rounded-full bg-transparent text-[hsl(var(--brand-ink))] ring-1 ring-[hsl(var(--brand-ink)/0.55)] hover:bg-[hsl(var(--brand-ink)/0.06)] active:scale-[0.99] transition-all text-[12px] font-semibold uppercase tracking-[0.14em] flex items-center justify-center gap-2"
+                  className={cn(secondaryButton, "h-[52px] flex-[40] min-w-0 px-4")}
                 >
-                  <ShoppingBag className="w-4 h-4 shrink-0" />
+                  <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
                   <span className="truncate">
                     {madeToOrder ? "Pre-order" : "Add"}
                     <span className="hidden sm:inline"> to cart</span>
                   </span>
                 </button>
                 <button
+                  type="button"
                   onClick={handleBuyNow}
-                  className="h-[52px] flex-[62] min-w-0 rounded-full bg-[hsl(var(--brand-ink))] text-[hsl(var(--brand-paper))] hover:bg-[hsl(var(--brand-ink-soft))] active:scale-[0.99] transition-all text-[12px] font-semibold uppercase tracking-[0.16em] shadow-[0_2px_12px_rgba(26,21,18,0.18)]"
+                  className={cn(primaryButton, "h-[52px] flex-[60] min-w-0 px-4")}
                 >
                   Buy now
                 </button>
               </div>
-              <p className="mt-3 text-center text-[11px] text-[hsl(var(--brand-ink)/0.5)]">
-                UPI · Cards · Net banking · Wallets
-              </p>
             </div>
 
-            {/* Trust row — flat, no cards */}
-            <div className="mt-7 pt-6 border-t border-[hsl(var(--brand-gold)/0.2)] grid grid-cols-3 gap-2">
+            {/* Good to know before paying: payment ways and the no-returns rule */}
+            <ul className="mt-5 space-y-2 font-sans text-[14px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+              <li className="flex gap-2.5">
+                {diamond}
+                <span>Pay by UPI, card, net banking or wallet.</span>
+              </li>
+              <li className="flex gap-2.5">
+                {diamond}
+                <span>
+                  All sales are final. No returns or refunds.{" "}
+                  <Link
+                    href="/returns"
+                    className={cn(
+                      "whitespace-nowrap rounded-sm font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))]",
+                      focusRing,
+                    )}
+                  >
+                    Read policy
+                  </Link>
+                </span>
+              </li>
+            </ul>
+            <a
+              href={askOnWhatsAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(textLink, "mt-4")}
+            >
+              <MessageCircle className="h-4 w-4 text-[#1F7A4D]" aria-hidden="true" />
+              Ask about this piece on WhatsApp
+            </a>
+
+            {/* Fact strip: dotted gold lines and charcoal marks, as on the home page */}
+            <ul className="mt-7 grid grid-cols-3 gap-2 border-y border-[hsl(var(--brand-gold)/0.45)] py-5">
               {[
                 { Mark: ParcelMark, label: "Free shipping" },
                 { Mark: LockMark, label: "Secure payment" },
-                { Mark: LotusSealMark, label: "GI certified" },
+                { Mark: LotusSealMark, label: "GI-registered craft" },
               ].map(({ Mark, label }) => (
-                <div
+                <li
                   key={label}
-                  className="flex flex-col items-center text-center gap-1.5"
+                  className="flex flex-col items-center text-center gap-2"
                 >
-                  <Mark className="w-[22px] h-[22px] text-[hsl(var(--brand-gold-deep))]" />
-                  <span className="text-[11px] leading-tight text-[hsl(var(--brand-ink)/0.65)]">
+                  <Mark className="w-6 h-6 text-[hsl(var(--brand-ink))]" />
+                  <span className="font-sans text-[13px] font-semibold leading-tight text-[hsl(var(--brand-ink))]">
                     {label}
                   </span>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
 
           </div>
         </div>
 
-        {/* ── Details ──────────────────────────────────────────────
-            Full width rather than stacked in the buy rail, which left
-            the whole area beside the gallery empty. */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 pt-12 border-t border-[hsl(var(--brand-gold)/0.2)]">
-          <div className="lg:col-span-5">
-            {product.description && (
-              <>
-                <h2 className="font-serif text-[19px] font-semibold text-[hsl(var(--brand-ink))]">
-                  About this piece
-                </h2>
-                <p className="mt-4 max-w-[62ch] text-[14.5px] leading-[1.8] text-[hsl(var(--brand-ink)/0.75)] whitespace-pre-line">
-                  {product.description}
-                </p>
-              </>
-            )}
-          </div>
+      </div>
 
-          <div className="lg:col-span-6 lg:col-start-7">
-            <h2 className="font-serif text-[19px] font-semibold text-[hsl(var(--brand-ink))]">
+      {/* ── About + details: plain turmeric band ── */}
+      <section
+        aria-labelledby="piece-details"
+        className="bg-[hsl(var(--brand-turmeric-tint))] py-12 md:py-16"
+      >
+        <div
+          className={cn(
+            "mx-auto grid max-w-[1200px] gap-10 px-5 sm:px-8 lg:gap-16",
+            product.description && "lg:grid-cols-2",
+          )}
+        >
+          {product.description && (
+            <div>
+              <h2 className="font-serif text-[20px] leading-tight text-[hsl(var(--brand-ink))] md:text-[22px]">
+                About this piece
+              </h2>
+              <p className="mt-4 max-w-[62ch] font-sans text-[16px] leading-relaxed text-[hsl(var(--brand-ink-soft))] whitespace-pre-line">
+                {product.description}
+              </p>
+            </div>
+          )}
+
+          <div className={cn(!product.description && "mx-auto w-full max-w-2xl")}>
+            <h2
+              id="piece-details"
+              className="font-serif text-[20px] leading-tight text-[hsl(var(--brand-ink))] md:text-[22px]"
+            >
               Details
             </h2>
-            {/* Two columns so the table height matches the description
-                beside it instead of running 380px past it. */}
-            <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-10">
+            <dl className="mt-4 border-t border-[hsl(var(--brand-gold-ornament)/0.5)]">
               {specRows.map(([label, value]) => (
                 <div
                   key={label}
-                  className="border-t border-[hsl(var(--brand-ink)/0.1)] py-3.5"
+                  className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 border-b border-[hsl(var(--brand-gold-ornament)/0.35)] py-4"
                 >
-                  <dt className="text-[11px] uppercase tracking-[0.12em] text-[hsl(var(--brand-ink)/0.5)]">
+                  <dt className="font-sans text-[14px] font-medium text-[hsl(var(--brand-ink-soft))]">
                     {label}
                   </dt>
-                  <dd className="mt-1 text-[14px] leading-[1.5] text-[hsl(var(--brand-ink)/0.9)]">
+                  <dd className="font-sans text-[15px] leading-[1.5] text-[hsl(var(--brand-ink))] whitespace-pre-line">
                     {value}
                   </dd>
                 </div>
               ))}
             </dl>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── Related ──────────────────────────────────────────── */}
-        {relatedProducts.length > 0 && (
-          <section className="mt-16 pt-12 border-t border-[hsl(var(--brand-gold)/0.2)]">
-            <h2 className="font-serif text-[22px] font-semibold text-[hsl(var(--brand-ink))] mb-6">
-              You may also like
-            </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-9">
-              {relatedProducts.map((relProduct) => {
-                const relSave =
-                  relProduct.original_price &&
-                  relProduct.original_price > (relProduct.price || 0)
-                    ? Math.round(
-                        ((relProduct.original_price - (relProduct.price || 0)) /
-                          relProduct.original_price) *
-                          100,
-                      )
-                    : 0
-                return (
-                  <Link
-                    key={relProduct.id}
-                    href={`/products/${relProduct.slug || relProduct.id}`}
-                    className="group block"
-                  >
-                    <div className="relative aspect-square bg-[hsl(var(--brand-paper))] rounded-lg overflow-hidden ring-1 ring-[hsl(var(--brand-ink)/0.07)]">
-                      <OptimizedImage
-                        src={
-                          getImageTier(relProduct?.images, "thumb", 0) ||
-                          "/images/products/product-placeholder.png"
-                        }
-                        alt={relProduct.name || relProduct.title || "Product"}
-                        fill
-                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                        sizes={getResponsiveSizes("grid")}
-                        imageType="productCard"
-                        priority={false}
-                        loading="lazy"
-                      />
-
-                      {relSave > 0 && (
-                        <span className="absolute top-2.5 left-2.5 rounded-full bg-[hsl(var(--brand-paper)/0.95)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--brand-madder))]">
-                          Save {relSave}%
-                        </span>
-                      )}
-
-                      <button
-                        onClick={(e) => handleQuickAdd(e, relProduct)}
-                        aria-label={`Add ${relProduct.name || relProduct.title} to cart`}
-                        className="absolute inset-x-2.5 bottom-2.5 h-9 rounded-full bg-[hsl(var(--brand-ink)/0.92)] text-[hsl(var(--brand-paper))] backdrop-blur-sm flex items-center justify-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] transition-all duration-300 ease-out hover:bg-[hsl(var(--brand-ink))] lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        Add
-                      </button>
-                    </div>
-
-                    <h3 className="mt-3 min-h-[2.6em] text-[13.5px] leading-[1.35] text-[hsl(var(--brand-ink)/0.85)] line-clamp-2">
-                      {relProduct.name || relProduct.title}
-                    </h3>
-                    <div className="mt-1 flex items-baseline gap-2">
-                      <span className="text-[15px] font-semibold text-[hsl(var(--brand-ink))] tabular-nums">
-                        {formatPrice(relProduct.price || 0)}
-                      </span>
-                      {relSave > 0 && (
-                        <span className="text-[12px] text-[hsl(var(--brand-ink)/0.4)] line-through tabular-nums">
-                          {formatPrice(relProduct.original_price || 0)}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                )
-              })}
+      {/* ── Related: the home page's card and centred lotus heading ── */}
+      {relatedProducts.length > 0 && (
+        <section aria-labelledby="related-pieces" className="bg-white py-12 md:py-16">
+          <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2
+                id="related-pieces"
+                className="font-serif text-[22px] leading-tight text-[hsl(var(--brand-ink))] md:text-[24px]"
+              >
+                You may also like
+              </h2>
             </div>
-          </section>
-        )}
+            <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
+              {relatedProducts.map((relProduct, index) => (
+                <CuratedProductCard key={relProduct.id} product={relProduct} index={index} />
+              ))}
+            </div>
+            <div className="mt-10 text-center">
+              <Link href="/products" className={textLink}>
+                See all pieces
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
-        {/* ── Reviews ──────────────────────────────────────────── */}
+      {/* ── Reviews: shown only when real approved reviews exist, as on the home page ── */}
+      {totalReviews > 0 && (
         <section
           id="reviews-section"
-          className="mt-16 pt-12 border-t border-[hsl(var(--brand-gold)/0.2)]"
+          aria-labelledby="reviews-title"
+          className="bg-[hsl(var(--brand-madder-tint))] py-12 md:py-16"
         >
-          <ProductReviews
-            productId={product.id}
-            productName={product.title || product.name}
-          />
+          <div className="mx-auto max-w-3xl px-5 sm:px-8">
+            <div className="text-center">
+              <h2
+                id="reviews-title"
+                className="font-serif text-[22px] leading-tight text-[hsl(var(--brand-ink))] md:text-[24px]"
+              >
+                Reviews
+              </h2>
+            </div>
+            <ProductReviews
+              productId={product.id}
+              productName={product.title || product.name}
+            />
+          </div>
         </section>
-      </div>
+      )}
 
       {/* ── Docked purchase bar ──────────────────────────────────
           Rises once the buy block scrolls away, on every viewport. */}
@@ -1040,9 +1161,9 @@ export default function ProductDetail() {
         )}
         aria-hidden={!showBuyBar}
       >
-        <div className="border-t border-[hsl(var(--brand-gold)/0.25)] bg-[hsl(var(--brand-paper)/0.92)] backdrop-blur-xl shadow-[0_-6px_28px_rgba(26,21,18,0.09)]">
+        <div className="border-t border-[hsl(var(--brand-gold)/0.55)] bg-white shadow-[0_-10px_28px_-18px_rgba(33,30,36,0.35)]">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-3">
-            <div className="relative w-11 h-14 rounded-md overflow-hidden shrink-0 hidden sm:block ring-1 ring-[hsl(var(--brand-ink)/0.08)]">
+            <div className="relative w-11 h-14 rounded-sm overflow-hidden shrink-0 hidden sm:block ring-1 ring-[hsl(var(--brand-gold)/0.5)]">
               <OptimizedImage
                 src={mainProductImage}
                 alt=""
@@ -1055,28 +1176,30 @@ export default function ProductDetail() {
             </div>
 
             <div className="min-w-0 flex-1 sm:flex-none sm:w-auto">
-              <p className="hidden sm:block text-[13px] text-[hsl(var(--brand-ink)/0.75)] truncate max-w-[220px]">
+              <p className="hidden sm:block font-sans text-[14px] text-[hsl(var(--brand-ink-soft))] truncate max-w-[260px]">
                 {productName}
               </p>
-              <p className="text-[18px] sm:text-[17px] font-semibold text-[hsl(var(--brand-ink))] tabular-nums leading-tight">
+              <p className="font-sans text-[18px] font-semibold text-[hsl(var(--brand-ink))] tabular-nums leading-tight">
                 {formatPrice(product.price || 0)}
               </p>
             </div>
 
             <div className="flex items-center gap-2 ml-auto shrink-0 flex-1 sm:flex-none justify-end">
               <button
+                type="button"
                 onClick={handleAddToCart}
                 aria-label={madeToOrder ? "Pre-order" : "Add to cart"}
-                className="h-11 w-11 sm:w-auto sm:px-6 rounded-full ring-1 ring-[hsl(var(--brand-ink)/0.5)] text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-ink)/0.06)] transition-colors flex items-center justify-center gap-2 shrink-0"
+                className={cn(secondaryButton, "h-11 w-11 shrink-0 sm:w-auto sm:px-6")}
               >
-                <ShoppingBag className="w-4 h-4" />
-                <span className="hidden sm:inline text-[12px] font-semibold uppercase tracking-[0.14em]">
+                <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+                <span className="hidden sm:inline">
                   {madeToOrder ? "Pre-order" : "Add"}
                 </span>
               </button>
               <button
+                type="button"
                 onClick={handleBuyNow}
-                className="h-11 flex-1 sm:flex-none sm:w-44 max-w-[220px] rounded-full bg-[hsl(var(--brand-ink))] text-[hsl(var(--brand-paper))] hover:bg-[hsl(var(--brand-ink-soft))] transition-colors text-[12px] font-semibold uppercase tracking-[0.14em] whitespace-nowrap"
+                className={cn(primaryButton, "h-11 flex-1 sm:flex-none sm:w-44 max-w-[220px] whitespace-nowrap")}
               >
                 Buy now
               </button>
@@ -1249,8 +1372,8 @@ export default function ProductDetail() {
                   ))}
                 </div>
               )}
-              <div className="text-[11px] font-sans text-white/50 tracking-wider uppercase pointer-events-none text-center">
-                Click to zoom • Drag to pan • Wheel to scale • Esc to close
+              <div className="text-[12px] font-sans text-white/85 tracking-wide pointer-events-none text-center">
+                Tap or click to zoom · Drag to move · Esc to close
               </div>
             </div>
           </motion.div>

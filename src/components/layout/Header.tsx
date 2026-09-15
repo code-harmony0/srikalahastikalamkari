@@ -50,7 +50,7 @@ const ActionIcon = ({
     <Link
       href={href}
       onClick={onClick}
-      className="relative group flex h-11 w-11 items-center justify-center rounded-full hover:bg-[hsl(var(--brand-ink)/0.06)] transition-all duration-300"
+      className="relative group flex h-11 w-11 items-center justify-center rounded-full hover:bg-[hsl(var(--brand-ink)/0.07)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
       aria-label={label}
     >
       <Icon
@@ -59,13 +59,13 @@ const ActionIcon = ({
           "w-[22px] h-[22px] transition-all duration-300 ease-out",
 
           // Default State
-          "text-[hsl(var(--brand-ink))] group-hover:text-[hsl(var(--brand-gold))]",
+          "text-[hsl(var(--brand-ink))]",
 
           // Hover Effects
           "group-hover:-translate-y-[2px]",
 
           // Variant Specifics
-          variant === "wishlist" && isActive && "text-[hsl(var(--brand-gold))]", // Gold text instead of fill
+          variant === "wishlist" && isActive && "text-[hsl(var(--brand-madder))]",
           variant === "cart" && "group-hover:rotate-3 origin-top",
         )}
       />
@@ -83,7 +83,7 @@ const ActionIcon = ({
       )}
 
       {/* Tooltip */}
-      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-medium tracking-wide bg-[hsl(var(--brand-ink))] text-[hsl(var(--brand-paper))] px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-[hsl(var(--brand-paper)/0.1)] z-50">
+      <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[12px] font-medium tracking-wide bg-[hsl(var(--brand-ink))] text-[hsl(var(--brand-paper))] px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-[hsl(var(--brand-paper)/0.1)] z-50">
         {label}
         <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[hsl(var(--brand-ink))] rotate-45 border-t border-l border-[hsl(var(--brand-paper)/0.1)]"></span>
       </span>
@@ -210,7 +210,7 @@ export default function Header() {
     <>
       <AnnouncementBar />
       <header
-        className="sticky top-0 z-50 flex h-14 w-full items-center border-b border-[hsl(var(--brand-ink)/0.05)] bg-[hsl(var(--brand-paper))]/[0.98] shadow-[0_1px_3px_rgba(26,21,18,0.04)] backdrop-blur-md md:h-[72px]"
+        className="sticky top-0 z-50 flex h-14 w-full items-center border-b border-[hsl(var(--brand-ink)/0.05)] bg-[hsl(var(--brand-paper))]/[0.98] shadow-[0_1px_3px_rgba(14,34,64,0.04)] backdrop-blur-md md:h-[72px]"
       >
         {/* Three-column grid on desktop so the centred nav reserves its own
             track. The previous absolutely-positioned nav sat outside the flow,
@@ -219,15 +219,15 @@ export default function Header() {
           {/* 1️⃣ LOGO BLOCK */}
           <Link
             href="/"
-            className="flex items-center gap-3 group min-w-0 md:justify-self-start"
+            className="flex items-center gap-4 group min-w-0 md:justify-self-start"
           >
             <div className="relative w-10 h-10 md:w-12 md:h-12 shrink-0 group-hover:-translate-y-[1px] transition-transform duration-300 ease-out">
               <Image
-                src="https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo-transparent/full"
+                src="/images/srikalahasti-crest-only.png"
                 alt="Srikalahasti Kalamkari Logo"
-                width={64}
-                height={64}
-                className="w-full h-full object-contain"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain scale-[1.15] md:scale-[1.25] origin-center"
                 priority
                 unoptimized
               />
@@ -235,7 +235,7 @@ export default function Header() {
             {/* Below sm there is no room for the wordmark beside four actions;
                 showing it only produced an ellipsis. The mark carries it. */}
             <div className="hidden sm:flex flex-col min-w-0">
-              <span className="font-serif font-bold text-[13px] lg:text-[15px] text-[hsl(var(--brand-ink))] leading-none tracking-wide uppercase group-hover:text-[hsl(var(--brand-gold-deep))] transition-colors truncate">
+              <span className="font-sans font-semibold text-lg lg:text-xl text-[hsl(var(--brand-ink))] leading-none tracking-normal capitalize transition-colors truncate">
                 Srikalahasti Kalamkari
               </span>
             </div>
@@ -248,10 +248,10 @@ export default function Header() {
           >
             {navLinks.map((link) => {
               const linkClass = cn(
-                "group relative text-[13px] uppercase font-semibold tracking-[0.1em] transition-colors duration-200 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] focus-visible:ring-offset-2 rounded-sm",
+                "group relative text-[13px] uppercase font-semibold tracking-[0.1em] transition-colors duration-200 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2 rounded-sm",
                 isActive(link.href)
                   ? "text-[hsl(var(--brand-ink))]"
-                  : "text-[hsl(var(--brand-ink)/0.6)] hover:text-[hsl(var(--brand-gold-deep))]",
+                  : "text-[hsl(var(--brand-ink-soft))] hover:text-[hsl(var(--brand-ink))]",
               );
               const underline = isActive(link.href) ? (
                 <span className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full bg-[hsl(var(--brand-gold))]" />
@@ -317,11 +317,11 @@ export default function Header() {
               aria-expanded={isSearchOpen}
               aria-controls="header-search"
               aria-label={isSearchOpen ? "Close search" : "Search products"}
-              className="relative group flex h-11 w-11 items-center justify-center rounded-full hover:bg-[hsl(var(--brand-ink)/0.06)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+              className="relative group flex h-11 w-11 items-center justify-center rounded-full hover:bg-[hsl(var(--brand-ink)/0.07)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
             >
               <Search
                 strokeWidth={1.5}
-                className="w-[22px] h-[22px] text-[hsl(var(--brand-ink))] group-hover:text-[hsl(var(--brand-gold))] group-hover:-translate-y-[2px] transition-all duration-300 ease-out"
+                className="w-[22px] h-[22px] text-[hsl(var(--brand-ink))] group-hover:-translate-y-[2px] transition-all duration-300 ease-out"
               />
             </button>
             )}
@@ -378,7 +378,7 @@ export default function Header() {
         {isSearchOpen && (
           <div
             id="header-search"
-            className="absolute left-0 right-0 top-full border-t border-[hsl(var(--brand-ink)/0.06)] border-b border-[hsl(var(--brand-gold)/0.25)] bg-[hsl(var(--brand-paper))] shadow-[0_18px_40px_-18px_rgba(26,21,18,0.35)]"
+            className="absolute left-0 right-0 top-full border-t border-[hsl(var(--brand-ink)/0.06)] border-b border-[hsl(var(--brand-gold)/0.25)] bg-[hsl(var(--brand-paper))] shadow-[0_18px_40px_-18px_rgba(14,34,64,0.35)]"
           >
             <form
               onSubmit={submitSearch}
@@ -387,7 +387,7 @@ export default function Header() {
               <div className="relative flex-1">
                 <Search
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[hsl(var(--brand-ink)/0.4)]"
+                  className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[hsl(var(--brand-muted))]"
                 />
                 <input
                   ref={searchInputRef}
@@ -396,12 +396,12 @@ export default function Header() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search sarees, dupattas, fabrics"
                   aria-label="Search products"
-                  className="h-12 w-full rounded-full border border-[hsl(var(--brand-ink)/0.14)] bg-[hsl(var(--brand-paper))] pl-11 pr-4 text-[15px] text-[hsl(var(--brand-ink))] placeholder:text-[hsl(var(--brand-ink)/0.42)] focus:border-[hsl(var(--brand-gold))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-gold)/0.25)]"
+                  className="h-12 w-full rounded-full border border-[hsl(var(--brand-ink)/0.14)] bg-[hsl(var(--brand-paper))] pl-11 pr-4 text-[15px] text-[hsl(var(--brand-ink))] placeholder:text-[hsl(var(--brand-muted))] focus:border-[hsl(var(--brand-ink)/0.5)] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-royal)/0.35)]"
                 />
               </div>
               <button
                 type="submit"
-                className="h-12 shrink-0 rounded-full bg-[hsl(var(--brand-ink))] px-5 text-[12px] font-bold uppercase tracking-[0.14em] text-[hsl(var(--brand-paper))] transition-colors hover:bg-[hsl(var(--brand-gold-deep))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                className="h-12 shrink-0 rounded-full bg-[hsl(var(--brand-midnight))] px-5 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-[hsl(var(--brand-midnight-hover))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
               >
                 Search
               </button>
@@ -409,7 +409,7 @@ export default function Header() {
                 type="button"
                 onClick={() => setIsSearchOpen(false)}
                 aria-label="Close search"
-                className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-full text-[hsl(var(--brand-ink)/0.6)] hover:bg-[hsl(var(--brand-ink)/0.06)] sm:flex"
+                className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-full text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-ink)/0.06)] sm:flex"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -420,7 +420,7 @@ export default function Header() {
         {/* CATEGORY PANEL - Main Category -> Product Type */}
         {isShopOpen && shopCategories.length > 0 && (
           <div
-            className="absolute left-0 right-0 top-full hidden md:block border-t border-[hsl(var(--brand-ink)/0.06)] border-b border-[hsl(var(--brand-gold)/0.25)] bg-[hsl(var(--brand-paper))] shadow-[0_18px_40px_-18px_rgba(26,21,18,0.35)]"
+            className="absolute left-0 right-0 top-full hidden md:block border-t border-[hsl(var(--brand-ink)/0.06)] border-b border-[hsl(var(--brand-gold)/0.25)] bg-[hsl(var(--brand-paper))] shadow-[0_18px_40px_-18px_rgba(14,34,64,0.35)]"
             onMouseEnter={openShop}
             onMouseLeave={() => closeShop()}
           >
@@ -443,7 +443,7 @@ export default function Header() {
                           "flex items-center justify-between gap-2 rounded-md px-3 py-2 font-sans text-[14px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]",
                           isActive
                             ? "bg-[hsl(var(--brand-gold)/0.12)] font-semibold text-[hsl(var(--brand-ink))]"
-                            : "text-[hsl(var(--brand-ink)/0.7)] hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))]",
+                            : "text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))]",
                         )}
                       >
                         <span className="truncate">{category.name}</span>
@@ -452,7 +452,7 @@ export default function Header() {
                           className={cn(
                             "h-3.5 w-3.5 -rotate-90 shrink-0 transition-opacity",
                             isActive
-                              ? "text-[hsl(var(--brand-gold-deep))] opacity-100"
+                              ? "text-[hsl(var(--brand-ink))] opacity-100"
                               : "opacity-0",
                           )}
                         />
@@ -472,7 +472,7 @@ export default function Header() {
                       </h3>
                       <Link
                         href={categoryHref(activeCategory.name)}
-                        className="shrink-0 font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-gold-deep))] hover:text-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
+                        className="shrink-0 font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
                       >
                         Shop all {activeCategory.name}
                       </Link>
@@ -486,7 +486,7 @@ export default function Header() {
                           <li key={sub.id}>
                             <Link
                               href={categoryHref(sub.name)}
-                              className="block truncate rounded-md px-2 py-1.5 font-sans text-[13.5px] text-[hsl(var(--brand-ink)/0.68)] transition-colors hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                              className="block truncate rounded-md px-2 py-1.5 font-sans text-[13.5px] text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
                             >
                               {sub.name}
                             </Link>
@@ -496,7 +496,7 @@ export default function Header() {
                           <li>
                             <Link
                               href={categoryHref(activeCategory.name)}
-                              className="block rounded-md px-2 py-1.5 font-sans text-[13.5px] font-semibold text-[hsl(var(--brand-gold-deep))] transition-colors hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                              className="block rounded-md px-2 py-1.5 font-sans text-[13.5px] font-semibold text-[hsl(var(--brand-ink))] transition-colors hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
                             >
                               +{activeCategory.subcategories.length - SHOP_MENU_LIMIT} more
                             </Link>
@@ -504,7 +504,7 @@ export default function Header() {
                         )}
                       </ul>
                     ) : (
-                      <p className="px-2 font-sans text-[13.5px] text-[hsl(var(--brand-ink)/0.5)]">
+                      <p className="px-2 font-sans text-[13.5px] text-[hsl(var(--brand-muted))]">
                         Browse everything in {activeCategory.name}.
                       </p>
                     )}
@@ -523,7 +523,7 @@ export default function Header() {
                             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                             unoptimized
                           />
-                          <span className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[rgba(20,12,6,0.9)] to-transparent" />
+                          <span className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[rgba(8,20,40,0.9)] to-transparent" />
                           <span className="absolute bottom-3 left-4 right-4 font-sans text-[13px] font-semibold text-white">
                             Shop {activeCategory.name}
                           </span>
@@ -539,7 +539,7 @@ export default function Header() {
               <div className="mx-auto flex max-w-[1280px] items-center justify-end gap-4 px-6 py-3.5">
                 <Link
                   href="/products"
-                  className="shrink-0 text-[12px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-gold-deep))] hover:text-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
+                  className="shrink-0 text-[12px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
                 >
                   View all products
                 </Link>
@@ -564,7 +564,7 @@ export default function Header() {
                   "text-lg font-medium py-3 px-4 rounded-lg transition-all duration-200 flex justify-between items-center min-h-[44px]",
                   isActive(link.href)
                     ? "text-[hsl(var(--brand-ink))] bg-[hsl(var(--brand-ink)/0.05)] font-bold"
-                    : "text-[hsl(var(--brand-ink)/0.7)] hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))]",
+                    : "text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))]",
                 );
 
                 // Same two-level hierarchy as desktop, so navigation does not
@@ -610,7 +610,7 @@ export default function Header() {
                                       key={sub.id}
                                       href={categoryHref(sub.name)}
                                       onClick={() => setIsMobileMenuOpen(false)}
-                                      className="flex min-h-[40px] items-center px-2 text-[14px] text-[hsl(var(--brand-ink)/0.62)] rounded-md hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))]"
+                                      className="flex min-h-[40px] items-center px-2 text-[14px] text-[hsl(var(--brand-ink-soft))] rounded-md hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))]"
                                     >
                                       {sub.name}
                                     </Link>
@@ -623,7 +623,7 @@ export default function Header() {
                           <Link
                             href="/products"
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="flex min-h-[44px] items-center px-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-gold-deep))]"
+                            className="flex min-h-[44px] items-center px-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-ink))]"
                           >
                             View all products
                           </Link>
@@ -653,7 +653,7 @@ export default function Header() {
               <Link
                 href={user ? "/profile" : "/login"}
                 onClick={handleMobileProfileClick}
-                className="flex items-center gap-3 py-3 px-4 text-[hsl(var(--brand-ink)/0.7)] hover:text-[hsl(var(--brand-ink))] transition-colors rounded-lg hover:bg-[hsl(var(--brand-ink)/0.05)] font-medium"
+                className="flex items-center gap-3 py-3 px-4 text-[hsl(var(--brand-ink-soft))] hover:text-[hsl(var(--brand-ink))] transition-colors rounded-lg hover:bg-[hsl(var(--brand-ink)/0.05)] font-medium"
               >
                 {user ? (
                   <User className="w-5 h-5" />

@@ -46,70 +46,85 @@
   :root {
     /* SRIKALAHASTI THEME */
 
-    /* Base: Pure White (#FFFFFF) */
-    --background: 0 0% 100%;
-    /* Text: Deep Charcoal / Espresso (#1A1512) */
-    --foreground: 22 18% 9%;
+    /* Sky & Gold (client choice 2026-09-15): cool near-white page, navy text */
+    --background: 60 14% 99%;
+    --foreground: 270 9% 13%;
 
     /* Card: Pure White for product contrast */
     --card: 0 0% 100%;
-    --card-foreground: 22 18% 9%;
+    --card-foreground: 270 9% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 22 18% 9%;
+    --popover-foreground: 270 9% 13%;
 
-    /* Primary: Soft Muted Gold (#C19A5B) */
-    --primary: 42 43% 55%;
+    /* Primary: midnight navy from the logo's dark ground (#0B2A55, white text 14:1) */
+    --primary: 215 77% 19%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Charcoal (#2E2623) */
-    --secondary: 22 13% 16%;
+    /* Secondary: midnight blue */
+    --secondary: 215 77% 19%;
     --secondary-foreground: 0 0% 100%;
 
     /* Muted: Clean light gray */
-    --muted: 220 10% 96%;
-    --muted-foreground: 22 10% 40%;
+    --muted: 210 50% 95%;
+    --muted-foreground: 273 5% 39%;
 
     /* Accent: Deep Slate */
-    --accent: 215 15% 35%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 209 80% 95%;
+    --accent-foreground: 270 9% 13%;
 
     /* Secondary Accent: Lighter Slate */
     --accent-secondary: 215 15% 55%;
 
     /* Text Tokens */
-    --text-heading: 22 25% 19%; /* Espresso */
-    --text-body: 22 25% 19%; /* Espresso */
-    --text-muted: 22 15% 45%;
+    --text-heading: 270 9% 13%;
+    --text-body: 270 7% 27%;
+    --text-muted: 273 5% 39%;
 
     /* Surface Variants */
-    --surface-1: 36 67% 94%;
-    --surface-2: 36 67% 90%;
+    --surface-1: 210 67% 94%;
+    --surface-2: 210 55% 90%;
 
     /* Destructive: Crimson (#DC143C) */
     --destructive: 348 83% 47%;
     --destructive-foreground: 0 0% 98%;
 
     /* Border: Light Slate */
-    --border: 215 20% 85%;
-    --input: 215 20% 85%;
+    --border: 210 38% 86%;
+    --input: 210 38% 82%;
     /* Ring: Focus ring color (Slate) */
-    --ring: 215 20% 65%; /* Using Slate Color */
+    --ring: 209 90% 38%; /* logo royal blue */
 
     --radius: 0.5rem; /* 8px unified radius */
 
     /* ── Brand ramp ──────────────────────────────────────────────────────
        The storefront previously hardcoded these as hex in ~300 places, so
        the theme could not be changed from one spot. They live here now.
-       Values are drawn from Kalamkari's own mordant dyes rather than a
-       generic luxury gold: iron-jaggery ink, myrobalan cream, madder red. */
-    --brand-ink: 24 30% 6%;          /* iron-jaggery black — the anchor */
-    --brand-ink-soft: 24 14% 26%;
-    --brand-paper: 0 0% 100%;        /* clean white ground, not beige */
-    --brand-cream: 40 56% 96%;       /* myrobalan cream — a light accent band */
-    --brand-gold: 43 74% 52%;        /* luminous gold; the old tan read as mud */
-    --brand-gold-soft: 43 88% 76%;
-    --brand-gold-deep: 38 66% 32%;   /* bronze — for gold-coloured TEXT (4.5:1 on white) */
+       From the logo and the craft (owner decisions 2026-09-15):
+       - text is neutral charcoal: never brown, never blue
+       - buttons are midnight navy (the logo's dark ground); royal blue is only
+         a focus ring, never a text or button colour
+       - pastel bands are pale tints of Kalamkari's natural dyes
+       - crest gold is ornament only: frames, rules, motifs (1.8:1, never text)
+       Every text role passes 4.5:1 on white and on every pastel band. */
+    --brand-ink: 270 9% 13%;         /* #211E24 charcoal — headings, body, prices (16.5:1, 13.7:1 on madder tint) */
+    --brand-ink-soft: 270 7% 27%;    /* #46414B — secondary text (9.9:1, 8.3:1 on madder tint) */
+    --brand-muted: 273 5% 39%;       /* #655F6A — captions, counts (6.2:1, 5.2:1 on madder tint) */
+    --brand-paper: 60 14% 99%;       /* #FCFCFB page */
+    --brand-cream: 212 52% 94%;      /* #E9F0F8 pale indigo band (name kept for existing classes) */
+    --brand-indigo-tint: 212 52% 94%;   /* #E9F0F8 */
+    --brand-turmeric-tint: 44 81% 92%;  /* #FBF2D9 */
+    --brand-madder-tint: 14 61% 93%;    /* #F8E7E2 */
+    --brand-leaf-tint: 126 25% 92%;     /* #E6F0E7 */
+    --brand-gold: 45 96% 48%;        /* #F2B705 crest gold — rules, frames, motifs */
+    --brand-gold-soft: 47 95% 76%;   /* #FCE38A — gold text on midnight only */
+    --brand-gold-ornament: 42 78% 45%; /* #CD9A19 — floral lines and frames on pastel bands (decoration) */
+    --brand-gold-deep: 270 7% 27%;   /* legacy name: now charcoal-soft so leftover uses stay readable and not blue */
+    --brand-royal: 209 90% 38%;      /* #0A63B8 — focus rings only */
+    --brand-royal-deep: 210 89% 29%;
+    --brand-royal-soft: 209 80% 95%;
+    --brand-midnight: 215 77% 19%;   /* #0B2A55 — primary buttons, dark bands, footer */
+    --brand-midnight-hover: 214 72% 25%; /* #123A70 */
     --brand-madder: 8 68% 44%;       /* alizarin red — the chromatic counterpoint */
     --brand-madder-soft: 16 76% 62%;
 
@@ -221,7 +236,7 @@ body [role="dialog"].auth-modal-dialog {
 }
 
 body [role="dialog"].auth-modal-dialog .auth-modal-header {
-  background-color: #1A1512 !important;
+  background-color: hsl(var(--brand-midnight)) !important;
 }
 
 /* Hide only the Radix default close button which is a direct child of the DialogContent */
@@ -242,9 +257,23 @@ body [role="dialog"].auth-modal-dialog > button {
   html {
   }
 
-  /* Website styles - warm beige theme */
+  /* Website styles - Sky & Gold */
   body {
     @apply bg-background text-foreground;
+    caret-color: hsl(var(--brand-royal));
+  }
+
+  ::selection {
+    background: hsl(var(--brand-gold-soft));
+    color: hsl(var(--brand-ink));
+  }
+
+  :focus-visible {
+    outline-color: hsl(var(--brand-royal));
+  }
+
+  html {
+    scrollbar-color: hsl(var(--brand-royal) / 0.45) hsl(var(--brand-cream));
   }
 
   /* Dashboard override - clean white theme */
@@ -298,7 +327,7 @@ body [role="dialog"].auth-modal-dialog > button {
 /* Homepage Custom Styles - Moved from inline <style> to fix hydration error */
 /* Single Static Kalamkari Motif Background - Subdued for Gallery feel */
 .kalamkari-static-background {
-  background-color: #FFFFFF; /* Pristine White base */
+  background-color: hsl(var(--brand-paper)); /* ivory ground */
   background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231A1512' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.03'%3E%3Cpath d='M50 30c18 0 32 14 32 32 0 25-18 45-32 45s-32-20-32-45c0-18 14-32 32-32z' fill='%231A1512' fill-opacity='0.01'/%3E%3Cpath d='M150 120c15 0 27 12 27 27 0 21-15 39-27 39s-27-18-27-39c0-15 12-27 27-27z' fill='%231A1512' fill-opacity='0.01'/%3E%3Cpath d='M120 50c12 0 22 10 22 22 0 16-12 30-22 30s-22-14-22-30c0-12 10-22 22-22z' fill='%231A1512' fill-opacity='0.01'/%3E%3Cpath d='M70 140c10 0 18 8 18 18 0 14-10 25-18 25s-18-11-18-25c0-10 8-18 18-18z' fill='%231A1512' fill-opacity='0.01'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 200px 200px;
   background-position: 0 0;
@@ -700,8 +729,8 @@ body [role="dialog"].auth-modal-dialog > button {
 
 /* CTA glow pulse */
 @keyframes ctaGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 154, 91, 0); }
-  50% { box-shadow: 0 0 20px 4px rgba(193, 154, 91, 0.25); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242, 183, 5, 0); }
+  50% { box-shadow: 0 8px 20px -6px rgba(242, 183, 5, 0.35); }
 }
 
 .cta-glow {

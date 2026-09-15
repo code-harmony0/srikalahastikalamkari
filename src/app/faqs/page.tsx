@@ -119,17 +119,17 @@ export default function FAQsPage() {
       <PageHero
         compact
         eyebrow="Help & Support"
-        titleStart="Frequently Asked"
+        titleStart="Frequently asked"
         titleAccent="questions"
         description="Find answers to common questions about authentic Srikalahasti Kalamkari craftsmanship, orders, care, and delivery."
       />
 
       <div className="max-w-4xl mx-auto px-5 sm:px-6 py-10 md:py-14">
-        <div className="bg-white/95 dark:bg-[#1E1510] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
+        <div className="bg-white/95 dark:bg-[hsl(var(--brand-midnight))] rounded-xl border border-[hsl(var(--brand-gold)/0.25)] shadow-sm p-6 sm:p-8 md:p-12 backdrop-blur-sm">
           <div className="space-y-12">
             {faqs.map((category, categoryIndex) => (
               <section key={categoryIndex}>
-                <h2 className="font-serif text-2xl font-bold text-[hsl(var(--brand-gold-deep))] dark:text-[hsl(var(--brand-gold))] mb-6 pb-2 border-b border-[hsl(var(--brand-gold)/0.2)]">
+                <h2 className="font-serif text-2xl text-[hsl(var(--brand-ink))] mb-6 pb-2 border-b border-[hsl(var(--brand-gold)/0.2)]">
                   {category.category}
                 </h2>
 
@@ -137,12 +137,12 @@ export default function FAQsPage() {
                   {category.questions.map((faq, faqIndex) => (
                     <div
                       key={faqIndex}
-                      className="border-l-4 border-[#C19A5B]/30 pl-6"
+                      className="border-l-4 border-[hsl(var(--brand-gold)/0.3)] pl-6"
                     >
-                      <h3 className="font-inter font-semibold text-[#1A1512] text-lg mb-3">
+                      <h3 className="font-inter font-semibold text-[hsl(var(--brand-ink))] text-lg mb-3">
                         {faq.q}
                       </h3>
-                      <p className="font-inter text-[#1A1512]/80 leading-relaxed">
+                      <p className="font-inter text-[hsl(var(--brand-ink))] leading-relaxed">
                         {faq.a}
                       </p>
                     </div>
@@ -152,35 +152,35 @@ export default function FAQsPage() {
             ))}
           </div>
 
-          <div className="mt-16 p-6 bg-[#1A1512]/5 rounded-lg border border-[#C19A5B]/20">
-            <h3 className="font-playfair text-xl font-semibold text-[#1A1512] dark:text-white mb-4">
+          <div className="mt-16 p-6 bg-[hsl(var(--brand-ink)/0.05)] rounded-lg border border-[hsl(var(--brand-gold)/0.2)]">
+            <h3 className="font-serif text-xl text-[hsl(var(--brand-ink))] dark:text-white mb-4">
               Still Have Questions?
             </h3>
-            <p className="font-inter text-[#1A1512]/80 dark:text-neutral-200 mb-4">
+            <p className="font-inter text-[hsl(var(--brand-ink))] dark:text-neutral-200 mb-4">
               We're here to help! Whether you need more information about our
               products, want to discuss a custom order, or have any other
               questions, don't hesitate to reach out.
             </p>
-            <div className="space-y-2 font-inter text-sm text-[#1A1512]/80 dark:text-neutral-300">
+            <div className="space-y-2 font-inter text-sm text-[hsl(var(--brand-ink))] dark:text-neutral-300">
               <p>
-                <strong className="text-[#1A1512] dark:text-white">Email:</strong>{" "}
-                <a href={mailtoHref()} className="inline-flex min-h-[44px] items-center text-[#854D0E] dark:text-[#E2BD7A] font-semibold hover:underline break-all">
+                <strong className="text-[hsl(var(--brand-ink))] dark:text-white">Email:</strong>{" "}
+                <a href={mailtoHref()} className="inline-flex min-h-[44px] items-center text-[hsl(var(--brand-ink))] font-semibold underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] break-all">
                   {CONTACT.email}
                 </a>
               </p>
               <p>
-                <strong className="text-[#1A1512] dark:text-white">Phone:</strong>{" "}
+                <strong className="text-[hsl(var(--brand-ink))] dark:text-white">Phone:</strong>{" "}
                 {CONTACT.phones.slice(0, 2).map((phone, i) => (
                   <span key={phone}>
                     {i > 0 && " / "}
-                    <a href={telHref(phone)} className="inline-flex min-h-[44px] items-center text-[#854D0E] dark:text-[#E2BD7A] font-semibold hover:underline">
+                    <a href={telHref(phone)} className="inline-flex min-h-[44px] items-center text-[hsl(var(--brand-ink))] font-semibold underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))]">
                       {phone}
                     </a>
                   </span>
                 ))}
               </p>
               <p>
-                <strong className="text-[#1A1512]">Visit:</strong> # 17-68, Bharathi Nagar, Tirupati Main
+                <strong className="text-[hsl(var(--brand-ink))]">Visit:</strong> # 17-68, Bharathi Nagar, Tirupati Main
                 Road, Srikalahasti-517640
               </p>
             </div>

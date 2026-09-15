@@ -51,7 +51,7 @@ const CountdownTimer = () => {
     <div className="flex gap-3 md:gap-5 justify-center">
       {blocks.map((block, i) => (
         <div key={i} className="flex flex-col items-center">
-          <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(193,154,91,0.2)]">
+          <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(242,183,5,0.2)]">
             <span className="font-serif text-2xl md:text-3xl font-bold text-white">
               {String(block.value).padStart(2, "0")}
             </span>
@@ -71,7 +71,7 @@ const GoldParticles = () => (
     {[...Array(15)].map((_, i) => (
       <div
         key={i}
-        className="absolute rounded-full bg-[#C19A5B] shadow-[0_0_8px_#C19A5B]"
+        className="absolute rounded-full bg-[hsl(var(--brand-gold))] shadow-[0_0_8px_#F2B705]"
         style={{
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,
@@ -114,7 +114,7 @@ export default function ComingSoonPage() {
   }, [heroBackgroundImages.length])
 
   return (
-    <main className="w-full h-screen overflow-hidden text-foreground relative flex flex-col justify-center items-center bg-[#1A1512]">
+    <main className="w-full h-screen overflow-hidden text-foreground relative flex flex-col justify-center items-center bg-[hsl(var(--brand-midnight))]">
       {/* Background Images */}
       <div className="absolute inset-0 w-full h-full z-0">
         <AnimatePresence mode="sync">
@@ -177,7 +177,7 @@ export default function ComingSoonPage() {
             Coming Soon
           </h1>
           
-          <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#C19A5B] to-transparent mb-6" />
+          <div className="w-16 h-px bg-gradient-to-r from-transparent via-[hsl(var(--brand-gold))] to-transparent mb-6" />
 
           {/* Subheading */}
           <p className="font-sans text-sm md:text-lg text-white/80 max-w-xl mx-auto mb-10 leading-relaxed font-light tracking-wide">
@@ -191,7 +191,7 @@ export default function ComingSoonPage() {
 
           {/* WhatsApp / Contact Button */}
           <a href="https://wa.me/917288848881?text=Hello%21%20Please%20notify%20me%20when%20the%20Srikalahasti%20Kalamkari%20website%20launches." target="_blank" rel="noreferrer">
-            <Button className="h-12 md:h-14 px-8 rounded-none bg-[#C19A5B] text-white hover:bg-white hover:text-[#1A1512] text-xs md:text-sm font-bold tracking-[0.15em] uppercase transition-colors duration-500 shadow-[0_0_20px_rgba(193,154,91,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+            <Button className="h-12 md:h-14 px-8 rounded-none bg-[hsl(var(--brand-gold))] text-white hover:bg-white hover:text-[hsl(var(--brand-ink))] text-xs md:text-sm font-bold tracking-[0.15em] uppercase transition-colors duration-500 shadow-[0_0_20px_rgba(242,183,5,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
               <MessageCircle className="w-4 h-4 mr-2" />
               Notify Me via WhatsApp
             </Button>

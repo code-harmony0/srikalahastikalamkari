@@ -1,94 +1,52 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useReviews, Review } from "@/shared/hooks/use-reviews";
-import { StarRating, RatingDistribution } from "@/shared/ui/star-rating";
+import { StarRating } from "@/shared/ui/star-rating";
 import { formatDistanceToNow } from "date-fns";
-import {
-  MessageSquare,
-  ThumbsUp,
-  CheckCircle2,
-  ChevronDown,
-  Send,
-  User,
-  Loader2,
-  Star,
-} from "lucide-react";
+import { ThumbsUp, CheckCircle2, ChevronDown, User } from "lucide-react";
 import { cn } from "@/shared/utils";
-import { toast } from "sonner";
-import { useAuth } from "@/shared/contexts/AuthContext";
-import { hasPurchasedProduct } from "@/services/orders";
-import { useEffect } from "react";
-
 
 interface ProductReviewsProps {
   productId: string;
   productName: string;
 }
 
-export function ProductReviews({ productId, productName }: ProductReviewsProps) {
-  const {
-    reviews,
-    averageRating,
-    totalReviews,
-    ratingDistribution,
-    isLoading,
-    submitReview,
-    markHelpful,
-  } = useReviews(productId);
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2";
 
-
+/**
+ * Approved reviews for one piece. Renders nothing until real reviews exist,
+ * so the product page never shows an empty "be the first" box.
+ */
+export function ProductReviews({ productId }: ProductReviewsProps) {
+  const { reviews, totalReviews, isLoading, markHelpful } = useReviews(productId);
   const [showAll, setShowAll] = useState(false);
+
+  if (isLoading || totalReviews === 0) return null;
+
   const displayedReviews = showAll ? reviews : reviews.slice(0, 3);
 
-  if (isLoading) {
-    return (
-      <div className="py-12 flex justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[hsl(var(--brand-gold-deep))]" />
-      </div>
-    );
-  }
-
   return (
-    <div className="py-12 border-t border-[#C19A5B]/20">
-      {/* Header */}
-      {totalReviews === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-[#C19A5B]/20 px-6">
-          <div className="w-16 h-16 bg-[#C19A5B]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#C19A5B]/20">
-            <Star className="w-8 h-8 text-[hsl(var(--brand-gold-deep))]" fill="currentColor" />
-          </div>
-          <h3 className="font-playfair text-xl font-bold text-[#1A1512] mb-2">
-            Be the First to Own a Masterpiece
-          </h3>
-          <p className="text-[#1A1512]/60 max-w-md mx-auto mb-6 leading-relaxed">
-            This authentic Kalamkari piece is waiting for its home. Purchase now and perform the first review to share your experience with the world.
-          </p>
-          <div className="inline-flex items-center justify-center px-4 py-1.5 bg-[#C19A5B]/10 rounded-full border border-[#C19A5B]/25 text-xs font-medium text-[hsl(var(--brand-gold-deep))]">
-            <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
-            Verified Purchase Required for Review
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {displayedReviews.map((review) => (
-            <ReviewCard key={review.id} review={review} onHelpful={markHelpful} />
-          ))}
+    <div className="mt-10 space-y-4">
+      {displayedReviews.map((review) => (
+        <ReviewCard key={review.id} review={review} onHelpful={markHelpful} />
+      ))}
 
-          {reviews.length > 3 && (
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="w-full py-3 text-[#1A1512] hover:text-[hsl(var(--brand-gold-deep))] font-medium flex items-center justify-center gap-2 hover:bg-[#C19A5B]/5 rounded-lg transition-colors"
-            >
-              {showAll ? "Show Less" : `Show All ${reviews.length} Reviews`}
-              <ChevronDown
-                className={cn(
-                  "w-4 h-4 transition-transform",
-                  showAll && "rotate-180"
-                )}
-              />
-            </button>
-          )}
+      {reviews.length > 3 && (
+        <div className="pt-2 text-center">
+          <button
+            type="button"
+            onClick={() => setShowAll(!showAll)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-sm font-sans text-[14px] font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[6px] hover:decoration-[hsl(var(--brand-ink))]",
+              focusRing,
+            )}
+          >
+            {showAll ? "Show fewer reviews" : `Show all ${reviews.length} reviews`}
+            <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
+          </button>
         </div>
       )}
     </div>
@@ -110,30 +68,29 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
   };
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl border border-[#C19A5B]/20 p-5"
+      className="rounded-sm border border-[hsl(var(--brand-gold)/0.55)] bg-white p-5 sm:p-6"
     >
-      {/* Header */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white border border-[#C19A5B]/30 flex items-center justify-center">
-            <User className="w-5 h-5 text-[hsl(var(--brand-gold-deep))]" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[hsl(var(--brand-gold)/0.55)] bg-white">
+            <User className="h-5 w-5 text-[hsl(var(--brand-ink))]" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-[#1A1512]">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-sans text-[15px] font-semibold text-[hsl(var(--brand-ink))]">
                 {review.customer_name}
               </span>
               {review.is_verified_purchase && (
-                <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                  <CheckCircle2 className="w-3 h-3" />
-                  Verified
+                <span className="flex items-center gap-1 rounded-full bg-[hsl(var(--brand-leaf-tint))] px-2 py-0.5 font-sans text-[12px] font-medium text-[#1F6B3A]">
+                  <CheckCircle2 className="h-3 w-3" />
+                  Verified buyer
                 </span>
               )}
             </div>
-            <span className="text-xs text-[#1A1512]/50">
+            <span className="font-sans text-[13px] text-[hsl(var(--brand-muted))]">
               {formatDistanceToNow(new Date(review.created_at), { addSuffix: true })}
             </span>
           </div>
@@ -141,30 +98,30 @@ function ReviewCard({ review, onHelpful }: ReviewCardProps) {
         <StarRating rating={review.rating} size="sm" />
       </div>
 
-      {/* Content */}
       {review.title && (
-        <h4 className="font-semibold text-[#1A1512] mb-1">{review.title}</h4>
+        <h3 className="mb-1 font-sans text-[15px] font-semibold text-[hsl(var(--brand-ink))]">{review.title}</h3>
       )}
       {review.content && (
-        <p className="text-sm text-[#1A1512]/70 leading-relaxed">{review.content}</p>
+        <p className="font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">{review.content}</p>
       )}
 
-      {/* Footer */}
-      <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[#C19A5B]/25">
+      <div className="mt-4 flex items-center gap-4 border-t border-dotted border-[hsl(var(--brand-gold-ornament)/0.6)] pt-3">
         <button
+          type="button"
           onClick={handleHelpful}
           disabled={hasVoted}
           className={cn(
-            "flex items-center gap-1.5 text-xs transition-colors",
+            "flex min-h-[40px] items-center gap-1.5 rounded-sm font-sans text-[13px] font-medium transition-colors",
+            focusRing,
             hasVoted
-              ? "text-[hsl(var(--brand-gold-deep))] cursor-default"
-              : "text-[#1A1512]/50 hover:text-[hsl(var(--brand-gold-deep))]"
+              ? "cursor-default text-[hsl(var(--brand-ink))]"
+              : "text-[hsl(var(--brand-ink-soft))] hover:text-[hsl(var(--brand-ink))]",
           )}
         >
-          <ThumbsUp className="w-3.5 h-3.5" />
+          <ThumbsUp className={cn("h-4 w-4", hasVoted && "fill-current")} />
           Helpful ({review.helpful_count})
         </button>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
