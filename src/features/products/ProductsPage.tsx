@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { ProductCard } from "./ProductCard"
 import { PRICE_BANDS, type PriceBandId } from "./price-bands"
+import { CategoryPickerDialog } from "./CategoryPickerDialog"
 import { ProductCardCompact, ProductCardCompactSkeleton } from "./ProductCardCompact"
 import Link from "next/link"
 import { cn } from "@/shared/utils"
@@ -34,7 +35,10 @@ import { STORE_WHATSAPP_NUMBER } from "@/shared/lib/whatsapp"
 import dynamic from "next/dynamic"
 
 const FilterSidebar = dynamic(
-  () => import("./FilterSidebar").then((mod) => mod.FilterSidebar),
+  () =>
+    import(/* webpackChunkName: "products-filter-sidebar" */ "./FilterSidebar").then(
+      (mod) => mod.FilterSidebar,
+    ),
   {
     ssr: false,
     loading: () => (
@@ -114,6 +118,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   const [itemsPerPage, setItemsPerPage] = useState(12)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
+  const [pickerCategoryId, setPickerCategoryId] = useState<string | null>(null)
 
   // Ensure page always starts at the top
   useEffect(() => {
@@ -375,7 +380,6 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       customAvailableFilters.subCategoryNamesByCategory,
     restrictToAvailableFilters: isCustomDesignMode,
     availableFiltersLoading: isCustomDesignMode && isLoading,
-    resultCount: totalCount,
   }
 
   const heroCopy = isCustomDesignMode
@@ -423,17 +427,24 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
               aria-label="Categories"
               className="scrollbar-hide -mx-6 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 sm:flex-wrap sm:justify-center lg:hidden"
             >
-              {[{ id: "all", name: "All" }, ...filterCategories].map((cat) => {
+              {[{ id: "all", name: "All", subcategories: [] }, ...filterCategories].map((cat) => {
                 const isAll = cat.id === "all"
+                const hasSubs = cat.subcategories.length > 0
                 const active = isAll
                   ? selectedCategories.length === 0
-                  : selectedCategories.length === 1 && selectedCategories[0] === cat.name
+                  : [cat.name, ...cat.subcategories.map((sub) => sub.name)].some((name) =>
+                      selectedCategories.includes(name),
+                    )
                 return (
                   <li key={cat.id} className="shrink-0">
                     <button
                       type="button"
                       aria-pressed={active}
-                      onClick={() => setSelectedCategories(isAll ? [] : [cat.name])}
+                      aria-haspopup={hasSubs ? "dialog" : undefined}
+                      onClick={() => {
+                        if (hasSubs) setPickerCategoryId(cat.id)
+                        else setSelectedCategories(isAll ? [] : [cat.name])
+                      }}
                       className={cn(
                         "inline-flex h-10 items-center rounded-full border px-4 font-sans text-[14px] font-medium transition-colors",
                         focusRingClass,
@@ -449,6 +460,12 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
               })}
             </ul>
           )}
+          <CategoryPickerDialog
+            category={filterCategories.find((cat) => cat.id === pickerCategoryId) ?? null}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            onClose={() => setPickerCategoryId(null)}
+          />
         </div>
       </section>
 

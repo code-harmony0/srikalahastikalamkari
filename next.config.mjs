@@ -126,16 +126,22 @@ const nextConfig = {
           },
         ],
       },
-      {
-        source: "/:all*(js|css)",
-        locale: false,
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
+      // Dev chunk names carry no content hash, so a year-long immutable cache
+      // pins browsers to old code. Only production builds get it.
+      ...(process.env.NODE_ENV === "production"
+        ? [
+            {
+              source: "/:all*(js|css)",
+              locale: false,
+              headers: [
+                {
+                  key: "Cache-Control",
+                  value: "public, max-age=31536000, immutable",
+                },
+              ],
+            },
+          ]
+        : []),
       {
         source: "/fonts/:font*",
         headers: [

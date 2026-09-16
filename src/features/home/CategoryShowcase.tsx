@@ -81,13 +81,13 @@ export function CategoryShowcase() {
         <ul className="-mx-4 mt-8 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2 [mask-image:linear-gradient(to_right,black_82%,transparent)] md:[mask-image:none] [scrollbar-width:none] sm:mx-0 sm:px-0 md:mt-10 md:flex-wrap md:justify-center md:gap-8 md:overflow-visible [&::-webkit-scrollbar]:hidden">
           {loading
             ? Array.from({ length: 6 }, (_, i) => (
-                <li key={i} className="flex w-[88px] shrink-0 flex-col items-center gap-3 md:w-[120px]">
+                <li key={i} className="flex w-[120px] shrink-0 flex-col items-center gap-3 md:w-[160px]">
                   <span className="aspect-square w-full animate-pulse rounded-full bg-[hsl(var(--brand-paper))]" />
                   <span className="h-3 w-16 animate-pulse rounded bg-[hsl(var(--brand-paper))]" />
                 </li>
               ))
             : showcase!.top.map((category) => (
-                <li key={category.id} className="w-[88px] shrink-0 snap-start md:w-[120px]">
+                <li key={category.id} className="w-[120px] shrink-0 snap-start md:w-[160px]">
                   <Link
                     href={categoryHref(category.name)}
                     className="group flex flex-col items-center rounded-lg text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-4 focus-visible:ring-offset-[hsl(var(--brand-cream))]"

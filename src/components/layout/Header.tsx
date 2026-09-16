@@ -420,14 +420,14 @@ export default function Header() {
         {/* CATEGORY PANEL - Main Category -> Product Type */}
         {isShopOpen && shopCategories.length > 0 && (
           <div
-            className="absolute left-0 right-0 top-full hidden md:block border-t border-[hsl(var(--brand-ink)/0.06)] border-b border-[hsl(var(--brand-gold)/0.25)] bg-[hsl(var(--brand-paper))] shadow-[0_18px_40px_-18px_rgba(14,34,64,0.35)]"
+            className="absolute left-0 right-0 top-full hidden md:block border-t-0 border-b-2 border-b-[hsl(var(--brand-gold))] bg-[hsl(var(--brand-midnight))] shadow-2xl"
             onMouseEnter={openShop}
             onMouseLeave={() => closeShop()}
           >
             <div className="mx-auto flex max-w-[1280px] px-6 py-5">
               {/* Left rail: the categories themselves */}
               <ul
-                className="w-[248px] shrink-0 border-r border-[hsl(var(--brand-ink)/0.08)] pr-3"
+                className="w-[248px] shrink-0 border-r border-white/10 pr-3"
                 role="list"
               >
                 {shopCategories.map((category) => {
@@ -442,8 +442,8 @@ export default function Header() {
                         className={cn(
                           "flex items-center justify-between gap-2 rounded-md px-3 py-2 font-sans text-[14px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]",
                           isActive
-                            ? "bg-[hsl(var(--brand-gold)/0.12)] font-semibold text-[hsl(var(--brand-ink))]"
-                            : "text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))]",
+                            ? "bg-white/10 font-semibold text-[hsl(var(--brand-gold-soft))]"
+                            : "text-[hsl(var(--brand-paper))] hover:bg-white/5 hover:text-white",
                         )}
                       >
                         <span className="truncate">{category.name}</span>
@@ -452,7 +452,7 @@ export default function Header() {
                           className={cn(
                             "h-3.5 w-3.5 -rotate-90 shrink-0 transition-opacity",
                             isActive
-                              ? "text-[hsl(var(--brand-ink))] opacity-100"
+                              ? "text-[hsl(var(--brand-gold-soft))] opacity-100"
                               : "opacity-0",
                           )}
                         />
@@ -467,12 +467,12 @@ export default function Header() {
                 {activeCategory && (
                   <>
                     <div className="mb-4 flex items-baseline justify-between gap-4">
-                      <h3 className="font-serif text-[17px] font-bold text-[hsl(var(--brand-ink))]">
+                      <h3 className="font-serif text-[17px] font-bold text-white">
                         {activeCategory.name}
                       </h3>
                       <Link
                         href={categoryHref(activeCategory.name)}
-                        className="shrink-0 font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
+                        className="shrink-0 font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-gold-soft))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-white hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))] rounded-sm"
                       >
                         Shop all {activeCategory.name}
                       </Link>
@@ -486,7 +486,7 @@ export default function Header() {
                           <li key={sub.id}>
                             <Link
                               href={categoryHref(sub.name)}
-                              className="block truncate rounded-md px-2 py-1.5 font-sans text-[13.5px] text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-ink)/0.04)] hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                              className="block truncate rounded-md px-2 py-1.5 font-sans text-[13.5px] text-[#DCE6F2] transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
                             >
                               {sub.name}
                             </Link>
@@ -496,7 +496,7 @@ export default function Header() {
                           <li>
                             <Link
                               href={categoryHref(activeCategory.name)}
-                              className="block rounded-md px-2 py-1.5 font-sans text-[13.5px] font-semibold text-[hsl(var(--brand-ink))] transition-colors hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
+                              className="block rounded-md px-2 py-1.5 font-sans text-[13.5px] font-semibold text-white transition-colors hover:text-[hsl(var(--brand-gold-soft))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold))]"
                             >
                               +{activeCategory.subcategories.length - SHOP_MENU_LIMIT} more
                             </Link>
@@ -504,7 +504,7 @@ export default function Header() {
                         )}
                       </ul>
                     ) : (
-                      <p className="px-2 font-sans text-[13.5px] text-[hsl(var(--brand-muted))]">
+                      <p className="px-2 font-sans text-[13.5px] text-[#DCE6F2]/70">
                         Browse everything in {activeCategory.name}.
                       </p>
                     )}

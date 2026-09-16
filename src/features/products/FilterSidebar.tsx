@@ -1,15 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, X } from "lucide-react";
-import { useFilterCategories } from "@/shared/hooks/use-filter-categories";
+import { ChevronRight, X } from "lucide-react";
+import { useFilterCategories, type Category } from "@/shared/hooks/use-filter-categories";
 import { cn } from "@/shared/utils";
 import { PRICE_BANDS, type PriceBandId } from "./price-bands";
-
-// A customer found the old filter too complicated: each category opened a
-// second popup inside the drawer, price had a slider, min/max boxes and presets
-// for one choice, and an "in stock" toggle removed nothing because everything
-// is in stock. Now: categories with inline types, and a single price choice.
+import { CategoryPickerDialog } from "./CategoryPickerDialog";
 
 interface FilterSidebarProps {
   selectedCategories: string[];
@@ -19,7 +15,6 @@ interface FilterSidebarProps {
   clearFilters: () => void;
   showMobile?: boolean;
   onCloseMobile?: () => void;
-  resultCount?: number;
   availableCategoryNames?: Set<string>;
   availableSubCategoryNames?: Set<string>;
   availableSubCategoryNamesByCategory?: Map<string, Set<string>>;
@@ -30,54 +25,45 @@ interface FilterSidebarProps {
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]";
 
-function ChoiceRow({
+/* ─── Price radio row (only used for price bands) ─── */
+function PriceRow({
   label,
   checked,
   onClick,
-  radio = false,
-  indent = false,
 }: {
   label: string;
   checked: boolean;
   onClick: () => void;
-  radio?: boolean;
-  indent?: boolean;
 }) {
   return (
     <button
       type="button"
-      role={radio ? "radio" : "checkbox"}
+      role="radio"
       aria-checked={checked}
       onClick={onClick}
       className={cn(
-        "flex min-h-[40px] w-full items-center gap-3 rounded-md py-2 pr-2 text-left font-sans text-[14px] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint)/0.7)]",
+        "flex min-h-[40px] w-full items-center gap-3 rounded-md py-2 pl-1.5 pr-2 text-left font-sans text-[14px] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint)/0.7)]",
         focusRing,
-        indent ? "pl-8" : "pl-1.5",
         checked && "font-medium",
       )}
     >
       <span
         aria-hidden
         className={cn(
-          "flex h-[18px] w-[18px] shrink-0 items-center justify-center ring-1 ring-inset transition-colors",
-          radio ? "rounded-full" : "rounded-[4px]",
+          "flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full ring-1 ring-inset transition-colors",
           checked
             ? "bg-[hsl(var(--brand-midnight))] text-white ring-[hsl(var(--brand-midnight))]"
             : "bg-white ring-[hsl(var(--brand-ink)/0.4)]",
         )}
       >
-        {checked &&
-          (radio ? (
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-          ) : (
-            <Check className="h-3 w-3" strokeWidth={3} />
-          ))}
+        {checked && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
       </span>
       <span className="min-w-0 flex-1 leading-snug">{label}</span>
     </button>
   );
 }
 
+/* ─── Main FilterSidebar ─── */
 const FilterSidebar = ({
   selectedCategories,
   setSelectedCategories,
@@ -86,7 +72,6 @@ const FilterSidebar = ({
   clearFilters,
   showMobile = false,
   onCloseMobile,
-  resultCount,
   availableCategoryNames,
   availableSubCategoryNames,
   availableSubCategoryNamesByCategory,
@@ -94,7 +79,7 @@ const FilterSidebar = ({
   availableFiltersLoading = false,
 }: FilterSidebarProps) => {
   const { categories, isLoading, error } = useFilterCategories();
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [pickerCategoryId, setPickerCategoryId] = useState<string | null>(null);
 
   const toggleCategory = (name: string) =>
     setSelectedCategories(
@@ -106,7 +91,7 @@ const FilterSidebar = ({
   const hasActiveFilters = selectedCategories.length > 0 || priceBand !== null;
 
   // Custom-design mode only offers categories that have custom pieces.
-  const visibleCategories = useMemo(() => {
+  const visibleCategories = useMemo((): Category[] => {
     const restrict =
       restrictToAvailableFilters ||
       availableCategoryNames !== undefined ||
@@ -116,9 +101,9 @@ const FilterSidebar = ({
     if (availableFiltersLoading) return [];
 
     return categories
-      .map((category: any) => {
+      .map((category) => {
         const namesForCategory = availableSubCategoryNamesByCategory?.get(category.name);
-        const subcategories = (category.subcategories || []).filter((sub: any) =>
+        const subcategories = category.subcategories.filter((sub) =>
           namesForCategory
             ? namesForCategory.has(sub.name)
             : availableSubCategoryNames?.has(sub.name),
@@ -128,7 +113,7 @@ const FilterSidebar = ({
         }
         return { ...category, subcategories };
       })
-      .filter(Boolean);
+      .filter((category): category is Category => category !== null);
   }, [
     availableCategoryNames,
     availableFiltersLoading,
@@ -185,7 +170,7 @@ const FilterSidebar = ({
       <div className="flex-1">
         <section className={sectionClass}>
           <h3 className={sectionTitleClass}>Category</h3>
-          <div className="mt-2">
+          <div className="mt-2 space-y-0.5">
             {loadingCategories && (
               <div className="space-y-2 py-1">
                 {[0, 1, 2, 3].map((i) => (
@@ -208,53 +193,50 @@ const FilterSidebar = ({
             )}
             {!loadingCategories &&
               !error &&
-              visibleCategories.map((category: any) => {
-                const subcategories = category.subcategories || [];
-                const subSelected = subcategories.some((sub: any) =>
-                  selectedCategories.includes(sub.name),
+              visibleCategories.map((category) => {
+                const subcategories = category.subcategories;
+                const hasSubs = subcategories.length > 0;
+                const chosen = [category.name, ...subcategories.map((sub) => sub.name)].filter(
+                  (name) => selectedCategories.includes(name),
                 );
-                const open = expanded[category.id] ?? subSelected;
+                const isActive = chosen.length > 0;
 
                 return (
-                  <div key={category.id}>
-                    <div className="flex items-center">
-                      <div className="min-w-0 flex-1">
-                        <ChoiceRow
-                          label={category.name}
-                          checked={selectedCategories.includes(category.name)}
-                          onClick={() => toggleCategory(category.name)}
-                        />
-                      </div>
-                      {subcategories.length > 0 && (
-                        <button
-                          type="button"
-                          aria-expanded={open}
-                          aria-label={`${open ? "Hide" : "Show"} types of ${category.name}`}
-                          onClick={() =>
-                            setExpanded((current) => ({ ...current, [category.id]: !open }))
-                          }
-                          className={cn(
-                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-[hsl(var(--brand-ink-soft))] hover:bg-[hsl(var(--brand-indigo-tint)/0.7)]",
-                            focusRing,
-                          )}
-                        >
-                          <ChevronDown
-                            className={cn("h-4 w-4 transition-transform", open && "rotate-180")}
-                          />
-                        </button>
+                  <button
+                    key={category.id}
+                    type="button"
+                    onClick={() => {
+                      if (hasSubs) {
+                        setPickerCategoryId(category.id);
+                      } else {
+                        toggleCategory(category.name);
+                      }
+                    }}
+                    className={cn(
+                      "flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left font-sans text-[14px] transition-colors",
+                      isActive
+                        ? "bg-[hsl(var(--brand-indigo-tint))] font-semibold text-[hsl(var(--brand-midnight))]"
+                        : "text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-indigo-tint)/0.5)]",
+                      focusRing,
+                    )}
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block">{category.name}</span>
+                      {hasSubs && isActive && (
+                        <span className="mt-0.5 block text-[13px] font-normal leading-snug text-[hsl(var(--brand-ink-soft))]">
+                          {chosen.map((name) => (name === category.name ? "All" : name)).join(", ")}
+                        </span>
                       )}
-                    </div>
-                    {open &&
-                      subcategories.map((sub: any) => (
-                        <ChoiceRow
-                          key={sub.id ?? sub.name}
-                          indent
-                          label={sub.name}
-                          checked={selectedCategories.includes(sub.name)}
-                          onClick={() => toggleCategory(sub.name)}
-                        />
-                      ))}
-                  </div>
+                    </span>
+                    {isActive && (
+                      <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[hsl(var(--brand-midnight))] px-1 text-[11px] font-semibold text-white tabular-nums">
+                        {chosen.length}
+                      </span>
+                    )}
+                    {hasSubs && (
+                      <ChevronRight className="h-4 w-4 shrink-0 text-[hsl(var(--brand-ink-soft))]" />
+                    )}
+                  </button>
                 );
               })}
           </div>
@@ -266,9 +248,8 @@ const FilterSidebar = ({
           </h3>
           <div role="radiogroup" aria-labelledby="price-filter-label" className="mt-2 tabular-nums">
             {PRICE_BANDS.map((band) => (
-              <ChoiceRow
+              <PriceRow
                 key={band.id}
-                radio
                 label={band.label}
                 checked={priceBand === band.id}
                 onClick={() => setPriceBand(priceBand === band.id ? null : band.id)}
@@ -288,12 +269,17 @@ const FilterSidebar = ({
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2",
             )}
           >
-            {resultCount !== undefined
-              ? `Show ${resultCount} ${resultCount === 1 ? "piece" : "pieces"}`
-              : "Show pieces"}
+            Show results
           </button>
         </div>
       )}
+
+      <CategoryPickerDialog
+        category={visibleCategories.find((category) => category.id === pickerCategoryId) ?? null}
+        selectedCategories={selectedCategories}
+        setSelectedCategories={setSelectedCategories}
+        onClose={() => setPickerCategoryId(null)}
+      />
     </aside>
   );
 };

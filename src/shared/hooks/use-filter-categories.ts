@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { getCategories, getSubCategories } from "@/services/categories";
 
-interface Subcategory {
+export interface Subcategory {
   id: string;
   name: string;
   slug?: string;
@@ -10,7 +10,7 @@ interface Subcategory {
   parentCategoryId: string;
 }
 
-interface Category {
+export interface Category {
   id: string;
   name: string;
   slug?: string;
