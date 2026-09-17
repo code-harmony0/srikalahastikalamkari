@@ -526,7 +526,7 @@ export default function ProductDetail() {
     push("Dyes", "Natural botanical and mineral dyes")
     // Care for anything worn or used as cloth; wall paintings are not washed.
     if (!/wall|painting/i.test(product?.categoryName ?? "")) {
-      push("Care", "Dry clean only, at a professional cleaner.\nDo not hand wash or machine wash.")
+      push("Care", "Dry clean only. Do not hand wash or machine wash.")
     }
     // Dispatch time for ready pieces isn't confirmed, so only made-to-order
     // pieces state a timeline.
