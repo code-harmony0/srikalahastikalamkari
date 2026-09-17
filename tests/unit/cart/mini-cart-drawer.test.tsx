@@ -65,10 +65,10 @@ describe('MiniCartDrawer', () => {
     render(<MiniCartDrawer />)
 
     fireEvent.click(screen.getByLabelText(/increase quantity/i))
-    expect(mockUpdateQuantity).toHaveBeenCalledWith('p1', 3)
+    expect(mockUpdateQuantity).toHaveBeenCalledWith('p1', 3, undefined)
 
     fireEvent.click(screen.getByLabelText(/decrease quantity/i))
-    expect(mockUpdateQuantity).toHaveBeenCalledWith('p1', 1)
+    expect(mockUpdateQuantity).toHaveBeenCalledWith('p1', 1, undefined)
   })
 
   it('caps the increase at available stock', () => {
@@ -82,7 +82,7 @@ describe('MiniCartDrawer', () => {
     useMiniCartStore.setState({ isOpen: true })
     render(<MiniCartDrawer />)
     fireEvent.click(screen.getByLabelText(/remove .* from cart/i))
-    expect(mockRemoveItem).toHaveBeenCalledWith('p1')
+    expect(mockRemoveItem).toHaveBeenCalledWith('p1', undefined)
   })
 
   it('closes on Continue Shopping', () => {
