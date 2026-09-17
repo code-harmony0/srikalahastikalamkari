@@ -64,15 +64,15 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="pt-1">
+            <div className="pt-3">
               <a
                 href="https://www.instagram.com/srikalahasti_kalamkari_offical"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${linkClass} inline-flex items-center gap-2 text-[13px]`}
+                className="inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))]"
               >
-                <Instagram className="h-4 w-4 text-[hsl(var(--brand-gold-soft))]" />
-                <span>@srikalahasti_kalamkari_offical</span>
+                <Instagram className="h-4 w-4" />
+                <span>Follow us on Instagram</span>
               </a>
             </div>
           </div>

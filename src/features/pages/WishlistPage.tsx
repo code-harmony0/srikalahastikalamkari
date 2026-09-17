@@ -131,7 +131,7 @@ export default function WishlistPage() {
           <h1 className="font-serif text-[28px] leading-tight md:text-[36px]">Your wishlist</h1>
           <KalashDivider className="mt-2" />
           <p className="mt-2 font-sans text-[14px] tabular-nums text-[hsl(var(--brand-ink-soft))] md:text-[15px]">
-            {wishlistItems.length} {wishlistItems.length === 1 ? "piece" : "pieces"} saved
+            {wishlistItems.length} {wishlistItems.length === 1 ? "item" : "items"} saved
           </p>
         </div>
       </div>

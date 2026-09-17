@@ -690,9 +690,9 @@ export default function CheckoutPage() {
 
               {hasMadeToOrderItems && (
                 <div className="mt-4 rounded-md border border-[hsl(var(--brand-gold)/0.5)] bg-white p-3 font-sans">
-                  <p className="text-[14px] font-semibold">Made-to-order pieces</p>
-                  <p className="mt-1 text-[14px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
-                    We make these pieces for you and deliver them in {MADE_TO_ORDER_DAYS}.
+                  <p className="text-[14px] font-semibold">Made-to-order items</p>
+                  <p className="mt-1 text-[13px] text-[hsl(var(--brand-ink-soft))]">
+                    We make these items for you and deliver them in {MADE_TO_ORDER_DAYS}.
                   </p>
                 </div>
               )}

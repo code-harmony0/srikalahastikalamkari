@@ -390,7 +390,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       }
     : {
         title: "Shop Kalamkari",
-        description: "Hand-painted sarees, dupattas and fabrics from Srikalahasti.",
+        description: "Hand-painted Sarees, Dupattas and Fabrics from Srikalahasti.",
       }
 
   const firstShown = Math.min((currentPage - 1) * itemsPerPage + 1, totalCount)
@@ -606,14 +606,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                     )}
                   </button>
 
-                  <p
-                    aria-live="polite"
-                    className="order-last w-full font-sans text-[14px] text-[hsl(var(--brand-ink-soft))] tabular-nums md:order-none md:mr-auto md:w-auto"
-                  >
-                    {isLoading
-                      ? " "
-                      : `${totalCount} ${totalCount === 1 ? "piece" : "pieces"}`}
-                  </p>
+                  <div className="order-last w-full md:order-none md:mr-auto md:w-auto" aria-hidden="true" />
 
                   {/* View Toggle */}
                   <div className="hidden sm:flex items-center gap-1 rounded-full border border-[hsl(var(--brand-ink)/0.2)] bg-white p-1">
@@ -645,7 +638,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                     <select
                       value={itemsPerPage}
                       onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                      aria-label="Pieces per page"
+                      aria-label="Items per page"
                       className={cn(selectClass, "w-[148px]")}
                     >
                       <option value={12}>12 per page</option>
@@ -660,7 +653,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      aria-label="Sort pieces"
+                      aria-label="Sort"
                       className={cn(selectClass, "w-full")}
                     >
                       <option value="default">Recommended</option>
@@ -720,7 +713,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                     className="mt-12 flex flex-col items-center gap-4 border-t border-[hsl(var(--brand-gold)/0.45)] pt-6 sm:flex-row sm:justify-between md:mt-16"
                   >
                     <p className="font-sans text-[14px] text-[hsl(var(--brand-ink-soft))] tabular-nums">
-                      Showing {firstShown}–{lastShown} of {totalCount} pieces
+                      Showing {firstShown}–{lastShown} of {totalCount} items
                     </p>
                     {totalPages > 1 && (
                       <div className="flex items-center gap-1.5 sm:gap-2">
@@ -787,7 +780,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                 /* Empty State */
                 <div className="mx-auto max-w-xl rounded-sm border border-[hsl(var(--brand-gold)/0.55)] bg-white px-6 py-14 text-center">
                   <h2 className="text-balance font-serif text-[26px] leading-tight text-[hsl(var(--brand-ink))] md:text-[30px]">
-                    {hasActiveFilters ? "No pieces match these filters" : "No pieces to show right now"}
+                    {hasActiveFilters ? "No products match these filters" : "No products to show right now"}
                   </h2>
                   <TempleBellsDivider className="mt-3" />
                   <p className="mx-auto mt-4 max-w-sm font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">

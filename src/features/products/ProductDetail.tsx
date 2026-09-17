@@ -1106,7 +1106,7 @@ export default function ProductDetail() {
           <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
             <div className="mx-auto max-w-2xl text-center">
               <h2
-                id="related-pieces"
+                id="related-products"
                 className="font-serif text-[22px] leading-tight text-[hsl(var(--brand-ink))] md:text-[24px]"
               >
                 You may also like
@@ -1119,7 +1119,7 @@ export default function ProductDetail() {
             </div>
             <div className="mt-10 text-center">
               <Link href="/products" className={textLink}>
-                See all pieces
+                See all products
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>

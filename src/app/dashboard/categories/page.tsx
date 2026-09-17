@@ -97,7 +97,14 @@ const Categories = () => {
   const fetchData = async () => {
     const { data: cats } = await getCategories()
     const { data: subCats } = await getSubCategories()
-    if (cats) setCategories(cats)
+    if (cats) {
+      const sortedCats = [...cats].sort((a, b) => {
+        if (a.name.toLowerCase() === "sarees") return -1;
+        if (b.name.toLowerCase() === "sarees") return 1;
+        return 0;
+      });
+      setCategories(sortedCats)
+    }
     if (subCats) setSubCategories(subCats)
   }
 

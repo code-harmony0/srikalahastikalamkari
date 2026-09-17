@@ -213,7 +213,7 @@ export default function HomePage() {
             Srikalahasti Kalamkari
           </h1>
           <p className="mt-4 max-w-xl text-pretty font-sans text-[15px] leading-relaxed text-white/90 md:text-[18px]">
-            Sarees, dupattas and fabrics, drawn with a bamboo kalam and natural dyes.
+            Discover handcrafted Kalamkari Sarees, Dupattas and Fabrics where traditional artistry meets contemporary elegance.
           </p>
           <div className="mt-8 flex flex-col items-center gap-5 sm:flex-row sm:gap-7">
             <Link
@@ -263,12 +263,12 @@ export default function HomePage() {
       {/* ── SHOP BY CATEGORY (pale indigo band) ─────────────────────────── */}
       <CategoryShowcase />
 
-      {/* ── FEATURED PIECES (white) ─────────────────────────────────────── */}
+      {/* ── FEATURED PRODUCTS (white) ─────────────────────────────────────── */}
       {(loading || featured.length > 0) && (
-        <section aria-labelledby="featured-pieces" className="bg-white py-16 md:py-24">
+        <section aria-labelledby="featured-products" className="bg-white py-16 md:py-24">
           <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-            <div id="featured-pieces">
-              <SectionHeading title="Featured pieces" intro="New sarees from our workshop." />
+            <div id="featured-products">
+              <SectionHeading title="Featured products" intro="New sarees from our workshop." />
             </div>
             <div className="mt-10 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:mt-12 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
               {loading
@@ -279,7 +279,7 @@ export default function HomePage() {
             </div>
             <div className="mt-12 text-center">
               <Link href="/products" className={secondaryButton}>
-                Shop all pieces
+                Shop all products
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
@@ -433,7 +433,7 @@ export default function HomePage() {
             </ul>
             <div className="mt-10 text-center">
               <Link href="/products" className={textLink}>
-                See all pieces in the shop
+                See all products in the shop
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>

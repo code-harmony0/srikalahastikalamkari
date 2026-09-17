@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Mail, Phone, MapPin, Clock, Send, ExternalLink, CheckCircle2, Loader2 } from "lucide-react"
+import { Mail, Phone, MapPin, Clock, Send, ExternalLink, CheckCircle2, Loader2, Instagram } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/shared/utils"
 import { supabase } from "@/lib/supabase/client"
@@ -173,6 +173,19 @@ export default function ContactPage() {
               <InfoRow icon={<Clock className="h-5 w-5" />} label="Opening hours">
                 <p>{CONTACT.hours.weekdays}</p>
                 <p>{CONTACT.hours.sunday}</p>
+              </InfoRow>
+
+              <InfoRow icon={<Instagram className="h-5 w-5" />} label="Social Media">
+                <p>Follow us for the latest collections and workshop updates.</p>
+                <a
+                  href="https://www.instagram.com/srikalahasti_kalamkari_offical"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(textLink, "mt-2 inline-flex items-center gap-1.5 text-[14px]")}
+                >
+                  @srikalahasti_kalamkari_offical
+                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
               </InfoRow>
             </div>
           </section>

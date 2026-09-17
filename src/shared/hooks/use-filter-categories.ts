@@ -65,7 +65,7 @@ export const useFilterCategories = (): UseFilterCategoriesResult => {
   const nestedCategories = useMemo(() => {
     if (!parents.length) return [];
 
-    return parents.map((parent) => ({
+    const formatted = parents.map((parent) => ({
       id: parent.id,
       name: parent.name,
       slug: parent.slug,
@@ -80,6 +80,15 @@ export const useFilterCategories = (): UseFilterCategoriesResult => {
           parentCategoryId: child.category_id || child.parent_id,
         })),
     }));
+    
+    // Sort so Sarees appears first
+    formatted.sort((a, b) => {
+      if (a.name.toLowerCase() === 'sarees') return -1;
+      if (b.name.toLowerCase() === 'sarees') return 1;
+      return 0;
+    });
+
+    return formatted;
   }, [parents, children]);
 
   return { categories: nestedCategories, isLoading, error };
