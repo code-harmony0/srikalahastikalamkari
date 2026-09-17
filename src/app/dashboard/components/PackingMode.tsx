@@ -877,6 +877,11 @@ const PackingMode: React.FC<PackingModeProps> = ({
                             <h4 className="font-semibold text-base line-clamp-1 text-slate-900">
                               {item.products?.name || item.name || "Product"}
                             </h4>
+                            {item.selected_color && (
+                              <p className="mt-0.5 text-[14px] text-gray-500 font-medium">
+                                Color: {item.selected_color}
+                              </p>
+                            )}
                             <div className="flex items-center gap-3 mt-1">
                               {item.category && (
                                 <Badge

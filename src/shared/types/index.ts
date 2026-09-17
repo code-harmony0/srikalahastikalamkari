@@ -119,6 +119,7 @@ export interface CartItem {
   quantity: number
   variant?: string
   maxStock?: number
+  selectedColor?: string
 }
 
 export interface User {

@@ -300,7 +300,7 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         // Only what is being bought — the server prices it from the database.
         body: JSON.stringify({
-          items: cart.items.map(({ productId, quantity }) => ({ productId, quantity })),
+          items: cart.items.map(({ productId, quantity, selectedColor }) => ({ productId, quantity, selectedColor })),
           couponCode: appliedCoupon?.code ?? null,
         }),
       })
@@ -313,7 +313,7 @@ export default function CheckoutPage() {
         .map((item) => {
           const product = products.find((p: any) => p.id === item.productId)
           if (!product) return null
-          return { productId: product.id, price: product.price, quantity: item.quantity }
+          return { productId: product.id, price: product.price, quantity: item.quantity, selectedColor: item.selectedColor }
         })
         .filter(Boolean)
 
@@ -589,7 +589,7 @@ export default function CheckoutPage() {
               <h2 className="font-serif text-[20px] leading-tight md:text-[22px]">Order summary</h2>
 
               <ul className="mt-4 max-h-[320px] divide-y divide-[hsl(var(--brand-gold-ornament)/0.3)] overflow-y-auto border-y border-[hsl(var(--brand-gold-ornament)/0.3)]">
-                {cartItems.map(({ product, quantity }) =>
+                {cartItems.map(({ product, quantity, selectedColor }) =>
                   product ? (
                     <li key={product.id} className="flex gap-3 py-3">
                       <div className="relative h-[72px] w-14 shrink-0 overflow-hidden rounded-sm bg-white ring-1 ring-[hsl(var(--brand-gold)/0.5)]">
@@ -612,6 +612,11 @@ export default function CheckoutPage() {
                         <p className="line-clamp-2 text-[14px] font-medium leading-snug">
                           {product.title || product.name}
                         </p>
+                        {selectedColor && (
+                          <p className="mt-0.5 font-sans text-[13px] text-[hsl(var(--brand-ink-soft))]">
+                            Color: {selectedColor}
+                          </p>
+                        )}
                         <p className="mt-1 text-[13px] text-[hsl(var(--brand-ink-soft))] tabular-nums">
                           Qty {quantity}
                         </p>

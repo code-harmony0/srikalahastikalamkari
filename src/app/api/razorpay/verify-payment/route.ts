@@ -69,11 +69,12 @@ export async function POST(req: NextRequest) {
     if (orderError) throw orderError;
 
     // Save order items
-    const orderItems = cartItems.map((item: { productId: string; price: number; quantity: number }) => ({
+    const orderItems = cartItems.map((item: { productId: string; price: number; quantity: number; selectedColor?: string }) => ({
       order_id: order.id,
       product_id: item.productId,
       quantity: item.quantity,
       price_at_purchase: item.price, // already in rupees
+      selected_color: item.selectedColor || null,
     }));
 
     const { error: itemsError } = await supabaseAdmin

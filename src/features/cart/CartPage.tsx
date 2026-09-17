@@ -102,6 +102,7 @@ export default function CartPage() {
     nextQuantity: number,
     limit: number,
     madeToOrder: boolean,
+    selectedColor?: string,
   ) => {
     if (nextQuantity < 1) return;
     if (nextQuantity > limit) {
@@ -112,11 +113,11 @@ export default function CartPage() {
       );
       return;
     }
-    cart.updateQuantity(productId, nextQuantity);
+    cart.updateQuantity(productId, nextQuantity, selectedColor);
   };
 
-  const handleRemoveItem = (productId: string, name: string) => {
-    cart.removeItem(productId);
+  const handleRemoveItem = (productId: string, name: string, selectedColor?: string) => {
+    cart.removeItem(productId, selectedColor);
     toast(`${name} removed from your cart`);
   };
 
@@ -171,7 +172,7 @@ export default function CartPage() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
           {/* Items */}
           <ul className="self-start divide-y divide-[hsl(var(--brand-gold-ornament)/0.3)] border-y border-[hsl(var(--brand-gold)/0.45)] lg:col-span-7">
-            {cartItems.map(({ productId, quantity, product }) => {
+            {cartItems.map(({ productId, quantity, product, selectedColor }) => {
               const name = product.name || "Product";
               const price = product.price || 0;
               const originalPrice = product.original_price;
@@ -185,7 +186,7 @@ export default function CartPage() {
                 null;
 
               return (
-                <li key={productId} className="flex gap-4 py-5 sm:gap-5">
+                <li key={`${productId}-${selectedColor ?? ""}`} className="flex gap-4 py-5 sm:gap-5">
                   <Link
                     href={href}
                     className={cn(
@@ -217,6 +218,12 @@ export default function CartPage() {
                       </p>
                     </div>
 
+                    {selectedColor && (
+                      <p className="mt-1 text-[14px] text-[hsl(var(--brand-ink-soft))]">
+                        Color: {selectedColor}
+                      </p>
+                    )}
+
                     <p className="mt-1 text-[14px] tabular-nums text-[hsl(var(--brand-ink-soft))]">
                       {formatPrice(price)}
                       {originalPrice && originalPrice > price && (
@@ -237,7 +244,7 @@ export default function CartPage() {
                         <button
                           type="button"
                           onClick={() =>
-                            handleUpdateQuantity(productId, quantity - 1, limit, madeToOrder)
+                            handleUpdateQuantity(productId, quantity - 1, limit, madeToOrder, selectedColor)
                           }
                           disabled={quantity <= 1}
                           aria-label={`Decrease quantity of ${name}`}
@@ -254,7 +261,7 @@ export default function CartPage() {
                         <button
                           type="button"
                           onClick={() =>
-                            handleUpdateQuantity(productId, quantity + 1, limit, madeToOrder)
+                            handleUpdateQuantity(productId, quantity + 1, limit, madeToOrder, selectedColor)
                           }
                           disabled={quantity >= limit}
                           aria-label={`Increase quantity of ${name}`}
@@ -269,7 +276,7 @@ export default function CartPage() {
 
                       <button
                         type="button"
-                        onClick={() => handleRemoveItem(productId, name)}
+                        onClick={() => handleRemoveItem(productId, name, selectedColor)}
                         className={cn(
                           "inline-flex h-11 items-center gap-1.5 rounded-sm px-1 text-[14px] text-[hsl(var(--brand-ink-soft))] underline-offset-4 hover:text-[hsl(var(--brand-ink))] hover:underline",
                           focusRing,

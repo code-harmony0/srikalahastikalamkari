@@ -272,6 +272,12 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
                         <h3 className="font-semibold text-slate-900 text-lg leading-tight">
                           {item.products?.name || item.name || 'Product'}
                         </h3>
+                        {item.selected_color && (
+                          <div className="mt-1 flex items-center gap-2">
+                            <span className="text-sm text-gray-500">Color:</span>
+                            <span className="text-sm font-medium text-slate-700">{item.selected_color}</span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-4 mt-3">
                           <span className="text-base text-gray-600">
                             Qty: {item.quantity}

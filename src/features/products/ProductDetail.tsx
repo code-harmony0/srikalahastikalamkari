@@ -100,6 +100,7 @@ export default function ProductDetail() {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined)
   // Swipe on the main photo (phones): a sideways drag changes the photo
   // and must not also open the zoom view.
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null)
@@ -406,7 +407,7 @@ export default function ProductDetail() {
 
   const handleAddToCart = useAuthGuardedAction(() => {
     if (!product) return
-    const existingItem = cart.items.find((i) => i.productId === product.id)
+    const existingItem = cart.items.find((i) => i.productId === product.id && i.selectedColor === selectedColor)
     const currentQty = existingItem?.quantity ?? 0
     const addable = Math.min(quantity, purchasableLimit - currentQty)
     if (addable <= 0) {
@@ -417,7 +418,7 @@ export default function ProductDetail() {
       )
       return
     }
-    cart.addItem(product, addable)
+    cart.addItem(product, addable, selectedColor)
     openMiniCart(product.id)
     if (madeToOrder) {
       toast.success(`Added ${addable} item(s) to cart`, {
@@ -431,7 +432,7 @@ export default function ProductDetail() {
   // BUY NOW = Add item and immediately redirect to checkout
   const handleBuyNow = useAuthGuardedAction(() => {
     if (!product) return
-    const existingItem = cart.items.find((i) => i.productId === product.id)
+    const existingItem = cart.items.find((i) => i.productId === product.id && i.selectedColor === selectedColor)
     const currentQty = existingItem?.quantity ?? 0
     const addable = Math.min(quantity, purchasableLimit - currentQty)
     if (addable <= 0) {
@@ -442,7 +443,7 @@ export default function ProductDetail() {
       )
       return
     }
-    cart.addItem(product, addable)
+    cart.addItem(product, addable, selectedColor)
     router.push("/checkout")
   })
 
@@ -911,27 +912,36 @@ export default function ProductDetail() {
               )}
             </p>
 
-            {/* Colours painted in this piece. Shown as facts, not a picker:
-                each piece is hand-painted once and the cart has no colour choice. */}
+            {/* Colours choice */}
             {pieceColours.length > 0 && (
               <div className="mt-6">
                 <p className="font-sans text-[14px] font-medium text-[hsl(var(--brand-ink))]">
-                  Colours in this piece
+                  Select Colour (Optional)
                 </p>
                 <ul className="mt-2.5 flex flex-wrap gap-2">
                   {pieceColours.map((color) => {
                     const { name, hex } = parseColorEntry(color)
+                    const isSelected = selectedColor === name
                     return (
-                      <li
-                        key={color}
-                        className="inline-flex h-9 items-center gap-2 rounded-full border border-[hsl(var(--brand-ink)/0.15)] bg-white pl-1.5 pr-3.5 font-sans text-[14px] text-[hsl(var(--brand-ink))]"
-                      >
-                        <span
-                          aria-hidden
-                          className="h-6 w-6 rounded-full ring-1 ring-inset ring-[hsl(var(--brand-ink)/0.2)]"
-                          style={{ backgroundColor: hex || "#D1D5DB" }}
-                        />
-                        {name}
+                      <li key={color}>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedColor(isSelected ? undefined : name)}
+                          className={cn(
+                            "inline-flex h-9 items-center gap-2 rounded-full border bg-white pl-1.5 pr-3.5 font-sans text-[14px] transition-colors",
+                            isSelected
+                              ? "border-[hsl(var(--brand-gold))] ring-1 ring-[hsl(var(--brand-gold))] text-[hsl(var(--brand-ink))]"
+                              : "border-[hsl(var(--brand-ink)/0.15)] text-[hsl(var(--brand-ink))] hover:border-[hsl(var(--brand-gold)/0.5)]"
+                          )}
+                          aria-pressed={isSelected}
+                        >
+                          <span
+                            aria-hidden
+                            className="h-6 w-6 rounded-full ring-1 ring-inset ring-[hsl(var(--brand-ink)/0.2)]"
+                            style={{ backgroundColor: hex || "#D1D5DB" }}
+                          />
+                          {name}
+                        </button>
                       </li>
                     )
                   })}

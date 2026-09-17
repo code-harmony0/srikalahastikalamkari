@@ -12,9 +12,9 @@ interface CartState {
   items: CartItem[];
   _hasHydrated: boolean;
   setHasHydrated: (val: boolean) => void;
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, quantity?: number, selectedColor?: string) => void;
+  removeItem: (productId: string, selectedColor?: string) => void;
+  updateQuantity: (productId: string, quantity: number, selectedColor?: string) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: (products: Product[]) => number;
@@ -28,7 +28,7 @@ export const useCartStore = create<CartState>()(
 
       setHasHydrated: (val) => set({ _hasHydrated: val }),
 
-      addItem: (product, quantity = 1) => {
+      addItem: (product, quantity = 1, selectedColor) => {
         if (!product?.id) {
           console.error('Cannot add product to cart: Missing product.id');
           return;
@@ -37,7 +37,7 @@ export const useCartStore = create<CartState>()(
         set((state) => {
           const variantId = (product as any).selectedVariant?.id;
           const existingItem = state.items.find(
-            (item) => item.productId === product.id && item.variant === variantId
+            (item) => item.productId === product.id && item.variant === variantId && item.selectedColor === selectedColor
           );
 
           if (existingItem) {
@@ -45,7 +45,7 @@ export const useCartStore = create<CartState>()(
             if (newQty === existingItem.quantity) return state; // already at stock limit
             return {
               items: state.items.map((item) =>
-                (item.productId === product.id && item.variant === variantId)
+                (item.productId === product.id && item.variant === variantId && item.selectedColor === selectedColor)
                   ? { ...item, quantity: newQty, maxStock }
                   : item
               ),
@@ -54,26 +54,26 @@ export const useCartStore = create<CartState>()(
 
           const initialQty = Math.min(quantity, maxStock);
           return {
-            items: [...state.items, { productId: product.id, quantity: initialQty, variant: variantId, maxStock }],
+            items: [...state.items, { productId: product.id, quantity: initialQty, variant: variantId, maxStock, selectedColor }],
           };
         });
       },
 
-      removeItem: (productId) => {
+      removeItem: (productId, selectedColor) => {
         set((state) => ({
-          items: state.items.filter((item) => item.productId !== productId),
+          items: state.items.filter((item) => !(item.productId === productId && item.selectedColor === selectedColor)),
         }));
       },
 
-      updateQuantity: (productId, quantity) => {
+      updateQuantity: (productId, quantity, selectedColor) => {
         if (quantity <= 0) {
-          get().removeItem(productId);
+          get().removeItem(productId, selectedColor);
           return;
         }
 
         set((state) => ({
           items: state.items.map((item) => {
-            if (item.productId !== productId) return item;
+            if (item.productId !== productId || item.selectedColor !== selectedColor) return item;
             const capped = item.maxStock ? Math.min(quantity, item.maxStock) : quantity;
             return { ...item, quantity: capped };
           }),

@@ -275,6 +275,7 @@ export type Database = {
           price_at_purchase: number
           product_id: string
           quantity: number
+          selected_color: string | null
         }
         Insert: {
           id?: string
@@ -282,6 +283,7 @@ export type Database = {
           price_at_purchase: number
           product_id: string
           quantity: number
+          selected_color?: string | null
         }
         Update: {
           id?: string
@@ -289,6 +291,7 @@ export type Database = {
           price_at_purchase?: number
           product_id?: string
           quantity?: number
+          selected_color?: string | null
         }
         Relationships: [
           {

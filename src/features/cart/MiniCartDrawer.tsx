@@ -135,7 +135,7 @@ export default function MiniCartDrawer() {
                     const max = line.maxStock ?? 99
                     return (
                       <li
-                        key={`${line.productId}-${line.variant ?? ""}`}
+                        key={`${line.productId}-${line.variant ?? ""}-${line.selectedColor ?? ""}`}
                         className={`flex gap-3.5 py-4 ${isNew ? "-mx-2 rounded-md bg-[hsl(var(--brand-turmeric-tint))] px-2" : ""}`}
                       >
                         <div className="relative h-[86px] w-[68px] shrink-0 overflow-hidden rounded-sm bg-white ring-1 ring-[hsl(var(--brand-gold)/0.5)]">
@@ -160,6 +160,11 @@ export default function MiniCartDrawer() {
                           >
                             {p.name || p.title}
                           </Link>
+                          {line.selectedColor && (
+                            <span className="mt-0.5 font-sans text-[13px] text-[hsl(var(--brand-ink-soft))]">
+                              Color: {line.selectedColor}
+                            </span>
+                          )}
                           <span className="mt-1 font-sans text-[14px] font-semibold tabular-nums text-[hsl(var(--brand-ink))]">
                             {formatPrice(Number(p.price) || 0)}
                           </span>
@@ -168,7 +173,7 @@ export default function MiniCartDrawer() {
                             <div className="flex items-center rounded-full border border-[hsl(var(--brand-ink)/0.25)] bg-white">
                               <button
                                 onClick={() =>
-                                  cart.updateQuantity(line.productId, line.quantity - 1)
+                                  cart.updateQuantity(line.productId, line.quantity - 1, line.selectedColor)
                                 }
                                 aria-label={`Decrease quantity of ${p.name || p.title}`}
                                 className="flex h-9 w-9 items-center justify-center text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))] disabled:opacity-40"
@@ -181,7 +186,7 @@ export default function MiniCartDrawer() {
                               </span>
                               <button
                                 onClick={() =>
-                                  cart.updateQuantity(line.productId, line.quantity + 1)
+                                  cart.updateQuantity(line.productId, line.quantity + 1, line.selectedColor)
                                 }
                                 aria-label={`Increase quantity of ${p.name || p.title}`}
                                 className="flex h-9 w-9 items-center justify-center text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-ink)/0.05)] hover:text-[hsl(var(--brand-ink))] disabled:opacity-40"
@@ -192,7 +197,7 @@ export default function MiniCartDrawer() {
                             </div>
 
                             <button
-                              onClick={() => cart.removeItem(line.productId)}
+                              onClick={() => cart.removeItem(line.productId, line.selectedColor)}
                               aria-label={`Remove ${p.name || p.title} from cart`}
                               className="flex h-10 w-10 items-center justify-center rounded-full text-[hsl(var(--brand-ink-soft))] transition-colors hover:bg-[hsl(var(--brand-indigo-tint))] hover:text-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
                             >

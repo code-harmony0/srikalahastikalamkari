@@ -116,9 +116,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Atelier & inquiries */}
+          {/* Inquiries */}
           <div className="space-y-4 lg:col-span-4">
-            <h4 className={headingClass}>Atelier & Inquiries</h4>
+            <h4 className={headingClass}>Inquiries</h4>
 
             <div className="space-y-3 text-[13.5px]">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
@@ -152,7 +152,7 @@ export default function Footer() {
                 <div className="flex items-start gap-2.5">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <div>
-                    <div className="font-semibold text-white">Srikalahasti Atelier</div>
+                    <div className="font-semibold text-white">Srikalahasti Studio</div>
                     <div className="leading-snug text-white/75">#17-68, Bharathi Nagar, Tirupati Main Rd</div>
                   </div>
                 </div>
@@ -195,8 +195,16 @@ export default function Footer() {
             <Link href="/shipping" className="transition-colors hover:text-[hsl(var(--brand-gold-soft))]">Shipping</Link>
           </div>
 
-          <div className="font-sans text-[13px] tracking-wide text-[hsl(var(--brand-gold-soft))]">
-            Crafted with Devotion in Srikalahasti
+          <div className="flex flex-col items-center gap-1 sm:items-end">
+            <div className="font-sans text-[13px] tracking-wide text-[hsl(var(--brand-gold-soft))]">
+              Crafted with Devotion in Srikalahasti
+            </div>
+            <div className="font-sans text-[12px] text-white/50">
+              Made by{" "}
+              <a href="https://exploreconsultancyservices.com/projects" target="_blank" rel="noopener noreferrer" className="font-medium text-white/80 hover:text-[hsl(var(--brand-gold))] transition-colors">
+                Explore Consultancy Services
+              </a>
+            </div>
           </div>
         </div>
       </div>
