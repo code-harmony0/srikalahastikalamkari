@@ -28,6 +28,7 @@ interface OrderItem {
   name: string;
   price_at_purchase: number;
   quantity: number;
+  selected_color?: string | null;
   image?: string;
   category?: string;
   products?: {
