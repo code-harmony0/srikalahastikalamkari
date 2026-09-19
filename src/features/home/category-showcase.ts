@@ -39,6 +39,33 @@ const newestImage = (products: ShowcaseProduct[]) =>
     .filter((product) => product.image)
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]?.image ?? null
 
+export interface CategoryPhoto {
+  count: number
+  image: string | null
+}
+
+/**
+ * A photo and product count for every category and sub-category, keyed by id.
+ * The image the admin uploaded for the category wins; the newest product photo
+ * only fills in when none was uploaded.
+ */
+export function buildCategoryPhotos(
+  categories: ShowcaseCategory[],
+  products: ShowcaseProduct[],
+): Map<string, CategoryPhoto> {
+  const photos = new Map<string, CategoryPhoto>()
+  for (const category of categories) {
+    const inCategory = products.filter((product) =>
+      category.parent_id ? product.sub_category_id === category.id : product.category_id === category.id,
+    )
+    photos.set(category.id, {
+      count: inCategory.length,
+      image: category.image_url || newestImage(inCategory),
+    })
+  }
+  return photos
+}
+
 export function buildCategoryShowcase(
   categories: ShowcaseCategory[],
   products: ShowcaseProduct[],

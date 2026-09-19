@@ -1,4 +1,4 @@
-import { buildCategoryShowcase } from "@/features/home/category-showcase"
+import { buildCategoryPhotos, buildCategoryShowcase } from "@/features/home/category-showcase"
 
 const categories = [
   { id: "sarees", name: "Sarees", parent_id: null, image_url: "sarees.jpg" },
@@ -126,5 +126,25 @@ describe("buildCategoryShowcase", () => {
     const { fabrics } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
 
     expect(fabrics.map((f) => f.name)).toEqual(["Bangalore Silk", "Linen saree"])
+  })
+})
+
+describe("buildCategoryPhotos", () => {
+  it("uses the photo the admin uploaded for each category, with product counts", () => {
+    const products = [
+      ...rows(3, { category_id: "sarees", sub_category_id: "linen" }),
+      ...rows(1, { category_id: "sarees", sub_category_id: null }),
+    ]
+
+    const photos = buildCategoryPhotos(categories, products)
+
+    expect(photos.get("sarees")).toEqual({ count: 4, image: "sarees.jpg" })
+    expect(photos.get("tissue")).toEqual({ count: 0, image: "tissue.jpg" })
+  })
+
+  it("falls back to the newest product photo when no image was uploaded", () => {
+    const products = rows(3, { category_id: "sarees", sub_category_id: "linen" })
+
+    expect(buildCategoryPhotos(categories, products).get("linen")).toEqual({ count: 3, image: "p2.jpg" })
   })
 })

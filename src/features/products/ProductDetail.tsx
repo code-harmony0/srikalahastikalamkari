@@ -49,6 +49,9 @@ import {
   ParcelMark,
   LockMark,
   LotusSealMark,
+  HandmadeMark,
+  HandWashMark,
+  DryCleanMark,
 } from "@/shared/ui/craft-marks"
 import { CuratedProductCard } from "./CuratedProductCard"
 import { ProductReviews } from "./ProductReviews"
@@ -362,16 +365,13 @@ export default function ProductDetail() {
     return img || "/images/products/product-placeholder.png"
   }, [product?.images, selectedImageIndex])
 
-  // Modal full image (Fast instant load from cached medium/main tier)
+  // Fullscreen view uses the full-size image so zooming stays sharp.
   const modalImageSrc = useMemo(() => {
-    if (modalImageIndex === selectedImageIndex && mainProductImage) {
-      return mainProductImage
-    }
     const img =
-      getImageTier(product?.images, "medium", modalImageIndex) ||
-      getImageTier(product?.images, "full", modalImageIndex)
+      getImageTier(product?.images, "full", modalImageIndex) ||
+      getImageTier(product?.images, "medium", modalImageIndex)
     return img || "/images/products/product-placeholder.png"
-  }, [product?.images, modalImageIndex, selectedImageIndex, mainProductImage])
+  }, [product?.images, modalImageIndex])
 
   // Optimized thumbnails
   const thumbnailImages = useMemo(() => {
@@ -524,10 +524,6 @@ export default function ProductDetail() {
 
     // True of every piece the workshop makes, so safe to state without data.
     push("Dyes", "Natural botanical and mineral dyes")
-    // Care for anything worn or used as cloth; wall paintings are not washed.
-    if (!/wall|painting/i.test(product?.categoryName ?? "")) {
-      push("Care", "Dry clean only. Do not hand wash or machine wash.")
-    }
     // Dispatch time for ready pieces isn't confirmed, so only made-to-order
     // pieces state a timeline.
     if (madeToOrder) {
@@ -1015,7 +1011,7 @@ export default function ProductDetail() {
               <li className="flex gap-2.5">
                 {diamond}
                 <span>
-                  All sales are final. No returns or refunds.{" "}
+                  No returns or refunds.{" "}
                   <Link
                     href="/returns"
                     className={cn(
@@ -1039,11 +1035,12 @@ export default function ProductDetail() {
             </a>
 
             {/* Fact strip: dotted gold lines and charcoal marks, as on the home page */}
-            <ul className="mt-7 grid grid-cols-3 gap-2 border-y border-[hsl(var(--brand-gold)/0.45)] py-5">
+            <ul className="mt-7 grid grid-cols-4 gap-2 border-y border-[hsl(var(--brand-gold)/0.45)] py-5">
               {[
                 { Mark: ParcelMark, label: "Free shipping" },
                 { Mark: LockMark, label: "Secure payment" },
-                { Mark: LotusSealMark, label: "GI-registered craft" },
+                { Mark: HandmadeMark, label: "100% Handmade" },
+                { Mark: DryCleanMark, label: "Dry clean only" },
               ].map(({ Mark, label }) => (
                 <li
                   key={label}
@@ -1056,6 +1053,8 @@ export default function ProductDetail() {
                 </li>
               ))}
             </ul>
+
+
 
           </div>
         </div>
@@ -1340,9 +1339,12 @@ export default function ProductDetail() {
                   alt="Product Full View"
                   fill
                   priority={true}
-                  className="object-contain select-none pointer-events-none"
+                  className="select-none pointer-events-none"
+                  objectFit="contain"
                   variant="full"
-                  sizes="100vw"
+                  context="zoom"
+                  quality={85}
+                  sizes="(min-width: 1024px) 1200px, 100vw"
                 />
               </div>
             </div>

@@ -17,22 +17,22 @@ const team = [
   {
     name: "Shaik Saleem Basha",
     role: "Founder",
-    image: "/images/about/shaik-saleem-basha.png",
+    image: "/images/about/shaik-saleem-basha.jpg",
   },
   {
     name: "Shaik Abdul Vajid",
     role: "Operations manager",
-    image: "/images/about/shaik-abdul-vajid.jpg",
+    image: "/images/about/shaik-abdul-vajid-new.jpg",
   },
   {
     name: "Yalasiri Anitha",
     role: "Master artisan",
-    image: "/images/about/anitha.png",
+    image: "/images/about/anitha.jpg",
   },
   {
     name: "Muni Krishna Reddy",
     role: "Colouring master",
-    image: "/images/about/muni.jpg",
+    image: "/images/about/muni-new.jpg",
   },
 ]
 
@@ -113,7 +113,7 @@ export default function AboutPage() {
           <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:mt-12 md:grid-cols-4 lg:gap-x-6">
             {team.map((member) => (
               <li key={member.name} className="text-center">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-sm bg-[hsl(var(--brand-indigo-tint))] shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)]">
+                <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-[hsl(var(--brand-indigo-tint))] shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)]">
                   <Image
                     src={member.image}
                     alt={member.name}

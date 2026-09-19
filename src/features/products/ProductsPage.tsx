@@ -21,7 +21,7 @@ import {
 } from "lucide-react"
 import { ProductCard } from "./ProductCard"
 import { PRICE_BANDS, type PriceBandId } from "./price-bands"
-import { CategoryPickerDialog } from "./CategoryPickerDialog"
+import { CategoryHero } from "./CategoryHero"
 import { ProductCardCompact, ProductCardCompactSkeleton } from "./ProductCardCompact"
 import Link from "next/link"
 import { cn } from "@/shared/utils"
@@ -118,7 +118,6 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   const [itemsPerPage, setItemsPerPage] = useState(12)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showFilters, setShowFilters] = useState(false)
-  const [pickerCategoryId, setPickerCategoryId] = useState<string | null>(null)
 
   // Ensure page always starts at the top
   useEffect(() => {
@@ -146,17 +145,6 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
   const { categories: filterCategories, isLoading: categoriesLoading } =
     useFilterCategories()
-
-  // Keep the chosen category pill in view when the row scrolls sideways on phones.
-  const pillRowRef = useRef<HTMLUListElement>(null)
-  useEffect(() => {
-    const row = pillRowRef.current
-    const active = row?.querySelector<HTMLElement>('[aria-pressed="true"]')
-    if (!row || !active) return
-    const rowBox = row.getBoundingClientRect()
-    const pillBox = active.getBoundingClientRect()
-    row.scrollLeft += pillBox.left - rowBox.left - (rowBox.width - pillBox.width) / 2
-  }, [selectedCategories, filterCategories])
 
   useEffect(() => {
     if (categoriesLoading || !filterCategories.length || !selectedCategories.length)
@@ -402,72 +390,34 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
   return (
     <div className="w-full min-h-screen bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))] overflow-hidden">
-      {/* Page band: pale indigo, temple tower divider and corner temple drawings */}
-      <section className="relative overflow-hidden bg-[hsl(var(--brand-indigo-tint))]">
-        <CornerFlorals className="absolute left-2 top-3 h-14 w-14 opacity-70 md:left-4 md:h-24 md:w-24" />
-        <CornerFlorals
-          className={cn(
-            "absolute bottom-3 right-2 h-14 w-14 rotate-180 opacity-70 md:right-4 md:h-24 md:w-24",
-            !isCustomDesignMode && "hidden lg:block",
-          )}
+      {/* Shop opens with round category photos; custom design keeps the plain band */}
+      {!isCustomDesignMode ? (
+        <CategoryHero
+          categories={filterCategories}
+          isLoading={categoriesLoading}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
         />
-        <div className="relative mx-auto max-w-2xl px-6 py-10 text-center md:py-14">
-          <h1 className="text-balance font-serif text-[32px] leading-tight text-[hsl(var(--brand-ink))] md:text-[46px]">
-            {heroCopy.title}
-          </h1>
-          <TempleTowerDivider className="mt-3" />
-          <p className="mx-auto mt-3 max-w-xl text-pretty font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))] md:text-[16px]">
-            {heroCopy.description}
-          </p>
-
-          {/* One-tap categories for phones and tablets; desktop has them in the sidebar */}
-          {!isCustomDesignMode && filterCategories.length > 0 && (
-            <ul
-              ref={pillRowRef}
-              aria-label="Categories"
-              className="scrollbar-hide -mx-6 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 sm:flex-wrap sm:justify-center lg:hidden"
-            >
-              {[{ id: "all", name: "All", subcategories: [] }, ...filterCategories].map((cat) => {
-                const isAll = cat.id === "all"
-                const hasSubs = cat.subcategories.length > 0
-                const active = isAll
-                  ? selectedCategories.length === 0
-                  : [cat.name, ...cat.subcategories.map((sub) => sub.name)].some((name) =>
-                      selectedCategories.includes(name),
-                    )
-                return (
-                  <li key={cat.id} className="shrink-0">
-                    <button
-                      type="button"
-                      aria-pressed={active}
-                      aria-haspopup={hasSubs ? "dialog" : undefined}
-                      onClick={() => {
-                        if (hasSubs) setPickerCategoryId(cat.id)
-                        else setSelectedCategories(isAll ? [] : [cat.name])
-                      }}
-                      className={cn(
-                        "inline-flex h-10 items-center rounded-full border px-4 font-sans text-[14px] font-medium transition-colors",
-                        focusRingClass,
-                        active
-                          ? "border-[hsl(var(--brand-midnight))] bg-[hsl(var(--brand-midnight))] text-white"
-                          : "border-[hsl(var(--brand-ink)/0.25)] bg-white text-[hsl(var(--brand-ink))] hover:border-[hsl(var(--brand-ink))]",
-                      )}
-                    >
-                      {cat.name}
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-          <CategoryPickerDialog
-            category={filterCategories.find((cat) => cat.id === pickerCategoryId) ?? null}
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-            onClose={() => setPickerCategoryId(null)}
+      ) : (
+        <section className="relative overflow-hidden bg-[hsl(var(--brand-indigo-tint))]">
+          <CornerFlorals className="absolute left-2 top-3 h-14 w-14 opacity-70 md:left-4 md:h-24 md:w-24" />
+          <CornerFlorals
+            className={cn(
+              "absolute bottom-3 right-2 h-14 w-14 rotate-180 opacity-70 md:right-4 md:h-24 md:w-24",
+              !isCustomDesignMode && "hidden lg:block",
+            )}
           />
-        </div>
-      </section>
+          <div className="relative mx-auto max-w-2xl px-6 py-10 text-center md:py-14">
+            <h1 className="text-balance font-serif text-[32px] leading-tight text-[hsl(var(--brand-ink))] md:text-[46px]">
+              {heroCopy.title}
+            </h1>
+            <TempleTowerDivider className="mt-3" />
+            <p className="mx-auto mt-3 max-w-xl text-pretty font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))] md:text-[16px]">
+              {heroCopy.description}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Main Content */}
       <div className="relative min-h-screen">

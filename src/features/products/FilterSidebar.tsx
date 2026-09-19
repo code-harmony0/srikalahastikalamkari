@@ -196,9 +196,9 @@ const FilterSidebar = ({
               visibleCategories.map((category) => {
                 const subcategories = category.subcategories;
                 const hasSubs = subcategories.length > 0;
-                const chosen = [category.name, ...subcategories.map((sub) => sub.name)].filter(
-                  (name) => selectedCategories.includes(name),
-                );
+                const chosen = Array.from(
+                  new Set([category.name, ...subcategories.map((sub) => sub.name)]),
+                ).filter((name) => selectedCategories.includes(name));
                 const isActive = chosen.length > 0;
 
                 return (
