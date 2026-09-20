@@ -17,22 +17,22 @@ const team = [
   {
     name: "Shaik Saleem Basha",
     role: "Founder",
-    image: "/images/about/shaik-saleem-basha.jpg",
+    image: "/images/about/shaik-saleem-basha-v2.jpg",
   },
   {
     name: "Shaik Abdul Vajid",
     role: "Operations manager",
-    image: "/images/about/shaik-abdul-vajid-new.jpg",
+    image: "/images/about/shaik-abdul-vajid-v2.jpg",
   },
   {
     name: "Yalasiri Anitha",
     role: "Master artisan",
-    image: "/images/about/anitha.jpg",
+    image: "/images/about/anitha-v2.jpg",
   },
   {
     name: "Muni Krishna Reddy",
     role: "Colouring master",
-    image: "/images/about/muni-new.jpg",
+    image: "/images/about/muni-v2.jpg",
   },
 ]
 
@@ -72,22 +72,28 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <h2 id="the-craft" className="text-balance font-serif text-[30px] leading-tight md:text-[40px]">
-              Painted by hand in Srikalahasti
+            <h2 id="the-craft" className="text-balance font-serif text-[30px] leading-tight md:text-[38px]">
+              Rooted in Srikalahasti.<br />Created to Reach the World.
             </h2>
-            <div className="mt-5 max-w-[34rem] space-y-4 font-sans text-[16px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+            <div className="mt-6 max-w-[38rem] space-y-4 font-sans text-[15.5px] leading-relaxed text-[hsl(var(--brand-ink-soft))] md:text-[16px]">
               <p>
-                Srikalahasti Kalamkari is drawn freehand with a bamboo <em>kalam</em> and coloured with natural
-                dyes, in the temple town of Srikalahasti in Andhra Pradesh. The craft carries a Geographical
-                Indication (GI) tag.
+                Srikalahasti Kalamkari Studio was founded by Mr. Shaik Saleem with a vision to preserve the rich heritage of Srikalahasti Kalamkari and share its beauty with the world.
               </p>
               <p>
-                We work directly with the artisans who paint every saree, dupatta and fabric we sell, from their
-                workshop to your order.
+                We work closely with local artisans and their families, creating opportunities that help sustain the people and skills behind this traditional craft.
+              </p>
+              <p>
+                What makes our studio special is our ability to create custom Kalamkari designs. From colours and motifs to themes and personal ideas, we work with our customers to bring their vision to life through the hands of skilled artisans.
+              </p>
+              <p>
+                Today, our Kalamkari has found its way to happy customers across India and around the world.
+              </p>
+              <p className="font-medium text-[hsl(var(--brand-ink))]">
+                Our purpose is simple: preserve the craft, support the artisans, and carry the story of Srikalahasti Kalamkari to the world.
               </p>
             </div>
 
-            <p className="mt-6 font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">
+            <p className="mt-8 font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">
               Registered business · GSTIN{" "}
               <span className="font-medium tabular-nums text-[hsl(var(--brand-ink))]">37EVOPS6191D1ZX</span>
             </p>
@@ -113,7 +119,7 @@ export default function AboutPage() {
           <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:mt-12 md:grid-cols-4 lg:gap-x-6">
             {team.map((member) => (
               <li key={member.name} className="text-center">
-                <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-[hsl(var(--brand-indigo-tint))] shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)]">
+                <div className="relative mx-auto aspect-square w-[85%] overflow-hidden rounded-full bg-[hsl(var(--brand-indigo-tint))] shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)] sm:w-full">
                   <Image
                     src={member.image}
                     alt={member.name}
@@ -123,10 +129,10 @@ export default function AboutPage() {
                   />
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-[7px] rounded-[2px] border border-[hsl(var(--brand-gold-soft)/0.9)]"
+                    className="pointer-events-none absolute inset-[7px] rounded-full border border-[hsl(var(--brand-gold-soft)/0.9)]"
                   />
                 </div>
-                <p className="mt-4 font-serif text-[17px] leading-snug md:text-[19px]">{member.name}</p>
+                <p className="mt-5 font-serif text-[17px] leading-snug md:text-[19px]">{member.name}</p>
                 <p className="mt-1 font-sans text-[14px] text-[hsl(var(--brand-ink-soft))]">{member.role}</p>
               </li>
             ))}

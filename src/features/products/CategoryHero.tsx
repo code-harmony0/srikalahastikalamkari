@@ -84,7 +84,7 @@ function CategoryCircle({
         <span
           className={cn(
             "inline-block rounded-xl px-2.5 py-0.5 font-sans leading-snug transition-colors duration-300",
-            large ? "text-[13px]" : "text-[12px] md:text-[13px]",
+            large ? "text-[12px] md:text-[13px]" : "text-[12px] md:text-[13px]",
             active
               ? "bg-[hsl(var(--brand-midnight))] font-semibold text-white"
               : "font-medium text-[hsl(var(--brand-ink))]",
@@ -98,7 +98,7 @@ function CategoryCircle({
 }
 
 const stripClass =
-  "flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 pt-1.5 [scrollbar-width:none] sm:px-6 md:flex-wrap md:justify-center md:gap-x-6 md:gap-y-4 md:overflow-visible [&::-webkit-scrollbar]:hidden";
+  "flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 pt-1.5 [scrollbar-width:none] sm:px-6 [justify-content:safe_center] md:gap-4 xl:flex-wrap xl:gap-x-6 xl:gap-y-4 xl:overflow-visible [&::-webkit-scrollbar]:hidden";
 
 // Keep the chosen circle in view when the strip scrolls sideways on phones.
 function useScrollActiveIntoView(activeKey: string) {
@@ -207,7 +207,7 @@ export function CategoryHero({
       className="bg-[hsl(var(--brand-paper))]"
     >
       <div className="relative border-b border-[hsl(var(--brand-gold)/0.55)] bg-[hsl(var(--brand-cream))]">
-        <div className="mx-auto max-w-[1440px] pb-4 pt-4 md:pb-5 md:pt-6">
+        <div className="mx-auto max-w-[1440px] pb-3 pt-4 md:pb-5 md:pt-6">
           <h1 id="shop-heading" className="sr-only">
             Shop Kalamkari by category
           </h1>
@@ -217,7 +217,7 @@ export function CategoryHero({
             ref={parentRef}
             className={cn(
               stripClass,
-              "[mask-image:linear-gradient(to_right,transparent,black_4%,black_88%,transparent)] md:[mask-image:none]",
+              "[mask-image:linear-gradient(to_right,transparent,black_4%,black_92%,transparent)] xl:[mask-image:none]",
             )}
           >
             {isLoading ? (

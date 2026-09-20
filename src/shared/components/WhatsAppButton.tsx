@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { MessageCircle } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { motion } from "framer-motion"
 import { usePathname } from "next/navigation"
 
@@ -94,7 +94,7 @@ export function WhatsAppButton({
       transition={{ delay: 1, type: "spring", stiffness: 400 }}
       aria-label="Chat on WhatsApp"
     >
-      <MessageCircle className="w-7 h-7 text-white" />
+      <FaWhatsapp className="w-7 h-7 text-white" />
 
       {/* Tooltip */}
       <span className="absolute right-full mr-3 px-3 py-1.5 bg-white text-slate-700 text-sm font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">

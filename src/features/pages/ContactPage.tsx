@@ -155,12 +155,8 @@ export default function ContactPage() {
                 <p>
                   #17-68, Bharathi Nagar, Tirupati Main Road, Near Railway Station, Srikalahasti, AP – 517640
                 </p>
-              </InfoRow>
-
-              <InfoRow icon={<MapPin className="h-5 w-5" />} label="Tirupati Store">
-                <p>#6-8-1126, NGOs Colony, Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati</p>
                 <a
-                  href="https://maps.app.goo.gl/tABoSwfoUcmEQjgJA"
+                  href="https://maps.app.goo.gl/Swct9jg3LUwAqvZP6?g_st=ic"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(textLink, "mt-2 inline-flex items-center gap-1.5 text-[14px]")}
@@ -168,6 +164,10 @@ export default function ContactPage() {
                   View on Google Maps
                   <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                 </a>
+              </InfoRow>
+
+              <InfoRow icon={<MapPin className="h-5 w-5" />} label="Tirupati Store">
+                <p>#6-8-1126, NGOs Colony, Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati</p>
               </InfoRow>
 
               <InfoRow icon={<Clock className="h-5 w-5" />} label="Opening hours">

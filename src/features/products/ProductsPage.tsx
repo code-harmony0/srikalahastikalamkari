@@ -17,8 +17,8 @@ import {
   LayoutGrid,
   List as ListIcon,
   X,
-  MessageCircle,
 } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { ProductCard } from "./ProductCard"
 import { PRICE_BANDS, type PriceBandId } from "./price-bands"
 import { CategoryHero } from "./CategoryHero"
@@ -454,7 +454,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
         <div
           ref={gridRef}
-          className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-12 relative z-10 scroll-mt-24"
+          className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-5 md:py-12 relative z-10 scroll-mt-24"
           id="product-grid-start"
         >
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
@@ -468,7 +468,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
             {/* Main Product Area */}
             <main className="min-w-0 flex-1">
               {/* Toolbar */}
-              <div className="mb-7 border-b border-[hsl(var(--brand-gold)/0.45)] pb-5 md:mb-10">
+              <div className="mb-5 border-b border-[hsl(var(--brand-gold)/0.45)] pb-4 md:mb-10 md:pb-5">
                 {/* Chosen filters, shown on phones and tablets where the sidebar is closed */}
                 {hasActiveFilters && (
                   <div className="mb-3 flex flex-wrap items-center gap-2 lg:hidden">
@@ -523,7 +523,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                         setSearchQuery(e.target.value)
                         setCurrentPage(1)
                       }}
-                      placeholder="Search sarees, dupattas, fabrics..."
+                      placeholder="Search products"
                       aria-label="Search products"
                       className="h-12 w-full rounded-full border border-[hsl(var(--brand-ink)/0.2)] bg-white pl-11 pr-11 font-sans text-[15px] text-[hsl(var(--brand-ink))] placeholder:text-[hsl(var(--brand-muted))] focus:border-[hsl(var(--brand-ink)/0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))]"
                     />
@@ -584,7 +584,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                   </div>
 
                   {/* Items per page */}
-                  <div className="relative hidden sm:block">
+                  <div className="relative hidden xl:block">
                     <select
                       value={itemsPerPage}
                       onChange={(e) => setItemsPerPage(Number(e.target.value))}
@@ -747,9 +747,9 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                       href={CUSTOM_WHATSAPP_URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-8 inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#1F7A4D] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#17603C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+                      className="mt-8 inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#1DA851] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
                     >
-                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                      <FaWhatsapp className="h-[15px] w-[15px] text-white" aria-hidden="true" />
                       Message on WhatsApp
                     </a>
                   )}
@@ -779,9 +779,9 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
                 href={CUSTOM_WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1F7A4D] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:bg-[#17603C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2 sm:w-auto"
+                className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:bg-[#1DA851] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 sm:w-auto"
               >
-                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                <FaWhatsapp className="h-[15px] w-[15px] text-white" aria-hidden="true" />
                 Message on WhatsApp
               </a>
               <Link

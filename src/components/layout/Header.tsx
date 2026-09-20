@@ -234,7 +234,7 @@ export default function Header() {
             </div>
             {/* Below sm there is no room for the wordmark beside four actions;
                 showing it only produced an ellipsis. The mark carries it. */}
-            <div className="hidden sm:flex flex-col min-w-0">
+            <div className="hidden sm:flex md:hidden lg:flex flex-col min-w-0">
               <span className="font-sans font-semibold text-lg lg:text-xl text-[hsl(var(--brand-ink))] leading-none tracking-normal capitalize transition-colors truncate">
                 Srikalahasti Kalamkari
               </span>

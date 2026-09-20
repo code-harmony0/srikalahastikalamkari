@@ -8,9 +8,9 @@ import {
   Phone,
   ExternalLink,
   Mail,
-  MessageCircle,
   Clock,
 } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { CONTACT, mailtoHref, telHref, whatsAppHref } from "@/shared/config/contact"
 import { KalamkariMandala } from "@/shared/ui/heritage-ornaments"
 
@@ -136,7 +136,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 font-semibold text-emerald-300 transition-colors hover:text-emerald-200"
                 >
-                  <MessageCircle className="h-3.5 w-3.5" />
+                  <FaWhatsapp className="h-3.5 w-3.5" />
                   <span>WhatsApp</span>
                 </a>
               </div>
@@ -152,18 +152,10 @@ export default function Footer() {
                 <div className="flex items-start gap-2.5">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <div>
-                    <div className="font-semibold text-white">Srikalahasti Studio</div>
-                    <div className="leading-snug text-white/75">#17-68, Bharathi Nagar, Tirupati Main Rd</div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
-                  <div>
                     <div className="font-semibold text-white">
-                      Tirupati Store{" "}
+                      Srikalahasti Studio{" "}
                       <a
-                        href="https://maps.app.goo.gl/tABoSwfoUcmEQjgJA"
+                        href="https://maps.app.goo.gl/Swct9jg3LUwAqvZP6?g_st=ic"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="ml-1 inline-flex items-center gap-1 text-[11px] font-bold text-[hsl(var(--brand-gold-soft))] hover:underline"
@@ -171,6 +163,14 @@ export default function Footer() {
                         Map <ExternalLink className="h-3 w-3" />
                       </a>
                     </div>
+                    <div className="leading-snug text-white/75">#17-68, Bharathi Nagar, Tirupati Main Rd</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2.5">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
+                  <div>
+                    <div className="font-semibold text-white">Tirupati Store</div>
                     <div className="leading-snug text-white/75">#6-8-1126, NGOs Colony</div>
                   </div>
                 </div>

@@ -7,21 +7,21 @@ import Link from "next/link";
 export default function AnnouncementBar() {
   return (
     <div className="relative z-50 bg-[#0B1525] text-white">
-      <div className="mx-auto flex w-full max-w-screen-2xl flex-col items-center justify-between px-6 py-2.5 sm:flex-row text-[12px] sm:text-[13px] font-sans gap-2 sm:gap-0">
+      <div className="mx-auto flex w-full max-w-screen-2xl flex-col items-center justify-between px-4 py-2 sm:px-6 sm:py-2.5 sm:flex-row text-[12px] sm:text-[13px] font-sans sm:gap-0">
         
         {/* Left side text items */}
         <div className="flex items-center flex-wrap justify-center sm:justify-start">
-          <span className="font-medium tracking-wide">Handcrafted with Heritage</span>
-          <span className="mx-2.5 text-white/40">|</span>
-          <span className="font-medium tracking-wide">Made in India</span>
-          <span className="mx-2.5 text-white/40">|</span>
+          <span className="hidden font-medium tracking-wide sm:inline">Handcrafted with Heritage</span>
+          <span className="mx-2.5 hidden text-white/40 sm:inline">|</span>
+          <span className="hidden font-medium tracking-wide sm:inline">Made in India</span>
+          <span className="mx-2.5 hidden text-white/40 sm:inline">|</span>
           <span className="flex items-center gap-1.5 font-medium tracking-wide">
             <span aria-label="truck">🚚</span> Free Shipping Across India
           </span>
         </div>
 
-        {/* Right side social & contact */}
-        <div className="flex items-center gap-5">
+        {/* Right side social & contact (in the menu and footer on phones) */}
+        <div className="hidden items-center gap-5 sm:flex">
           <div className="flex items-center gap-3">
             <a href="https://www.instagram.com/srikalahasti_kalamkari_offical" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110 focus:outline-none flex items-center group relative" aria-label="Follow us on Instagram">
               {/* Tooltip for Instagram follow */}

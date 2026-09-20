@@ -3,7 +3,8 @@
 import React, { memo, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Heart, MessageCircle, ShoppingBag } from "lucide-react"
+import { Heart, ShoppingBag } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { useWishlistStore } from "@/shared/wishlist-store"
 import { useCartStore } from "@/shared/cart-store"
 import { useAuthGuardedAction } from "@/shared/hooks/use-auth-guarded-action"
@@ -238,7 +239,7 @@ export const ProductCard = memo(
                   rel="noopener noreferrer"
                   className={cn(actionButton, "bg-[#1F7A4D] hover:bg-[#17603C]", focusRing)}
                 >
-                  <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                  <FaWhatsapp className="h-[15px] w-[15px] text-[#25D366]" aria-hidden="true" />
                   Ask on WhatsApp
                 </a>
               ) : (

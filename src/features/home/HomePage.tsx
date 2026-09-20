@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
-import { ArrowRight, BadgeCheck, MessageCircle, Pause, Play, Star } from "lucide-react"
+import { ArrowRight, BadgeCheck, Pause, Play, Star } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { productsService } from "@/services/products"
 import { Product } from "@/shared/types"
 import { cn } from "@/shared/utils"
@@ -16,6 +17,7 @@ import { CornerFlorals, FloralDivider, JharokhaFrame } from "@/shared/ui/heritag
 import { getCategories } from "@/services/categories"
 import { CategoryShowcase } from "./CategoryShowcase"
 import { pickGalleryPieces } from "./gallery-pieces"
+import { ProcessSteps } from "./ProcessSteps"
 
 /*
  * Colour roles on this page (PRODUCT.md, 2026-09-15):
@@ -30,14 +32,6 @@ const HERO_IMAGES = [
   { src: "/images/brand-models/model-saree-01.jpeg", alt: "Model wearing a purple Kalamkari saree with narrative pallu artwork" },
   { src: "/images/brand-models/model-saree-07.jpeg", alt: "Model wearing a blue Kalamkari saree with traditional painted motifs" },
   { src: "/images/brand-models/model-saree-10.jpeg", alt: "Model in a black and gold Kalamkari saree with hand-painted motifs" },
-]
-
-const PROCESS_STEPS = [
-  { title: "Prepare the cloth", text: "Cotton or silk is washed and soaked so it will take the dye." },
-  { title: "Draw with the kalam", text: "Every outline is drawn freehand with a bamboo pen." },
-  { title: "Fill the colours", text: "Natural dyes are painted in by hand, one colour at a time." },
-  { title: "Wash and fix", text: "The cloth is washed so the colours set into the fabric." },
-  { title: "Check and send", text: "Each piece is checked before it leaves Srikalahasti." },
 ]
 
 const FACTS = [
@@ -305,16 +299,15 @@ export default function HomePage() {
           </div>
           <div>
             <h2 id="the-craft" className="text-balance font-serif text-[30px] leading-tight md:text-[44px]">
-              Drawn by hand, not printed
+              About Kalamkari
             </h2>
             <FloralDivider className="ml-0 mt-4" />
-            <div className="mt-6 max-w-[34rem] space-y-4 font-sans text-[16px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+            <div className="mt-6 max-w-[38rem] space-y-4 font-sans text-[15.5px] leading-relaxed text-[hsl(var(--brand-ink-soft))] md:text-[16px]">
               <p>
-                Kalamkari means pen-work. In Srikalahasti every outline is drawn freehand with a bamboo kalam, then filled
-                with natural dyes, colour by colour. No blocks, no machines.
+                Kalamkari is a 3,000-year-old Indian hand-painted textile art whose name comes from the Persian words <em>kalam</em> (pen) and <em>kari</em> (craftsmanship). In Srikalahasti, Andhra Pradesh, this craft lives as a living tradition where artisans paint mythological narratives—especially scenes from the Ramayana and Mahabharata—directly onto cotton and silk using a bamboo pen and natural dyes.
               </p>
               <p>
-                We paint sarees, dupattas, fabrics and more in the village, and sell them to you directly.
+                What sets Srikalahasti Kalamkari apart is its freehand drawing style, temple-inspired motifs, and a fully natural dyeing process that yields deep blacks, earthy reds, indigo blues, and warm yellows without synthetic chemicals. Each saree can take 10 days to 3 months to complete, depending on design complexity, because the fabric is washed, dried, painted, and re-washed after every color application.
               </p>
             </div>
             <ul className="mt-7 flex flex-wrap gap-2.5">
@@ -339,29 +332,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── THE PROCESS (midnight band) ─────────────────────────────────── */}
-      <section aria-labelledby="the-process" className="relative bg-[hsl(var(--brand-midnight))] py-16 md:py-24">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <div id="the-process">
-            <SectionHeading onDark title="From cloth to kalam" intro="How a Srikalahasti Kalamkari piece is made." />
-          </div>
-          <ol className="relative mt-12 grid grid-cols-2 gap-x-4 gap-y-9 md:mt-16 lg:grid-cols-5 lg:gap-6">
-            <span
-              aria-hidden="true"
-              className="absolute left-[10%] right-[10%] top-[26px] hidden border-t border-dashed border-[hsl(var(--brand-gold)/0.55)] lg:block"
-            />
-            {PROCESS_STEPS.map((step, i) => (
-              <li key={step.title} className={cn("relative flex flex-col items-center text-center", i === PROCESS_STEPS.length - 1 && "col-span-2 lg:col-span-1")}>
-                <span className="relative z-10 flex h-[52px] w-[52px] items-center justify-center rounded-full border border-[hsl(var(--brand-gold))] bg-[hsl(var(--brand-midnight))] font-sans text-[16px] font-semibold tabular-nums text-[hsl(var(--brand-gold-soft))]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-4 font-serif text-[20px] leading-snug text-white">{step.title}</h3>
-                <p className="mt-2 max-w-[15rem] font-sans text-[14px] leading-relaxed text-[#DCE6F2]">{step.text}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      {/* ── THE PROCESS PARALLAX ────────────────────────────────────────── */}
+      <ProcessSteps />
 
       {/* ── FACT STRIP (replaces the promise cards) ─────────────────────── */}
       <section aria-label="About the craft" className="bg-white">
@@ -490,9 +462,9 @@ export default function HomePage() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#1F7A4D] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:bg-[#17603C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] focus-visible:ring-offset-2"
+                className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:bg-[#1DA851] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
               >
-                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                <FaWhatsapp className="h-[18px] w-[18px]" aria-hidden="true" />
                 Message on WhatsApp
               </a>
               <Link href="/custom-design" className={cn(secondaryButton, "hover:bg-white/80")}>

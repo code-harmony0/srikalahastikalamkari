@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/shared/ui/button"
-import { Sparkles, MessageCircle } from "lucide-react"
+import { Sparkles } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { KanjeevaramPattern } from "@/shared/ui/decorative-pattern"
 
 // Countdown Timer Component
@@ -192,7 +193,7 @@ export default function ComingSoonPage() {
           {/* WhatsApp / Contact Button */}
           <a href="https://wa.me/917288848881?text=Hello%21%20Please%20notify%20me%20when%20the%20Srikalahasti%20Kalamkari%20website%20launches." target="_blank" rel="noreferrer">
             <Button className="h-12 md:h-14 px-8 rounded-none bg-[hsl(var(--brand-gold))] text-white hover:bg-white hover:text-[hsl(var(--brand-ink))] text-xs md:text-sm font-bold tracking-[0.15em] uppercase transition-colors duration-500 shadow-[0_0_20px_rgba(242,183,5,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
-              <MessageCircle className="w-4 h-4 mr-2" />
+              <FaWhatsapp className="w-4 h-4 mr-2" />
               Notify Me via WhatsApp
             </Button>
           </a>

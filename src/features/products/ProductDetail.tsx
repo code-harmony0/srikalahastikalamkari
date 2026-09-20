@@ -37,8 +37,8 @@ import {
   ChevronRight,
   ShoppingBag,
   ArrowRight,
-  MessageCircle,
 } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { toast } from "sonner"
 import { formatPrice, cn } from "@/shared/utils"
 import { parseColorEntry } from "@/shared/lib/color-swatch"
@@ -1030,7 +1030,7 @@ export default function ProductDetail() {
               rel="noopener noreferrer"
               className={cn(textLink, "mt-4")}
             >
-              <MessageCircle className="h-4 w-4 text-[#1F7A4D]" aria-hidden="true" />
+              <FaWhatsapp className="h-[18px] w-[18px] text-[#25D366]" aria-hidden="true" />
               Ask about this piece on WhatsApp
             </a>
 
