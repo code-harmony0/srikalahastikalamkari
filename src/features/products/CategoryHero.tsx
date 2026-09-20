@@ -12,14 +12,14 @@ import {
   buildCategoryPhotos,
   type CategoryPhoto,
 } from "@/features/home/category-showcase";
-import { toggleCategoryChoice } from "./CategoryPickerDialog";
+
 import { cn } from "@/shared/utils";
 
 interface CategoryHeroProps {
   categories: Category[];
   isLoading: boolean;
-  selectedCategories: string[];
-  setSelectedCategories: (cats: string[]) => void;
+  heroCategory: string | null;
+  setHeroCategory: (cat: string | null) => void;
 }
 
 interface CircleProps {
@@ -124,8 +124,8 @@ function useScrollActiveIntoView(activeKey: string) {
 export function CategoryHero({
   categories,
   isLoading,
-  selectedCategories,
-  setSelectedCategories,
+  heroCategory,
+  setHeroCategory,
 }: CategoryHeroProps) {
   // Same query key as the home page, so the photos are usually already cached.
   const { data: index } = useQuery({
@@ -172,9 +172,9 @@ export function CategoryHero({
 
   // Same selection rules as the sidebar: every chosen category or type shows
   // as selected here, and both places read and write the same list.
-  const isSelected = (name: string) => selectedCategories.includes(name);
+  const isSelected = (name: string) => heroCategory === name;
   const isParentActive = (cat: (typeof visibleCategories)[number]) =>
-    isSelected(cat.name) || cat.subcategories.some((sub) => isSelected(sub.name));
+    heroCategory === cat.name || cat.subcategories.some((sub) => heroCategory === sub.name);
 
   const [openId, setOpenId] = useState<string | null>(null);
   const trayParent =
@@ -186,20 +186,23 @@ export function CategoryHero({
 
   const selectParent = (cat: (typeof visibleCategories)[number]) => {
     setOpenId(cat.id);
-    if (!isParentActive(cat)) setSelectedCategories([cat.name]);
-    else if (cat.subcategories.length === 0) setSelectedCategories([]);
+    if (!isParentActive(cat)) setHeroCategory(cat.name);
+    else if (cat.subcategories.length === 0) setHeroCategory(null);
   };
   const chooseInTray = (name: string) => {
-    if (trayParent)
-      setSelectedCategories(
-        toggleCategoryChoice(selectedCategories, trayParent, name),
-      );
+    if (trayParent) {
+      if (isSelected(name)) {
+        setHeroCategory(null);
+      } else {
+        setHeroCategory(name);
+      }
+    }
   };
 
   const parentRef = useScrollActiveIntoView(
     visibleCategories.filter(isParentActive).map((cat) => cat.id).join("|"),
   );
-  const subRef = useScrollActiveIntoView(selectedCategories.join("|"));
+  const subRef = useScrollActiveIntoView(heroCategory ?? "");
 
   return (
     <section
@@ -232,9 +235,9 @@ export function CategoryHero({
                 <li className="w-[80px] shrink-0 snap-center md:w-[96px]">
                   <CategoryCircle
                     label="All"
-                    active={selectedCategories.length === 0}
+                    active={heroCategory === null}
                     size="large"
-                    onSelect={() => setSelectedCategories([])}
+                    onSelect={() => setHeroCategory(null)}
                   >
                     <LayoutGrid
                       className="h-1/3 w-1/3 text-[hsl(var(--brand-ink))]"

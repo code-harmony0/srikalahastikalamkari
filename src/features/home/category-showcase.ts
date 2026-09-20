@@ -104,6 +104,22 @@ export function buildCategoryShowcase(
     fabricsByName.set(key, entry)
   }
 
+  const getSortIndex = (name: string) => {
+    const lower = name.toLowerCase();
+    if (lower === 'pure silk kanchipuram pattu') return 0;
+    if (lower === 'semi kanchi silk') return 1;
+    if (lower.includes('tussar') && !lower.includes('munga')) return 2;
+    if (lower.includes('munga') || lower.includes('moonga')) return 3;
+    if (lower.includes('bangalore') || lower.includes('banglore')) return 4;
+    if (lower.includes('cotton')) return 5;
+    if (lower.includes('linen')) return 6;
+    if (lower.includes('pochampalli')) return 7;
+    if (lower.includes('dola silk')) return 8;
+    if (lower.includes('pure crepe')) return 9;
+    if (lower.includes('crepe')) return 10;
+    return 999;
+  };
+
   const fabrics = [...fabricsByName.values()]
     .map((entry) => ({
       name: entry.name,
@@ -111,7 +127,12 @@ export function buildCategoryShowcase(
       image: newestImage(entry.products) || entry.categories.find((category) => category.image_url)?.image_url || null,
     }))
     .filter((tile) => tile.count >= Math.max(1, minFabricCount))
-    .sort(byCountThenName)
+    .sort((a, b) => {
+      const iA = getSortIndex(a.name);
+      const iB = getSortIndex(b.name);
+      if (iA !== iB) return iA - iB;
+      return b.count - a.count || a.name.localeCompare(b.name);
+    });
 
   return { top, fabrics }
 }

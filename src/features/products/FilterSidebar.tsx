@@ -10,6 +10,8 @@ import { CategoryPickerDialog } from "./CategoryPickerDialog";
 interface FilterSidebarProps {
   selectedCategories: string[];
   setSelectedCategories: (categories: string[]) => void;
+  heroCategory?: string | null;
+  setHeroCategory?: (cat: string | null) => void;
   priceBand: PriceBandId | null;
   setPriceBand: (band: PriceBandId | null) => void;
   clearFilters: () => void;
@@ -67,6 +69,8 @@ function PriceRow({
 const FilterSidebar = ({
   selectedCategories,
   setSelectedCategories,
+  heroCategory,
+  setHeroCategory,
   priceBand,
   setPriceBand,
   clearFilters,
@@ -88,7 +92,8 @@ const FilterSidebar = ({
         : [...selectedCategories, name],
     );
 
-  const hasActiveFilters = selectedCategories.length > 0 || priceBand !== null;
+  const hasActiveFilters =
+    Boolean(heroCategory) || selectedCategories.length > 0 || priceBand !== null;
 
   // Custom-design mode only offers categories that have custom pieces.
   const visibleCategories = useMemo((): Category[] => {

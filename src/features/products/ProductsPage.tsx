@@ -110,6 +110,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   // Filter states
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [heroCategory, setHeroCategory] = useState<string | null>(null)
   const [priceBand, setPriceBand] = useState<PriceBandId | null>(null)
   const [sortBy, setSortBy] = useState("default")
 
@@ -129,7 +130,8 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   useEffect(() => {
     const cat = searchParams.get("category")
     if (cat) {
-      setSelectedCategories([decodeURIComponent(cat)])
+      setHeroCategory(decodeURIComponent(cat))
+      setSelectedCategories([])
       setCurrentPage(1)
     }
     // ?search= lets the header search box hand a query straight to the grid.
@@ -185,12 +187,13 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   // Resolve category IDs from selected names for the API
   // Must search both parent categories AND subcategories
   const categoryIds = useMemo(() => {
-    if (selectedCategories.length === 0) return undefined
-    // Categories still loading — defer; don't show all products yet
+    // When heroCategory is selected, ONLY use heroCategory. Otherwise use sidebar selection.
+    const allSelected = heroCategory ? [heroCategory] : selectedCategories
+    if (allSelected.length === 0) return undefined
     if (categoriesLoading || !filterCategories.length)
       return ["00000000-0000-0000-0000-000000000000"]
     const selectedTokens = new Set(
-      selectedCategories.map((category) => normalizeCategoryToken(category)),
+      allSelected.map((category) => normalizeCategoryToken(category)),
     )
     const matchedIds: string[] = []
 
@@ -209,12 +212,10 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       }
     }
 
-    // No DB match for the selected category — return impossible ID so 0 results show
-    // instead of falling through to show all products
     return matchedIds.length > 0
       ? matchedIds
       : ["00000000-0000-0000-0000-000000000000"]
-  }, [selectedCategories, filterCategories, categoriesLoading])
+  }, [heroCategory, selectedCategories, filterCategories, categoriesLoading])
 
   const selectedBand = PRICE_BANDS.find((band) => band.id === priceBand)
 
@@ -247,7 +248,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   )
 
   // Use Server-Side Pagination
-  const { data: queryData, isLoading, isFetching } = useProducts(filters)
+  const { data: queryData, isLoading, isFetching, isPlaceholderData } = useProducts(filters)
   const products = queryData?.data || []
   const totalCount = queryData?.count || 0
 
@@ -308,6 +309,9 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   const queryClient = useQueryClient()
 
   useEffect(() => {
+    // While a new filter loads, totalCount is still the old filter's count, so
+    // skip until the real one arrives or we would ask for a page that is not there.
+    if (isPlaceholderData) return
     if (currentPage < Math.ceil(totalCount / itemsPerPage)) {
       const nextFilters = { ...filters, page: currentPage + 1 }
       queryClient.prefetchQuery({
@@ -315,7 +319,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
         queryFn: () => productsService.getPaginated(nextFilters),
       })
     }
-  }, [filters, currentPage, totalCount, itemsPerPage, queryClient])
+  }, [filters, currentPage, totalCount, itemsPerPage, isPlaceholderData, queryClient])
 
   // Pagination
   const totalPages = Math.ceil(totalCount / itemsPerPage)
@@ -327,6 +331,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   }, [
     searchQuery,
     selectedCategories,
+    heroCategory,
     priceBand,
     sortBy,
     itemsPerPage,
@@ -341,12 +346,14 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
   const clearAllFilters = useCallback(() => {
     setSearchQuery("")
     setSelectedCategories([])
+    setHeroCategory(null)
     setPriceBand(null)
     setCurrentPage(1)
   }, [])
 
   const getActiveFiltersCount = () => {
     let count = 0
+    if (heroCategory) count++
     if (searchQuery) count++
     if (selectedCategories.length > 0) count += selectedCategories.length
     if (priceBand) count++
@@ -355,10 +362,26 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
 
   const hasActiveFilters = getActiveFiltersCount() > 0
 
+  const handleHeroCategoryChange = useCallback((cat: string | null) => {
+    setHeroCategory(cat)
+    setSelectedCategories([]) // Clear sidebar filters when top hero category is selected!
+    setCurrentPage(1)
+  }, [])
+
+  const handleSidebarCategoriesChange = useCallback((categories: string[]) => {
+    setSelectedCategories(categories)
+    if (categories.length > 0) {
+      setHeroCategory(null) // Clear hero category when sidebar filters are chosen!
+    }
+    setCurrentPage(1)
+  }, [])
+
   // Filter bar props shared between mobile and desktop sidebar
   const filterProps = {
     selectedCategories,
-    setSelectedCategories,
+    setSelectedCategories: handleSidebarCategoriesChange,
+    heroCategory,
+    setHeroCategory: handleHeroCategoryChange,
     priceBand,
     setPriceBand,
     clearFilters: clearAllFilters,
@@ -395,8 +418,8 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
         <CategoryHero
           categories={filterCategories}
           isLoading={categoriesLoading}
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
+          heroCategory={heroCategory}
+          setHeroCategory={handleHeroCategoryChange}
         />
       ) : (
         <section className="relative overflow-hidden bg-[hsl(var(--brand-indigo-tint))]">
@@ -469,9 +492,22 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
             <main className="min-w-0 flex-1">
               {/* Toolbar */}
               <div className="mb-5 border-b border-[hsl(var(--brand-gold)/0.45)] pb-4 md:mb-10 md:pb-5">
-                {/* Chosen filters, shown on phones and tablets where the sidebar is closed */}
+                {/* Chosen filters */}
                 {hasActiveFilters && (
-                  <div className="mb-3 flex flex-wrap items-center gap-2 lg:hidden">
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    {heroCategory && (
+                      <span className={chipClass}>
+                        {heroCategory}
+                        <button
+                          type="button"
+                          onClick={() => setHeroCategory(null)}
+                          aria-label={`Remove ${heroCategory}`}
+                          className={chipCloseClass}
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </span>
+                    )}
                     {searchQuery && (
                       <span className={chipClass}>
                         &ldquo;{searchQuery}&rdquo;

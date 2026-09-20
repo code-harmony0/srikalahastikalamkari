@@ -151,7 +151,7 @@ export default function ContactPage() {
                 </p>
               </InfoRow>
 
-              <InfoRow icon={<MapPin className="h-5 w-5" />} label="Srikalahasti Studio (workshop)">
+              <InfoRow icon={<MapPin className="h-5 w-5" />} label="Srikalahasti Kalamkari (workshop)">
                 <p>
                   #17-68, Bharathi Nagar, Tirupati Main Road, Near Railway Station, Srikalahasti, AP – 517640
                 </p>

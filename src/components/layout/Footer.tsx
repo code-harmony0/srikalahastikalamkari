@@ -9,6 +9,7 @@ import {
   ExternalLink,
   Mail,
   Clock,
+  Youtube,
 } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 import { CONTACT, mailtoHref, telHref, whatsAppHref } from "@/shared/config/contact"
@@ -64,7 +65,7 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="pt-3">
+            <div className="pt-3 flex flex-col gap-3 xl:flex-row xl:flex-wrap">
               <a
                 href="https://www.instagram.com/srikalahasti_kalamkari_offical"
                 target="_blank"
@@ -73,6 +74,15 @@ export default function Footer() {
               >
                 <Instagram className="h-4 w-4" />
                 <span>Follow us on Instagram</span>
+              </a>
+              <a
+                href="https://youtube.com/@srikalahastikalamkari-u4d?si=1_yYDVL677cYJrrn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 rounded-full bg-[#FF0000] px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))]"
+              >
+                <Youtube className="h-4 w-4" />
+                <span>Subscribe on YouTube</span>
               </a>
             </div>
           </div>
@@ -153,7 +163,7 @@ export default function Footer() {
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <div>
                     <div className="font-semibold text-white">
-                      Srikalahasti Studio{" "}
+                      Srikalahasti Kalamkari{" "}
                       <a
                         href="https://maps.app.goo.gl/Swct9jg3LUwAqvZP6?g_st=ic"
                         target="_blank"

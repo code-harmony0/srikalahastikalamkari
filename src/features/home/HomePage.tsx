@@ -98,7 +98,6 @@ function SectionHeading({ title, intro, onDark = false }: { title: string; intro
 export default function HomePage() {
   const reduceMotion = useReducedMotion()
   const [featured, setFeatured] = useState<Product[]>([])
-  const [customPiece, setCustomPiece] = useState<Product | null>(null)
   const [gallery, setGallery] = useState<GalleryPiece[]>([])
   const [loading, setLoading] = useState(true)
   const [heroIndex, setHeroIndex] = useState(0)
@@ -118,10 +117,7 @@ export default function HomePage() {
     let cancelled = false
     const load = async () => {
       try {
-        const [customRows, topCategories] = await Promise.all([
-          productsService.getVisibleInTopCategories(["Customisations"]).catch(() => [] as Product[]),
-          getCategories().catch(() => ({ data: null, error: null })),
-        ])
+        const topCategories = await getCategories().catch(() => ({ data: null, error: null }))
         const names = (topCategories.data ?? []).map((c: { name: string }) => c.name)
         const everyPiece = names.length ? await productsService.getVisibleInTopCategories(names) : []
         if (cancelled) return
@@ -131,9 +127,6 @@ export default function HomePage() {
         const sarees = withPhoto.filter((p) => SAREE_CATEGORIES.includes((p as { categoryName?: string }).categoryName ?? ""))
         const featuredRows = [...withPhoto.filter((p) => p.is_featured), ...sarees.filter((p) => !p.is_featured)].slice(0, 6)
         setFeatured(featuredRows)
-
-        const customWithPhoto = customRows.filter((p) => getImageTier(p.images, "medium", 0))
-        setCustomPiece(customWithPhoto.find((p) => !/wall|painting|frame/i.test(p.name || "")) ?? customWithPhoto[0] ?? null)
 
         const picked = pickGalleryPieces(
           withPhoto.map((p) => ({ ...p, image: getImageTier(p.images, "medium", 0) })),
@@ -164,7 +157,6 @@ export default function HomePage() {
     return () => clearInterval(timer)
   }, [reduceMotion, heroPaused])
 
-  const customImage = customPiece ? getImageTier(customPiece.images, "medium", 0) : null
 
   return (
     <main className="w-full overflow-hidden bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))]">
@@ -289,11 +281,11 @@ export default function HomePage() {
           <div className="mx-auto w-full max-w-[380px] pt-6">
             <JharokhaFrame>
               <Image
-                src="/images/brand-models/model-saree-05.jpeg"
-                alt="Model wearing a hand-painted Srikalahasti Kalamkari dupatta"
+                src="/images/about/kalamkari-painted-saree.jpg"
+                alt="Painted folds of a Kalamkari saree with gods, elephants and flowers in natural colours"
                 fill
                 sizes="(max-width: 768px) 80vw, 380px"
-                className="object-cover"
+                className="object-cover object-bottom"
               />
             </JharokhaFrame>
           </div>
@@ -474,28 +466,14 @@ export default function HomePage() {
           </div>
           <div className="order-1 mx-auto w-full max-w-[340px] pt-6 md:order-2">
             <JharokhaFrame>
-              {customImage ? (
-                <OptimizedImage
-                  src={customImage}
-                  alt={customPiece?.name ? `Commissioned piece: ${customPiece.name}` : "A commissioned Kalamkari piece"}
-                  fill
-                  sizes="(max-width: 768px) 80vw, 340px"
-                  imageType="productCard"
-                  className="object-cover"
-                />
-              ) : (
-                <Image
-                  src="/images/brand-models/model-saree-08.jpeg"
-                  alt="Hand-painted Srikalahasti Kalamkari saree"
-                  fill
-                  sizes="(max-width: 768px) 80vw, 340px"
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src="/images/custom-design/custom-design-studio.jpg"
+                alt="A customer and an artisan planning a custom Kalamkari design together"
+                fill
+                sizes="(max-width: 768px) 80vw, 340px"
+                className="object-cover"
+              />
             </JharokhaFrame>
-            {customPiece?.name && (
-              <p className="mt-3 text-center font-sans text-[13px] text-[hsl(var(--brand-muted))]">{customPiece.name}</p>
-            )}
           </div>
         </div>
       </section>

@@ -13,13 +13,23 @@ export interface ProcessStep {
   title: string
   subtitle: string
   description: string
-  cfUrl: string
-  cfId: string
+  cfUrl?: string
+  cfId?: string
   localPath: string
   badge: string
 }
 
 export const PROCESS_STEPS: ProcessStep[] = [
+  {
+    id: "step-bundle",
+    stepNumber: "00",
+    title: "Handcrafted Heritage in Every Fold",
+    subtitle: "Srikalahasti Kalamkari Sarees",
+    description:
+      "Each saree is the result of skilled hands, natural colours and a timeless tradition from Srikalahasti.",
+    localPath: "/images/process/step-00-bundle-sarees.jpg",
+    badge: "Our Sarees",
+  },
   {
     id: "step-01",
     stepNumber: "01",
@@ -73,56 +83,64 @@ export const PROCESS_STEPS: ProcessStep[] = [
     badge: "Shade Dried",
   },
   {
-    id: "step-06",
-    stepNumber: "06",
-    title: "Preparing Natural Colours",
-    subtitle: "Earth, Bark, Minerals & Indigo",
+    id: "step-05",
+    stepNumber: "05",
+    title: "Hand Drawing (Outlining with Kalam)",
+    subtitle: "Freehand Outlining with Iron & Jaggery",
     description:
-      "Colours are prepared from natural sources like indigo, madder, pomegranate rind, turmeric and other plant materials. These eco-friendly dyes give Kalamkari its rich and timeless shades.",
-    cfUrl:
-      "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/042449ab-4f24-4b72-c50d-e6660d035700/full",
-    cfId: "042449ab-4f24-4b72-c50d-e6660d035700",
-    localPath: "/images/process/step-06-preparing-natural-colours.jpg",
-    badge: "100% Plant Dyes",
+      "Skilled artisans draw intricate designs freehand using a traditional Kalam (bamboo pen) with natural dye made from iron and jaggery. This forms the outline for the artwork.",
+    localPath: "/images/process/step-05-hand-drawing.jpg",
+    badge: "Freehand Kalam",
   },
   {
-    id: "step-08a",
-    stepNumber: "08A",
-    title: "Filling in Colours (Painting)",
-    subtitle: "Hand-Painting with the Bamboo Kalam",
+    id: "step-06",
+    stepNumber: "06",
+    title: "Applying Natural Colours",
+    subtitle: "Colours from Roots, Leaves & Minerals",
     description:
-      "The outlined designs are carefully filled with natural colours using a Kalam (bamboo pen) or brush. Artisans apply each colour by hand with great precision and patience.",
-    cfUrl:
-      "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/6ee548b2-e9a6-498a-0516-3085d7ff5100/full",
-    cfId: "6ee548b2-e9a6-498a-0516-3085d7ff5100",
-    localPath: "/images/process/step-08a-filling-in-colours.jpg",
+      "Natural colours are prepared from roots, leaves, flowers, bark and minerals. Each colour is carefully applied by hand, following traditional practices.",
+    localPath: "/images/process/step-06-applying-natural-colours.jpg",
     badge: "Hand Painted",
   },
   {
-    id: "step-08b",
-    stepNumber: "08B",
-    title: "Washing for Clarity",
-    subtitle: "Washing Off Excess Dye in Flowing Waters",
+    id: "step-07",
+    stepNumber: "07",
+    title: "Mordanting & Colour Development",
+    subtitle: "Alum & Myrobalan for Lasting Colour",
     description:
-      "The fabric is thoroughly washed in clean water, often in flowing river water, to remove excess dye. This step reveals the clarity of the design and prepares the fabric.",
-    cfUrl:
-      "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/45a9e45e-e00e-42fb-bd4e-402e3d9fe800/full",
-    cfId: "45a9e45e-e00e-42fb-bd4e-402e3d9fe800",
-    localPath: "/images/process/step-08b-washing-off-excess-dye.jpg",
-    badge: "Flowing Water",
+      "Natural mordants such as alum are applied to specific areas to help develop and fix the colours. The fabric may undergo multiple rounds of dyeing and drying to achieve the desired shades.",
+    localPath: "/images/process/step-07-mordanting-colour-development.jpg",
+    badge: "Natural Mordants",
   },
   {
-    id: "step-08c",
-    stepNumber: "08C",
-    title: "Washing & Finishing",
-    subtitle: "Sun-Dried Sacred Lustre",
+    id: "step-08",
+    stepNumber: "08",
+    title: "Washing & Drying",
+    subtitle: "Washed Clean, Dried in the Sun",
     description:
-      "After dyeing, the fabric is thoroughly washed in clean water to remove excess dye and fixed properly. The cloth is then sun-dried and finished for a soft, vibrant and long-lasting look.",
-    cfUrl:
-      "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/e32ae0ec-7698-49d6-93c3-2c0e980bfe00/full",
-    cfId: "e32ae0ec-7698-49d6-93c3-2c0e980bfe00",
-    localPath: "/images/process/step-08c-washing-and-finishing.jpg",
-    badge: "Sun Finished",
+      "The fabric is repeatedly washed in clean water to remove excess dye and then dried in the shade or sunlight. This process may be repeated several times for rich, lasting colours.",
+    localPath: "/images/process/step-08-washing-drying.jpg",
+    badge: "Sun Dried",
+  },
+  {
+    id: "step-09",
+    stepNumber: "09",
+    title: "Detailing & Final Touches",
+    subtitle: "Fine Details Create Timeless Art",
+    description:
+      "Once the main colours are complete, artisans add fine details, shading and final outlines. Every element is handcrafted with precision, bringing the design to life.",
+    localPath: "/images/process/step-09-detailing-final-touches.jpg",
+    badge: "Fine Detailing",
+  },
+  {
+    id: "step-10",
+    stepNumber: "10",
+    title: "Quality Check & Finishing",
+    subtitle: "Checked with Care for You",
+    description:
+      "Each saree is carefully inspected for quality, colour consistency and finishing before it is neatly folded and ready to be shared with you.",
+    localPath: "/images/process/step-10-quality-check-finishing.jpg",
+    badge: "Quality Checked",
   },
   {
     id: "step-overview",
@@ -141,7 +159,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
 
 // Legacy export compatibility
 export const PROCESS_IMAGES = PROCESS_STEPS.map((step) => ({
-  src: step.cfUrl,
+  src: step.cfUrl ?? step.localPath,
   alt: `${step.stepNumber} ${step.title}`,
 }))
 

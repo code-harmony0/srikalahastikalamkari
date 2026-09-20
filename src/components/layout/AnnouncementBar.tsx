@@ -23,6 +23,13 @@ export default function AnnouncementBar() {
         {/* Right side social & contact (in the menu and footer on phones) */}
         <div className="hidden items-center gap-5 sm:flex">
           <div className="flex items-center gap-3">
+            <a href="https://youtube.com/@srikalahastikalamkari-u4d?si=1_yYDVL677cYJrrn" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110 focus:outline-none flex items-center group relative" aria-label="Subscribe to our YouTube Channel">
+              <div className="absolute -top-7 right-0 whitespace-nowrap bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                Subscribe on YouTube
+                <div className="absolute -bottom-1 right-2 w-2 h-2 bg-white rotate-45" />
+              </div>
+              <Youtube className="w-5 h-5 text-red-500" />
+            </a>
             <a href="https://www.instagram.com/srikalahasti_kalamkari_offical" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110 focus:outline-none flex items-center group relative" aria-label="Follow us on Instagram">
               {/* Tooltip for Instagram follow */}
               <div className="absolute -top-7 right-0 whitespace-nowrap bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">

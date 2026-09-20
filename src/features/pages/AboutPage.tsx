@@ -77,7 +77,7 @@ export default function AboutPage() {
             </h2>
             <div className="mt-6 max-w-[38rem] space-y-4 font-sans text-[15.5px] leading-relaxed text-[hsl(var(--brand-ink-soft))] md:text-[16px]">
               <p>
-                Srikalahasti Kalamkari Studio was founded by Mr. Shaik Saleem with a vision to preserve the rich heritage of Srikalahasti Kalamkari and share its beauty with the world.
+                Srikalahasti Kalamkari was founded by Mr. Shaik Saleem Basha with a vision to preserve the rich heritage of Srikalahasti Kalamkari and share its beauty with the world.
               </p>
               <p>
                 We work closely with local artisans and their families, creating opportunities that help sustain the people and skills behind this traditional craft.

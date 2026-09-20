@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { useProductsByIds } from "@/shared/hooks/use-products";
+import { productsService } from "@/services/products";
 import { useCartStore } from "@/shared/cart-store";
 import { useCoupon } from "@/shared/hooks/use-coupon";
 import { useAuth } from "@/shared/contexts/AuthContext";
@@ -11,12 +13,16 @@ import { useAuthModalStore } from "@/shared/auth-modal-store";
 import {
   ArrowLeft,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Lock,
   Tag,
   X,
   Loader2,
 } from "lucide-react";
 import { formatPrice, cn } from "@/shared/utils";
+import { FaCcMastercard, FaCcVisa, FaUniversity } from "react-icons/fa";
+import { SiGooglepay, SiPaytm, SiPhonepe } from "react-icons/si";
 import { toast } from "sonner";
 import { getOrderTotals } from "@/shared/lib/order-totals";
 import environment from "@/shared/config/environment";
@@ -28,6 +34,7 @@ import {
   KalashDivider,
   TempleBellsDivider,
 } from "@/shared/ui/heritage-ornaments";
+import { CuratedProductCard, CuratedProductCardSkeleton } from "@/features/products/CuratedProductCard";
 
 // --- Razorpay Script Loader ---
 function loadRazorpayScript(): Promise<void> {
@@ -224,6 +231,18 @@ export default function CheckoutPage() {
     () => cart.getTotalPrice(products),
     [cart, products],
   );
+  // What the pieces were listed at before their selling price (MRP).
+  const totalMrp = useMemo(
+    () =>
+      cart.items.reduce((sum, item) => {
+        const product = products.find((p) => p.id === item.productId);
+        if (!product) return sum;
+        const mrp = product.original_price ?? product.originalPrice ?? 0;
+        return sum + Math.max(mrp, product.price || 0) * item.quantity;
+      }, 0),
+    [cart.items, products],
+  );
+  const mrpDiscount = Math.max(0, totalMrp - subtotal);
   const { discount, shipping, total } = getOrderTotals({
     subtotal,
     discount: appliedCoupon?.discountAmount || 0,
@@ -578,6 +597,7 @@ export default function CheckoutPage() {
                   <p className="mt-1 font-sans text-[14px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
                     UPI, cards, net banking or wallets. Cash on delivery is not available.
                   </p>
+                  <PaymentIcons />
                 </div>
               </div>
             </Section>
@@ -702,27 +722,47 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {/* Price breakdown */}
-              <dl className="mt-4 space-y-2.5 border-t border-[hsl(var(--brand-gold-ornament)/0.3)] pt-4 font-sans text-[14px]">
+              {/* Price details: MRP, discounts and what you pay */}
+              <h3 className="mt-4 border-t border-[hsl(var(--brand-gold-ornament)/0.3)] pt-4 font-sans text-[15px] font-semibold">
+                Price details
+              </h3>
+              <dl className="mt-3 space-y-2.5 font-sans text-[14px]">
                 <div className="flex justify-between">
-                  <dt className="text-[hsl(var(--brand-ink-soft))]">Subtotal</dt>
-                  <dd className="font-medium tabular-nums">{formatPrice(subtotal)}</dd>
+                  <dt className="text-[hsl(var(--brand-ink-soft))]">{mrpDiscount > 0 ? "Total MRP" : "Subtotal"}</dt>
+                  <dd className="font-medium tabular-nums">{formatPrice(mrpDiscount > 0 ? totalMrp : subtotal)}</dd>
                 </div>
+                {mrpDiscount > 0 && (
+                  <div className="flex justify-between">
+                    <dt className="text-[hsl(var(--brand-ink-soft))]">Discount on MRP</dt>
+                    <dd className="font-medium tabular-nums text-[#1F6B3A]">−{formatPrice(mrpDiscount)}</dd>
+                  </div>
+                )}
                 {discount > 0 && (
                   <div className="flex justify-between">
                     <dt className="text-[hsl(var(--brand-ink-soft))]">Coupon discount</dt>
-                    <dd className="font-medium tabular-nums">−{formatPrice(discount)}</dd>
+                    <dd className="font-medium tabular-nums text-[#1F6B3A]">−{formatPrice(discount)}</dd>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <dt className="text-[hsl(var(--brand-ink-soft))]">Shipping</dt>
-                  <dd className="font-medium tabular-nums">{shipping === 0 ? "Free" : formatPrice(shipping)}</dd>
+                  <dd className={cn("font-medium tabular-nums", shipping === 0 && "text-[#1F6B3A]")}>
+                    {shipping === 0 ? "Free" : formatPrice(shipping)}
+                  </dd>
                 </div>
-                <div className="flex items-baseline justify-between border-t border-[hsl(var(--brand-gold-ornament)/0.3)] pt-3">
-                  <dt className="text-[16px] font-semibold">Total</dt>
+                <div className="flex items-baseline justify-between border-t border-dashed border-[hsl(var(--brand-gold-ornament)/0.5)] pt-3">
+                  <dt className="text-[16px] font-semibold">Total amount</dt>
                   <dd className="text-[22px] font-semibold tabular-nums">{formatPrice(total)}</dd>
                 </div>
               </dl>
+
+              {mrpDiscount + discount > 0 && (
+                <p className="mt-4 flex items-center justify-center gap-2 rounded-md bg-[#E3F3E8] px-3 py-2.5 text-center font-sans text-[14px] text-[#1F6B3A]">
+                  <Tag className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span>
+                    You&apos;re saving <strong className="font-semibold tabular-nums">{formatPrice(mrpDiscount + discount)}</strong> on this order
+                  </span>
+                </p>
+              )}
 
               <button
                 type="submit"
@@ -738,10 +778,7 @@ export default function CheckoutPage() {
               </button>
 
               <ul className="mt-4 space-y-1.5 font-sans text-[13px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
-                <li>
-                  All sales are final. No returns, refunds or cancellations.{" "}
-                  <Link href="/returns" className={inlineLink}>Read policy</Link>
-                </li>
+                <li>No Return &amp; No Exchange. All purchases are final.</li>
                 <li>
                   By paying, you agree to our <Link href="/terms" className={inlineLink}>terms</Link>.
                 </li>
@@ -773,9 +810,162 @@ export default function CheckoutPage() {
           </button>
         </div>
         <p className="mt-2 text-center font-sans text-[13px] text-[hsl(var(--brand-ink-soft))]">
-          All sales are final. No returns or refunds.
+          No Return &amp; No Exchange. All purchases are final.
         </p>
       </div>
+      {/* ── Before You Go — featured products strip ── */}
+      <BeforeYouGoStrip />
+
     </div>
+  );
+}
+
+// ── Payment method icons ─────────────────────────────────────────────────────
+const chip =
+  "flex h-9 items-center gap-1.5 rounded-md border border-[hsl(var(--brand-ink)/0.15)] bg-white px-2.5 font-sans text-[12px] font-semibold text-[hsl(var(--brand-ink))]";
+
+function PaymentIcons() {
+  return (
+    <ul aria-label="Accepted payment methods" className="mt-3 flex flex-wrap gap-2">
+      <li className={chip}>
+        <span className="text-[15px] font-extrabold italic tracking-tight">
+          <span className="text-[#097939]">U</span>
+          <span className="text-[#097939]">P</span>
+          <span className="text-[#F47920]">I</span>
+        </span>
+      </li>
+      <li className={chip} aria-label="Google Pay"><SiGooglepay className="h-5 w-auto text-[#4285F4]" aria-hidden="true" /></li>
+      <li className={chip} aria-label="PhonePe"><SiPhonepe className="h-4 w-auto text-[#5F259F]" aria-hidden="true" /></li>
+      <li className={chip} aria-label="Paytm"><SiPaytm className="h-4 w-auto text-[#00BAF2]" aria-hidden="true" /></li>
+      <li className={chip} aria-label="Visa"><FaCcVisa className="h-6 w-auto text-[#1A1F71]" aria-hidden="true" /></li>
+      <li className={chip} aria-label="Mastercard"><FaCcMastercard className="h-6 w-auto text-[#EB001B]" aria-hidden="true" /></li>
+      <li className={chip}>
+        <span className="text-[13px] font-bold tracking-tight">
+          <span className="text-[#1A4B9C]">Ru</span>
+          <span className="text-[#F47920]">Pay</span>
+        </span>
+      </li>
+      <li className={chip}>
+        <FaUniversity className="h-3.5 w-3.5" aria-hidden="true" />
+        Net banking
+      </li>
+    </ul>
+  );
+}
+
+// ── Before You Go strip ──────────────────────────────────────────────────────
+function BeforeYouGoStrip() {
+  const cartItems = useCartStore((state) => state.items);
+  const { data, isLoading } = useQuery({
+    queryKey: ["checkout", "before-you-go"],
+    queryFn: () => productsService.getFeaturedEfficient(12),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Never suggest something that is already in the cart.
+  const products = useMemo(
+    () => (data ?? []).filter((p) => !cartItems.some((item) => item.productId === p.id)).slice(0, 8),
+    [data, cartItems],
+  );
+
+  const railRef = useRef<HTMLUListElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const updateArrows = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    setCanPrev(rail.scrollLeft > 4);
+    setCanNext(rail.scrollLeft + rail.clientWidth < rail.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    updateArrows();
+    window.addEventListener("resize", updateArrows);
+    return () => window.removeEventListener("resize", updateArrows);
+  }, [updateArrows, products.length]);
+
+  const scrollRail = (direction: 1 | -1) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    rail.scrollBy({ left: direction * rail.clientWidth * 0.85, behavior: "smooth" });
+  };
+
+  if (!isLoading && !products.length) return null;
+
+  return (
+    <section
+      aria-labelledby="before-you-go"
+      className="border-t border-[hsl(var(--brand-gold)/0.45)] bg-[hsl(var(--brand-indigo-tint))] py-10 pb-28 md:py-14 lg:pb-14"
+    >
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+        <div className="flex items-end justify-between gap-4">
+          <div className="min-w-0">
+            <h2
+              id="before-you-go"
+              className="text-balance font-serif text-[24px] leading-tight text-[hsl(var(--brand-ink))] md:text-[30px]"
+            >
+              Before you go
+            </h2>
+            <p className="mt-1.5 font-sans text-[15px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
+              A few more pieces from Srikalahasti you may like.
+            </p>
+          </div>
+
+          <div className="hidden shrink-0 gap-2 sm:flex">
+            {([-1, 1] as const).map((direction) => {
+              const Icon = direction === -1 ? ChevronLeft : ChevronRight;
+              return (
+                <button
+                  key={direction}
+                  type="button"
+                  onClick={() => scrollRail(direction)}
+                  disabled={direction === -1 ? !canPrev : !canNext}
+                  aria-label={direction === -1 ? "Previous pieces" : "Next pieces"}
+                  className={cn(
+                    "flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(var(--brand-ink)/0.6)] bg-white text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-paper))] disabled:cursor-not-allowed disabled:border-[hsl(var(--brand-ink)/0.2)] disabled:text-[hsl(var(--brand-ink)/0.35)] disabled:hover:bg-white",
+                    focusRing,
+                  )}
+                >
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Swipe row on phones, arrows on larger screens */}
+        <ul
+          ref={railRef}
+          onScroll={updateArrows}
+          aria-busy={isLoading}
+          className="-mx-4 mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 md:gap-5 [&::-webkit-scrollbar]:hidden"
+        >
+          {isLoading
+            ? Array.from({ length: 5 }, (_, i) => (
+                <li key={i} className="w-[46vw] max-w-[230px] shrink-0 sm:w-[220px]">
+                  <CuratedProductCardSkeleton />
+                </li>
+              ))
+            : products.map((product, index) => (
+                <li key={product.id} className="w-[46vw] max-w-[230px] shrink-0 snap-start sm:w-[220px]">
+                  <CuratedProductCard product={product} index={index} />
+                </li>
+              ))}
+        </ul>
+
+        <div className="mt-4 text-center">
+          <Link
+            href="/products"
+            className={cn(
+              "inline-flex h-11 items-center justify-center rounded-full border border-[hsl(var(--brand-ink)/0.75)] bg-white px-7 font-sans text-[13px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] transition-colors hover:bg-[hsl(var(--brand-paper))]",
+              focusRing,
+            )}
+          >
+            See all products
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }

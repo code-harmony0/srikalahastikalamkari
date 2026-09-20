@@ -118,3 +118,18 @@ export function DryCleanMark({ className, strokeWidth = 1.2 }: CraftMarkProps) {
     </svg>
   )
 }
+
+/** An exchange badge with rounded container and circular cycle arrows — 7-day exchange for damaged items. */
+export function ExchangeMark({ className, strokeWidth = 1.2 }: CraftMarkProps) {
+  return (
+    <svg {...baseProps} className={className} strokeWidth={strokeWidth}>
+      {/* Outer rounded frame */}
+      <rect x="2.5" y="2.5" width="19" height="19" rx="3.5" strokeLinejoin="round" />
+      {/* Top curved cycle arrow */}
+      <path d="M7 10.5a5 5 0 0 1 8.5-2.5l1.5 1.5m0-3v3h-3" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Bottom curved cycle arrow */}
+      <path d="M17 13.5a5 5 0 0 1-8.5 2.5L7 14.5m0 3v-3h3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+

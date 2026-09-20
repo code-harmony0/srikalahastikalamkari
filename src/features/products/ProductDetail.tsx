@@ -52,6 +52,7 @@ import {
   HandmadeMark,
   HandWashMark,
   DryCleanMark,
+  ExchangeMark,
 } from "@/shared/ui/craft-marks"
 import { CuratedProductCard } from "./CuratedProductCard"
 import { ProductReviews } from "./ProductReviews"
@@ -539,7 +540,7 @@ export default function ProductDetail() {
     return (
       <div
         aria-busy="true"
-        aria-label="Loading this piece"
+        aria-label="Loading this product"
         className="min-h-screen bg-[hsl(var(--brand-paper))]"
       >
         <div className="h-[49px] border-b border-[hsl(var(--brand-gold)/0.45)] bg-[hsl(var(--brand-indigo-tint))]" />
@@ -568,7 +569,7 @@ export default function ProductDetail() {
           strokeWidth={1.25}
         />
         <h1 className="font-serif text-[28px] text-[hsl(var(--brand-ink))]">
-          We couldn&apos;t find that piece
+          We couldn&apos;t find that product
         </h1>
         <Link href="/products" className={cn(primaryButton, "mt-6 h-12 px-8")}>
           Back to shop
@@ -587,9 +588,12 @@ export default function ProductDetail() {
       : 0
 
   const productName = product.name || product.title || "Product"
+  const formattedDescription = (product.description || "")
+    .replace(/\ballover\s+/gi, "all over ")
+    .replace(/\ballover\b/gi, "all over")
   const categoryName = product.categoryName || null
   const askOnWhatsAppUrl = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    ["Hello, I have a question about this piece:", productName, pageUrl].filter(Boolean).join("\n"),
+    ["Hello, I have a question about this product:", productName, pageUrl].filter(Boolean).join("\n"),
   )}`
   const pieceColours = (product.colors ?? []).filter(
     (color): color is string => typeof color === "string" && color.trim().length > 0,
@@ -1002,7 +1006,7 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* Good to know before paying: payment ways and the no-returns rule */}
+            {/* Good to know before paying: payment ways and exchange policy */}
             <ul className="mt-5 space-y-2 font-sans text-[14px] leading-relaxed text-[hsl(var(--brand-ink-soft))]">
               <li className="flex gap-2.5">
                 {diamond}
@@ -1010,18 +1014,11 @@ export default function ProductDetail() {
               </li>
               <li className="flex gap-2.5">
                 {diamond}
-                <span>
-                  No returns or refunds.{" "}
-                  <Link
-                    href="/returns"
-                    className={cn(
-                      "whitespace-nowrap rounded-sm font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-4 hover:decoration-[hsl(var(--brand-ink))]",
-                      focusRing,
-                    )}
-                  >
-                    Read policy
-                  </Link>
-                </span>
+                <span>No Return &amp; No Exchange. All purchases are final.</span>
+              </li>
+              <li className="flex gap-2.5">
+                {diamond}
+                <span>Dry clean or gentle hand wash only. Do not machine wash.</span>
               </li>
             </ul>
             <a
@@ -1031,11 +1028,11 @@ export default function ProductDetail() {
               className={cn(textLink, "mt-4")}
             >
               <FaWhatsapp className="h-[18px] w-[18px] text-[#25D366]" aria-hidden="true" />
-              Ask about this piece on WhatsApp
+              Ask about this product on WhatsApp
             </a>
 
             {/* Fact strip: dotted gold lines and charcoal marks, as on the home page */}
-            <ul className="mt-7 grid grid-cols-4 gap-2 border-y border-[hsl(var(--brand-gold)/0.45)] py-5">
+            <ul className="mt-7 grid grid-cols-4 gap-1 sm:gap-2 border-y border-[hsl(var(--brand-gold)/0.45)] py-5">
               {[
                 { Mark: ParcelMark, label: "Free shipping" },
                 { Mark: LockMark, label: "Secure payment" },
@@ -1047,7 +1044,7 @@ export default function ProductDetail() {
                   className="flex flex-col items-center text-center gap-2"
                 >
                   <Mark className="w-6 h-6 text-[hsl(var(--brand-ink))]" />
-                  <span className="font-sans text-[13px] font-semibold leading-tight text-[hsl(var(--brand-ink))]">
+                  <span className="font-sans text-[11px] sm:text-[13px] font-semibold leading-tight text-[hsl(var(--brand-ink))]">
                     {label}
                   </span>
                 </li>
@@ -1063,7 +1060,7 @@ export default function ProductDetail() {
 
       {/* ── About + details: plain turmeric band ── */}
       <section
-        aria-labelledby="piece-details"
+        aria-labelledby="product-details"
         className="bg-[hsl(var(--brand-turmeric-tint))] py-12 md:py-16"
       >
         <div
@@ -1075,17 +1072,17 @@ export default function ProductDetail() {
           {product.description && (
             <div>
               <h2 className="font-serif text-[20px] leading-tight text-[hsl(var(--brand-ink))] md:text-[22px]">
-                About this piece
+                About the product
               </h2>
               <p className="mt-4 max-w-[62ch] font-sans text-[16px] leading-relaxed text-[hsl(var(--brand-ink-soft))] whitespace-pre-line">
-                {product.description}
+                {formattedDescription}
               </p>
             </div>
           )}
 
           <div className={cn(!product.description && "mx-auto w-full max-w-2xl")}>
             <h2
-              id="piece-details"
+              id="product-details"
               className="font-serif text-[20px] leading-tight text-[hsl(var(--brand-ink))] md:text-[22px]"
             >
               Details
@@ -1111,7 +1108,7 @@ export default function ProductDetail() {
 
       {/* ── Related: the home page's card and centred lotus heading ── */}
       {relatedProducts.length > 0 && (
-        <section aria-labelledby="related-pieces" className="bg-white py-12 md:py-16">
+        <section aria-labelledby="related-products" className="bg-white py-12 md:py-16">
           <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
             <div className="mx-auto max-w-2xl text-center">
               <h2
