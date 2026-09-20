@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import CheckoutPage from '@/features/checkout/CheckoutPage'
 
 // Checkout used to price the cart against the first page of the catalogue — 12
@@ -64,6 +65,18 @@ jest.mock('@/shared/config/environment', () => ({
   default: { razorpay: { keyId: 'test' } },
 }))
 
+// The "Before you go" strip suggests other pieces; these tests are about the total.
+jest.mock('@/services/products', () => ({
+  productsService: { getFeaturedEfficient: jest.fn().mockResolvedValue([]) },
+}))
+
+const renderCheckout = () =>
+  render(
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <CheckoutPage />
+    </QueryClientProvider>,
+  )
+
 jest.mock('@/lib/image-tiers', () => ({ getImageTier: () => null }))
 
 jest.mock('@/components/shared/OptimizedImage', () => ({
@@ -72,13 +85,13 @@ jest.mock('@/components/shared/OptimizedImage', () => ({
 
 describe('CheckoutPage', () => {
   it('charges the full price of every cart item, looked up by id', () => {
-    render(<CheckoutPage />)
+    renderCheckout()
 
     expect(screen.getByText('Kanchipuram Silk Kalamkari Dupatta')).toBeInTheDocument()
 
     // desktop order summary and the mobile pay bar
     const totals = screen
-      .getAllByText('Total')
+      .getAllByText(/^Total( amount)?$/)
       .map((label) => label.nextElementSibling as HTMLElement)
     expect(totals).toHaveLength(2)
     totals.forEach((amount) => {
@@ -88,7 +101,7 @@ describe('CheckoutPage', () => {
   })
 
   it('makes no delivery or security promise checkout cannot keep', () => {
-    render(<CheckoutPage />)
+    renderCheckout()
 
     expect(screen.queryByText(/international/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/express/i)).not.toBeInTheDocument()
