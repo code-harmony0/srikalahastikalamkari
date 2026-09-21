@@ -125,6 +125,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Phone Authentication with OTP
   const signInWithPhone = async (phoneNumber: string, recaptchaContainer: string) => {
     try {
+      // In development mode, provide a reliable dev auth flow
+      // (avoids reCAPTCHA domain mismatch and Firebase AppCheck failures on localhost)
+      if (process.env.NODE_ENV === "development") {
+        setConfirmationResult({
+          verificationId: "dev-verification-id",
+          confirm: async (_otpCode: string) => {
+            const res = await signInWithEmailAndPassword(
+              auth,
+              "dev-test-kalamkari@example.com",
+              "DevPassword123!"
+            )
+            try {
+              useUserProfileStore.getState().updateProfile({
+                phone: phoneNumber,
+                name: "Dev User",
+              })
+            } catch (_) {}
+            setUser(res.user)
+            return { user: res.user }
+          },
+        } as any)
+        return { error: null }
+      }
+
       // Init App Check on first phone auth attempt (deferred from page load)
       await initAppCheckOnDemand()
 

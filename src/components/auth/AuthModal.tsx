@@ -97,17 +97,44 @@ export function AuthModal() {
       setStep("otp")
       setResendTimer(30)
       toast.success("Verification Code Sent", {
-        description: `Code sent to +91 ${cleaned}`,
+        description:
+          process.env.NODE_ENV === "development"
+            ? `Code sent to +91 ${cleaned} (Dev OTP: 123456)`
+            : `Code sent to +91 ${cleaned}`,
       })
+    }
+  }
+
+  const handleQuickDevLogin = async () => {
+    setLoading(true)
+    try {
+      const cleaned = phoneNumber.replace(/\D/g, "")
+      const formattedPhone = cleaned.length === 10 ? "+91" + cleaned : "+919876543210"
+      await signInWithPhone(formattedPhone, "auth-modal-recaptcha")
+      const { error } = await verifyPhoneOTP("123456")
+      if (error) {
+        toast.error("Dev Sign In Failed", { description: error.message })
+      } else {
+        toast.success("Welcome Back (Dev Mode)", { description: "Successfully logged in." })
+        closeModal()
+        if (redirectUrl) {
+          router.push(redirectUrl)
+        }
+      }
+    } catch (err: any) {
+      toast.error("Dev Sign In Error", { description: err.message })
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (otp.length !== 6) return
+    const finalOtp = otp || (process.env.NODE_ENV === "development" ? "123456" : "")
+    if (finalOtp.length !== 6) return
 
     setLoading(true)
-    const { error } = await verifyPhoneOTP(otp)
+    const { error } = await verifyPhoneOTP(finalOtp)
     setLoading(false)
 
     if (error) {
@@ -209,6 +236,17 @@ export function AuthModal() {
                   {loading ? "Sending..." : "Send Verification Code"}
                   {!loading && <ArrowRight className="w-4 h-4" />}
                 </button>
+
+                {process.env.NODE_ENV === "development" && (
+                  <button
+                    type="button"
+                    onClick={handleQuickDevLogin}
+                    disabled={loading}
+                    className="w-full py-2.5 px-4 bg-amber-50 border border-dashed border-amber-300 text-amber-900 rounded-[8px] font-mono text-xs font-semibold hover:bg-amber-100 transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <span>⚡ Dev Quick Sign In (Skip OTP for Testing)</span>
+                  </button>
+                )}
               </motion.form>
             ) : (
               /* STEP 2: OTP Entry */
@@ -220,6 +258,11 @@ export function AuthModal() {
                 onSubmit={handleVerifyOtp}
                 className="space-y-8"
               >
+                {process.env.NODE_ENV === "development" && (
+                  <p className="text-center font-mono text-xs text-amber-800 bg-amber-50 py-1.5 px-3 rounded border border-amber-200">
+                    Dev Mode: Enter <strong>123456</strong> to sign in
+                  </p>
+                )}
                 <div className="flex justify-center">
                   <OtpInput
                     value={otp}
@@ -239,7 +282,7 @@ export function AuthModal() {
 
                 <button
                   type="submit"
-                  disabled={loading || otp.length !== 6}
+                  disabled={loading || (process.env.NODE_ENV !== "development" && otp.length !== 6)}
                   className="w-full py-3.5 bg-[hsl(var(--brand-midnight))] text-white rounded-[8px] font-inter font-bold text-sm uppercase tracking-widest hover:bg-[hsl(var(--brand-midnight-hover))] shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
                 >
                   {loading ? "Verifying..." : "Verify & Sign In"}

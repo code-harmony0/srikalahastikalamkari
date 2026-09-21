@@ -131,15 +131,36 @@ export default function ContactPage() {
               </InfoRow>
 
               <InfoRow icon={<Phone className="h-5 w-5" />} label="Phone">
-                <ul className="space-y-1">
-                  {CONTACT.phones.map((phone) => (
-                    <li key={phone}>
-                      <a href={telHref(phone)} className={cn(textLink, "tabular-nums")}>
-                        {phone}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-[hsl(var(--brand-ink)/0.7)]">
+                      Srikalahasti (Store & Workshop)
+                    </p>
+                    <ul className="space-y-1 mt-1">
+                      {CONTACT.phones.map((phone) => (
+                        <li key={phone}>
+                          <a href={telHref(phone)} className={cn(textLink, "tabular-nums")}>
+                            {phone}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="pt-2 border-t border-[hsl(var(--brand-gold-ornament)/0.25)]">
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-[hsl(var(--brand-ink)/0.7)]">
+                      Tirupati Store
+                    </p>
+                    <ul className="space-y-1 mt-1">
+                      {CONTACT.tirupatiPhones.map((phone) => (
+                        <li key={phone}>
+                          <a href={telHref(phone)} className={cn(textLink, "tabular-nums")}>
+                            {phone}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </InfoRow>
 
               <InfoRow icon={<Mail className="h-5 w-5" />} label="Email">
@@ -147,16 +168,16 @@ export default function ContactPage() {
                   {CONTACT.email}
                 </a>
                 <p className="mt-2 text-[14px]">
-                  GSTIN <span className="tabular-nums text-[hsl(var(--brand-ink))]">{CONTACT.gstin}</span>
+                  GSTIN <span className="tabular-nums font-mono font-medium text-[hsl(var(--brand-ink))]">{CONTACT.gstin}</span>
                 </p>
               </InfoRow>
 
-              <InfoRow icon={<MapPin className="h-5 w-5" />} label="Srikalahasti Kalamkari (workshop)">
+              <InfoRow icon={<MapPin className="h-5 w-5" />} label="Srikalahasti (Store & Workshop)">
                 <p>
-                  #17-68, Bharathi Nagar, Tirupati Main Road, Near Railway Station, Srikalahasti, AP – 517640
+                  # 17-68, Bharathi Nagar, Tirupati Main Road, Near Railway Station, Srikalahasti-517640
                 </p>
                 <a
-                  href="https://maps.app.goo.gl/Swct9jg3LUwAqvZP6?g_st=ic"
+                  href={CONTACT.addresses.kalahasti.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(textLink, "mt-2 inline-flex items-center gap-1.5 text-[14px]")}
@@ -167,7 +188,7 @@ export default function ContactPage() {
               </InfoRow>
 
               <InfoRow icon={<MapPin className="h-5 w-5" />} label="Tirupati Store">
-                <p>#6-8-1126, NGOs Colony, Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati</p>
+                <p># 6-8-1126, NGOs Colony, Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati</p>
               </InfoRow>
 
               <InfoRow icon={<Clock className="h-5 w-5" />} label="Opening hours">

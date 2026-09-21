@@ -27,12 +27,8 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
 // Called lazily from AuthContext when user interacts with phone login
 let appCheckInitialized = false
 export async function initAppCheckOnDemand() {
-  if (appCheckInitialized || typeof window === "undefined") return
+  if (appCheckInitialized || typeof window === "undefined" || process.env.NODE_ENV === "development") return
   appCheckInitialized = true
-
-  if (process.env.NODE_ENV === "development") {
-    ;(window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true
-  }
 
   try {
     const { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } = await import("firebase/app-check")

@@ -179,10 +179,14 @@ export default function FAQsPage() {
                   </span>
                 ))}
               </p>
-              <p>
-                <strong className="text-[hsl(var(--brand-ink))]">Visit:</strong> # 17-68, Bharathi Nagar, Tirupati Main
-                Road, Srikalahasti-517640
-              </p>
+              <div className="space-y-1.5 pt-1">
+                <p>
+                  <strong className="text-[hsl(var(--brand-ink))]">Visit Srikalahasti:</strong> # 17-68, Bharathi Nagar, Tirupati Main Road, Near Railway Station, Srikalahasti-517640
+                </p>
+                <p>
+                  <strong className="text-[hsl(var(--brand-ink))]">Visit Tirupati:</strong> # 6-8-1126, NGOs Colony, Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati
+                </p>
+              </div>
             </div>
           </div>
         </div>

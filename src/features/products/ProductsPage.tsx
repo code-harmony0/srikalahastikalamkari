@@ -412,7 +412,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
       : "grid grid-cols-1 gap-6 max-w-4xl mx-auto"
 
   return (
-    <div className="w-full min-h-screen bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))] overflow-hidden">
+    <div className="w-full min-h-screen bg-[hsl(var(--brand-paper))] text-[hsl(var(--brand-ink))] overflow-clip">
       {/* Shop opens with round category photos; custom design keeps the plain band */}
       {!isCustomDesignMode ? (
         <CategoryHero
@@ -483,7 +483,7 @@ export default function ProductsPage({ mode = "shop" }: ProductsPageProps) {
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full">
             {/* Desktop Filter Sidebar */}
             <aside className="hidden lg:block w-[272px] flex-shrink-0">
-              <div className="sticky top-24">
+              <div className="sticky top-[8.5rem]">
                 <FilterSidebar {...filterProps} />
               </div>
             </aside>

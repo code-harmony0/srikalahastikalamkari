@@ -20,4 +20,14 @@ describe("contact helpers", () => {
   it("URL-encodes a WhatsApp prefilled message", () => {
     expect(whatsAppHref("Hello there")).toBe("https://wa.me/917288848881?text=Hello%20there")
   })
+
+  it("formats Tirupati store phones correctly", () => {
+    expect(telHref(CONTACT.tirupatiPhones[0])).toBe("tel:+917036481999")
+    expect(CONTACT.addresses.tirupati.phones[0]).toBe("+91 70364 81999")
+  })
+
+  it("contains complete addresses for both stores", () => {
+    expect(CONTACT.addresses.kalahasti.full).toContain("Near Railway Station, Srikalahasti-517640")
+    expect(CONTACT.addresses.tirupati.full).toContain("Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati")
+  })
 })

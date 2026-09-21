@@ -46,7 +46,7 @@ export default function Footer() {
                   className="h-full w-full object-contain"
                 />
               </div>
-              <h3 className="font-sans text-xl font-semibold tracking-normal text-white sm:text-2xl">
+              <h3 className="font-serif text-xl font-bold tracking-normal text-white sm:text-2xl">
                 Srikalahasti Kalamkari
               </h3>
             </div>
@@ -65,21 +65,21 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="pt-3 flex flex-col gap-3 xl:flex-row xl:flex-wrap">
+            <div className="pt-3 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <a
-                href="https://www.instagram.com/srikalahasti_kalamkari_offical"
+                href={CONTACT.instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))]"
+                className="inline-flex w-fit items-center gap-2.5 rounded-full bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))]"
               >
                 <Instagram className="h-4 w-4" />
                 <span>Follow us on Instagram</span>
               </a>
               <a
-                href="https://youtube.com/@srikalahastikalamkari-u4d?si=1_yYDVL677cYJrrn"
+                href={CONTACT.youtube.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 rounded-full bg-[#FF0000] px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))]"
+                className="inline-flex w-fit items-center gap-2.5 rounded-full bg-[#FF0000] px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-gold-soft))]"
               >
                 <Youtube className="h-4 w-4" />
                 <span>Subscribe on YouTube</span>
@@ -158,14 +158,14 @@ export default function Footer() {
                 </a>
               </div>
 
-              <div className="space-y-3 border-t border-white/10 pt-2 text-[13px]">
+              <div className="space-y-3.5 border-t border-white/10 pt-2.5 text-[13px]">
                 <div className="flex items-start gap-2.5">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <div>
                     <div className="font-semibold text-white">
-                      Srikalahasti Kalamkari{" "}
+                      Srikalahasti (Store & Workshop){" "}
                       <a
-                        href="https://maps.app.goo.gl/Swct9jg3LUwAqvZP6?g_st=ic"
+                        href={CONTACT.addresses.kalahasti.mapUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="ml-1 inline-flex items-center gap-1 text-[11px] font-bold text-[hsl(var(--brand-gold-soft))] hover:underline"
@@ -173,7 +173,12 @@ export default function Footer() {
                         Map <ExternalLink className="h-3 w-3" />
                       </a>
                     </div>
-                    <div className="leading-snug text-white/75">#17-68, Bharathi Nagar, Tirupati Main Rd</div>
+                    <div className="leading-snug text-white/75">
+                      # 17-68, Bharathi Nagar, Tirupati Main Road, Near Railway Station, Srikalahasti-517640
+                    </div>
+                    <div className="mt-0.5 text-[12px] text-[hsl(var(--brand-gold-soft))] tabular-nums">
+                      Ph: +91 72888 48881 / 82 / 83
+                    </div>
                   </div>
                 </div>
 
@@ -181,7 +186,12 @@ export default function Footer() {
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--brand-gold-soft))]" />
                   <div>
                     <div className="font-semibold text-white">Tirupati Store</div>
-                    <div className="leading-snug text-white/75">#6-8-1126, NGOs Colony</div>
+                    <div className="leading-snug text-white/75">
+                      # 6-8-1126, NGOs Colony, Opp: Balaji Silk Emporium, Revenue Ward No 6, Tirupati
+                    </div>
+                    <div className="mt-0.5 text-[12px] text-[hsl(var(--brand-gold-soft))] tabular-nums">
+                      Ph: +91 70364 81999 / 82999 / 83999
+                    </div>
                   </div>
                 </div>
 
@@ -196,7 +206,7 @@ export default function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 pb-24 text-[12.5px] text-white/70 sm:flex-row sm:pb-6 sm:pr-28">
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center sm:justify-start sm:text-left">
-            <span>© 2026 Srikalahasti Kalamkari</span>
+            <span>© 2026 <span className="font-serif font-semibold">Srikalahasti Kalamkari</span></span>
             <span className="text-white/50">|</span>
             <Link href="/privacy" className="transition-colors hover:text-[hsl(var(--brand-gold-soft))]">Privacy Policy</Link>
             <span className="text-white/50">·</span>
@@ -206,7 +216,7 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col items-center gap-1 sm:items-end">
-            <div className="font-sans text-[13px] tracking-wide text-[hsl(var(--brand-gold-soft))]">
+            <div className="font-serif text-[13px] tracking-wide text-[hsl(var(--brand-gold-soft))]">
               Crafted with Devotion in Srikalahasti
             </div>
             <div className="font-sans text-[12px] text-white/50">

@@ -641,7 +641,7 @@ export default function ProductDetail() {
         {/* ── Buy block: gallery + purchase column ──────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 py-7 lg:py-10 items-start">
           {/* Gallery */}
-          <div className="lg:col-span-6 flex flex-col-reverse lg:flex-row gap-3 lg:gap-4">
+          <div className="lg:col-span-6 flex flex-col-reverse lg:flex-row lg:justify-center gap-3 lg:gap-4">
             {product?.images && product.images.length > 1 && (
               <div className="hidden lg:flex lg:flex-col gap-3 shrink-0 p-1">
                 {product.images.map((_, idx) => (
@@ -677,7 +677,7 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Main image — height-capped so the whole buy column stays above the fold */}
+            {/* Main image — width is capped from the screen height (keeping 4:5), so the whole photo fits without scrolling */}
             <div
               onClick={() => {
                 if (swipedRef.current) {
@@ -702,7 +702,7 @@ export default function ProductDetail() {
                 swipedRef.current = true
                 setSelectedImageIndex((prev) => (prev + (dx < 0 ? 1 : -1) + total) % total)
               }}
-              className="group relative flex-1 min-w-0 w-full aspect-[4/5] bg-[hsl(var(--brand-indigo-tint))] rounded-sm overflow-hidden shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)] cursor-zoom-in select-none touch-pan-y"
+              className="group relative flex-1 min-w-0 w-full mx-auto lg:mx-0 aspect-[4/5] max-w-[max(16rem,calc((100svh_-_13rem)*0.8))] lg:max-w-[max(18rem,calc((100svh_-_13.75rem)*0.8))] bg-[hsl(var(--brand-indigo-tint))] rounded-sm overflow-hidden shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)] cursor-zoom-in select-none touch-pan-y"
             >
               <OptimizedImage
                 src={mainProductImage}

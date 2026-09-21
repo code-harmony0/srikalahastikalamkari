@@ -171,7 +171,9 @@ const jsonLd = {
       telephone: "+91-72888-48881",
       address: {
         "@type": "PostalAddress",
+        streetAddress: "# 17-68, Bharathi Nagar, Tirupati Main Road, Near Railway Station",
         addressLocality: "Srikalahasti",
+        postalCode: "517640",
         addressRegion: "Andhra Pradesh",
         addressCountry: "IN",
       },
@@ -181,7 +183,7 @@ const jsonLd = {
         longitude: 79.6988,
       },
       priceRange: "₹₹",
-      image: "https://srikalahastikalamkari.inhttps://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full",
+      image: "https://imagedelivery.net/xGnXvGVZkNr8ZNcbFxAROQ/srikalahasti-logo/full",
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Kalamkari Sarees & Fabrics",
