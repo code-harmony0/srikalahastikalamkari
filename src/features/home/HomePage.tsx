@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { useReducedMotion } from "framer-motion"
 import { ArrowRight, BadgeCheck, Pause, Play, Star } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 import { productsService } from "@/services/products"
@@ -165,25 +165,30 @@ export default function HomePage() {
         aria-label="Srikalahasti Kalamkari"
         className="relative flex min-h-[calc(88svh-96px)] w-full items-center justify-center overflow-hidden bg-[hsl(var(--brand-midnight))] sm:min-h-[640px] lg:min-h-[calc(100svh-112px)]"
       >
-        <AnimatePresence mode="sync">
-          <motion.div
-            key={heroIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 1.6, ease: [0.16, 1, 0.3, 1] }}
+        {/* All slides pre-rendered in the DOM — no loading flash ever.
+            Active slide is shown via CSS opacity transition only. */}
+        {HERO_IMAGES.map((img, i) => (
+          <div
+            key={img.src}
             className="absolute inset-0"
+            style={{
+              opacity: i === heroIndex ? 1 : 0,
+              transition: reduceMotion ? "none" : "opacity 1.6s cubic-bezier(0.16,1,0.3,1)",
+              willChange: "opacity",
+              zIndex: i === heroIndex ? 1 : 0,
+            }}
           >
             <Image
-              src={HERO_IMAGES[heroIndex].src}
-              alt={HERO_IMAGES[heroIndex].alt}
+              src={img.src}
+              alt={i === 0 ? img.alt : ""}
               fill
-              priority={heroIndex === 0}
+              priority={i === 0}
+              loading={i === 0 ? undefined : "eager"}
               sizes="100vw"
               className="object-cover object-[center_40%]"
             />
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        ))}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,16,32,0.55)_0%,rgba(8,16,32,0.35)_45%,rgba(8,16,32,0.78)_100%)]" />
 
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-5 py-16 text-center">

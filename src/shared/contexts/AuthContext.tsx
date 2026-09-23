@@ -124,6 +124,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Phone Authentication with OTP
   const signInWithPhone = async (phoneNumber: string, recaptchaContainer: string) => {
+    // Helper: fully tear down any prior reCAPTCHA verifier
+    const destroyPreviousVerifier = () => {
+      if ((window as any).recaptchaVerifier) {
+        try { (window as any).recaptchaVerifier.clear() } catch (_) {}
+        (window as any).recaptchaVerifier = null
+      }
+    }
+
+    // Helper: create a brand-new child <div> inside the container so the
+    // Google reCAPTCHA library never sees a "previously rendered" element.
+    // This is the only reliable way to avoid the intermittent
+    // "reCAPTCHA has already been rendered in this element" error.
+    const createFreshRecaptchaElement = (containerId: string): string => {
+      const parent = document.getElementById(containerId)
+      if (parent) parent.innerHTML = ""
+
+      const freshId = `${containerId}-${Date.now()}`
+      const el = document.createElement("div")
+      el.id = freshId
+      parent?.appendChild(el)
+      return freshId
+    }
+
     try {
       // In development mode, provide a reliable dev auth flow
       // (avoids reCAPTCHA domain mismatch and Firebase AppCheck failures on localhost)
@@ -152,18 +175,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Init App Check on first phone auth attempt (deferred from page load)
       await initAppCheckOnDemand()
 
-      // Destroy any existing verifier to prevent "reCAPTCHA has already been rendered" error
-      if ((window as any).recaptchaVerifier) {
-        try { (window as any).recaptchaVerifier.clear() } catch (_) {}
-        (window as any).recaptchaVerifier = null
-      }
+      // Destroy any existing verifier
+      destroyPreviousVerifier()
 
-      // Clear and reset the container DOM node
-      const container = document.getElementById(recaptchaContainer)
-      if (container) container.innerHTML = ""
+      // Create a fresh DOM element so reCAPTCHA never complains about re-use
+      const freshElementId = createFreshRecaptchaElement(recaptchaContainer)
 
-      // Create a fresh invisible verifier
-      const verifier = new RecaptchaVerifier(auth, recaptchaContainer, {
+      // Create a fresh invisible verifier on the new element
+      const verifier = new RecaptchaVerifier(auth, freshElementId, {
         size: "invisible",
         callback: () => {}, // no-op; required for invisible reCAPTCHA
       })
@@ -178,10 +197,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error: any) {
       console.error("Error sending OTP:", error)
       // Always clean up on failure so the next attempt starts fresh
-      if ((window as any).recaptchaVerifier) {
-        try { (window as any).recaptchaVerifier.clear() } catch (_) {}
-        (window as any).recaptchaVerifier = null
-      }
+      destroyPreviousVerifier()
       const container = document.getElementById(recaptchaContainer)
       if (container) container.innerHTML = ""
       return { error }

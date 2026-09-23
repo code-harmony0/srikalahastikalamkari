@@ -131,6 +131,9 @@ export default function ProductDetail() {
 
   const { averageRating, totalReviews } = useReviews(product?.id || "")
 
+  // Track which full-res src has actually finished loading to avoid flicker.
+  const [loadedModalSrc, setLoadedModalSrc] = useState<string | null>(null)
+
   // Reset zoom & pan when opening modal or changing modal image
   const resetZoom = useCallback(() => {
     setZoomLevel(1)
@@ -142,6 +145,7 @@ export default function ProductDetail() {
   const handleOpenZoomModal = useCallback(() => {
     if (!product?.images?.length) return
     setModalImageIndex(selectedImageIndex)
+    setLoadedModalSrc(null)
     resetZoom()
     setIsImageModalOpen(true)
   }, [product?.images, selectedImageIndex, resetZoom])
@@ -156,6 +160,7 @@ export default function ProductDetail() {
       e?.stopPropagation()
       const total = product?.images?.length || 0
       if (total <= 1) return
+      setLoadedModalSrc(null)
       setModalImageIndex((prev) => (prev + 1) % total)
       resetZoom()
     },
@@ -167,6 +172,7 @@ export default function ProductDetail() {
       e?.stopPropagation()
       const total = product?.images?.length || 0
       if (total <= 1) return
+      setLoadedModalSrc(null)
       setModalImageIndex((prev) => (prev - 1 + total) % total)
       resetZoom()
     },
@@ -321,6 +327,14 @@ export default function ProductDetail() {
     lastTouchDistanceRef.current = null
   }, [])
 
+  // Lock body scroll when fullscreen viewer is open to prevent background shifts
+  useEffect(() => {
+    if (!isImageModalOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [isImageModalOpen])
+
   // Keyboard navigation for zoom modal
   useEffect(() => {
     if (!isImageModalOpen) return
@@ -367,12 +381,35 @@ export default function ProductDetail() {
   }, [product?.images, selectedImageIndex])
 
   // Fullscreen view uses the full-size image so zooming stays sharp.
-  const modalImageSrc = useMemo(() => {
+  const modalImageSrcFull = useMemo(() => {
     const img =
       getImageTier(product?.images, "full", modalImageIndex) ||
       getImageTier(product?.images, "medium", modalImageIndex)
     return img || "/images/products/product-placeholder.png"
   }, [product?.images, modalImageIndex])
+
+  // Medium-res fallback is already cached from the product page, so it shows instantly.
+  const modalImageSrcMedium = useMemo(() => {
+    const img = getImageTier(product?.images, "medium", modalImageIndex)
+    return img || "/images/products/product-placeholder.png"
+  }, [product?.images, modalImageIndex])
+
+  // Show the full-res when loaded, otherwise fall back to the cached medium.
+  const modalImageSrc = loadedModalSrc === modalImageSrcFull ? modalImageSrcFull : modalImageSrcMedium
+
+  // Preload full-res in the background.
+  useEffect(() => {
+    if (!isImageModalOpen || !modalImageSrcFull) return
+    // If the full src is the same as medium, it's already loaded.
+    if (modalImageSrcFull === modalImageSrcMedium) {
+      setLoadedModalSrc(modalImageSrcFull)
+      return
+    }
+    const img = new window.Image()
+    img.src = modalImageSrcFull
+    img.onload = () => setLoadedModalSrc(modalImageSrcFull)
+    return () => { img.onload = null }
+  }, [isImageModalOpen, modalImageSrcFull, modalImageSrcMedium])
 
   // Optimized thumbnails
   const thumbnailImages = useMemo(() => {
@@ -1018,7 +1055,7 @@ export default function ProductDetail() {
               </li>
               <li className="flex gap-2.5">
                 {diamond}
-                <span>Dry clean or gentle hand wash only. Do not machine wash.</span>
+                <span>Dry clean only.</span>
               </li>
             </ul>
             <a
@@ -1223,7 +1260,8 @@ export default function ProductDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center select-none"
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed inset-0 z-[70] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center select-none will-change-[opacity]"
             onClick={handleCloseZoomModal}
           >
             {/* Top Bar with Controls */}
@@ -1329,8 +1367,10 @@ export default function ProductDetail() {
                 style={{
                   transform: `translate(${panPosition.x}px, ${panPosition.y}px) scale(${zoomLevel})`,
                   transition: isDragging ? "none" : "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                  willChange: "transform",
                 }}
               >
+                {/* Show medium-res immediately (already cached), swap to full once loaded */}
                 <OptimizedImage
                   src={modalImageSrc}
                   alt="Product Full View"
@@ -1338,7 +1378,7 @@ export default function ProductDetail() {
                   priority={true}
                   className="select-none pointer-events-none"
                   objectFit="contain"
-                  variant="full"
+                  variant={loadedModalSrc === modalImageSrcFull ? "full" : "medium"}
                   context="zoom"
                   quality={85}
                   sizes="(min-width: 1024px) 1200px, 100vw"

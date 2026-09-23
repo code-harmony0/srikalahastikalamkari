@@ -1,6 +1,6 @@
 "use client"
 
-import React, { memo, useEffect, useMemo, useState } from "react"
+import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import Image from "next/image"
 import { cn } from "@/shared/utils"
 import {
@@ -134,8 +134,13 @@ export const OptimizedImage = memo(
 
     const [imgSrc, setImgSrc] = useState<string>(resolvedSrc)
     const [hasError, setHasError] = useState(false)
+    // Track previous resolvedSrc so we only update state when it genuinely changes,
+    // not on every render, to avoid the extra repaint that causes flicker.
+    const prevResolvedSrcRef = useRef(resolvedSrc)
 
     useEffect(() => {
+      if (prevResolvedSrcRef.current === resolvedSrc) return
+      prevResolvedSrcRef.current = resolvedSrc
       setHasError(false)
       setImgSrc(resolvedSrc)
     }, [resolvedSrc])
@@ -214,7 +219,7 @@ export const OptimizedImage = memo(
         width={fill ? undefined : width}
         height={fill ? undefined : height}
         fill={fill}
-        className={cn("transition-opacity duration-300", className)}
+        className={cn(className)}
         priority={priority}
         loading={priority ? undefined : loading}
         sizes={sizes}
