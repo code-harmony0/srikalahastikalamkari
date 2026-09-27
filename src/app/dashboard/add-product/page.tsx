@@ -176,11 +176,11 @@ const AddProduct = () => {
   })
 
   // UI state
-  const [imageFiles, setImageFiles] = useState<File[]>([])
+  const [imageFiles, setImageFiles] = useState<(File | null)[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [compressing, setCompressing] = useState(false)
-  const [compressionStats, setCompressionStats] = useState<string[]>([])
+  const [compressionStats, setCompressionStats] = useState<(string | null)[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [categories, setCategories] = useState<any[]>([])
   const [subCategories, setSubCategories] = useState<any[]>([])
@@ -250,10 +250,10 @@ const AddProduct = () => {
     console.info("[image-debug][dashboard-product-form:state]", {
       mode: isEditMode ? "edit" : "create",
       editingProductId,
-      pendingUploadFiles: imageFiles.map((file) => ({
-        name: file.name,
-        type: file.type,
-        sizeBytes: file.size,
+      pendingUploadFiles: imageFiles.filter(Boolean).map((file) => ({
+        name: file!.name,
+        type: file!.type,
+        sizeBytes: file!.size,
       })),
       previewCount: imagePreviews.length,
       previews: imagePreviews.map((ref, index) => ({
@@ -448,6 +448,8 @@ const AddProduct = () => {
 
       if (existingImages.length > 0) {
         setImagePreviews(existingImages)
+        setImageFiles(existingImages.map(() => null))
+        setCompressionStats(existingImages.map(() => null))
       }
 
       // Clear the flag after a short delay
@@ -629,6 +631,32 @@ const AddProduct = () => {
     setCompressionStats((prev) => prev.filter((_, i) => i !== index))
   }
 
+  // Set image as thumbnail (move to front)
+  const makeThumbnail = (index: number) => {
+    if (index === 0) return
+    
+    setImageFiles((prev) => {
+      const newFiles = [...prev]
+      const [item] = newFiles.splice(index, 1)
+      newFiles.unshift(item)
+      return newFiles
+    })
+    
+    setImagePreviews((prev) => {
+      const newPreviews = [...prev]
+      const [item] = newPreviews.splice(index, 1)
+      newPreviews.unshift(item)
+      return newPreviews
+    })
+    
+    setCompressionStats((prev) => {
+      const newStats = [...prev]
+      const [item] = newStats.splice(index, 1)
+      newStats.unshift(item)
+      return newStats
+    })
+  }
+
   // Clear all images
   const clearAllImages = () => {
     setImageFiles([])
@@ -763,7 +791,7 @@ const AddProduct = () => {
     setLoading(true)
 
     try {
-      let imageUrls: string[] = []
+      // Prepare imageUrls array
 
       // 1. Keep existing persisted refs that haven't been removed.
       // New file previews are data/blob URLs and are uploaded below.
@@ -780,40 +808,58 @@ const AddProduct = () => {
             ref: summarizeImageRef(ref),
             debug: getProductImageDebugInfo(ref, "thumb"),
           })),
-          newUploadFiles: imageFiles.map((file) => ({
-            name: file.name,
-            type: file.type,
-            sizeBytes: file.size,
+          newUploadFiles: imageFiles.filter(Boolean).map((file) => ({
+            name: file!.name,
+            type: file!.type,
+            sizeBytes: file!.size,
           })),
         })
       }
 
-      // 2. Upload all files in `imageFiles`
-      const newUploadPromises = imageFiles.map((file) => uploadImage(file))
-      const uploadResults = await Promise.all(newUploadPromises)
+      // 1. & 2. & 3. Iterate through arrays perfectly in sync to preserve order!
+      let imageUrls: string[] = new Array(imagePreviews.length).fill("")
+      const uploadPromises = []
+
+      for (let i = 0; i < imageFiles.length; i++) {
+        if (imageFiles[i]) {
+          // New file -> Upload
+          const promise = uploadImage(imageFiles[i]!).then((result) => ({
+            index: i,
+            result,
+          }))
+          uploadPromises.push(promise)
+        } else {
+          // Existing image URL -> Keep it
+          imageUrls[i] = imagePreviews[i]
+        }
+      }
+
+      const uploadResults = await Promise.all(uploadPromises)
 
       if (isProductImageDebugEnabled()) {
         console.info("[image-debug][dashboard-product-form:upload-results]", {
-          results: uploadResults.map((result, index) => ({
-            index,
-            hasError: Boolean(result.error),
-            errorMessage: result.error?.message,
-            storedRef: result.url,
-            debug: getProductImageDebugInfo(result.url, "thumb"),
+          results: uploadResults.map((r) => ({
+            index: r.index,
+            hasError: Boolean(r.result.error),
+            errorMessage: r.result.error?.message,
+            storedRef: r.result.url,
+            debug: getProductImageDebugInfo(r.result.url, "thumb"),
           })),
         })
       }
 
       // Check for errors
-      const failedUploads = uploadResults.filter((r) => r.error)
+      const failedUploads = uploadResults.filter((r) => r.result.error)
       if (failedUploads.length > 0) {
-        throw new Error(`Failed to upload ${failedUploads.length} images`)
+        throw new Error(
+          `Failed to upload ${failedUploads.length} images`
+        )
       }
 
-      const newUrls = uploadResults.map((r) => r.url as string)
-
-      // 3. Combine
-      imageUrls = [...existingUrls, ...newUrls]
+      // Assign uploaded URLs back to their exact index position
+      for (const r of uploadResults) {
+        imageUrls[r.index] = r.result.url!
+      }
 
       if (isProductImageDebugEnabled()) {
         console.info("[image-debug][dashboard-product-form:final-images]", {
@@ -1611,6 +1657,25 @@ const AddProduct = () => {
                           >
                             <X className="h-3 w-3" />
                           </Button>
+                          {index > 0 && (
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              className="absolute top-1 left-1 h-6 text-[10px] px-2 rounded-md z-10 shadow-md opacity-90 hover:opacity-100"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                makeThumbnail(index)
+                              }}
+                            >
+                              Set Main
+                            </Button>
+                          )}
+                          {index === 0 && (
+                            <div className="absolute top-1 left-1 h-6 text-[10px] px-2 bg-[#D49217] text-white rounded-md z-10 shadow-md flex items-center font-medium">
+                              Thumbnail
+                            </div>
+                          )}
                           <div className="aspect-square bg-white relative">
                             {preview.startsWith("data:") ||
                             preview.startsWith("blob:") ? (
@@ -1644,20 +1709,20 @@ const AddProduct = () => {
                     </div>
 
                     {/* Add More Button */}
-                    {imageFiles.length < 5 && (
+                    {imagePreviews.length < 5 && (
                       <div
                         className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-[#D49217] transition-colors"
                         onClick={handleBoxClick}
                       >
                         <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
                         <p className="text-sm text-[#D49217]">
-                          Add more images ({imageFiles.length}/5)
+                          Add more images ({imagePreviews.length}/5)
                         </p>
                       </div>
                     )}
 
                     {/* Max images message */}
-                    {imageFiles.length >= 5 && (
+                    {imagePreviews.length >= 5 && (
                       <div className="text-center p-4 bg-gray-50 rounded-lg">
                         <p className="text-sm text-muted-foreground">
                           Maximum of 5 images reached

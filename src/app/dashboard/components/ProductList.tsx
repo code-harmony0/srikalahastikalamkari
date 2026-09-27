@@ -302,6 +302,14 @@ const ProductList = () => {
             Refresh
           </Button>
           <Button
+            variant="outline"
+            onClick={() => router.push("/dashboard/products/bulk-import")}
+            className="h-9 gap-2 px-4 rounded-lg transition-all"
+          >
+            <Plus className="h-4 w-4" />
+            Bulk Import
+          </Button>
+          <Button
             onClick={() => router.push("/dashboard/add-product")}
             className="bg-slate-900 hover:bg-slate-800 text-white shadow-md h-9 gap-2 px-4 rounded-lg transition-all"
           >
