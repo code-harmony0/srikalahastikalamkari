@@ -48,7 +48,7 @@ function timingSafeEqual(a: string, b: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
-    const ip = request.ip || request.headers.get("x-forwarded-for") || "unknown"
+    const ip = request.headers.get("x-forwarded-for") || "unknown"
     const rateLimit = checkRateLimit(ip)
 
     if (!rateLimit.allowed) {
