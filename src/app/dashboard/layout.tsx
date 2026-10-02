@@ -27,7 +27,7 @@ export default async function AdminDashboardLayout({
   // in the root layout keeps it off every storefront page.
   return (
     <InventoryProvider>
-      <DashboardLayout>{children}</DashboardLayout>
+      <DashboardLayout adminSession={session}>{children}</DashboardLayout>
     </InventoryProvider>
   );
 }

@@ -107,6 +107,25 @@
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Shared control treatment for dashboard settings pages. */
+.dashboard-root .field {
+  height: 36px;
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  padding: 0 12px;
+  color: #0f172a;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.dashboard-root .field:focus {
+  border-color: #475569;
+  box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.13);
+}
+
 .dashboard {
   padding: var(--space-md) var(--space-lg);
   max-width: 1800px;
@@ -185,4 +204,3 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-

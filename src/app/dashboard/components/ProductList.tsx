@@ -30,7 +30,26 @@ import {
   EyeOff,
   RefreshCw,
   Star,
+  MoreVertical,
+  Copy,
+  X,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/shared/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetFooter,
+  SheetClose,
+} from "@/shared/ui/sheet";
 import { getCategories } from "@/services/categories";
 import { toast } from "sonner";
 import {
@@ -60,7 +79,7 @@ import { getImageTier } from "@/lib/image-tiers";
 
 interface FilterState {
   categories: string[];
-  priceRange: [number, number];
+  priceRange: [number | "", number | ""];
   colors: string[];
   inStock: boolean;
   isVisible: boolean | null; // Added visibility filter
@@ -134,7 +153,7 @@ const ProductList = () => {
   const [filters, setFilters] = useState<FilterState>({
     // New state
     categories: [],
-    priceRange: [0, 1000000],
+    priceRange: ["", ""],
     colors: [],
     inStock: false,
     isVisible: null, // Default to show all
@@ -147,8 +166,8 @@ const ProductList = () => {
     search: searchQuery || undefined,
     category_id: filters.categories.length > 0 ? filters.categories : undefined,
     sub_category_id: subCategoryFilter !== "all" ? subCategoryFilter : undefined,
-    price_min: filters.priceRange[0],
-    price_max: filters.priceRange[1],
+    price_min: filters.priceRange[0] === "" ? undefined : Number(filters.priceRange[0]),
+    price_max: filters.priceRange[1] === "" ? undefined : Number(filters.priceRange[1]),
     include_out_of_stock: !filters.inStock, // Logic inversion: inStock=true means only available
     in_stock: filters.inStock || undefined,
     sort_by: sortBy
@@ -210,7 +229,7 @@ const ProductList = () => {
   const clearFilters = () => {
     setFilters({
       categories: [],
-      priceRange: [0, 1000000],
+      priceRange: ["", ""],
       colors: [],
       inStock: false,
       isVisible: null,
@@ -273,8 +292,7 @@ const ProductList = () => {
     if (filters.categories.length > 0) count++;
     if (subCategoryFilter !== "all") count++;
     if (filters.colors.length > 0) count++;
-    if (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000000)
-      count++;
+    if (filters.priceRange[0] !== "" || filters.priceRange[1] !== "") count++;
     if (filters.inStock) count++;
     if (filters.isVisible !== null) count++;
     return count;
@@ -360,250 +378,303 @@ const ProductList = () => {
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            placeholder="Search products by name, category..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-11 border-slate-300  rounded-xl"
-          />
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input
+              placeholder="Search products by name, category..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-11 border-slate-300 rounded-xl"
+            />
+          </div>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full sm:w-[200px] h-11 border-slate-300 rounded-xl">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <ArrowUpDown className="h-4 w-4" />
+                  <SelectValue placeholder="Sort by" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="oldest">Oldest First</SelectItem>
+                <SelectItem value="name-asc">Name (A-Z)</SelectItem>
+                <SelectItem value="name-desc">Name (Z-A)</SelectItem>
+                <SelectItem value="price-low">Price (Low to High)</SelectItem>
+                <SelectItem value="price-high">Price (High to Low)</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Sheet open={showFilters} onOpenChange={setShowFilters}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="relative h-11 px-4 text-base border-slate-300 rounded-xl"
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filters
+                  {activeFilterCount > 0 && (
+                    <Badge className="ml-2 bg-slate-900 text-white px-2 py-0.5 rounded-full">
+                      {activeFilterCount}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+                <SheetHeader className="mb-6">
+                  <SheetTitle className="text-xl font-bold">Filters</SheetTitle>
+                </SheetHeader>
+                
+                <div className="flex flex-col gap-6">
+                  {/* Categories & Subcategories */}
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-4">
+                    <h4 className="font-semibold text-slate-900">Category</h4>
+                    <div className="space-y-4">
+                       <div>
+                          <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wider">Main Category</label>
+                          <Select
+                            value={filters.categories[0] || "all"}
+                            onValueChange={(val) => {
+                               const newCats = val === "all" ? [] : [val];
+                               setFilters(prev => ({...prev, categories: newCats}));
+                               setSubCategoryFilter("all");
+                            }}
+                          >
+                            <SelectTrigger className="w-full bg-white border-slate-200 h-10 rounded-xl">
+                              <SelectValue placeholder="All Categories" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl">
+                              <SelectItem value="all">All Categories</SelectItem>
+                              {allCategories.filter(c => !c.parent_id).map(c => (
+                                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                       </div>
+                       <div>
+                          <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wider">Sub Category</label>
+                          <Select
+                            value={subCategoryFilter}
+                            onValueChange={setSubCategoryFilter}
+                            disabled={filters.categories.length === 0}
+                          >
+                            <SelectTrigger className="w-full bg-white border-slate-200 h-10 rounded-xl">
+                              <SelectValue placeholder="All Sub Categories" />
+                            </SelectTrigger>
+                             <SelectContent className="rounded-xl">
+                              <SelectItem value="all">All Sub Categories</SelectItem>
+                              {allCategories
+                                .filter(c => c.parent_id === filters.categories[0])
+                                .map(c => (
+                                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Colors */}
+                  {availableColors.length > 0 && (
+                    <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-4">
+                      <h4 className="font-semibold text-slate-900">Colors</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {availableColors.map((color) => (
+                          <Badge
+                            key={color}
+                            variant="outline"
+                            className={`cursor-pointer px-3 py-1.5 rounded-lg ${filters.colors.includes(color) ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border-slate-200'}`}
+                            onClick={() => toggleColor(color)}
+                          >
+                            {color}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Price Range */}
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-4">
+                    <h4 className="font-semibold text-slate-900">
+                      Price Range (₹)
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wider">
+                          Min Price
+                        </label>
+                        <Input
+                          type="number"
+                          placeholder="Min"
+                          value={filters.priceRange[0]}
+                          onChange={(e) =>
+                            setFilters((prev) => ({
+                              ...prev,
+                              priceRange: [
+                                e.target.value === "" ? "" : Number(e.target.value),
+                                prev.priceRange[1],
+                              ],
+                            }))
+                          }
+                          className="w-full bg-white border-slate-200 h-10 rounded-xl"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wider">
+                          Max Price
+                        </label>
+                        <Input
+                          type="number"
+                          placeholder="Max"
+                          value={filters.priceRange[1]}
+                          onChange={(e) =>
+                            setFilters((prev) => ({
+                              ...prev,
+                              priceRange: [
+                                prev.priceRange[0],
+                                e.target.value === "" ? "" : Number(e.target.value),
+                              ],
+                            }))
+                          }
+                          className="w-full bg-white border-slate-200 h-10 rounded-xl"
+                          min="0"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Settings */}
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-6">
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-slate-900 text-sm">
+                        Availability
+                      </h4>
+                      <label className="flex items-center gap-3 cursor-pointer text-slate-700 hover:text-slate-900 transition-colors bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                        <input
+                          type="checkbox"
+                          checked={filters.inStock}
+                          onChange={(e) =>
+                            setFilters((prev) => ({
+                              ...prev,
+                              inStock: e.target.checked,
+                            }))
+                          }
+                          className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+                        />
+                        <span className="text-sm font-medium">In Stock Only</span>
+                      </label>
+                    </div>
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-slate-900 text-sm">
+                        Visibility
+                      </h4>
+                      <div className="flex flex-col gap-2">
+                        <label className="flex items-center gap-3 cursor-pointer text-slate-700 hover:text-slate-900 transition-colors bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                          <input
+                            type="radio"
+                            name="visibility"
+                            checked={filters.isVisible === null}
+                            onChange={() =>
+                              setFilters((prev) => ({ ...prev, isVisible: null }))
+                            }
+                            className="h-4 w-4 rounded-full border-slate-300 text-slate-900 focus:ring-slate-900"
+                          />
+                          <span className="text-sm font-medium">Show All</span>
+                        </label>
+                        <label className="flex items-center gap-3 cursor-pointer text-slate-700 hover:text-slate-900 transition-colors bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                          <input
+                            type="radio"
+                            name="visibility"
+                            checked={filters.isVisible === true}
+                            onChange={() =>
+                              setFilters((prev) => ({ ...prev, isVisible: true }))
+                            }
+                            className="h-4 w-4 rounded-full border-slate-300 text-slate-900 focus:ring-slate-900"
+                          />
+                          <span className="text-sm font-medium">Visible Only</span>
+                        </label>
+                        <label className="flex items-center gap-3 cursor-pointer text-slate-700 hover:text-slate-900 transition-colors bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                          <input
+                            type="radio"
+                            name="visibility"
+                            checked={filters.isVisible === false}
+                            onChange={() =>
+                              setFilters((prev) => ({ ...prev, isVisible: false }))
+                            }
+                            className="h-4 w-4 rounded-full border-slate-300 text-slate-900 focus:ring-slate-900"
+                          />
+                          <span className="text-sm font-medium">Hidden Only</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <SheetFooter className="mt-8 pt-4 border-t border-slate-100 flex-row justify-between gap-3 sm:justify-between">
+                   <Button variant="ghost" onClick={clearFilters} disabled={activeFilterCount === 0}>
+                     Clear All
+                   </Button>
+                   <SheetClose asChild>
+                     <Button className="bg-slate-900 text-white">Apply Filters</Button>
+                   </SheetClose>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-full sm:w-[200px] h-11 border-slate-300 rounded-xl">
-              <div className="flex items-center gap-2 text-slate-600">
-                <ArrowUpDown className="h-4 w-4" />
-                <SelectValue placeholder="Sort by" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">Newest First</SelectItem>
-              <SelectItem value="oldest">Oldest First</SelectItem>
-              <SelectItem value="name-asc">Name (A-Z)</SelectItem>
-              <SelectItem value="name-desc">Name (Z-A)</SelectItem>
-              <SelectItem value="price-low">Price (Low to High)</SelectItem>
-              <SelectItem value="price-high">Price (High to Low)</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            variant="outline"
-            className="relative h-11 px-4 text-base border-slate-300 rounded-xl"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="h-4 w-4 mr-2" />
-            Filters
-            {activeFilterCount > 0 && (
-              <Badge className="ml-2 bg-slate-900 text-white px-2 py-0.5 rounded-full">
-                {activeFilterCount}
+        
+        {/* Active Filter Chips */}
+        {activeFilterCount > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm text-slate-500 font-medium mr-2">Active Filters:</span>
+            {filters.categories.length > 0 && (
+              <Badge variant="secondary" className="bg-white text-slate-700 hover:bg-slate-100 cursor-pointer border border-slate-200" onClick={() => { setFilters(prev => ({...prev, categories: []})); setSubCategoryFilter("all"); }}>
+                Category
+                <X className="w-3 h-3 ml-1 text-slate-400" />
               </Badge>
             )}
-          </Button>
-        </div>
-      </div>
-
-      {/* Filter Panel */}
-      {showFilters && (
-        <div className="mb-8 p-6 border border-slate-100 rounded-2xl bg-white shadow-sm">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-slate-900">
-              Advanced Filters
-            </h3>
-            <Button variant="ghost" size="sm" onClick={clearFilters}>
-              Clear All
+            {subCategoryFilter !== "all" && (
+              <Badge variant="secondary" className="bg-white text-slate-700 hover:bg-slate-100 cursor-pointer border border-slate-200" onClick={() => setSubCategoryFilter("all")}>
+                Subcategory
+                <X className="w-3 h-3 ml-1 text-slate-400" />
+              </Badge>
+            )}
+            {filters.colors.map(color => (
+              <Badge key={color} variant="secondary" className="bg-white text-slate-700 hover:bg-slate-100 cursor-pointer border border-slate-200" onClick={() => toggleColor(color)}>
+                {color}
+                <X className="w-3 h-3 ml-1 text-slate-400" />
+              </Badge>
+            ))}
+            {(filters.priceRange[0] !== "" || filters.priceRange[1] !== "") && (
+              <Badge variant="secondary" className="bg-white text-slate-700 hover:bg-slate-100 cursor-pointer border border-slate-200" onClick={() => setFilters(prev => ({...prev, priceRange: ["", ""]}))}>
+                Price
+                <X className="w-3 h-3 ml-1 text-slate-400" />
+              </Badge>
+            )}
+            {filters.inStock && (
+              <Badge variant="secondary" className="bg-white text-slate-700 hover:bg-slate-100 cursor-pointer border border-slate-200" onClick={() => setFilters(prev => ({...prev, inStock: false}))}>
+                In Stock
+                <X className="w-3 h-3 ml-1 text-slate-400" />
+              </Badge>
+            )}
+            {filters.isVisible !== null && (
+              <Badge variant="secondary" className="bg-white text-slate-700 hover:bg-slate-100 cursor-pointer border border-slate-200" onClick={() => setFilters(prev => ({...prev, isVisible: null}))}>
+                {filters.isVisible ? 'Visible' : 'Hidden'}
+                <X className="w-3 h-3 ml-1 text-slate-400" />
+              </Badge>
+            )}
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs h-6 px-2 text-slate-500 hover:text-slate-900 ml-2">
+               Clear All
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Categories & Subcategories */}
-            <div className="md:col-span-2 space-y-4">
-              <h4 className="font-semibold text-slate-700 mb-3">Categories</h4>
-              <div className="grid grid-cols-2 gap-4">
-                 <div>
-                    <label className="text-xs font-medium text-slate-500 mb-1 block">Category</label>
-                    <Select
-                      value={filters.categories[0] || "all"}
-                      onValueChange={(val) => {
-                         const newCats = val === "all" ? [] : [val];
-                         setFilters(prev => ({...prev, categories: newCats}));
-                         setSubCategoryFilter("all");
-                      }}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="All Categories" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Categories</SelectItem>
-                        {allCategories.filter(c => !c.parent_id).map(c => (
-                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                 </div>
-                 <div>
-                    <label className="text-xs font-medium text-slate-500 mb-1 block">Sub Category</label>
-                    <Select
-                      value={subCategoryFilter}
-                      onValueChange={setSubCategoryFilter}
-                      disabled={filters.categories.length === 0}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="All Sub Categories" />
-                      </SelectTrigger>
-                       <SelectContent>
-                        <SelectItem value="all">All Sub Categories</SelectItem>
-                        {allCategories
-                          .filter(c => c.parent_id === filters.categories[0])
-                          .map(c => (
-                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                 </div>
-              </div>
-            </div>
-
-            {/* Colors */}
-            <div>
-              <h4 className="font-semibold text-slate-700 mb-3">Colors</h4>
-              <div className="space-y-2">
-                {availableColors.map((color) => (
-                  <label
-                    key={color}
-                    className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={filters.colors.includes(color)}
-                      onChange={() => toggleColor(color)}
-                      className="rounded border-slate-300 text-slate-900 "
-                    />
-                    <span className="text-sm">{color}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Price Range */}
-            <div>
-              <h4 className="font-semibold text-slate-700 mb-3">
-                Price Range (₹)
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs font-medium text-slate-500 mb-1 block">
-                    Min Price
-                  </label>
-                  <Input
-                    type="number"
-                    value={filters.priceRange[0]}
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        priceRange: [
-                          Number(e.target.value),
-                          prev.priceRange[1],
-                        ],
-                      }))
-                    }
-                    className="w-full px-3 py-2 border-slate-300 rounded-xl bg-slate-50 "
-                    min="0"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-slate-500 mb-1 block">
-                    Max Price
-                  </label>
-                  <Input
-                    type="number"
-                    value={filters.priceRange[1]}
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        priceRange: [
-                          prev.priceRange[0],
-                          Number(e.target.value),
-                        ],
-                      }))
-                    }
-                    className="w-full px-3 py-2 border-slate-300 rounded-xl bg-slate-50 "
-                    min="0"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Availability and Visibility */}
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold text-slate-700 mb-3">
-                  Availability
-                </h4>
-                <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={filters.inStock}
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        inStock: e.target.checked,
-                      }))
-                    }
-                    className="rounded border-slate-300 text-slate-900 "
-                  />
-                  <span className="text-sm">In Stock Only</span>
-                </label>
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-700 mb-3">
-                  Visibility
-                </h4>
-                <div className="flex flex-col space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
-                    <input
-                      type="radio"
-                      name="visibility"
-                      checked={filters.isVisible === null}
-                      onChange={() =>
-                        setFilters((prev) => ({ ...prev, isVisible: null }))
-                      }
-                      className="rounded-full border-slate-300 text-slate-900 "
-                    />
-                    <span className="text-sm">Show All</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
-                    <input
-                      type="radio"
-                      name="visibility"
-                      checked={filters.isVisible === true}
-                      onChange={() =>
-                        setFilters((prev) => ({ ...prev, isVisible: true }))
-                      }
-                      className="rounded-full border-slate-300 text-slate-900 "
-                    />
-                    <span className="text-sm">Visible</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
-                    <input
-                      type="radio"
-                      name="visibility"
-                      checked={filters.isVisible === false}
-                      onChange={() =>
-                        setFilters((prev) => ({ ...prev, isVisible: false }))
-                      }
-                      className="rounded-full border-slate-300 text-slate-900 "
-                    />
-                    <span className="text-sm">Hidden</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Product Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <Table>
           <TableHeader className="bg-slate-50/80">
             <TableRow className="hover:bg-transparent border-b border-slate-300">
@@ -625,9 +696,6 @@ const ProductList = () => {
               <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">
                 Status
               </TableHead>
-               <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 text-center">
-                Featured
-              </TableHead>
               <TableHead className="text-right font-semibold text-xs uppercase tracking-wider text-slate-500 pr-6 py-4">
                 Actions
               </TableHead>
@@ -636,7 +704,7 @@ const ProductList = () => {
           <TableBody>
             {isQueryLoading ? (
                <TableRow>
-                 <TableCell colSpan={8} className="h-48 text-center text-slate-500">
+                 <TableCell colSpan={7} className="h-48 text-center text-slate-500">
                    <div className="flex flex-col items-center justify-center gap-2 h-full">
                       <RefreshCw className="h-6 w-6 animate-spin text-slate-400" />
                       <p>Loading products...</p>
@@ -645,7 +713,7 @@ const ProductList = () => {
                </TableRow>
             ) : filteredAndSortedProducts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="h-64 text-center">
+                <TableCell colSpan={7} className="h-64 text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400">
                     <Package className="h-12 w-12 mb-4 text-slate-200" />
                     <p className="text-lg font-medium text-slate-900">
@@ -666,12 +734,10 @@ const ProductList = () => {
                     className={`group hover:bg-slate-50/50 border-slate-50 transition-colors ${!isVisible ? "opacity-50" : ""}`}
                   >
                     <TableCell
-                      className="pl-6 py-4"
-                      onClick={() => {
-                        router.push(`/dashboard/products/${product.id}`);
-                      }}
+                      className="pl-6 py-4 cursor-pointer"
+                      onClick={() => handleEdit(product)}
                     >
-                      <div className="relative h-16 w-16 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden">
+                      <div className="relative h-12 w-12 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden">
                         <OptimizedImage
                           src={
                             getImageTier(product.images, "thumb", 0) ||
@@ -682,42 +748,44 @@ const ProductList = () => {
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-500"
                           imageType="thumbnail"
-                          sizes="64px"
+                          sizes="48px"
                           placeholder="empty"
                         />
                       </div>
                     </TableCell>
                     <TableCell
-                      onClick={() =>
-                        router.push(`/dashboard/products/${product.id}`)
-                      }
+                      className="cursor-pointer"
+                      onClick={() => handleEdit(product)}
                     >
                       <div>
-                        <div>
+                        <div className="flex items-center gap-2">
                           <p className="font-bold text-slate-900 text-base">
                             {product.name}
                           </p>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            <p className="text-xs text-slate-500 line-clamp-1 max-w-[200px]">
-                              {product.description}
-                            </p>
-                            {!isVisible && (
-                              <Badge
-                                variant="outline"
-                                className="bg-slate-100 text-slate-600 border-slate-300 text-[10px] px-1.5 py-0"
-                              >
-                                <EyeOff className="h-3 w-3 mr-1" />
-                                Hidden
-                              </Badge>
-                            )}
-                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          {product.sku ? (
+                            <code className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-mono font-semibold text-slate-600 border border-slate-200 tracking-wide">
+                              {product.sku}
+                            </code>
+                          ) : (
+                            <span className="text-[11px] text-slate-400 italic">No SKU</span>
+                          )}
+                          {!isVisible && (
+                            <Badge
+                              variant="outline"
+                              className="bg-slate-100 text-slate-600 border-slate-300 text-[10px] px-1.5 py-0"
+                            >
+                              <EyeOff className="h-3 w-3 mr-1" />
+                              Hidden
+                            </Badge>
+                          )}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell
-                      onClick={() =>
-                        router.push(`/dashboard/products/${product.id}`)
-                      }
+                      className="cursor-pointer"
+                      onClick={() => handleEdit(product)}
                     >
                       <Badge
                         variant="outline"
@@ -727,10 +795,8 @@ const ProductList = () => {
                       </Badge>
                     </TableCell>
                     <TableCell
-                      onClick={() =>
-                        router.push(`/dashboard/products/${product.id}`)
-                      }
-                      className="text-right tabular-nums"
+                      onClick={() => handleEdit(product)}
+                      className="text-right tabular-nums cursor-pointer"
                     >
                       <div className="font-bold text-slate-900">
                         ₹{product.price?.toLocaleString()}
@@ -786,40 +852,24 @@ const ProductList = () => {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell onClick={(e) => e.stopPropagation()} className="text-center">
-                        <Button
-                            variant="ghost" 
-                            size="icon"
-                            // removed disabled={loading} logic for now as queries manage loading 
-                            onClick={() => handleFeaturedToggle(product, !product.isFeatured)}
-                            className={`h-8 w-8 rounded-full ${product.isFeatured ? 'text-amber-500 bg-amber-50 hover:bg-amber-100' : 'text-slate-300 hover:text-slate-500 hover:bg-slate-100'}`}
-                        >
-                            <Star className={`h-4 w-4 ${product.isFeatured ? 'fill-amber-500' : ''}`} />
-                        </Button>
-                    </TableCell>
                     <TableCell className="text-right pr-6">
                       <div
-                        className="flex items-center justify-end gap-1"
+                        className="flex items-center justify-end"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
-                          onClick={() => handleEdit(product)}
-                          title="Edit product"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                          onClick={() => handleDeleteClick(product)}
-                          title="Delete product"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 rounded-lg outline-none ring-0">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                            <DropdownMenuItem onClick={() => handleDeleteClick(product)} className="text-red-600 focus:bg-red-50 focus:text-red-700">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -828,9 +878,101 @@ const ProductList = () => {
             )}
           </TableBody>
         </Table>
-        
+      </div>
+
+      {/* Mobile Card List */}
+      <div className="md:hidden flex flex-col space-y-4">
+        {isQueryLoading ? (
+          <div className="h-48 flex flex-col items-center justify-center gap-2 text-slate-500 bg-white rounded-2xl border border-slate-100">
+            <RefreshCw className="h-6 w-6 animate-spin text-slate-400" />
+            <p>Loading products...</p>
+          </div>
+        ) : filteredAndSortedProducts.length === 0 ? (
+          <div className="h-48 flex flex-col items-center justify-center text-slate-400 bg-white rounded-2xl border border-slate-100">
+            <Package className="h-12 w-12 mb-4 text-slate-200" />
+            <p className="text-lg font-medium text-slate-900">No products found</p>
+          </div>
+        ) : (
+          filteredAndSortedProducts.map((product) => {
+            const isVisible = product.isVisible !== false;
+            return (
+              <div key={product.id} className={`bg-white rounded-2xl border border-slate-100 p-4 shadow-sm flex flex-col gap-4 ${!isVisible ? "opacity-60" : ""}`}>
+                <div className="flex justify-between items-start">
+                  <div className="flex gap-3 items-start cursor-pointer flex-1" onClick={() => handleEdit(product)}>
+                    <div className="relative h-14 w-14 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
+                      <OptimizedImage
+                        src={getImageTier(product.images, "thumb", 0) || product.image || null}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        imageType="thumbnail"
+                        sizes="56px"
+                        placeholder="empty"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1">
+                        <h3 className="font-bold text-slate-900 leading-tight line-clamp-2">{product.name}</h3>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        {product.sku ? (
+                          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-slate-600 border border-slate-200">
+                            {product.sku}
+                          </code>
+                        ) : null}
+                        {!isVisible && (
+                          <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-300 text-[9px] px-1.5 py-0">
+                            Hidden
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-slate-500 rounded-lg -mr-2 outline-none ring-0">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                      <DropdownMenuItem onClick={() => handleDeleteClick(product)} className="text-red-600 focus:bg-red-50 focus:text-red-700">
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                
+                <div className="flex items-center justify-between pt-3 border-t border-slate-50 cursor-pointer" onClick={() => handleEdit(product)}>
+                  <div>
+                    <div className="font-bold text-slate-900">₹{product.price?.toLocaleString()}</div>
+                    <div className="text-xs text-slate-500">{product.categoryName || "Uncategorized"}</div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <div className="font-medium text-slate-700">{product.quantity || 0} in stock</div>
+                      {product.variants && product.variants.length > 0 && (
+                        <div className="text-[10px] font-semibold text-slate-500 uppercase">{product.variants.length} Var</div>
+                      )}
+                    </div>
+                    <Switch
+                      checked={isVisible}
+                      onCheckedChange={(checked) => handleVisibilityToggle(product, checked)}
+                      disabled={togglingVisibility === product.id}
+                      className="data-[state=checked]:bg-green-600 scale-90"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+      
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mt-4">
         {/* Pagination Footer */}
-        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="px-6 py-4 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
            <div className="text-sm text-slate-500">
                Showing <span className="font-medium text-slate-900">{filteredAndSortedProducts.length}</span> of <span className="font-medium text-slate-900">{totalCount}</span> products
            </div>

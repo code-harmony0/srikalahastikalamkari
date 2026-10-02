@@ -41,23 +41,3 @@ export const dashboardKeys = {
 }
 
 // Prefetch strategy for dashboard
-export async function prefetchDashboardData(queryClient: QueryClient) {
-  // Parallel prefetch all dashboard data
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: dashboardKeys.kpis(),
-      queryFn: () => import('@/services/dashboard').then(m => m.getDashboardKPIs()),
-      staleTime: 5 * 60 * 1000,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: dashboardKeys.activity(7),
-      queryFn: () => import('@/services/dashboard').then(m => m.getDailyActivity(7)),
-      staleTime: 5 * 60 * 1000,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: dashboardKeys.categories(),
-      queryFn: () => import('@/services/dashboard').then(m => m.getTopCategoriesBySales(6)),
-      staleTime: 10 * 60 * 1000,
-    }),
-  ])
-}

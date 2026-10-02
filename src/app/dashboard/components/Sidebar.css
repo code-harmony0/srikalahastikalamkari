@@ -127,6 +127,9 @@
   letter-spacing: -0.3px;
   line-height: 1.2;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 145px;
 }
 
 .brand-subtitle {
@@ -137,6 +140,9 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 145px;
 }
 
 .sidebar-nav ul li a span {

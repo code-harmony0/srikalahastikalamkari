@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@supabase/supabase-js";
+import { assertAdminPermission } from "@/shared/lib/admin-guard";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -26,6 +27,7 @@ export interface CouponData {
 }
 
 export async function getCoupons() {
+  await assertAdminPermission("promotions.manage");
   const { data, error } = await supabaseAdmin
     .from("coupons")
     .select("*")
@@ -38,6 +40,7 @@ export async function getCoupons() {
 }
 
 export async function createCoupon(couponData: CouponData) {
+  await assertAdminPermission("promotions.manage");
   const { data, error } = await supabaseAdmin.from("coupons").insert(couponData).select().single();
 
   if (error) {
@@ -47,6 +50,7 @@ export async function createCoupon(couponData: CouponData) {
 }
 
 export async function updateCoupon(id: string, couponData: Partial<CouponData>) {
+  await assertAdminPermission("promotions.manage");
   const { data, error } = await supabaseAdmin
     .from("coupons")
     .update(couponData)
@@ -61,6 +65,7 @@ export async function updateCoupon(id: string, couponData: Partial<CouponData>) 
 }
 
 export async function deleteCoupon(id: string) {
+  await assertAdminPermission("promotions.manage");
   const { error } = await supabaseAdmin.from("coupons").delete().eq("id", id);
 
   if (error) {
@@ -70,6 +75,7 @@ export async function deleteCoupon(id: string) {
 }
 
 export async function toggleCouponActive(id: string, isActive: boolean) {
+  await assertAdminPermission("promotions.manage");
   const { data, error } = await supabaseAdmin
     .from("coupons")
     .update({ is_active: !isActive })

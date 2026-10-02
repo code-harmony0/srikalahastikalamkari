@@ -179,33 +179,33 @@ export default function CouponsPage() {
               </h2>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              {/* Code */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Coupon Code *
-                </label>
-                <input
-                  type="text"
-                  value={formData.code}
-                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                  required
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 uppercase"
-                  placeholder="SUMMER20"
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10"
-                  placeholder="Summer sale discount"
-                />
+              {/* Code & Description */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Coupon Code *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.code}
+                    onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                    required
+                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 uppercase font-mono"
+                    placeholder="SUMMER20"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Description
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                    placeholder="Summer sale discount"
+                  />
+                </div>
               </div>
 
               {/* Discount Type & Value */}
@@ -347,7 +347,7 @@ export default function CouponsPage() {
           <p className="text-slate-500 text-sm mt-1">Create your first discount code</p>
         </div>
       ) : (
-        <div className="grid gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {coupons.map((coupon) => (
             <CouponCard
               key={coupon.id}

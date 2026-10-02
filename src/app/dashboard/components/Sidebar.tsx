@@ -19,19 +19,24 @@ import {
   FiPercent,
   FiHeart,
   FiUser,
+  FiUsers,
 } from "react-icons/fi"
 import "./Sidebar.css"
 import { supabase } from "@/lib/supabase/client"
-import { useAuth } from "@/shared/contexts/AuthContext"
 import { useSidebar } from "@/shared/contexts/SidebarContext"
+import type { AdminSessionPayload } from "@/shared/lib/admin-session"
+import type { AdminPermission } from "@/shared/lib/admin-session"
 import { toast } from "sonner"
 
-const Sidebar = () => {
+interface SidebarProps {
+  adminSession: AdminSessionPayload
+}
+
+const Sidebar = ({ adminSession }: SidebarProps) => {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, logout } = useAuth()
   const { isCollapsed, toggleSidebar } = useSidebar()
-  const role = (user as any)?.metadata?.role
+  const role = adminSession.role
 
   const handleLogout = async () => {
     try {
@@ -117,13 +122,13 @@ const Sidebar = () => {
       to: "/dashboard",
       icon: FiGrid,
       label: "Dashboard",
-      roles: ["super_admin", "admin"],
+      permission: "dashboard.view" as AdminPermission,
     },
     {
       to: "/dashboard/orders",
       icon: FiClipboard,
       label: "Orders",
-      roles: ["super_admin", "admin"],
+      permission: "orders.view" as AdminPermission,
       badge: pendingOrders > 0 ? pendingOrders : null,
       badgeColor: "bg-red-600",
     },
@@ -131,7 +136,7 @@ const Sidebar = () => {
       to: "/dashboard/products",
       icon: FiBox,
       label: "Products",
-      roles: ["super_admin", "admin"],
+      permission: "products.view" as AdminPermission,
       badge: lowStockCount > 0 ? lowStockCount : null,
       badgeColor: "bg-red-500",
     },
@@ -139,19 +144,19 @@ const Sidebar = () => {
       to: "/dashboard/categories",
       icon: FiTag,
       label: "Categories",
-      roles: ["super_admin"],
+      permission: "categories.manage" as AdminPermission,
     },
     {
       to: "/dashboard/add-product",
       icon: FiPlusSquare,
       label: "Add Product",
-      roles: ["super_admin"],
+      permission: "products.manage" as AdminPermission,
     },
     {
       to: "/dashboard/inquiries",
       icon: FiMessageSquare,
       label: "Inquiries",
-      roles: ["super_admin", "admin"],
+      permission: "inquiries.manage" as AdminPermission,
       badge: newInquiries > 0 ? newInquiries : null,
       badgeColor: "bg-blue-600",
     },
@@ -160,27 +165,33 @@ const Sidebar = () => {
       to: "/dashboard/featured",
       icon: FiStar,
       label: "Featured",
-      roles: ["super_admin", "admin"],
+      permission: "featured.manage" as AdminPermission,
     },
     {
       to: "/dashboard/coupons",
       icon: FiPercent,
       label: "Coupons",
-      roles: ["super_admin"],
+      permission: "promotions.manage" as AdminPermission,
       badge: activeCoupons > 0 ? activeCoupons : null,
       badgeColor: "bg-red-600",
+    },
+    {
+      to: "/dashboard/users",
+      icon: FiUsers,
+      label: "Admin Users",
+      permission: "team.manage" as AdminPermission,
     },
     {
       to: "/dashboard/reviews",
       icon: FiHeart,
       label: "Reviews",
-      roles: ["super_admin", "admin"],
+      permission: "reviews.manage" as AdminPermission,
       badge: pendingReviews > 0 ? pendingReviews : null,
       badgeColor: "bg-amber-600",
     },
   ]
 
-  const filteredItems = menuItems
+  const filteredItems = menuItems.filter((item) => adminSession.permissions.includes(item.permission))
 
   return (
     <div
@@ -209,7 +220,7 @@ const Sidebar = () => {
                     />
                   </div>
                   <span className="brand-subtitle text-slate-500">
-                    Admin Panel {role && `- ${role.replace("_", " ")}`}
+                    {adminSession.name} · {role.replace("_", " ")}
                   </span>
                 </div>
               </div>

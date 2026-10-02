@@ -968,9 +968,9 @@ export const getProductsPaginated = async (
         
       if (cats && cats.length > 0) {
         const matchingCategoryIds = cats.map(c => c.id);
-        query = query.or(`name.ilike.%${stem}%,category_id.in.(${matchingCategoryIds.join(',')})`);
+        query = query.or(`name.ilike.%${stem}%,sku.ilike.%${q}%,category_id.in.(${matchingCategoryIds.join(',')})`);
       } else {
-        query = query.ilike("name", `%${stem}%`);
+        query = query.or(`name.ilike.%${stem}%,sku.ilike.%${q}%`);
       }
     }
 

@@ -52,7 +52,7 @@ interface Order {
   landmark?: string;
   customer_address?: string;
   total_amount: number;
-  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "cancelled";
+  status: "pending" | "paid" | "in_packing" | "packed" | "shipped" | "delivered" | "cancelled";
   order_items: OrderItem[];
   razorpay_payment_id?: string;
   shipping_company?: string;
@@ -68,6 +68,8 @@ interface OrderDetailsAdminProps {
   onClose: () => void;
   onPack: () => void;
   onShip: () => void;
+  onCancel?: () => void;
+  onPrintInvoice?: () => void;
 
 }
 
@@ -75,7 +77,9 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
   order, 
   onClose, 
   onPack, 
-  onShip
+  onShip,
+  onCancel,
+  onPrintInvoice
 }) => {
   
   const formatDate = (dateString?: string) => {
@@ -102,7 +106,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
     switch (status) {
       case "paid":
         return {
-          label: "Order Placed",
+          label: "Paid",
           color: "bg-slate-100 text-slate-700 border-slate-300",
           icon: Clock
         }
@@ -130,6 +134,12 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
           label: "Cancelled",
           color: "bg-red-50 text-red-700 border-red-200",
           icon: X
+        }
+      case "pending":
+        return {
+          label: "Unpaid",
+          color: "bg-gray-50 text-gray-700 border-gray-200",
+          icon: Clock
         }
       default:
         return {
@@ -187,10 +197,21 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
               </Badge>
               
               {/* Action Buttons Based on Status */}
+              {(order.status === "pending" || order.status === "paid" || order.status === "in_packing") && onCancel && (
+                <Button 
+                  onClick={onCancel}
+                  variant="outline"
+                  className="text-red-600 border-red-200 hover:bg-red-50 rounded-lg px-4 py-2 font-medium"
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
+              )}
+
               {(order.status === "paid" || order.status === "in_packing") && (
                 <Button 
                   onClick={onPack}
-                  className="bg-green-600 hover:bg-green-700 text-white rounded-lg px-4 py-2 font-medium"
+                  className="bg-gray-900 hover:bg-gray-800 text-white rounded-lg px-4 py-2 font-medium"
                 >
                   <Package className="h-4 w-4 mr-2" />
                   {order.status === "in_packing" ? "Resume Packing" : "Start Packing"}
@@ -218,10 +239,15 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
                 </Button>
               )}
 
-              {(order.status === "cancelled") && (
-                <Badge className="bg-green-50 text-green-700 border-green-200 px-3 py-1.5 rounded-full font-medium">
-                  {order.status === "cancelled" ? "✗ Cancelled" : ""}
-                </Badge>
+              {(order.status === "paid" || order.status === "packed" || order.status === "shipped" || order.status === "delivered") && onPrintInvoice && (
+                <Button 
+                  onClick={onPrintInvoice}
+                  variant="outline"
+                  className="border-slate-300 text-gray-700 hover:bg-gray-50 rounded-lg px-4 py-2 font-medium"
+                >
+                  <Printer className="h-4 w-4 mr-2" />
+                  Print Invoice
+                </Button>
               )}
             </div>
           </div>
@@ -248,55 +274,65 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
               </div>
               
               <div className="divide-y divide-gray-100">
-                {(order.order_items || []).map((item, index) => (
-                  <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
-                    <div className="flex gap-4">
-                      <div className="relative w-24 h-24 bg-gray-100 rounded-xl border border-gray-200 flex-shrink-0 overflow-hidden">
-                        {item.products?.images?.[0] ? (
-                          <OptimizedImage
-                            src={getImageTier(item.products.images, "thumb", 0)}
-                            alt={item.products.name || "Product"}
-                            fill
-                            className="object-cover"
-                            imageType="cartItem"
-                            sizes="96px"
-                            placeholder="empty"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Package className="h-8 w-8 text-gray-400" />
+                {order.order_items && order.order_items.length > 0 ? (
+                  order.order_items.map((item, index) => (
+                    <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
+                      <div className="flex gap-4">
+                        <div className="relative w-16 h-16 bg-gray-100 rounded-xl border border-gray-200 flex-shrink-0 overflow-hidden">
+                          {item.products?.images?.[0] ? (
+                            <OptimizedImage
+                              src={getImageTier(item.products.images, "thumb", 0)}
+                              alt={item.products.name || "Product"}
+                              fill
+                              className="object-cover"
+                              imageType="cartItem"
+                              sizes="96px"
+                              placeholder="empty"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Package className="h-8 w-8 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-slate-900 text-lg leading-tight">
+                            {item.products?.name || item.name || 'Product'}
+                          </h3>
+                          {item.selected_color && (
+                            <div className="mt-1 flex items-center gap-2">
+                              <span className="text-sm text-gray-500">Color:</span>
+                              <span className="text-sm font-medium text-slate-700">{item.selected_color}</span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-4 mt-3">
+                            <span className="text-base text-gray-600">
+                              Qty: {item.quantity}
+                            </span>
+                            <span className="text-base font-medium text-gray-700">
+                              ₹{item.price_at_purchase.toLocaleString('en-IN')} each
+                            </span>
                           </div>
-                        )}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-slate-900 text-lg leading-tight">
-                          {item.products?.name || item.name || 'Product'}
-                        </h3>
-                        {item.selected_color && (
-                          <div className="mt-1 flex items-center gap-2">
-                            <span className="text-sm text-gray-500">Color:</span>
-                            <span className="text-sm font-medium text-slate-700">{item.selected_color}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-4 mt-3">
-                          <span className="text-base text-gray-600">
-                            Qty: {item.quantity}
-                          </span>
-                          <span className="text-base font-medium text-gray-700">
-                            ₹{item.price_at_purchase.toLocaleString('en-IN')} each
-                          </span>
+                        </div>
+                        
+                        <div className="text-right">
+                          <p className="text-xl font-bold text-slate-900">
+                            ₹{(item.price_at_purchase * item.quantity).toLocaleString('en-IN')}
+                          </p>
                         </div>
                       </div>
-                      
-                      <div className="text-right">
-                        <p className="text-xl font-bold text-slate-900">
-                          ₹{(item.price_at_purchase * item.quantity).toLocaleString('en-IN')}
-                        </p>
-                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="p-12 text-center text-gray-500 flex flex-col items-center justify-center bg-gray-50/50">
+                    <div className="h-12 w-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-200 mb-3">
+                      <Package className="h-6 w-6 text-gray-400" />
+                    </div>
+                    <p className="font-medium text-slate-900">No items found</p>
+                    <p className="text-sm mt-1">This order does not contain any products.</p>
                   </div>
-                ))}
+                )}
               </div>
               
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
@@ -320,21 +356,21 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
                 {[
                   { 
                     status: 'paid', 
-                    label: 'Order Placed', 
+                    label: 'Paid', 
                     date: order.created_at, 
                     icon: Clock,
                     description: 'Order received and payment confirmed'
                   },
                   { 
                     status: 'in_packing', 
-                    label: 'Packing Started', 
+                    label: 'Processing', 
                     date: order.status === 'in_packing' || order.status === 'packed' || order.status === 'shipped' ? order.created_at : null, 
                     icon: Package,
                     description: 'Order is being prepared and packed'
                   },
                   { 
                     status: 'packed', 
-                    label: 'Ready to Ship', 
+                    label: 'Packed', 
                     date: order.packed_at, 
                     icon: PackageCheck,
                     description: 'Order packed and ready for shipment'
@@ -402,10 +438,10 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             
             {/* Customer Information */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
               <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <User className="h-5 w-5 text-gray-700" />
                 Customer
@@ -433,7 +469,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
             </div>
 
             {/* Shipping Address */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
               <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-gray-700" />
                 Delivery Address
@@ -449,9 +485,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
                       <p>{order.shipping_address.address}</p>
                       <p>{order.shipping_address.city}, {order.shipping_address.state}</p>
                       <p className="font-medium text-slate-900">{order.shipping_address.pincode}</p>
-                      {order.shipping_address.phone && (
-                        <p className="mt-2 text-gray-700">📞 {order.shipping_address.phone}</p>
-                      )}
+                      {/* Phone removed to prevent duplication, it's in Customer block */}
                     </>
                   ) : (
                     <p>No shipping address provided</p>
@@ -461,7 +495,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
             </div>
 
             {/* Payment Information */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
               <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <CreditCard className="h-5 w-5 text-gray-700" />
                 Payment
@@ -470,13 +504,15 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600">Method</span>
-                  <span className="font-medium text-slate-900">Razorpay</span>
+                  <span className="font-medium text-slate-900">
+                    {order.razorpay_payment_id ? "Razorpay" : (order.status === "pending" ? "Cash on Delivery" : "Online")}
+                  </span>
                 </div>
                 
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600">Status</span>
-                  <Badge className="bg-green-50 text-green-700 border-green-200">
-                    Paid
+                  <Badge className={`${order.status === "pending" || order.status === "cancelled" ? "bg-gray-100 text-gray-700 border-gray-200" : "bg-green-50 text-green-700 border-green-200"}`}>
+                    {order.status === "pending" ? "Unpaid" : (order.status === "cancelled" ? "Cancelled" : "Paid")}
                   </Badge>
                 </div>
                 
@@ -493,7 +529,7 @@ const OrderDetailsAdmin: React.FC<OrderDetailsAdminProps> = ({
 
             {/* Shipping Information */}
             {(order.status === "shipped") && order.shipping_company && (
-              <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
                 <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                   <Truck className="h-5 w-5 text-gray-700" />
                   Shipping Details

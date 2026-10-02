@@ -45,11 +45,12 @@ import {
   checkDuplicateProduct,
   updateProductStock,
 } from "@/services/products"
+import { supabase } from "@/lib/supabase/client"
 import { useInventory } from "@/shared/contexts/InventoryContext"
 
 import imageCompression from "browser-image-compression"
 import Barcode from "react-barcode"
-import { generateBarcode } from "@/shared/utils/barcodeUtils"
+import { getCategoryPrefix, getMaterialPrefix } from "@/shared/lib/sku-generator"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import {
   getProductImageDebugInfo,
@@ -170,6 +171,7 @@ const AddProduct = () => {
     subCategory: "",
     colors: "",
     quantity: "",
+    sku: "",
     inStock: true,
     isVisible: true,
     isCustomDesign: false,
@@ -382,6 +384,7 @@ const AddProduct = () => {
         subCategory: "", // Will be set by the effect below
         colors: "",
         quantity: quantity?.toString() || "1",
+        sku: editingProduct.sku || "",
         inStock: inStock ?? true,
         isCustomDesign: isCustomDesign ?? false,
       }))
@@ -873,12 +876,43 @@ const AddProduct = () => {
         })
       }
 
-      // Generate unique barcode for new products
+      // Generate human-readable SKU for new products
       let barcode = editingProduct?.barcode // Keep existing barcode if updating
-      if (!isEditMode) {
-        const uniqueId = `${Date.now()}${Math.random().toString(36).substr(2, 9)}`
-        barcode = generateBarcode(uniqueId)
-        setGeneratedBarcode(barcode) // Store for display
+      let sku = editingProduct?.sku // Keep existing SKU if updating
+      
+      // Use user-provided SKU if they typed one in (even in edit mode to allow overriding)
+      if (formData.sku && formData.sku.trim().length > 0) {
+        // Auto-format: trim, convert to uppercase, and replace spaces with hyphens
+        sku = formData.sku.trim().toUpperCase().replace(/\s+/g, "-")
+        barcode = sku // keep synced
+      } else if (!isEditMode) {
+        // Find the selected category name for prefix generation
+        const selectedCat = categories.find((c: any) => c.id === formData.category)
+        const catName = selectedCat?.name || null
+        const materialSpec = specifications.find((s) => s.key.trim().toLowerCase() === "material")
+        const materialHint = materialSpec?.value?.trim() || null
+
+        const catPrefix = getCategoryPrefix(catName)
+        const matPrefix = getMaterialPrefix(formData.name, catName, materialHint)
+        const skuPrefix = `${catPrefix}-${matPrefix}`
+
+        // Find the next available sequence for this prefix
+        const { data: existingSkus } = await supabase
+          .from("products")
+          .select("sku")
+          .ilike("sku", `${skuPrefix}-%`)
+          .order("sku", { ascending: false })
+          .limit(1)
+
+        let nextSeq = 1
+        if (existingSkus && existingSkus.length > 0 && existingSkus[0].sku) {
+          const lastPart = existingSkus[0].sku.split("-").pop()
+          nextSeq = (parseInt(lastPart || "0", 10) || 0) + 1
+        }
+
+        sku = `${skuPrefix}-${String(nextSeq).padStart(3, "0")}`
+        barcode = sku // Merge: barcode = sku
+        setGeneratedBarcode(sku) // Store for display
       }
 
       // CHECK FOR DUPLICATES (only when creating new product)
@@ -936,7 +970,8 @@ const AddProduct = () => {
         specifications: specsObject, // Add specifications
         quantity: parseInt(formData.quantity),
         images: imageUrls, // All images (array)
-        barcode: barcode, // Add barcode to product data
+        sku: sku, // Human-readable SKU (e.g. SAR-TSK-001)
+        barcode: barcode, // Same as SKU (merged)
         material: materialValue, // Add material from specifications
         variants: showVariants ? variants : [], // Add variants if enabled
       }
@@ -1117,6 +1152,235 @@ const AddProduct = () => {
               </div>
             </FormSection>
 
+            {/* Section 3: Categorization */}
+            <FormSection
+              title="Categorization"
+              icon={<FolderTree className="h-4 w-4" />}
+              badge="Required"
+            >
+              <div className="grid gap-3 md:gap-4 md:grid-cols-2">
+                <div className="space-y-1.5 md:space-y-2">
+                  <Label
+                    htmlFor="category"
+                    className="text-slate-700 font-medium"
+                  >
+                    Category <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => handleChange("category", value)}
+                  >
+                    <SelectTrigger
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl ${errors.category ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
+                    >
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-slate-200">
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id.toString()}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <p className="text-sm text-red-500">{errors.category}</p>
+                  )}
+                </div>
+
+                <div className="space-y-1.5 md:space-y-2">
+                  <Label
+                    htmlFor="subCategory"
+                    className="text-slate-700 font-medium"
+                  >
+                    Sub Category
+                  </Label>
+                  <Select
+                    value={formData.subCategory}
+                    onValueChange={(value) =>
+                      handleChange("subCategory", value)
+                    }
+                    disabled={
+                      !formData.category || filteredSubCategories.length === 0
+                    }
+                  >
+                    <SelectTrigger className="h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200">
+                      <SelectValue
+                        placeholder={
+                          !formData.category
+                            ? "Select category first"
+                            : "Select sub category"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-slate-200">
+                      {filteredSubCategories.map((sub) => (
+                        <SelectItem key={sub.id} value={sub.id.toString()}>
+                          {sub.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </FormSection>
+
+            {/* Section 5: Media (Image Upload) */}
+            <div id="product-images-section">
+              <FormSection
+                title="Product Images"
+                icon={<Image className="h-4 w-4" />}
+                badge="Required"
+              >
+              <div className="space-y-2">
+                <p className="text-sm text-slate-500 mb-4">
+                  Upload up to 5 product images. The first image will be the
+                  main display image.
+                </p>
+                {imagePreviews.length === 0 ? (
+                  <div
+                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${
+                      isDragging
+                        ? "border-[#D49217] bg-[#D49217]/10 scale-105"
+                        : errors.images 
+                        ? "border-red-500 bg-red-50"
+                        : "border-gray-300 hover:border-[#D49217] hover:bg-gray-50"
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={handleBoxClick}
+                  >
+                    <Upload
+                      className={`mx-auto h-12 w-12 mb-4 ${isDragging ? "text-[#D49217]" : "text-muted-foreground"}`}
+                    />
+                    <div className="space-y-2">
+                      <p className="text-[#D49217] font-medium">
+                        {isDragging
+                          ? "Drop images here"
+                          : "Click to upload or drag & drop"}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        PNG, JPG, WEBP (Multiple files supported)
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Image Previews Grid */}
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-3 pt-2">
+                      {imagePreviews.map((preview, index) => (
+                        <div
+                          key={index}
+                          className="relative border rounded-lg overflow-hidden bg-gray-50"
+                        >
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-1 right-1 h-6 w-6 rounded-full z-10 shadow-md"
+                            onClick={() => removeImage(index)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                          {index > 0 && (
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              className="absolute top-1 left-1 h-6 text-[10px] px-2 rounded-md z-10 shadow-md opacity-90 hover:opacity-100"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                makeThumbnail(index)
+                              }}
+                            >
+                              Set Main
+                            </Button>
+                          )}
+                          {index === 0 && (
+                            <div className="absolute top-1 left-1 h-6 text-[10px] px-2 bg-[#D49217] text-white rounded-md z-10 shadow-md flex items-center font-medium">
+                              Thumbnail
+                            </div>
+                          )}
+                          <div className="aspect-square bg-white relative">
+                            {preview.startsWith("data:") ||
+                            preview.startsWith("blob:") ? (
+                              <img
+                                src={preview}
+                                alt={`Preview ${index + 1}`}
+                                className="w-full h-full object-contain p-2"
+                              />
+                            ) : (
+                              <OptimizedImage
+                                src={preview}
+                                alt={`Preview ${index + 1}`}
+                                fill
+                                className="object-contain p-2"
+                                imageType="thumbnail"
+                                sizes="120px"
+                                placeholder="empty"
+                              />
+                            )}
+                          </div>
+                          {/* WebP conversion stats */}
+                          {compressionStats[index] && (
+                            <div className="mt-1 text-center">
+                              <p className="text-xs text-green-600 truncate">
+                                WebP: {compressionStats[index]}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Add More Button */}
+                    {imagePreviews.length < 5 && (
+                      <div
+                        className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-[#D49217] transition-colors"
+                        onClick={handleBoxClick}
+                      >
+                        <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-[#D49217]">
+                          Add more images ({imagePreviews.length}/5)
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Max images message */}
+                    {imagePreviews.length >= 5 && (
+                      <div className="text-center p-4 bg-gray-50 rounded-lg">
+                        <p className="text-sm text-muted-foreground">
+                          Maximum of 5 images reached
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Compressing Indicator */}
+                    {compressing && (
+                      <div className="text-center">
+                        <Loader2 className="inline mr-2 h-4 w-4 animate-spin text-blue-500" />
+                        <span className="text-sm text-blue-500">
+                          Compressing images...
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Hidden file input - always present */}
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </div>
+            </FormSection>
+            </div>
+
             {/* Section 2: Pricing & Inventory */}
             <FormSection
               title="Pricing & Inventory"
@@ -1191,126 +1455,32 @@ const AddProduct = () => {
                     )}
                   </div>
 
+                  
+                  
+                  
                   <div className="space-y-1.5 md:space-y-2">
-                    <Label className="text-slate-700 font-medium">
-                      Stock Status
-                    </Label>
-                    <div className="flex items-center gap-3 h-10 md:h-11 px-4 rounded-lg md:rounded-xl border border-slate-200 bg-white">
-                      <Checkbox
-                        id="inStock"
-                        checked={formData.inStock}
-                        onCheckedChange={(checked) =>
-                          handleChange("inStock", checked)
-                        }
-                      />
-                      <Label
-                        htmlFor="inStock"
-                        className="cursor-pointer text-slate-600 font-normal"
-                      >
-                        Product is in stock and available
-                      </Label>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5 md:space-y-2">
-                    <Label className="text-slate-700 font-medium">
-                      Custom Design
-                    </Label>
-                    <div className="flex items-center gap-3 h-10 md:h-11 px-4 rounded-lg md:rounded-xl border border-slate-200 bg-white">
-                      <Checkbox
-                        id="isCustomDesign"
-                        checked={formData.isCustomDesign}
-                        onCheckedChange={(checked) =>
-                          handleChange("isCustomDesign", checked)
-                        }
-                      />
-                      <Label
-                        htmlFor="isCustomDesign"
-                        className="cursor-pointer text-slate-600 font-normal"
-                      >
-                        Hide from Normal Shop (Custom Design Archive)
-                      </Label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </FormSection>
-
-            {/* Section 3: Categorization */}
-            <FormSection
-              title="Categorization"
-              icon={<FolderTree className="h-4 w-4" />}
-              badge="Required"
-            >
-              <div className="grid gap-3 md:gap-4 md:grid-cols-2">
-                <div className="space-y-1.5 md:space-y-2">
-                  <Label
-                    htmlFor="category"
-                    className="text-slate-700 font-medium"
-                  >
-                    Category <span className="text-red-500">*</span>
-                  </Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={(value) => handleChange("category", value)}
-                  >
-                    <SelectTrigger
-                      className={`h-10 md:h-11 rounded-lg md:rounded-xl ${errors.category ? "border-red-500 ring-1 ring-red-500" : "border-slate-200"}`}
+                    <Label
+                      htmlFor="sku"
+                      className="text-slate-700 font-medium"
                     >
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border-slate-200">
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id.toString()}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.category && (
-                    <p className="text-sm text-red-500">{errors.category}</p>
-                  )}
-                </div>
-
-                <div className="space-y-1.5 md:space-y-2">
-                  <Label
-                    htmlFor="subCategory"
-                    className="text-slate-700 font-medium"
-                  >
-                    Sub Category
-                  </Label>
-                  <Select
-                    value={formData.subCategory}
-                    onValueChange={(value) =>
-                      handleChange("subCategory", value)
-                    }
-                    disabled={
-                      !formData.category || filteredSubCategories.length === 0
-                    }
-                  >
-                    <SelectTrigger className="h-10 md:h-11 rounded-lg md:rounded-xl border-slate-200">
-                      <SelectValue
-                        placeholder={
-                          !formData.category
-                            ? "Select category first"
-                            : "Select sub category"
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border-slate-200">
-                      {filteredSubCategories.map((sub) => (
-                        <SelectItem key={sub.id} value={sub.id.toString()}>
-                          {sub.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      SKU (Optional)
+                    </Label>
+                    <Input
+                      id="sku"
+                      type="text"
+                      placeholder="e.g. SAR-TSK-001 (Auto-generated if empty)"
+                      value={formData.sku}
+                      onChange={(e) => handleChange("sku", e.target.value)}
+                      className={`h-10 md:h-11 rounded-lg md:rounded-xl focus:border-slate-400 border-slate-200`}
+                    />
+                  </div>
                 </div>
               </div>
             </FormSection>
 
             {/* Section 4: Attributes (Colors & Specifications) */}
             <FormSection
-              title="Attributes"
+              title="Product Attributes"
               icon={<Palette className="h-4 w-4" />}
               defaultOpen={false}
             >
@@ -1599,161 +1769,6 @@ const AddProduct = () => {
               </div>
             </FormSection>
 
-            {/* Section 5: Media (Image Upload) */}
-            <div id="product-images-section">
-              <FormSection
-                title="Product Images"
-                icon={<Image className="h-4 w-4" />}
-                badge="Required"
-              >
-              <div className="space-y-2">
-                <p className="text-sm text-slate-500 mb-4">
-                  Upload up to 5 product images. The first image will be the
-                  main display image.
-                </p>
-                {imagePreviews.length === 0 ? (
-                  <div
-                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${
-                      isDragging
-                        ? "border-[#D49217] bg-[#D49217]/10 scale-105"
-                        : errors.images 
-                        ? "border-red-500 bg-red-50"
-                        : "border-gray-300 hover:border-[#D49217] hover:bg-gray-50"
-                    }`}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    onClick={handleBoxClick}
-                  >
-                    <Upload
-                      className={`mx-auto h-12 w-12 mb-4 ${isDragging ? "text-[#D49217]" : "text-muted-foreground"}`}
-                    />
-                    <div className="space-y-2">
-                      <p className="text-[#D49217] font-medium">
-                        {isDragging
-                          ? "Drop images here"
-                          : "Click to upload or drag & drop"}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        PNG, JPG, WEBP (Multiple files supported)
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {/* Image Previews Grid */}
-                    <div className="grid grid-cols-3 md:grid-cols-4 gap-3 pt-2">
-                      {imagePreviews.map((preview, index) => (
-                        <div
-                          key={index}
-                          className="relative border rounded-lg overflow-hidden bg-gray-50"
-                        >
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-1 right-1 h-6 w-6 rounded-full z-10 shadow-md"
-                            onClick={() => removeImage(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                          {index > 0 && (
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              size="sm"
-                              className="absolute top-1 left-1 h-6 text-[10px] px-2 rounded-md z-10 shadow-md opacity-90 hover:opacity-100"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                makeThumbnail(index)
-                              }}
-                            >
-                              Set Main
-                            </Button>
-                          )}
-                          {index === 0 && (
-                            <div className="absolute top-1 left-1 h-6 text-[10px] px-2 bg-[#D49217] text-white rounded-md z-10 shadow-md flex items-center font-medium">
-                              Thumbnail
-                            </div>
-                          )}
-                          <div className="aspect-square bg-white relative">
-                            {preview.startsWith("data:") ||
-                            preview.startsWith("blob:") ? (
-                              <img
-                                src={preview}
-                                alt={`Preview ${index + 1}`}
-                                className="w-full h-full object-contain p-2"
-                              />
-                            ) : (
-                              <OptimizedImage
-                                src={preview}
-                                alt={`Preview ${index + 1}`}
-                                fill
-                                className="object-contain p-2"
-                                imageType="thumbnail"
-                                sizes="120px"
-                                placeholder="empty"
-                              />
-                            )}
-                          </div>
-                          {/* WebP conversion stats */}
-                          {compressionStats[index] && (
-                            <div className="mt-1 text-center">
-                              <p className="text-xs text-green-600 truncate">
-                                WebP: {compressionStats[index]}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Add More Button */}
-                    {imagePreviews.length < 5 && (
-                      <div
-                        className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-[#D49217] transition-colors"
-                        onClick={handleBoxClick}
-                      >
-                        <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                        <p className="text-sm text-[#D49217]">
-                          Add more images ({imagePreviews.length}/5)
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Max images message */}
-                    {imagePreviews.length >= 5 && (
-                      <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-muted-foreground">
-                          Maximum of 5 images reached
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Compressing Indicator */}
-                    {compressing && (
-                      <div className="text-center">
-                        <Loader2 className="inline mr-2 h-4 w-4 animate-spin text-blue-500" />
-                        <span className="text-sm text-blue-500">
-                          Compressing images...
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Hidden file input - always present */}
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-              </div>
-            </FormSection>
-
             {/* Section 6: Product Variants */}
             <FormSection
               title="Product Variants"
@@ -1792,7 +1807,7 @@ const AddProduct = () => {
                         {variants.map((variant, index) => (
                           <div
                             key={index}
-                            className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative group"
+                            className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative group"
                           >
                             <button
                               type="button"
@@ -1922,9 +1937,57 @@ const AddProduct = () => {
                 )}
               </div>
             </FormSection>
-            </div>
 
-            {/* Actions */}
+            {/* Section 7: Visibility */}
+            <FormSection
+              title="Visibility & Status"
+              icon={<FileText className="h-4 w-4" />}
+              defaultOpen={true}
+            >
+              <div className="grid gap-3 md:gap-4 md:grid-cols-2">
+                <div className="space-y-1.5 md:space-y-2">
+                    <Label className="text-slate-700 font-medium">
+                      Stock Status
+                    </Label>
+                    <div className="flex items-center gap-3 h-10 md:h-11 px-4 rounded-lg md:rounded-xl border border-slate-200 bg-white">
+                      <Checkbox
+                        id="inStock"
+                        checked={formData.inStock}
+                        onCheckedChange={(checked) =>
+                          handleChange("inStock", checked)
+                        }
+                      />
+                      <Label
+                        htmlFor="inStock"
+                        className="cursor-pointer text-slate-600 font-normal"
+                      >
+                        Product is in stock and available
+                      </Label>
+                    </div>
+                  </div>
+                <div className="space-y-1.5 md:space-y-2">
+                    <Label className="text-slate-700 font-medium">
+                      Custom Design
+                    </Label>
+                    <div className="flex items-center gap-3 h-10 md:h-11 px-4 rounded-lg md:rounded-xl border border-slate-200 bg-white">
+                      <Checkbox
+                        id="isCustomDesign"
+                        checked={formData.isCustomDesign}
+                        onCheckedChange={(checked) =>
+                          handleChange("isCustomDesign", checked)
+                        }
+                      />
+                      <Label
+                        htmlFor="isCustomDesign"
+                        className="cursor-pointer text-slate-600 font-normal"
+                      >
+                        Hide from Normal Shop (Custom Design Archive)
+                      </Label>
+                    </div>
+                  </div>
+              </div>
+            </FormSection>
+{/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4">
               <Button
                 type="submit"

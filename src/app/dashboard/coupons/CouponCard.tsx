@@ -1,6 +1,12 @@
 "use client";
 
-import { Edit, Trash2, Calendar, Users, Percent, IndianRupee } from "lucide-react";
+import { Calendar, Users, Percent, IndianRupee, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/ui/dropdown-menu";
 
 interface Coupon {
   id: string;
@@ -26,118 +32,142 @@ interface CouponCardProps {
 }
 
 export default function CouponCard({ coupon, onToggleActive, onEdit, onDelete }: CouponCardProps) {
+  // Check if actually expired
+  const isExpired = coupon.expires_at ? new Date(coupon.expires_at) < new Date() : false;
+  const isEffectivelyActive = coupon.is_active && !isExpired;
+
   return (
     <div
-      className={`rounded-xl overflow-hidden transition-all hover:shadow-md ${
-        coupon.is_active 
-          ? 'bg-white border border-emerald-200' 
-          : 'bg-slate-50 border border-slate-200'
+      className={`rounded-2xl overflow-hidden transition-all flex flex-col ${
+        isEffectivelyActive 
+          ? 'bg-white border border-slate-200 shadow-sm hover:shadow-md' 
+          : 'bg-slate-50/50 border border-slate-200/60 opacity-70'
       }`}
     >
-      <div className="flex">
-        {/* Left: Discount Badge */}
-        <div 
-          className={`w-32 flex flex-col items-center justify-center py-6 ${
-            coupon.is_active 
-              ? 'bg-emerald-600' 
-              : 'bg-slate-400'
-          }`}
-        >
-          <div className="text-white text-center">
-            <div className="flex items-center justify-center gap-1">
+      {/* Top Section - Discount & Code */}
+      <div className={`p-5 border-b flex items-center justify-between ${isEffectivelyActive ? 'border-slate-100 bg-slate-50/30' : 'border-slate-200/50'}`}>
+        <div className="flex items-center gap-4">
+          {/* Discount Badge */}
+          <div className={`flex items-center justify-center shrink-0 w-16 h-16 rounded-2xl ${
+            isEffectivelyActive ? 'bg-slate-900 text-white' : 'bg-slate-300 text-slate-600'
+          }`}>
+            <div className="text-center flex items-center justify-center -space-x-0.5">
               {coupon.discount_type === "percentage" ? (
                 <>
-                  <span className="text-4xl font-black">{coupon.discount_value}</span>
-                  <Percent className="w-6 h-6 mt-1" />
+                  <span className="text-2xl font-bold tracking-tight">{coupon.discount_value}</span>
+                  <Percent className="w-4 h-4 mb-1" />
                 </>
               ) : (
                 <>
-                  <IndianRupee className="w-5 h-5" />
-                  <span className="text-4xl font-black">{coupon.discount_value}</span>
+                  <IndianRupee className="w-4 h-4 mb-0.5" />
+                  <span className="text-2xl font-bold tracking-tight">{coupon.discount_value}</span>
                 </>
               )}
             </div>
-            <div className="text-sm font-bold mt-1 opacity-90 uppercase tracking-wider">OFF</div>
           </div>
-        </div>
-
-        {/* Right: Info + Actions */}
-        <div className="flex-1 p-4 flex items-center justify-between gap-4">
-          {/* Info */}
-          <div className="flex-1 min-w-0">
+          
+          <div>
             <div className="flex items-center gap-2 mb-1">
-              <span 
-                className={`font-mono text-xl font-black tracking-tight ${
-                  coupon.is_active ? 'text-slate-900' : 'text-slate-500'
-                }`}
-              >
+              <span className={`font-mono text-xl font-black tracking-tight ${isEffectivelyActive ? 'text-slate-900' : 'text-slate-500'}`}>
                 {coupon.code}
               </span>
+            </div>
+            <div className="flex items-center gap-2">
               {coupon.is_active ? (
-                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-                  Active
-                </span>
+                isExpired ? (
+                  <span className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold uppercase tracking-wider rounded-full">
+                    Expired
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider rounded-full">
+                    Active
+                  </span>
+                )
               ) : (
-                <span className="px-2 py-0.5 bg-slate-200 text-slate-600 text-xs font-semibold rounded-full">
+                <span className="px-2 py-0.5 bg-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded-full">
                   Inactive
                 </span>
               )}
             </div>
-            <p className="text-sm text-slate-500 mb-2 truncate">
-              {coupon.description || "No description"}
-            </p>
-            <div className="flex items-center gap-4 text-xs text-slate-400">
-              <span className="flex items-center gap-1">
-                <Users className="w-3.5 h-3.5" />
-                <span className="font-medium text-slate-600">{coupon.used_count}/{coupon.usage_limit || "∞"}</span>
-                used
-              </span>
-              {coupon.min_order_amount > 0 && (
-                <span className="flex items-center gap-1">
-                  <IndianRupee className="w-3 h-3" />
-                  <span className="font-medium text-slate-600">{coupon.min_order_amount}</span>
-                  min
-                </span>
-              )}
-              {coupon.expires_at && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span className="font-medium text-slate-600">
-                    {new Date(coupon.expires_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-                  </span>
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => onToggleActive(coupon)}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                coupon.is_active 
-                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' 
-                  : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-              }`}
-            >
-              {coupon.is_active ? "Deactivate" : "Activate"}
-            </button>
-            <button
-              onClick={() => onEdit(coupon)}
-              className="p-2.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
-              title="Edit"
-            >
-              <Edit className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => onDelete(coupon.id)}
-              className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
-              title="Delete"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
           </div>
         </div>
+
+        {/* Action Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger className="p-2 -mr-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none">
+            <MoreHorizontal className="w-5 h-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[160px]">
+            <DropdownMenuItem onClick={() => onEdit(coupon)} className="cursor-pointer">
+              <Edit className="w-4 h-4 mr-2" /> Edit Details
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(coupon.id)} className="cursor-pointer text-red-600 focus:text-red-600">
+              <Trash2 className="w-4 h-4 mr-2" /> Delete Coupon
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Bottom Section - Details & Main Action */}
+      <div className="p-5 flex flex-col justify-between flex-1 gap-4">
+        <div className="space-y-3 flex-1">
+          {coupon.description && (
+            <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed">
+              {coupon.description}
+            </p>
+          )}
+          
+          <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-xs text-slate-500 pt-2">
+            <div className="flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <span className="truncate">
+                <span className="font-medium text-slate-700">{coupon.used_count}</span>
+                /{coupon.usage_limit || "∞"} used
+              </span>
+            </div>
+            
+            {coupon.min_order_amount > 0 && (
+              <div className="flex items-center gap-1.5">
+                <IndianRupee className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="truncate">
+                  Min: <span className="font-medium text-slate-700">{coupon.min_order_amount}</span>
+                </span>
+              </div>
+            )}
+            
+            {coupon.max_discount_amount && (
+              <div className="flex items-center gap-1.5">
+                <IndianRupee className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="truncate">
+                  Max: <span className="font-medium text-slate-700">{coupon.max_discount_amount}</span>
+                </span>
+              </div>
+            )}
+            
+            {coupon.expires_at && (
+              <div className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className={`truncate ${isExpired ? 'text-red-600 font-medium' : ''}`}>
+                  {isExpired ? 'Expired ' : 'Ends '}
+                  <span className={!isExpired ? "font-medium text-slate-700" : ""}>
+                    {new Date(coupon.expires_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <button
+          onClick={() => onToggleActive(coupon)}
+          className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+            coupon.is_active 
+              ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' 
+              : 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm'
+          }`}
+        >
+          {coupon.is_active ? "Deactivate Coupon" : "Activate Coupon"}
+        </button>
       </div>
     </div>
   );

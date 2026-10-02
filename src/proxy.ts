@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import {
   ADMIN_SESSION_COOKIE,
+  type AdminPermission,
   verifyAdminSessionToken,
 } from '@/shared/lib/admin-session'
 import { SITE_OFFLINE } from '@/shared/config/site-status'
@@ -22,6 +23,17 @@ function isPublicApiRoute(pathname: string): boolean {
   return PUBLIC_API_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   )
+}
+
+function requiredDashboardPermission(pathname: string): AdminPermission {
+  const routes: Array<[string, AdminPermission]> = [
+    ["/dashboard/users", "team.manage"], ["/dashboard/coupons", "promotions.manage"],
+    ["/dashboard/categories", "categories.manage"], ["/dashboard/add-product", "products.manage"],
+    ["/dashboard/products", "products.view"], ["/dashboard/orders", "orders.view"],
+    ["/dashboard/inquiries", "inquiries.manage"], ["/dashboard/reviews", "reviews.manage"],
+    ["/dashboard/featured", "featured.manage"],
+  ]
+  return routes.find(([route]) => pathname === route || pathname.startsWith(`${route}/`))?.[1] ?? "dashboard.view"
 }
 
 export default async function proxy(request: NextRequest) {
@@ -68,6 +80,10 @@ export default async function proxy(request: NextRequest) {
       const loginUrl = new URL('/admin/login', request.url)
       loginUrl.searchParams.set('redirect', pathname)
       return NextResponse.redirect(loginUrl)
+    }
+
+    if (!session.permissions.includes(requiredDashboardPermission(pathname))) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
     }
   }
 

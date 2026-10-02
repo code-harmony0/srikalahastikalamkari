@@ -84,41 +84,29 @@ export default function InquiryDetailsPage({
     switch (status) {
       case "new":
         return (
-          <Badge
-            variant="outline"
-            className="bg-blue-50 text-blue-700 border-blue-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm"
-          >
-            <AlertCircle className="h-3.5 w-3.5" />
-            <span className="capitalize">New</span>
+          <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+             <AlertCircle className="h-3.5 w-3.5" />
+             <span className="capitalize">New</span>
           </Badge>
         )
       case "solved":
         return (
-          <Badge
-            variant="outline"
-            className="bg-green-50 text-green-700 border-green-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm"
-          >
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            <span className="capitalize">Solved</span>
+          <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+             <CheckCircle2 className="h-3.5 w-3.5" />
+             <span className="capitalize">Solved</span>
           </Badge>
         )
       case "ignored":
         return (
-          <Badge
-            variant="outline"
-            className="bg-slate-100 text-slate-600 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm"
-          >
-            <XCircle className="h-3.5 w-3.5" />
-            <span className="capitalize">Ignored</span>
+          <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+             <XCircle className="h-3.5 w-3.5" />
+             <span className="capitalize">Ignored</span>
           </Badge>
         )
       default:
         return (
-          <Badge
-            variant="outline"
-            className="bg-slate-50 text-slate-600 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm"
-          >
-            <span className="capitalize">{status}</span>
+          <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+             <span className="capitalize">{status}</span>
           </Badge>
         )
     }
@@ -221,12 +209,13 @@ export default function InquiryDetailsPage({
                   <Mail className="h-5 w-5" />
                 </div>
                 <div className="overflow-hidden">
-                  <p
-                    className="text-sm font-medium text-slate-900 truncate"
+                  <a
+                    href={`mailto:${inquiry.email}`}
+                    className="text-sm font-medium text-slate-900 truncate hover:text-slate-600 hover:underline transition-all"
                     title={inquiry.email}
                   >
                     {inquiry.email}
-                  </p>
+                  </a>
                   <p className="text-xs text-slate-500">Email Address</p>
                 </div>
               </div>
@@ -237,9 +226,12 @@ export default function InquiryDetailsPage({
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">
+                    <a
+                      href={`tel:${inquiry.phone}`}
+                      className="text-sm font-medium text-slate-900 hover:text-slate-600 hover:underline transition-all"
+                    >
                       {inquiry.phone}
-                    </p>
+                    </a>
                     <p className="text-xs text-slate-500">Phone Number</p>
                   </div>
                 </div>
@@ -254,34 +246,53 @@ export default function InquiryDetailsPage({
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-3">
-              {inquiry.status !== "solved" && (
-                <Button
-                  className="w-full justify-start bg-green-600 hover:bg-green-700 text-white shadow-sm"
-                  onClick={() => updateStatus("solved")}
-                >
-                  <CheckCircle2 className="mr-2 h-4 w-4" />
-                  Mark as Solved
-                </Button>
+              {inquiry.status === "new" && (
+                <>
+                  <Button
+                    className="w-full justify-start bg-slate-900 hover:bg-slate-800 text-white shadow-sm"
+                    onClick={() => updateStatus("solved")}
+                  >
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    Mark as Solved
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start border-slate-200 text-slate-600 hover:bg-slate-50"
+                    onClick={() => updateStatus("ignored")}
+                  >
+                    <XCircle className="mr-2 h-4 w-4" />
+                    Mark as Ignored
+                  </Button>
+                </>
               )}
-              {inquiry.status !== "new" && (
-                <Button
-                  variant="outline"
-                  className="w-full justify-start border-blue-200 text-blue-700 hover:bg-blue-50"
-                  onClick={() => updateStatus("new")}
-                >
-                  <AlertCircle className="mr-2 h-4 w-4" />
-                  Mark as New
-                </Button>
-              )}
-              {inquiry.status !== "ignored" && (
+              {inquiry.status === "solved" && (
                 <Button
                   variant="outline"
                   className="w-full justify-start border-slate-200 text-slate-600 hover:bg-slate-50"
-                  onClick={() => updateStatus("ignored")}
+                  onClick={() => updateStatus("new")}
                 >
-                  <XCircle className="mr-2 h-4 w-4" />
-                  Mark as Ignored
+                  <AlertCircle className="mr-2 h-4 w-4" />
+                  Mark as Unresolved (New)
                 </Button>
+              )}
+              {inquiry.status === "ignored" && (
+                <>
+                  <Button
+                    className="w-full justify-start bg-slate-900 hover:bg-slate-800 text-white shadow-sm"
+                    onClick={() => updateStatus("solved")}
+                  >
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    Mark as Solved
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start border-slate-200 text-slate-600 hover:bg-slate-50"
+                    onClick={() => updateStatus("new")}
+                  >
+                    <AlertCircle className="mr-2 h-4 w-4" />
+                    Move back to New
+                  </Button>
+                </>
               )}
             </CardContent>
           </Card>

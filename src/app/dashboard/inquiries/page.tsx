@@ -39,6 +39,12 @@ import {
   AlertCircle,
   Eye
 } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/ui/dropdown-menu"
 // Dropdown imports removed as requested to show direct actions
 
 export default function InquiriesPage() {
@@ -111,29 +117,29 @@ export default function InquiriesPage() {
     switch (status) {
       case "new":
         return (
-          <Badge variant="outline" className="bg-white text-slate-700 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+          <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
              <AlertCircle className="h-3.5 w-3.5" />
              <span className="capitalize">New</span>
           </Badge>
         )
       case "solved":
         return (
-          <Badge variant="outline" className="bg-slate-900 text-white border-slate-900 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+          <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
              <CheckCircle2 className="h-3.5 w-3.5" />
              <span className="capitalize">Solved</span>
           </Badge>
         )
       case "ignored":
         return (
-          <Badge variant="outline" className="bg-slate-50 text-slate-500 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+          <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
              <XCircle className="h-3.5 w-3.5" />
              <span className="capitalize">Ignored</span>
           </Badge>
         )
       default:
         return (
-          <Badge variant="outline" className="bg-white text-slate-600 border-slate-200 px-2 py-0.5 text-xs font-medium uppercase tracking-wide">
-            {status}
+          <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 px-3 py-1 flex items-center gap-1.5 w-fit rounded-full font-medium shadow-sm">
+             <span className="capitalize">{status}</span>
           </Badge>
         )
     }
@@ -184,7 +190,7 @@ export default function InquiriesPage() {
       </div>
 
       {/* Main Table */}
-      <div className="bg-white rounded-xl border border-slate-200/60 shadow-sm overflow-hidden">
+      <div className="hidden md:block bg-white rounded-xl border border-slate-200/60 shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
@@ -250,17 +256,16 @@ export default function InquiriesPage() {
                   </TableCell>
                   <TableCell className="align-middle py-3">
                     <div className="text-sm text-slate-600 font-medium whitespace-nowrap">
-                      {new Date(inquiry.created_at).toLocaleDateString('en-IN', {
+                      {new Date(inquiry.created_at).toLocaleDateString('en-US', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric'
                       })}
                     </div>
                   </TableCell>
+                  
                   <TableCell className="align-middle py-2 pr-4 text-right" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {/* View action handled by row click */}
-                        
+                    <div className="flex justify-end gap-2 items-center">
                         {inquiry.status !== 'solved' && (
                           <Button
                             size="sm"
@@ -272,18 +277,40 @@ export default function InquiriesPage() {
                           </Button>
                         )}
 
-                        {inquiry.status !== 'ignored' && (
-                          <Button
-                            size="sm"
-                            variant="outline" 
-                            className="h-8 px-3 text-xs border-slate-200 text-slate-600 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all rounded-lg gap-1.5"
-                            onClick={() => updateStatus(inquiry.id, 'ignored')}
-                          >
-                            <XCircle className="h-3.5 w-3.5" /> Ignore
-                          </Button>
-                        )}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-600">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-[160px]">
+                            {inquiry.status !== 'ignored' && (
+                              <DropdownMenuItem 
+                                onClick={() => updateStatus(inquiry.id, 'ignored')}
+                                className="text-red-600 focus:text-red-600 cursor-pointer"
+                              >
+                                <XCircle className="h-4 w-4 mr-2" /> Mark as Ignored
+                              </DropdownMenuItem>
+                            )}
+                            {inquiry.status !== 'new' && (
+                              <DropdownMenuItem 
+                                onClick={() => updateStatus(inquiry.id, 'new')}
+                                className="cursor-pointer"
+                              >
+                                <AlertCircle className="h-4 w-4 mr-2" /> Mark as New
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem 
+                              onClick={() => router.push(`/dashboard/inquiries/${inquiry.id}`)}
+                              className="cursor-pointer"
+                            >
+                              <Eye className="h-4 w-4 mr-2" /> View Details
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                   </TableCell>
+
                 </TableRow>
               ))
             )}
@@ -341,6 +368,110 @@ export default function InquiriesPage() {
               Next
             </Button>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden space-y-4">
+        {loading ? (
+          <div className="h-48 flex items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
+          </div>
+        ) : inquiries.length === 0 ? (
+          <div className="bg-white p-8 rounded-xl border border-slate-200 text-center">
+            <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
+              <MessageSquare className="h-6 w-6 text-slate-300" />
+            </div>
+            <p className="text-sm font-medium text-slate-500">No inquiries found</p>
+          </div>
+        ) : (
+          inquiries.map((inquiry) => (
+            <div 
+              key={inquiry.id} 
+              className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:border-slate-300 transition-colors"
+              onClick={() => router.push(`/dashboard/inquiries/${inquiry.id}`)}
+            >
+              <div className="flex justify-between items-start mb-3">
+                <div className="pr-4">
+                  <p className="font-bold text-slate-900 text-sm">{inquiry.name}</p>
+                  <p className="text-xs text-slate-500">{inquiry.email}</p>
+                </div>
+                <div>{getStatusBadge(inquiry.status)}</div>
+              </div>
+              
+              <div className="mb-4">
+                <p className="text-sm font-medium text-slate-700">{inquiry.subject || "No Subject"}</p>
+                <p className="text-sm text-slate-500 line-clamp-2 mt-1">{inquiry.message}</p>
+              </div>
+
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100" onClick={(e) => e.stopPropagation()}>
+                <span className="text-xs font-medium text-slate-400">
+                  {new Date(inquiry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+                
+                <div className="flex items-center gap-2">
+                  {inquiry.status !== 'solved' && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 px-3 text-xs border-slate-200 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 hover:border-emerald-100 transition-all rounded-lg gap-1.5"
+                      onClick={() => updateStatus(inquiry.id, 'solved')}
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5" /> Solve
+                    </Button>
+                  )}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-600 bg-slate-50">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[160px]">
+                      {inquiry.status !== 'ignored' && (
+                        <DropdownMenuItem 
+                          onClick={() => updateStatus(inquiry.id, 'ignored')}
+                          className="text-red-600 focus:text-red-600 cursor-pointer"
+                        >
+                          <XCircle className="h-4 w-4 mr-2" /> Mark as Ignored
+                        </DropdownMenuItem>
+                      )}
+                      {inquiry.status !== 'new' && (
+                        <DropdownMenuItem 
+                          onClick={() => updateStatus(inquiry.id, 'new')}
+                          className="cursor-pointer"
+                        >
+                          <AlertCircle className="h-4 w-4 mr-2" /> Mark as New
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+        
+        {/* Mobile Pagination */}
+        <div className="flex items-center justify-between pt-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1 || loading}
+            className="h-9 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+          >
+            Previous
+          </Button>
+          <span className="text-xs text-slate-500 font-medium">Page {page} of {Math.max(1, Math.ceil(totalCount / itemsPerPage))}</span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(p => Math.min(Math.ceil(totalCount / itemsPerPage), p + 1))}
+            disabled={page >= Math.ceil(totalCount / itemsPerPage) || loading}
+            className="h-9 text-xs bg-white border-slate-200 text-slate-600 hover:text-slate-900"
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>

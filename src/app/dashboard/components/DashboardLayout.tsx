@@ -6,9 +6,11 @@ import { useSidebar, SidebarProvider } from "@/shared/contexts/SidebarContext"
 import "../styles/dashboard.css"
 import "../styles/tables.css"
 import { Menu } from "lucide-react"
+import type { AdminSessionPayload } from "@/shared/lib/admin-session"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
+  adminSession: AdminSessionPayload
 }
 
 function MainContent({ children }: { children: React.ReactNode }) {
@@ -22,7 +24,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   )
 }
 
-function DashboardLayoutContent({ children }: DashboardLayoutProps) {
+function DashboardLayoutContent({ children, adminSession }: DashboardLayoutProps) {
   const { isCollapsed, toggleSidebar } = useSidebar()
   return (
     <div className="dashboard-root">
@@ -44,7 +46,7 @@ function DashboardLayoutContent({ children }: DashboardLayoutProps) {
         onClick={() => !isCollapsed && toggleSidebar()}
       />
 
-      <Sidebar />
+      <Sidebar adminSession={adminSession} />
       <MainContent>{children}</MainContent>
     </div>
   )

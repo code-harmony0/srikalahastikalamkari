@@ -15,10 +15,54 @@ const MIN_SECRET_LENGTH = 32
 
 export { ADMIN_SESSION_COOKIE }
 
+export const ADMIN_ROLES = ["super_admin", "operations", "sales_staff"] as const
+export type AdminRole = (typeof ADMIN_ROLES)[number]
+
+export const ADMIN_PERMISSIONS = [
+  "dashboard.view",
+  "orders.view",
+  "orders.manage",
+  "products.view",
+  "products.manage",
+  "categories.manage",
+  "inquiries.manage",
+  "reviews.manage",
+  "featured.manage",
+  "promotions.manage",
+  "team.manage",
+] as const
+export type AdminPermission = (typeof ADMIN_PERMISSIONS)[number]
+
+export const ROLE_DEFAULT_PERMISSIONS: Record<AdminRole, AdminPermission[]> = {
+  super_admin: [...ADMIN_PERMISSIONS],
+  operations: [
+    "dashboard.view", "orders.view", "orders.manage", "products.view",
+    "products.manage", "inquiries.manage", "reviews.manage", "featured.manage",
+  ],
+  sales_staff: ["dashboard.view", "orders.view", "orders.manage", "inquiries.manage"],
+}
+
 export type AdminSessionPayload = {
   sub: string
+  email: string
+  name: string
+  role: AdminRole
+  permissions: AdminPermission[]
   iat: number
   exp: number
+}
+
+export type AdminSessionIdentity = Pick<
+  AdminSessionPayload,
+  "sub" | "email" | "name" | "role" | "permissions"
+>
+
+const LEGACY_SUPER_ADMIN: AdminSessionIdentity = {
+  sub: "admin",
+  email: "",
+  name: "Store owner",
+  role: "super_admin",
+  permissions: ROLE_DEFAULT_PERMISSIONS.super_admin,
 }
 
 function base64UrlEncode(bytes: Uint8Array): string {
@@ -69,11 +113,13 @@ function timingSafeEqual(a: string, b: string): boolean {
 
 export async function createAdminSessionToken(
   maxAgeSeconds: number,
+  identity: Partial<AdminSessionIdentity> = {},
 ): Promise<string> {
   const secret = getSecret()
   const now = Math.floor(Date.now() / 1000)
   const payload: AdminSessionPayload = {
-    sub: "admin",
+    ...LEGACY_SUPER_ADMIN,
+    ...identity,
     iat: now,
     exp: now + maxAgeSeconds,
   }
@@ -115,7 +161,10 @@ export async function verifyAdminSessionToken(
       new TextDecoder().decode(base64UrlDecode(encoded)),
     ) as AdminSessionPayload
 
-    if (payload.sub !== "admin") return null
+    if (!payload.sub || (!payload.email && payload.sub !== "admin")) return null
+    if (!ADMIN_ROLES.includes(payload.role)) return null
+    if (!Array.isArray(payload.permissions) || payload.permissions.some((permission) => !ADMIN_PERMISSIONS.includes(permission))) return null
+    if (typeof payload.name !== "string") return null
     if (typeof payload.exp !== "number") return null
     if (payload.exp <= Math.floor(Date.now() / 1000)) return null
 

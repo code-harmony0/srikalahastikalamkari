@@ -9,7 +9,7 @@ import { FaWhatsapp } from "react-icons/fa"
 import { productsService } from "@/services/products"
 import { Product } from "@/shared/types"
 import { cn } from "@/shared/utils"
-import { useAllReviews, type Review } from "@/shared/hooks/use-reviews"
+import { useApprovedReviews, type Review } from "@/shared/hooks/use-reviews"
 import { getImageTier } from "@/lib/image-tiers"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { CuratedProductCard, CuratedProductCardSkeleton } from "@/features/products/CuratedProductCard"
@@ -103,7 +103,7 @@ export default function HomePage() {
   const [heroIndex, setHeroIndex] = useState(0)
   const [heroPaused, setHeroPaused] = useState(false)
 
-  const { reviews: allReviews } = useAllReviews()
+  const { reviews: allReviews } = useApprovedReviews()
   const reviews = useMemo(
     () =>
       (allReviews || [])

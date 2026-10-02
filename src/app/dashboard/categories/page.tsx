@@ -104,6 +104,9 @@ const Categories = () => {
         return 0;
       });
       setCategories(sortedCats)
+      if (sortedCats.length > 0) {
+         setSelectedCategoryId((prev) => prev || sortedCats[0].id)
+      }
     }
     if (subCats) setSubCategories(subCats)
   }
@@ -408,7 +411,7 @@ const Categories = () => {
     ? subCategories.filter(
         (subCat) => String(subCat.category_id) === String(selectedCategoryId)
       )
-    : subCategories
+    : []
 
   return (
     <div className="min-h-screen bg-[#f8fafc] p-4 md:p-6 font-sans space-y-6">
@@ -423,320 +426,227 @@ const Categories = () => {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3 items-stretch">
-        {/* Categories Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
-          <div className="p-6 border-b border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">Categories</h3>
-                <p className="text-sm text-slate-500 mt-1">
-                  {selectedCategoryId ? (
-                    <span className="flex items-center gap-1.5 text-xs text-blue-600 font-medium">
-                      Filtered &middot;{" "}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedCategoryId(null)}
-                        className="underline hover:text-blue-800"
-                      >
-                        Show all
-                      </button>
-                    </span>
-                  ) : (
-                    "Select a category to filter"
-                  )}
-                </p>
-              </div>
-              <Button
+      <div className="grid gap-6 md:grid-cols-12 items-stretch h-[calc(100vh-140px)]">
+        {/* Categories List (Left - Desktop) */}
+        <div className="hidden md:flex flex-col md:col-span-4 lg:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden h-full">
+           <div className="p-4 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
+             <h3 className="font-bold text-slate-900">Categories</h3>
+             <Button
+                size="sm"
+                variant="ghost"
                 onClick={() => openCategoryDialog()}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl h-10 px-4"
+                className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2 rounded-lg"
               >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Category
+                <Plus className="mr-1 h-4 w-4" />
+                Add
               </Button>
-            </div>
-          </div>
-          <div className="p-6 flex-1 overflow-auto">
-            <Table>
-              <TableHeader className="bg-slate-50/50">
-                <TableRow className="hover:bg-slate-50/50 border-slate-100">
-                  <TableHead className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
-                    Name
-                  </TableHead>
-                  <TableHead className="w-[100px] text-slate-700 font-semibold text-xs uppercase tracking-wider text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {categories.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={2}
-                      className="text-center py-12 text-slate-400"
-                    >
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
-                          <Plus className="h-5 w-5 text-slate-400" />
-                        </div>
-                        <p className="text-sm">No categories found</p>
-                        <p className="text-xs text-slate-400">Click "Seed Data" to get started</p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  categories.map((cat) => {
-                    const isSelected = selectedCategoryId === cat.id
-                    const subCount = subCategories.filter(
-                      (s) => String(s.category_id) === String(cat.id)
-                    ).length
-
-                    return (
-                      <TableRow
-                        key={cat.id}
-                        onClick={() =>
-                          setSelectedCategoryId((prev) =>
-                            prev === cat.id ? null : cat.id
-                          )
-                        }
-                        className={`cursor-pointer transition-all duration-200 border-slate-100 ${
-                          isSelected
-                            ? "bg-blue-50/50"
-                            : "hover:bg-slate-50/70"
-                        }`}
-                      >
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-3">
-                            {isSelected && (
-                              <div className="w-1 h-6 bg-blue-500 rounded-r-full absolute left-0" />
-                            )}
-                            <span
-                              className={`transition-colors ${
-                                isSelected
-                                  ? "text-blue-700 font-bold"
-                                  : "text-slate-700 font-medium"
-                              }`}
-                            >
-                              {cat.name}
-                            </span>
-                            <span
-                              className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
-                                isSelected
-                                  ? "bg-blue-100 text-blue-700 font-semibold"
-                                  : "bg-slate-100 text-slate-500 font-medium"
-                              }`}
-                            >
-                              {subCount}
-                            </span>
-                            {isSelected && (
-                              <span className="text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200">
-                                ACTIVE
-                              </span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div
-                            className="flex gap-1 justify-end"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openCategoryDialog(cat)}
-                              className={`h-8 w-8 rounded-lg transition-colors ${
-                                isSelected
-                                  ? "text-blue-600 hover:text-blue-800 hover:bg-blue-100"
-                                  : "text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-                              }`}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => confirmDeleteCategory(cat.id)}
-                              className={`h-8 w-8 rounded-lg transition-colors ${
-                                isSelected
-                                  ? "text-red-500 hover:text-red-700 hover:bg-red-50"
-                                  : "text-slate-400 hover:text-red-600 hover:bg-red-50"
-                              }`}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
+           </div>
+           
+           <div className="flex-1 overflow-y-auto p-3 space-y-1">
+             {categories.length === 0 ? (
+               <div className="text-center py-12 text-slate-400">
+                  <p className="text-sm">No categories found</p>
+               </div>
+             ) : (
+               categories.map((cat) => {
+                 const isSelected = selectedCategoryId === cat.id;
+                 const subCount = subCategories.filter(s => String(s.category_id) === String(cat.id)).length;
+                 return (
+                   <div 
+                     key={cat.id}
+                     onClick={() => setSelectedCategoryId(cat.id)}
+                     className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-colors ${
+                       isSelected ? 'bg-blue-50 text-blue-700' : 'hover:bg-slate-50 text-slate-700'
+                     }`}
+                   >
+                     <div className="flex items-center gap-3 overflow-hidden">
+                       <span className="font-semibold truncate">{cat.name}</span>
+                       <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 ${isSelected ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'}`}>
+                         {subCount}
+                       </span>
+                     </div>
+                     <div className={`flex items-center gap-1 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => { e.stopPropagation(); openCategoryDialog(cat); }}
+                          className={`h-7 w-7 rounded-lg ${isSelected ? 'hover:bg-blue-100 text-blue-600' : 'hover:bg-slate-200 text-slate-500'}`}
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => { e.stopPropagation(); confirmDeleteCategory(cat.id); }}
+                          className={`h-7 w-7 rounded-lg hover:bg-red-100 hover:text-red-700 ${isSelected ? 'text-blue-400' : 'text-slate-400'}`}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                     </div>
+                   </div>
+                 );
+               })
+             )}
+           </div>
         </div>
 
-        {/* SubCategories Card */}
-        <div className="md:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
-          <div className="p-4 border-b border-slate-100">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-slate-900">
-                    Subcategories
-                  </h3>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    {filteredSubCategories.length}{" "}
-                    {filteredSubCategories.length === 1 ? "item" : "items"}
-                  </span>
-                </div>
-                <p className="text-sm text-slate-500 mt-1">
-                  {selectedCategoryId ? (
-                    <span>
-                      Showing subcategories for{" "}
-                      <span className="font-semibold text-slate-900">
-                        {getCategoryName(selectedCategoryId)}
-                      </span>
-                    </span>
-                  ) : (
-                    "Product subcategories across all categories"
-                  )}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                {selectedCategoryId && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedCategoryId(null)}
-                    className="h-10 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-100 text-xs"
-                  >
-                    Show All ({subCategories.length})
-                  </Button>
-                )}
-                <Button
-                  onClick={() => openSubCategoryDialog()}
-                  disabled={categories.length === 0}
-                  className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-10 px-4 disabled:opacity-50"
+        {/* SubCategories Panel (Right) */}
+        <div className="md:col-span-8 lg:col-span-9 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full overflow-hidden">
+           {/* Mobile Category Selector */}
+           <div className="md:hidden p-4 border-b border-slate-100 bg-slate-50">
+             <div className="flex items-center justify-between gap-2 mb-3">
+               <label className="text-sm font-semibold text-slate-700">Select Category</label>
+               <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => openCategoryDialog()}
+                  className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2 rounded-lg"
                 >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Subcategory
+                  <Plus className="mr-1 h-4 w-4" />
+                  New
                 </Button>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 flex-1 overflow-auto">
-            <Table>
-              <TableHeader className="bg-slate-50/50">
-                <TableRow className="hover:bg-slate-50/50 border-slate-100">
-                  <TableHead className="w-[80px] text-slate-700 font-semibold text-xs uppercase tracking-wider">
-                    Image
-                  </TableHead>
-                  <TableHead className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
-                    Name
-                  </TableHead>
-                  <TableHead className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
-                    Category
-                  </TableHead>
-                  <TableHead className="w-[100px] text-slate-700 font-semibold text-xs uppercase tracking-wider text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredSubCategories.length === 0 ? (
-                  <TableRow>
-                     <TableCell colSpan={4} className="text-center py-12 text-slate-400">
-                       <div className="flex flex-col items-center gap-3">
-                         <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
-                           <Plus className="h-5 w-5 text-slate-400" />
-                         </div>
-                         {selectedCategoryId ? (
-                           <>
-                             <p className="text-sm font-medium text-slate-700">
-                               No subcategories for "{getCategoryName(selectedCategoryId)}"
-                             </p>
-                             <p className="text-xs text-slate-400">
-                               Click "Add Subcategory" to add one to this category
-                             </p>
+             </div>
+             <Select value={selectedCategoryId || ""} onValueChange={setSelectedCategoryId}>
+               <SelectTrigger className="w-full bg-white h-11 rounded-xl">
+                 <SelectValue placeholder="Select a category" />
+               </SelectTrigger>
+               <SelectContent className="rounded-xl">
+                 {categories.map(cat => (
+                   <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                 ))}
+               </SelectContent>
+             </Select>
+             {selectedCategoryId && (
+               <div className="flex gap-2 mt-3">
+                 <Button variant="outline" size="sm" className="flex-1 h-9 rounded-lg text-xs" onClick={() => openCategoryDialog(categories.find(c => c.id === selectedCategoryId))}>
+                   Edit Category
+                 </Button>
+                 <Button variant="outline" size="sm" className="flex-1 h-9 rounded-lg text-xs text-red-600 hover:text-red-700" onClick={() => confirmDeleteCategory(selectedCategoryId)}>
+                   Delete Category
+                 </Button>
+               </div>
+             )}
+           </div>
+
+           {/* Header */}
+           <div className="p-4 sm:p-6 border-b border-slate-100 shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+             <div>
+               <h3 className="text-xl font-bold text-slate-900 flex items-center gap-3">
+                 {selectedCategoryId ? getCategoryName(selectedCategoryId) : "Subcategories"}
+                 {selectedCategoryId && (
+                   <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                     {filteredSubCategories.length} items
+                   </span>
+                 )}
+               </h3>
+               <p className="text-sm text-slate-500 mt-1">
+                 {selectedCategoryId ? "Manage subcategories for this specific category" : "Select a category to view its subcategories"}
+               </p>
+             </div>
+             <Button
+                onClick={() => openSubCategoryDialog()}
+                disabled={!selectedCategoryId}
+                className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-10 px-4 disabled:opacity-50 shrink-0 w-full sm:w-auto shadow-sm"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Subcategory
+              </Button>
+           </div>
+           
+           {/* Subcategories List */}
+           <div className="flex-1 overflow-auto p-4 sm:p-6">
+             <div className="border border-slate-100 rounded-xl overflow-hidden">
+               <Table>
+                 <TableHeader className="bg-slate-50/80">
+                   <TableRow className="hover:bg-transparent border-slate-100">
+                     <TableHead className="w-[64px] py-3 pl-4"></TableHead>
+                     <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-600 py-3">Subcategory Name</TableHead>
+                     <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-600 py-3 pr-4 text-right w-[120px]">Actions</TableHead>
+                   </TableRow>
+                 </TableHeader>
+                 <TableBody>
+                   {filteredSubCategories.length === 0 ? (
+                     <TableRow>
+                        <TableCell colSpan={3} className="text-center py-12 text-slate-400">
+                          <div className="flex flex-col items-center gap-3">
+                            <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center">
+                              <Plus className="h-5 w-5 text-slate-400" />
+                            </div>
+                            {selectedCategoryId ? (
+                              <>
+                                <p className="text-sm font-medium text-slate-700">
+                                  No subcategories for "{getCategoryName(selectedCategoryId)}"
+                                </p>
+                                <p className="text-xs text-slate-400">
+                                  Click "Add Subcategory" to add one
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="text-sm">No subcategories found</p>
+                                <p className="text-xs text-slate-400">Select a category first</p>
+                              </>
+                            )}
+                          </div>
+                        </TableCell>
+                     </TableRow>
+                   ) : (
+                     filteredSubCategories.map((subCat) => (
+                       <TableRow
+                         key={subCat.id}
+                         className="hover:bg-slate-50/50 border-slate-100 transition-colors"
+                       >
+                         <TableCell className="pl-4 py-2 w-[64px]">
+                           <div 
+                             className="relative h-11 w-11 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 shrink-0"
+                           >
+                              {subCat.image_url ? (
+                                <OptimizedImage
+                                  src={subCat.image_url}
+                                  alt={subCat.name}
+                                  fill
+                                  className="object-cover"
+                                  imageType="thumbnail"
+                                  sizes="44px"
+                                  placeholder="empty"
+                                />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center bg-slate-50 text-slate-300">
+                                  <Upload className="h-4 w-4" />
+                                </div>
+                              )}
+                           </div>
+                         </TableCell>
+                         <TableCell className="font-medium text-slate-900 py-3">
+                           {subCat.name}
+                         </TableCell>
+                         <TableCell className="text-right pr-4 py-4">
+                           <div className="flex gap-1 justify-end">
                              <Button
-                               variant="outline"
-                               size="sm"
-                               onClick={() => setSelectedCategoryId(null)}
-                               className="mt-2 text-xs rounded-xl"
+                               variant="ghost"
+                               size="icon"
+                               onClick={() => openSubCategoryDialog(subCat)}
+                               className="h-8 w-8 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-900"
                              >
-                               View all subcategories
+                               <Pencil className="h-4 w-4" />
                              </Button>
-                           </>
-                         ) : (
-                           <>
-                             <p className="text-sm">No subcategories found</p>
-                             <p className="text-xs text-slate-400">Add a subcategory to organize products</p>
-                           </>
-                         )}
-                       </div>
-                     </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredSubCategories.map((subCat) => (
-                    <TableRow
-                      key={subCat.id}
-                      className="hover:bg-slate-50/50 border-slate-100"
-                    >
-                      <TableCell>
-                        <div 
-                          className="relative h-16 w-16 rounded-md bg-slate-100 overflow-hidden border border-slate-200 cursor-zoom-in"
-                          onMouseEnter={() => subCat.image_url && setHoveredImage({ url: subCat.image_url, name: subCat.name })}
-                          onMouseLeave={() => setHoveredImage(null)}
-                        >
-                           {subCat.image_url ? (
-                             <OptimizedImage
-                               src={subCat.image_url}
-                               alt={subCat.name}
-                               fill
-                               className="object-cover"
-                               imageType="thumbnail"
-                               sizes="64px"
-                               placeholder="empty"
-                             />
-                           ) : (
-                             <div className="h-full w-full flex items-center justify-center bg-slate-50 text-slate-300">
-                               <Upload className="h-4 w-4" />
-                             </div>
-                           )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium text-slate-900">
-                        {subCat.name}
-                      </TableCell>
-                      <TableCell className="text-sm text-slate-500">
-                        {getCategoryName(subCat.category_id)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-1 justify-end">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => openSubCategoryDialog(subCat)}
-                            className="h-8 w-8 hover:bg-slate-100 rounded-lg"
-                          >
-                            <Pencil className="h-4 w-4 text-slate-600" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => confirmDeleteSubCategory(subCat.id)}
-                            className="h-8 w-8 hover:bg-red-50 rounded-lg"
-                          >
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                             <Button
+                               variant="ghost"
+                               size="icon"
+                               onClick={() => confirmDeleteSubCategory(subCat.id)}
+                               className="h-8 w-8 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600"
+                             >
+                               <Trash2 className="h-4 w-4" />
+                             </Button>
+                           </div>
+                         </TableCell>
+                       </TableRow>
+                     ))
+                   )}
+                 </TableBody>
+               </Table>
+             </div>
+           </div>
         </div>
       </div>
 

@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  getAllReviews as getAllReviewsAction,
+  getAdminReviews,
   approveReview as approveReviewAction,
+  rejectReview as rejectReviewAction,
   deleteReview as deleteReviewAction,
   toggleReviewFeatured as toggleReviewFeaturedAction,
 } from "@/app/dashboard/reviews/actions";
@@ -22,6 +24,10 @@ export interface Review {
   is_featured: boolean;
   helpful_count: number;
   created_at: string;
+  products?: {
+    name: string;
+    images: string[];
+  };
 }
 
 interface UseReviewsReturn {
@@ -31,39 +37,32 @@ interface UseReviewsReturn {
   ratingDistribution: { [key: number]: number };
   isLoading: boolean;
   error: string | null;
-  submitReview: (review: Omit<Review, 'id' | 'is_approved' | 'is_featured' | 'helpful_count' | 'created_at' | 'is_verified_purchase'>) => Promise<boolean>;
+  submitReview: (review: Omit<Review, 'id' | 'is_approved' | 'is_featured' | 'helpful_count' | 'created_at' | 'is_verified_purchase' | 'products'>) => Promise<boolean>;
   markHelpful: (reviewId: string) => Promise<void>;
 }
 
 export function useReviews(productId: string): UseReviewsReturn {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const fetchReviews = useCallback(async () => {
-    if (!productId) return;
-    
-    setIsLoading(true);
-    const { data, error: fetchError } = await supabase
-      .from("reviews" as any)
-      .select("*")
-      .eq("product_id", productId)
-      .eq("is_approved", true)
-      .order("created_at", { ascending: false });
+  const { data: reviews = [], isLoading, error } = useQuery({
+    queryKey: ["reviews", "product", productId],
+    queryFn: async () => {
+      if (!productId) return [];
+      const { data, error: fetchError } = await supabase
+        .from("reviews" as any)
+        .select("*")
+        .eq("product_id", productId)
+        .eq("is_approved", true)
+        .order("created_at", { ascending: false });
 
-    if (fetchError) {
-      setError("Failed to load reviews");
-    } else {
-      setReviews((data as unknown as Review[]) || []);
-    }
-    setIsLoading(false);
-  }, [productId]);
+      if (fetchError) throw fetchError;
+      return (data as unknown as Review[]) || [];
+    },
+    enabled: !!productId,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+  });
 
-  useEffect(() => {
-    fetchReviews();
-  }, [fetchReviews]);
-
-  // Calculate stats
   const totalReviews = reviews.length;
   const averageRating = totalReviews > 0
     ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) * 10) / 10
@@ -74,24 +73,22 @@ export function useReviews(productId: string): UseReviewsReturn {
     return acc;
   }, {} as { [key: number]: number });
 
-  const submitReview = async (review: Omit<Review, 'id' | 'is_approved' | 'is_featured' | 'helpful_count' | 'created_at' | 'is_verified_purchase'>): Promise<boolean> => {
+  const submitReview = async (review: Omit<Review, 'id' | 'is_approved' | 'is_featured' | 'helpful_count' | 'created_at' | 'is_verified_purchase' | 'products'>): Promise<boolean> => {
     try {
       const { error: insertError } = await supabase
         .from("reviews" as any)
         .insert({
           ...review,
-          is_approved: false, // Requires moderation
+          is_approved: false,
           is_verified_purchase: false,
           helpful_count: 0,
         } as any);
 
       if (insertError) {
-        setError("Failed to submit review");
         return false;
       }
       return true;
     } catch (err) {
-      setError("Failed to submit review");
       return false;
     }
   };
@@ -105,10 +102,10 @@ export function useReviews(productId: string): UseReviewsReturn {
       .update({ helpful_count: review.helpful_count + 1 } as any)
       .eq("id", reviewId);
 
-    // Update local state
-    setReviews(prev => prev.map(r => 
-      r.id === reviewId ? { ...r, helpful_count: r.helpful_count + 1 } : r
-    ));
+    queryClient.setQueryData(["reviews", "product", productId], (old: Review[] | undefined) => {
+      if (!old) return old;
+      return old.map(r => r.id === reviewId ? { ...r, helpful_count: r.helpful_count + 1 } : r);
+    });
   };
 
   return {
@@ -117,47 +114,72 @@ export function useReviews(productId: string): UseReviewsReturn {
     totalReviews,
     ratingDistribution,
     isLoading,
-    error,
+    error: error ? error.message : null,
     submitReview,
     markHelpful,
   };
 }
 
-/**
- * Hook for admin to fetch all reviews (including unapproved)
- */
-export function useAllReviews() {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export function useApprovedReviews() {
+  const { data: reviews = [], isLoading } = useQuery({
+    queryKey: ["reviews", "approved-feed"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("reviews" as never)
+        .select("*")
+        .eq("is_approved", true)
+        .order("created_at", { ascending: false });
 
-  const fetchAllReviews = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const data = await getAllReviewsAction();
-      setReviews((data as unknown as Review[]) || []);
-    } catch (error) {
-      console.error("Failed to fetch reviews:", error);
-    }
-    setIsLoading(false);
-  }, []);
+      if (error) {
+        console.error("Failed to fetch approved reviews:", error);
+        return [];
+      }
+      return (data as unknown as Review[]) ?? [];
+    },
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+  });
 
-  useEffect(() => {
-    fetchAllReviews();
-  }, [fetchAllReviews]);
+  return { reviews, isLoading };
+}
+
+export function useAdminReviews() {
+  const queryClient = useQueryClient();
+  
+  const { data: reviews = [], isLoading, refetch } = useQuery({
+    queryKey: ["admin-reviews"],
+    queryFn: async () => {
+      const data = await getAdminReviews();
+      return (data as unknown as Review[]) || [];
+    },
+    refetchOnWindowFocus: true,
+  });
 
   const approveReview = async (id: string) => {
     try {
       await approveReviewAction(id);
-      fetchAllReviews();
+      await refetch();
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
     } catch (error) {
       console.error("Failed to approve review:", error);
+    }
+  };
+  
+  const rejectReview = async (id: string) => {
+    try {
+      await rejectReviewAction(id);
+      await refetch();
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
+    } catch (error) {
+      console.error("Failed to reject review:", error);
     }
   };
 
   const deleteReview = async (id: string) => {
     try {
       await deleteReviewAction(id);
-      fetchAllReviews();
+      await refetch();
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
     } catch (error) {
       console.error("Failed to delete review:", error);
     }
@@ -166,7 +188,8 @@ export function useAllReviews() {
   const toggleFeatured = async (id: string, current: boolean) => {
     try {
       await toggleReviewFeaturedAction(id, current);
-      fetchAllReviews();
+      await refetch();
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
     } catch (error) {
       console.error("Failed to toggle featured:", error);
     }
@@ -176,8 +199,9 @@ export function useAllReviews() {
     reviews,
     isLoading,
     approveReview,
+    rejectReview,
     deleteReview,
     toggleFeatured,
-    refetch: fetchAllReviews,
+    refetch,
   };
 }

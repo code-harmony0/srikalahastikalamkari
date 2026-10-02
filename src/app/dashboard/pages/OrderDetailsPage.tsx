@@ -31,6 +31,7 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
   // Shipping dialog state
   const [showShippingDialog, setShowShippingDialog] = useState(false);
   const [shippingCompany, setShippingCompany] = useState("DTDC");
+  const [customCourierName, setCustomCourierName] = useState("");
   const [trackingId, setTrackingId] = useState("");
   const [isShipping, setIsShipping] = useState(false);
 
@@ -98,9 +99,11 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
     const finalTrackingId = (shippingCompany === "Manual" || shippingCompany === "InStore")
       ? (trackingId || "MANUAL_DELIVERY")
       : trackingId;
+      
+    const finalCompany = shippingCompany === "Other" ? customCourierName : shippingCompany;
 
     const { data, error } = await shipOrder(order.id, {
-      shipping_company: shippingCompany,
+      shipping_company: finalCompany,
       tracking_id: finalTrackingId
     });
 
@@ -141,6 +144,21 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
         onClose={handleClose}
         onPack={handlePack}
         onShip={handleShip}
+        onCancel={async () => {
+          if (confirm('Are you sure you want to cancel this order?')) {
+            const success = await updateOrderStatus(order.id, 'cancelled');
+            if (success) {
+              setOrder({ ...order, status: 'cancelled' });
+              toast.success('Order Cancelled');
+            } else {
+              toast.error('Failed to cancel order');
+            }
+          }
+        }}
+        onPrintInvoice={() => {
+          window.print();
+          toast.info("Backend PDF generation required for formal invoices.");
+        }}
       />
 
       {/* Packing Mode Overlay */}
@@ -185,9 +203,17 @@ const OrderDetailsPage = ({ id }: { id?: string }) => {
                   <SelectItem value="IndiaPost">India Post</SelectItem>
                   <SelectItem value="Manual">Manual Delivery (Local)</SelectItem>
                   <SelectItem value="InStore">In-Store Pickup</SelectItem>
+                  <SelectItem value="Other">Other / Custom</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
+            {shippingCompany === "Other" && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                <Label>Custom Courier Name</Label>
+                <Input value={customCourierName} onChange={(e) => setCustomCourierName(e.target.value)} placeholder="e.g. FedEx" className="rounded-xl h-11" />
+              </div>
+            )}
 
             {shippingCompany !== "Manual" && shippingCompany !== "InStore" ? (
               <div className="space-y-2">

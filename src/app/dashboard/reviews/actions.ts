@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@supabase/supabase-js";
+import { assertAdminPermission } from "@/shared/lib/admin-guard";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -26,10 +27,18 @@ export interface ReviewData {
   helpful_count?: number;
 }
 
-export async function getAllReviews() {
+/** Includes pending reviews and therefore must never be called by storefront UI. */
+export async function getAdminReviews() {
+  await assertAdminPermission("reviews.manage");
   const { data, error } = await supabaseAdmin
     .from("reviews")
-    .select("*")
+    .select(`
+      *,
+      products (
+        name,
+        images
+      )
+    `)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -39,9 +48,27 @@ export async function getAllReviews() {
 }
 
 export async function approveReview(id: string) {
+  await assertAdminPermission("reviews.manage");
   const { data, error } = await supabaseAdmin
     .from("reviews")
-    .update({ is_approved: true })
+    .update({ is_approved: true, helpful_count: 0 })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+}
+
+export async function rejectReview(id: string) {
+  await assertAdminPermission("reviews.manage");
+  // We use helpful_count = -1 as a robust indicator for "Rejected" without requiring 
+  // a database schema migration. Pending is is_approved=false && helpful_count >= 0.
+  const { data, error } = await supabaseAdmin
+    .from("reviews")
+    .update({ is_approved: false, helpful_count: -1 })
     .eq("id", id)
     .select()
     .single();
@@ -53,6 +80,7 @@ export async function approveReview(id: string) {
 }
 
 export async function deleteReview(id: string) {
+  await assertAdminPermission("reviews.manage");
   const { error } = await supabaseAdmin.from("reviews").delete().eq("id", id);
 
   if (error) {
@@ -62,6 +90,7 @@ export async function deleteReview(id: string) {
 }
 
 export async function toggleReviewFeatured(id: string, isFeatured: boolean) {
+  await assertAdminPermission("reviews.manage");
   const { data, error } = await supabaseAdmin
     .from("reviews")
     .update({ is_featured: !isFeatured })
