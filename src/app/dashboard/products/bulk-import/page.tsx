@@ -73,6 +73,7 @@ interface ParsedProduct {
   existingImageIds: string[]
   // status
   errors: string[]
+  skipped?: boolean
   warnings: string[]
   status: "pending" | "uploading" | "success" | "error"
   statusMessage: string
@@ -167,6 +168,17 @@ const MAX_UPLOAD_RETRIES = 3
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
+// Everything that must be fixed before a row can be imported
+function getRowIssues(p: ParsedProduct, subCategories: any[]): string[] {
+  if (p.skipped) return []
+  const issues = [...p.errors]
+  if (!p.categoryId && !issues.some((e) => e.toLowerCase().includes("category"))) issues.push("Category is required")
+  const hasSubs = p.categoryId && subCategories.some((s) => String(s.category_id) === String(p.categoryId))
+  if (hasSubs && !p.subCategoryId && !issues.some((e) => e.toLowerCase().includes("subcategory"))) issues.push("Subcategory is required")
+  if (!(p.price > 0)) issues.push("Selling price is required")
+  return issues
+}
+
 export default function BulkImportPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -186,6 +198,8 @@ export default function BulkImportPage() {
   const [zipFile, setZipFile] = useState<File | null>(null)
   const [parsing, setParsing] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
+  const [reviewFilter, setReviewFilter] = useState<"all" | "fix" | "ready" | "skipped">("all")
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set())
   const [zipSizeWarning, setZipSizeWarning] = useState(false)
 
   // Network state
@@ -544,11 +558,6 @@ export default function BulkImportPage() {
 
         // Parse colors
         const colors = parseColors(colorsRaw)
-        const invalidColors = colorsRaw
-          .split(",")
-          .map((c) => c.trim())
-          .filter((c) => c && !normalizeColorName(c))
-        if (invalidColors.length > 0) errors.push(`Invalid colors: ${invalidColors.join(", ")} — use values from Colors dropdown`)
 
         // Get images from ZIP (lazy — entries only, no full extraction yet)
         const zipEntries = zipEntryMap.get(rowNum) ?? []
@@ -568,8 +577,7 @@ export default function BulkImportPage() {
           warnings.push("No images provided for this product.");
         }
 
-        if (price <= 0) warnings.push("Price is ₹0 — set it here or edit after import")
-        if (!description) warnings.push("No description — add it here or edit after import")
+                if (!description) warnings.push("No description — add it here or edit after import")
 
         return {
           rowNumber: rowNum,
@@ -601,7 +609,7 @@ export default function BulkImportPage() {
       setProducts(parsed)
       setStep("review")
 
-      const errorCount = parsed.filter((p) => p.errors.length > 0).length
+      const errorCount = parsed.filter((p) => getRowIssues(p, subCategories).length > 0).length
       const noImageCount = parsed.filter((p) => (p.zipEntries?.length ?? 0) === 0 && p.imageFiles.length === 0).length
 
       toast({
@@ -662,7 +670,7 @@ export default function BulkImportPage() {
   // ── Import All (with retry, concurrency, lazy extraction) ─────────────────
 
   const handleImportAll = async () => {
-    const validProducts = products.filter((p) => p.errors.length === 0)
+    const validProducts = products.filter((p) => !p.skipped && getRowIssues(p, subCategories).length === 0)
     if (validProducts.length === 0) {
       toast({ title: "No valid products", description: "Fix all errors before importing", variant: "destructive" })
       return
@@ -1105,9 +1113,17 @@ export default function BulkImportPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  const validCount = products.filter((p) => p.errors.length === 0).length
-  const errorCount = products.filter((p) => p.errors.length > 0).length
-  const warningCount = products.filter((p) => p.errors.length === 0 && (p.warnings?.length ?? 0) > 0).length
+  const skippedCount = products.filter((p) => p.skipped).length
+  const validCount = products.filter((p) => !p.skipped && getRowIssues(p, subCategories).length === 0).length
+  const errorCount = products.filter((p) => getRowIssues(p, subCategories).length > 0).length
+  const rowStatus = (p: ParsedProduct) =>
+    p.skipped ? "skipped" : getRowIssues(p, subCategories).length > 0 ? "fix" : "ready"
+  const visibleRows = reviewFilter === "all" ? products : products.filter((p) => rowStatus(p) === reviewFilter)
+  const selectedVisible = visibleRows.filter((p) => selectedRows.has(p.rowNumber)).length
+  const setSkipForSelected = (skipped: boolean) => {
+    setProducts((prev) => prev.map((p) => (selectedRows.has(p.rowNumber) ? { ...p, skipped } : p)))
+    setSelectedRows(new Set())
+  }
   const withImages = products.filter((p) => (p.zipEntries?.length ?? 0) > 0 || p.imageFiles.length > 0).length
   const successCount = importLog.filter((l) => l.status === "success").length
   const failCount = importLog.filter((l) => l.status === "error").length
@@ -1294,62 +1310,100 @@ export default function BulkImportPage() {
       {/* ── STEP 2: Review ─────────────────────────────────────────────────── */}
       {step === "review" && (
         <div className="space-y-4">
-          {/* Summary bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-white border rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-slate-900">{products.length}</p>
-              <p className="text-xs text-slate-500">Total Products</p>
-            </div>
-            <div className="bg-white border rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-green-600">{validCount - warningCount}</p>
-              <p className="text-xs text-slate-500">Ready</p>
-            </div>
-            <div className="bg-white border rounded-lg p-3 text-center">
-              <p className={`text-2xl font-bold ${warningCount > 0 ? "text-amber-500" : "text-slate-400"}`}>{warningCount}</p>
-              <p className="text-xs text-slate-500">Need Attention</p>
-            </div>
-            <div className="bg-white border rounded-lg p-3 text-center">
-              <p className={`text-2xl font-bold ${errorCount > 0 ? "text-red-600" : "text-slate-400"}`}>{errorCount}</p>
-              <p className="text-xs text-slate-500">Blocked</p>
-            </div>
-          </div>
-
-          {/* Status guide */}
-          <div className="bg-slate-50 border rounded-xl p-4 space-y-2">
-            <p className="text-sm font-medium text-slate-700">How this works:</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                <span className="text-slate-600"><strong>Ready</strong> — will import as-is</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
-                <span className="text-slate-600"><strong>Needs attention</strong> — missing price or description. Edit inline or fix after import</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <XCircle className="h-4 w-4 text-red-500 shrink-0" />
-                <span className="text-slate-600"><strong>Blocked</strong> — missing product name. Must fix to import</span>
-              </div>
-            </div>
-            <p className="text-xs text-slate-500 pt-1">💡 Expand any row to edit Price, Stock, and SKU directly. Changes apply instantly.</p>
+          {/* Filter tabs */}
+          <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Filter products">
+            {([
+              ["all", "All", products.length],
+              ["fix", "Needs fixing", errorCount],
+              ["ready", "Ready", validCount],
+              ["skipped", "Skipped", skippedCount],
+            ] as const).map(([key, label, count]) => (
+              <button
+                key={key}
+                type="button"
+                role="tab"
+                aria-selected={reviewFilter === key}
+                onClick={() => setReviewFilter(key)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                  reviewFilter === key
+                    ? "bg-[#0B2A55] border-[#0B2A55] text-white"
+                    : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                {label} <span className="tabular-nums">{count}</span>
+              </button>
+            ))}
           </div>
 
           {/* Product list */}
           <div className="border rounded-xl overflow-hidden bg-white">
+            {/* Selection toolbar */}
+            <div className="flex flex-wrap items-center gap-3 px-3 py-2.5 border-b bg-slate-50">
+              <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 accent-[#0B2A55]"
+                  checked={visibleRows.length > 0 && selectedVisible === visibleRows.length}
+                  ref={(el) => { if (el) el.indeterminate = selectedVisible > 0 && selectedVisible < visibleRows.length }}
+                  onChange={(e) =>
+                    setSelectedRows((prev) => {
+                      const next = new Set(prev)
+                      visibleRows.forEach((p) => (e.target.checked ? next.add(p.rowNumber) : next.delete(p.rowNumber)))
+                      return next
+                    })
+                  }
+                  disabled={visibleRows.length === 0}
+                />
+                {selectedRows.size > 0 ? `${selectedRows.size} selected` : "Select all"}
+              </label>
+              {selectedRows.size > 0 ? (
+                <>
+                  <Button size="sm" variant="outline" onClick={() => setSkipForSelected(true)}>Skip selected</Button>
+                  <Button size="sm" variant="outline" onClick={() => setSkipForSelected(false)}>Include selected</Button>
+                  <button type="button" onClick={() => setSelectedRows(new Set())} className="text-sm text-slate-600 underline underline-offset-2">Clear</button>
+                </>
+              ) : errorCount > 0 ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setProducts((prev) => prev.map((p) => (!p.skipped && getRowIssues(p, subCategories).length > 0 ? { ...p, skipped: true } : p)))}
+                >
+                  Skip all {errorCount} needing fixes
+                </Button>
+              ) : null}
+            </div>
             <div className="max-h-[60vh] overflow-y-auto">
-              {products.map((product) => {
-                const hasErrors = product.errors.length > 0
+              {visibleRows.length === 0 && (
+                <p className="p-6 text-sm text-slate-600 text-center">No products in this view.</p>
+              )}
+              {visibleRows.map((product) => {
+                const issues = getRowIssues(product, subCategories)
+                const hasErrors = issues.length > 0
                 const isExpanded = expandedRows.has(product.rowNumber)
 
                 return (
                   <div
                     key={product.rowNumber}
-                    className={`border-b last:border-b-0 ${hasErrors ? "bg-red-50/50" : ""}`}
+                    className={`border-b last:border-b-0 ${hasErrors ? "bg-red-50/50" : ""} ${product.skipped ? "opacity-50" : ""}`}
                   >
                     {/* Row summary */}
+                    <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      aria-label={`Select product ${product.rowNumber}`}
+                      className="ml-3 h-4 w-4 shrink-0 accent-[#0B2A55]"
+                      checked={selectedRows.has(product.rowNumber)}
+                      onChange={() =>
+                        setSelectedRows((prev) => {
+                          const next = new Set(prev)
+                          if (!next.delete(product.rowNumber)) next.add(product.rowNumber)
+                          return next
+                        })
+                      }
+                    />
                     <button
                       onClick={() => toggleRow(product.rowNumber)}
-                      className="w-full flex items-center gap-3 p-3 text-left hover:bg-slate-50/50 transition-colors"
+                      className="flex-1 min-w-0 flex items-center gap-3 p-3 text-left hover:bg-slate-50/50 transition-colors"
                     >
                       {/* Row number */}
                       <span className="h-7 w-7 shrink-0 rounded-lg bg-slate-100 flex items-center justify-center text-xs font-mono text-slate-600">
@@ -1416,6 +1470,14 @@ export default function BulkImportPage() {
                         <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />
                       )}
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => setProducts(prev => prev.map(p => p.rowNumber === product.rowNumber ? { ...p, skipped: !p.skipped } : p))}
+                      className="mr-3 shrink-0 text-xs px-2.5 py-1 rounded border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                    >
+                      {product.skipped ? "Include" : "Skip"}
+                    </button>
+                    </div>
 
                     {/* Expanded details */}
                     {isExpanded && (
@@ -1423,13 +1485,13 @@ export default function BulkImportPage() {
                         {/* Errors */}
                         {hasErrors && (
                           <div className="bg-red-50 border border-red-200 rounded-lg p-2.5">
-                            {product.errors.map((err, i) => (
+                            {issues.map((err, i) => (
                               <p key={i} className="text-xs text-red-700 flex items-start gap-1.5">
                                 <XCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                                 {err}
                               </p>
                             ))}
-                            {product.errors.some(e => e.toLowerCase().includes("image")) && (
+                            {issues.some(e => e.toLowerCase().includes("image")) && (
                               <div className="mt-2 ml-5">
                                 <label className="text-xs bg-white text-slate-700 border border-slate-300 px-3 py-1.5 rounded shadow-sm cursor-pointer hover:bg-slate-50 inline-flex items-center gap-1.5 font-medium transition-colors">
                                   <UploadCloud className="h-3.5 w-3.5 text-slate-500" />
@@ -1520,7 +1582,7 @@ export default function BulkImportPage() {
                           <div>
                             <label className="text-slate-500 block mb-1">Subcategory</label>
                             <select
-                              className={`w-full px-2 py-1.5 border rounded text-sm font-medium ${product.subCategoryName && !product.subCategoryId ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"}`}
+                              className={`w-full px-2 py-1.5 border rounded text-sm font-medium ${issues.some(e => e.toLowerCase().includes("subcategory")) ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"}`}
                               value={product.subCategoryId || ""}
                               disabled={!product.categoryId}
                               onChange={(e) => {
@@ -1559,7 +1621,7 @@ export default function BulkImportPage() {
                             <label className="text-slate-500 block mb-1">Selling Price (₹)</label>
                             <input
                               type="number"
-                              className={`w-full px-2 py-1.5 border rounded text-sm font-medium ${product.price <= 0 ? "border-amber-300 bg-amber-50" : "border-slate-200 bg-white"}`}
+                              className={`w-full px-2 py-1.5 border rounded text-sm font-medium ${product.price <= 0 ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"}`}
                               value={product.price || ""}
                               placeholder="0"
                               onChange={(e) => {
@@ -1658,7 +1720,7 @@ export default function BulkImportPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="sticky bottom-0 z-20 flex items-center justify-between flex-wrap gap-3 bg-white border-t py-3">
             <Button variant="outline" onClick={() => { setStep("upload"); setProducts([]) }} className="gap-1.5">
               <ArrowLeft className="h-4 w-4" />
               Back to Upload
@@ -1667,16 +1729,16 @@ export default function BulkImportPage() {
               {errorCount > 0 && (
                 <p className="text-xs text-amber-600">
                   <AlertTriangle className="h-3.5 w-3.5 inline mr-1" />
-                  {errorCount} products with errors will be skipped
+                  Fix {errorCount} product{errorCount > 1 ? "s" : ""} with errors: fix or skip {errorCount > 1 ? "them" : "it"}
                 </p>
               )}
               <Button
                 onClick={handleImportAll}
-                disabled={validCount === 0}
+                disabled={validCount === 0 || errorCount > 0}
                 className="gap-2"
               >
                 <Package className="h-4 w-4" />
-                Import {validCount} Products
+                Import {validCount} Products{skippedCount > 0 ? ` (${skippedCount} skipped)` : ""}
               </Button>
             </div>
           </div>
