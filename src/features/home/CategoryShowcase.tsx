@@ -11,14 +11,14 @@ import { OptimizedImage } from "@/components/shared/OptimizedImage"
 import { FloralDivider } from "@/shared/ui/heritage-ornaments"
 import { buildCategoryShowcase, type ShowcaseCategory } from "./category-showcase"
 
-const SAREE_PARENTS = ["Sarees", "Pure Silk Sarees"]
+// Dynamic fabrics based on all subcategories
 const MAX_FABRICS = 8
 
 const categoryHref = (name: string) => `/products?category=${encodeURIComponent(name)}`
 
 // "Linen saree" reads as "Linen" under a "Saree fabrics" heading.
 const fabricLabel = (name: string) => {
-  const stripped = name.replace(/\s+sarees?$/i, "").trim() || name
+  const stripped = name.replace(/\s+(sarees?|duppattas?)$/i, "").trim() || name
   return stripped.charAt(0).toUpperCase() + stripped.slice(1)
 }
 
@@ -53,8 +53,7 @@ export function CategoryShowcase() {
       created_at: product.created_at ?? "",
     }))
     return buildCategoryShowcase(categories, products, {
-      fabricParents: SAREE_PARENTS,
-      minFabricCount: 3,
+      minFabricCount: 0,
     })
   }, [topRows, subRows, index])
 
@@ -119,13 +118,13 @@ export function CategoryShowcase() {
           <div className="mt-14 md:mt-20">
             <div className="flex items-end justify-between gap-4">
               <h3 className="font-serif text-[22px] leading-tight text-[hsl(var(--brand-ink))] md:text-[28px]">
-                Saree fabrics
+                Collections & Fabrics
               </h3>
               <Link
-                href={categoryHref("Sarees")}
+                href={"/products"}
                 className="group inline-flex shrink-0 items-center gap-1.5 rounded font-sans text-[13px] font-semibold text-[hsl(var(--brand-ink))] underline decoration-[hsl(var(--brand-gold))] decoration-2 underline-offset-[6px] hover:decoration-[hsl(var(--brand-ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--brand-royal))] md:text-[14px]"
               >
-                All sarees
+                View all
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>

@@ -265,12 +265,7 @@ export function CategoryHero({
   // Once counts are known, hide categories a shopper would find empty.
   const hasProducts = (id: string) => !photos || (photoOf(id)?.count ?? 0) > 0;
 
-  const visibleCategories = categories
-    .map((cat) => ({
-      ...cat,
-      subcategories: cat.subcategories.filter((sub) => hasProducts(sub.id)),
-    }))
-    .filter((cat) => hasProducts(cat.id) || cat.subcategories.length > 0);
+  const visibleCategories = categories;
 
   // Same selection rules as the sidebar: every chosen category or type shows
   // as selected here, and both places read and write the same list.

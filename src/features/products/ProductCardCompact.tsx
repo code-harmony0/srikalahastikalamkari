@@ -3,7 +3,7 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useWishlistStore } from "@/shared/wishlist-store";
 import { useCartStore } from "@/shared/cart-store";
@@ -160,13 +160,13 @@ export const ProductCardCompact = memo(
             href={productUrl}
             className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[hsl(var(--brand-royal))]"
           >
-            <span className="relative block aspect-[3/4] overflow-hidden bg-[hsl(var(--brand-indigo-tint))]">
+            <span className="relative block aspect-[7/9] overflow-hidden bg-[hsl(var(--brand-indigo-tint))]">
               {productData.hoverImage && (
                 <OptimizedImage
                   src={productData.hoverImage}
                   alt=""
                   fill
-                  className="z-10 object-cover opacity-0 transition-opacity duration-500 [@media(hover:hover)]:group-hover:opacity-100"
+                  className="z-10 object-cover object-top opacity-0 transition-opacity duration-500 [@media(hover:hover)]:group-hover:opacity-100"
                   imageType="productHero"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   loading="lazy"
@@ -176,7 +176,7 @@ export const ProductCardCompact = memo(
                 src={productData.image}
                 alt={productData.name}
                 fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 imageType="productHero"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 priority={priority}
@@ -187,16 +187,20 @@ export const ProductCardCompact = memo(
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-[6px] z-20 rounded-[3px] border border-[hsl(var(--brand-gold-soft)/0.85)] sm:inset-[7px]"
               />
-              {/* Saving shown on the photo, as the reference shops do, so the text stays calm. */}
+              {/* Saving shown on the photo. Moved to top-right with premium styling */}
               {discountPercent > 0 && (
-                <span className="absolute left-2.5 top-2.5 z-30 rounded-full bg-white/95 px-2 py-0.5 font-sans text-[11px] font-semibold uppercase leading-5 tracking-[0.04em] text-[hsl(var(--brand-ink))] tabular-nums shadow-[0_4px_10px_-6px_rgba(33,30,36,0.5)] sm:left-3.5 sm:top-3.5 sm:text-[12px]">
-                  {discountPercent}% off
+                <span className="absolute top-0 right-4 z-30 flex flex-col items-center justify-center rounded-b bg-white/95 px-2 pb-2.5 pt-2 shadow-[0_4px_12px_-2px_rgba(33,30,36,0.15)] border-x border-b border-black/5 backdrop-blur-sm transition-transform hover:-translate-y-0.5">
+                  <span className="font-sans text-[11px] font-bold leading-none tracking-[0.05em] text-[#D93025]">
+                    {discountPercent}%
+                  </span>
+                  <span className="mt-0.5 font-sans text-[8px] font-bold uppercase tracking-[0.2em] text-[hsl(var(--brand-ink))]">
+                    Off
+                  </span>
                 </span>
               )}
             </span>
           </Link>
 
-          {!inquiryOnly && (
             <button
               type="button"
               onClick={toggleWishlist}
@@ -207,14 +211,14 @@ export const ProductCardCompact = memo(
                   : `Add ${productData.name} to wishlist`
               }
               className={cn(
-                photoButton,
-                "right-2.5 top-2.5 bg-white/95 text-[hsl(var(--brand-ink))] shadow-[0_6px_14px_-8px_rgba(33,30,36,0.6)] hover:bg-white sm:right-3.5 sm:top-3.5",
-                isWishlisted && "[@media(hover:hover)]:opacity-100",
+                "absolute z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/70 backdrop-blur-md shadow-md border border-white/60 text-[hsl(var(--brand-ink))] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-white hover:text-[#D93025] hover:scale-110 hover:shadow-xl sm:top-4 sm:left-4 top-3 left-3",
+                isWishlisted
+                  ? "[@media(hover:hover)]:scale-100 [@media(hover:hover)]:opacity-100 text-[#D93025]"
+                  : "[@media(hover:hover)]:scale-90 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:scale-100 [@media(hover:hover)]:group-hover:opacity-100"
               )}
             >
-              <Heart className={cn("h-4 w-4", isWishlisted && "fill-current")} />
+              <Heart className={cn("h-[18px] w-[18px]", isWishlisted && "fill-current")} />
             </button>
-          )}
 
           {inquiryOnly ? (
             <a
@@ -223,11 +227,17 @@ export const ProductCardCompact = memo(
               rel="noopener noreferrer"
               aria-label={`Ask on WhatsApp about ${productData.name}`}
               className={cn(
-                photoButton,
-                "bottom-2.5 right-2.5 bg-[#1F7A4D] text-white shadow-[0_8px_18px_-8px_rgba(23,96,60,0.8)] hover:bg-[#17603C] sm:bottom-3.5 sm:right-3.5",
+                "group/btn absolute z-30 flex h-10 items-center rounded-full bg-white/70 backdrop-blur-md shadow-md border border-white/60 text-[#1F7A4D] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-[#1F7A4D] hover:border-[#1F7A4D] hover:text-white hover:shadow-xl sm:bottom-4 sm:right-4 bottom-3 right-3",
               )}
             >
-              <FaWhatsapp className="h-[15px] w-[15px] text-[#25D366]" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+                <FaWhatsapp className="h-[20px] w-[20px]" />
+              </div>
+              <div className="flex max-w-0 items-center overflow-hidden whitespace-nowrap opacity-0 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover/btn:max-w-[140px] group-hover/btn:opacity-100">
+                <span className="pr-5 font-sans text-[11px] font-bold uppercase tracking-[0.1em]">
+                  Ask on WhatsApp
+                </span>
+              </div>
             </a>
           ) : (
             <button
@@ -237,11 +247,17 @@ export const ProductCardCompact = memo(
                 madeToOrder ? `Preorder ${productData.name}` : `Add ${productData.name} to cart`
               }
               className={cn(
-                photoButton,
-                "bottom-2.5 right-2.5 bg-[hsl(var(--brand-midnight))] text-white shadow-[0_8px_18px_-8px_rgba(11,42,85,0.8)] hover:bg-[hsl(var(--brand-midnight-hover))] sm:bottom-3.5 sm:right-3.5",
+                "group/btn absolute z-30 flex h-10 items-center rounded-full bg-white/70 backdrop-blur-md shadow-[0_4px_12px_rgba(33,30,36,0.1)] border border-white/60 text-[hsl(var(--brand-ink))] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-[hsl(var(--brand-midnight))] hover:border-[hsl(var(--brand-midnight))] hover:text-white hover:shadow-[0_8px_20px_rgba(11,42,85,0.4)] sm:bottom-4 sm:right-4 bottom-3 right-3",
               )}
             >
-              <ShoppingBag className="h-4 w-4" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+                <ShoppingCart className="h-[18px] w-[18px]" />
+              </div>
+              <div className="flex max-w-0 items-center overflow-hidden whitespace-nowrap opacity-0 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover/btn:max-w-[120px] group-hover/btn:opacity-100">
+                <span className="pr-5 font-sans text-[11px] font-bold uppercase tracking-[0.1em]">
+                  {madeToOrder ? "Preorder" : "Add to cart"}
+                </span>
+              </div>
             </button>
           )}
         </div>
@@ -293,7 +309,7 @@ ProductCardCompact.displayName = "ProductCardCompact";
 
 export const ProductCardCompactSkeleton = () => (
   <div className="flex w-full animate-pulse flex-col overflow-hidden rounded-lg bg-white ring-1 ring-[hsl(var(--brand-gold)/0.3)]">
-    <div className="aspect-[3/4] bg-[hsl(var(--brand-ink)/0.07)]" />
+    <div className="aspect-[7/9] bg-[hsl(var(--brand-ink)/0.07)]" />
     <div className="space-y-2 px-3 pb-4 pt-3 sm:px-4">
       <div className="h-3 w-1/3 rounded bg-[hsl(var(--brand-ink)/0.07)]" />
       <div className="h-4 w-3/4 rounded bg-[hsl(var(--brand-ink)/0.07)]" />

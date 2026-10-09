@@ -2,6 +2,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { getCategories, getSubCategories } from "@/services/categories";
 
+import { getSubcategorySortIndex } from "@/shared/lib/category-order";
+
 export interface Subcategory {
   id: string;
   name: string;
@@ -65,22 +67,6 @@ export const useFilterCategories = (): UseFilterCategoriesResult => {
   const nestedCategories = useMemo(() => {
     if (!parents.length) return [];
 
-    const getSortIndex = (name: string) => {
-      const lower = name.toLowerCase();
-      if (lower === 'pure silk kanchipuram pattu') return 0;
-      if (lower === 'semi kanchi silk') return 1;
-      if (lower.includes('tussar') && !lower.includes('munga')) return 2;
-      if (lower.includes('munga') || lower.includes('moonga')) return 3;
-      if (lower.includes('bangalore') || lower.includes('banglore')) return 4;
-      if (lower.includes('cotton')) return 5;
-      if (lower.includes('linen')) return 6;
-      if (lower.includes('pochampalli')) return 7;
-      if (lower.includes('dola silk')) return 8;
-      if (lower.includes('pure crepe')) return 9;
-      if (lower.includes('crepe')) return 10;
-      return 999;
-    };
-
     const formatted = parents.map((parent) => {
       let subs = children
         .filter((child) => child.category_id === parent.id || child.parent_id === parent.id)
@@ -94,8 +80,8 @@ export const useFilterCategories = (): UseFilterCategoriesResult => {
 
       if (parent.name.toLowerCase() === 'sarees') {
         subs.sort((a, b) => {
-          const iA = getSortIndex(a.name);
-          const iB = getSortIndex(b.name);
+          const iA = getSubcategorySortIndex(a.name);
+          const iB = getSubcategorySortIndex(b.name);
           if (iA !== iB) return iA - iB;
           return a.name.localeCompare(b.name);
         });

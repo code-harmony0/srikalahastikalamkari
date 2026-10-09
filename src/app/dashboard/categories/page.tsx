@@ -1,5 +1,7 @@
 "use client";
 
+import { getSubcategorySortIndex } from "@/shared/lib/category-order";
+
 import React, { useState, useEffect, useRef } from "react"
 import { Button } from "@/app/dashboard/ui/button"
 import { Input } from "@/app/dashboard/ui/input"
@@ -55,18 +57,23 @@ import {
 import { uploadImage } from "@/services/products"
 import imageCompression from "browser-image-compression"
 import { OptimizedImage } from "@/components/shared/OptimizedImage"
+import { useQueryClient } from "@tanstack/react-query"
 
 const Categories = () => {
+  const queryClient = useQueryClient()
   const [categories, setCategories] = useState<any[]>([])
   const [subCategories, setSubCategories] = useState<any[]>([])
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const [hoveredImage, setHoveredImage] = useState<{ url: string; name: string } | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // Category dialog state
   const [categoryDialog, setCategoryDialog] = useState(false)
   const [editingCategory, setEditingCategory] = useState<any>(null)
-  const [categoryForm, setCategoryForm] = useState({ name: "" })
+  const [categoryForm, setCategoryForm] = useState({ name: "", image_url: "" })
+  const categoryFileInputRef = useRef<HTMLInputElement | null>(null)
+  const [categoryImageFile, setCategoryImageFile] = useState<File | null>(null)
+  const [categoryImagePreview, setCategoryImagePreview] = useState<string | null>(null)
+  const [categoryImageCompressing, setCategoryImageCompressing] = useState(false)
 
   // SubCategory dialog state
   const [subCategoryDialog, setSubCategoryDialog] = useState(false)
@@ -109,6 +116,9 @@ const Categories = () => {
       }
     }
     if (subCats) setSubCategories(subCats)
+    
+    queryClient.invalidateQueries({ queryKey: ["categories"] })
+    queryClient.invalidateQueries({ queryKey: ["home", "sub-categories"] })
   }
 
 
@@ -117,12 +127,55 @@ const Categories = () => {
   const openCategoryDialog = (category?: any) => {
     if (category) {
       setEditingCategory(category)
-      setCategoryForm({ name: category.name })
+      setCategoryForm({ name: category.name, image_url: category.image_url ?? "" })
+      setCategoryImageFile(null)
+      setCategoryImagePreview(category.image_url ?? null)
     } else {
       setEditingCategory(null)
-      setCategoryForm({ name: "" })
+      setCategoryForm({ name: "", image_url: "" })
+      setCategoryImageFile(null)
+      setCategoryImagePreview(null)
     }
     setCategoryDialog(true)
+  }
+
+  const handleCategoryImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    setCategoryImageCompressing(true)
+    try {
+      const options = {
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1600,
+        useWebWorker: true,
+        fileType: "image/webp",
+        initialQuality: 0.92,
+      }
+      const compressed = await imageCompression(file, options)
+      setCategoryImageFile(compressed)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCategoryImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(compressed)
+    } catch (error) {
+      console.error("Failed to process category image:", error)
+      toast.success("Image error", { description: "Unable to process the selected image." })
+    } finally {
+      setCategoryImageCompressing(false)
+    }
+  }
+
+  const handleClearCategoryImage = () => {
+    setCategoryImageFile(null)
+    setCategoryImagePreview(null)
+    setCategoryForm((prev) => ({ ...prev, image_url: "" }))
+  }
+
+  const handleCategoryImageBoxClick = () => {
+    categoryFileInputRef.current?.click()
   }
 
   const handleSaveCategory = async () => {
@@ -132,8 +185,21 @@ const Categories = () => {
     }
 
     setLoading(true)
+    let imageUrl = categoryForm.image_url || null
+
+    if (categoryImageFile) {
+      const { url, error } = await uploadImage(categoryImageFile)
+      if (error || !url) {
+        setLoading(false)
+        toast.success("Upload failed", { description: error?.message || "Unable to upload image" })
+        return
+      }
+      imageUrl = url
+    }
+
     const payload = {
       name: categoryForm.name.trim(),
+      image_url: imageUrl,
     }
 
     const { error } = editingCategory
@@ -408,9 +474,16 @@ const Categories = () => {
   }
 
   const filteredSubCategories = selectedCategoryId
-    ? subCategories.filter(
-        (subCat) => String(subCat.category_id) === String(selectedCategoryId)
-      )
+    ? subCategories
+        .filter((subCat) => String(subCat.category_id) === String(selectedCategoryId))
+        .sort((a, b) => {
+          if (getCategoryName(selectedCategoryId).toLowerCase() === 'sarees') {
+            const iA = getSubcategorySortIndex(a.name);
+            const iB = getSubcategorySortIndex(b.name);
+            if (iA !== iB) return iA - iB;
+          }
+          return a.name.localeCompare(b.name);
+        })
     : []
 
   return (
@@ -677,6 +750,79 @@ const Categories = () => {
                 placeholder="e.g., Sarees"
                 className="mt-2 h-11 rounded-xl border-slate-300 focus-visible:border-slate-900 focus-visible:ring-0 text-slate-900"
               />
+            </div>
+            
+            <div id="cat-image-section">
+              <Label className="text-slate-700 font-medium">
+                Category Image
+              </Label>
+              <p className="text-xs text-slate-500 mt-1">
+                Used on the storefront hero section. Recommended size 600x600px.
+              </p>
+              <div
+                className="mt-3 border-2 border-dashed rounded-2xl p-4 text-center transition cursor-pointer relative border-slate-300 bg-slate-50/40 hover:border-slate-400"
+                onClick={handleCategoryImageBoxClick}
+              >
+                {categoryImagePreview ? (
+                  categoryImagePreview.startsWith("data:") ||
+                  categoryImagePreview.startsWith("blob:") ? (
+                    <img
+                      src={categoryImagePreview}
+                      alt="Category preview"
+                      className="w-full h-48 object-cover rounded-xl"
+                    />
+                  ) : (
+                    <div className="relative w-full h-48 rounded-xl overflow-hidden">
+                      <OptimizedImage
+                        src={categoryImagePreview}
+                        alt="Category preview"
+                        fill
+                        className="object-cover"
+                        imageType="thumbnail"
+                        sizes="400px"
+                      />
+                    </div>
+                  )
+                ) : (
+                  <div className="py-6 flex flex-col items-center justify-center">
+                    <Upload className="h-10 w-10 text-slate-300 mb-3" />
+                    <p className="text-sm font-medium text-slate-700">
+                      Click to upload image
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      WEBP, PNG, JPG (max 2MB)
+                    </p>
+                  </div>
+                )}
+                
+                {categoryImageCompressing && (
+                  <div className="absolute inset-0 bg-white/80 rounded-2xl flex items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin text-slate-600" />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  ref={categoryFileInputRef}
+                  onChange={handleCategoryImageChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </div>
+              {categoryImagePreview && (
+                <div className="mt-2 flex justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 px-2"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleClearCategoryImage()
+                    }}
+                  >
+                    <X className="h-4 w-4 mr-1" /> Remove Image
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter>

@@ -3,7 +3,7 @@
 import React, { memo, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Heart, ShoppingBag } from "lucide-react"
+import { Heart, ShoppingCart } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 import { useWishlistStore } from "@/shared/wishlist-store"
 import { useCartStore } from "@/shared/cart-store"
@@ -163,10 +163,36 @@ export const ProductCard = memo(
               aria-hidden="true"
               className="pointer-events-none absolute inset-[7px] z-20 rounded-[3px] border border-[hsl(var(--brand-gold-soft)/0.85)]"
             />
+            {/* Saving shown on the photo. Moved to top-right with premium styling */}
             {discountPercent > 0 && (
-              <span className="absolute left-3.5 top-3.5 z-30 rounded-full bg-white/95 px-2 py-0.5 font-sans text-[12px] font-semibold uppercase leading-5 tracking-[0.04em] text-[hsl(var(--brand-ink))] tabular-nums shadow-[0_4px_10px_-6px_rgba(33,30,36,0.5)]">
-                {discountPercent}% off
+              <span className="absolute top-0 right-4 z-30 flex flex-col items-center justify-center rounded-b bg-white/95 px-2 pb-2.5 pt-2 shadow-[0_4px_12px_-2px_rgba(33,30,36,0.15)] border-x border-b border-black/5 backdrop-blur-sm transition-transform hover:-translate-y-0.5">
+                <span className="font-sans text-[11px] font-bold leading-none tracking-[0.05em] text-[#D93025]">
+                  {discountPercent}%
+                </span>
+                <span className="mt-0.5 font-sans text-[8px] font-bold uppercase tracking-[0.2em] text-[hsl(var(--brand-ink))]">
+                  Off
+                </span>
               </span>
+            )}
+            
+            {/* Wishlist moved onto the photo to match compact card */}
+            {!inquiryOnly && (
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(); }}
+                aria-pressed={isWishlisted}
+                aria-label={
+                  isWishlisted
+                    ? `Remove ${productData.name} from wishlist`
+                    : `Add ${productData.name} to wishlist`
+                }
+                className={cn(
+                  "absolute left-2.5 top-2.5 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[hsl(var(--brand-ink))] shadow-[0_4px_12px_-4px_rgba(33,30,36,0.3)] hover:bg-white hover:text-red-500 hover:scale-105 transform transition-all",
+                  isWishlisted && "text-red-500",
+                )}
+              >
+                <Heart className={cn("h-[18px] w-[18px]", isWishlisted && "fill-current")} />
+              </button>
             )}
           </span>
         </Link>
@@ -213,25 +239,7 @@ export const ProductCard = memo(
             </div>
 
             <div className="flex items-center gap-2">
-              {!inquiryOnly && (
-                <button
-                  type="button"
-                  onClick={toggleWishlist}
-                  aria-pressed={isWishlisted}
-                  aria-label={
-                    isWishlisted
-                      ? `Remove ${productData.name} from wishlist`
-                      : `Add ${productData.name} to wishlist`
-                  }
-                  className={cn(
-                    "flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(var(--brand-ink)/0.25)] bg-white text-[hsl(var(--brand-ink))] transition-colors hover:border-[hsl(var(--brand-ink))]",
-                    focusRing,
-                  )}
-                >
-                  <Heart className={cn("h-4 w-4", isWishlisted && "fill-current")} />
-                </button>
-              )}
-
+              {/* Wishlist button moved to the image block above */}
               {inquiryOnly ? (
                 <a
                   href={inquiryUrl}
@@ -248,11 +256,11 @@ export const ProductCard = memo(
                   onClick={handleAddToCart}
                   className={cn(
                     actionButton,
-                    "bg-[hsl(var(--brand-midnight))] hover:bg-[hsl(var(--brand-midnight-hover))]",
+                    "bg-[hsl(var(--brand-midnight))] text-white shadow-[0_8px_16px_-6px_rgba(11,42,85,0.7)] hover:bg-[hsl(var(--brand-midnight-hover))] hover:scale-105 transform transition-all",
                     focusRing,
                   )}
                 >
-                  <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                  <ShoppingCart className="h-[18px] w-[18px]" aria-hidden="true" />
                   {madeToOrder ? "Preorder" : "Add to cart"}
                 </button>
               )}

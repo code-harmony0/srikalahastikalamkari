@@ -1,3 +1,5 @@
+import { getSubcategorySortIndex } from "@/shared/lib/category-order";
+
 /**
  * Builds the home page category section from live data, so every count and
  * photo reflects what a shopper will actually find, and empty categories never
@@ -69,7 +71,7 @@ export function buildCategoryPhotos(
 export function buildCategoryShowcase(
   categories: ShowcaseCategory[],
   products: ShowcaseProduct[],
-  { fabricParents, minFabricCount = 1 }: { fabricParents: string[]; minFabricCount?: number },
+  { minFabricCount = 1 }: { minFabricCount?: number } = {},
 ): { top: CategoryTile[]; fabrics: FabricTile[] } {
   const top = categories
     .filter((category) => !category.parent_id)
@@ -83,12 +85,11 @@ export function buildCategoryShowcase(
         image: newestImage(inCategory) || category.image_url,
       }
     })
-    .filter((tile) => tile.count > 0)
     .sort(byCountThenName)
 
   const parentIds = new Set(
     categories
-      .filter((category) => !category.parent_id && fabricParents.includes(category.name))
+      .filter((category) => !category.parent_id)
       .map((category) => category.id),
   )
 
@@ -104,32 +105,15 @@ export function buildCategoryShowcase(
     fabricsByName.set(key, entry)
   }
 
-  const getSortIndex = (name: string) => {
-    const lower = name.toLowerCase();
-    if (lower === 'pure silk kanchipuram pattu') return 0;
-    if (lower === 'semi kanchi silk') return 1;
-    if (lower.includes('tussar') && !lower.includes('munga')) return 2;
-    if (lower.includes('munga') || lower.includes('moonga')) return 3;
-    if (lower.includes('bangalore') || lower.includes('banglore')) return 4;
-    if (lower.includes('cotton')) return 5;
-    if (lower.includes('linen')) return 6;
-    if (lower.includes('pochampalli')) return 7;
-    if (lower.includes('dola silk')) return 8;
-    if (lower.includes('pure crepe')) return 9;
-    if (lower.includes('crepe')) return 10;
-    return 999;
-  };
-
   const fabrics = [...fabricsByName.values()]
     .map((entry) => ({
       name: entry.name,
       count: entry.products.length,
       image: newestImage(entry.products) || entry.categories.find((category) => category.image_url)?.image_url || null,
     }))
-    .filter((tile) => tile.count >= Math.max(1, minFabricCount))
     .sort((a, b) => {
-      const iA = getSortIndex(a.name);
-      const iB = getSortIndex(b.name);
+      const iA = getSubcategorySortIndex(a.name);
+      const iB = getSubcategorySortIndex(b.name);
       if (iA !== iB) return iA - iB;
       return b.count - a.count || a.name.localeCompare(b.name);
     });

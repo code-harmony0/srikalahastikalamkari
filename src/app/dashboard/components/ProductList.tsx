@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/app/dashboard/ui/select";
 import { Switch } from "@/shared/ui/switch";
+import { Checkbox } from "@/shared/ui/checkbox";
 import {
   Edit,
   Trash2,
@@ -50,7 +51,8 @@ import {
   SheetFooter,
   SheetClose,
 } from "@/shared/ui/sheet";
-import { getCategories } from "@/services/categories";
+import { getCategories, getSubCategories } from "@/services/categories";
+import { getSubcategorySortIndex } from "@/shared/lib/category-order";
 import { toast } from "sonner";
 import {
   Table,
@@ -76,6 +78,7 @@ import { useProducts } from "@/shared/hooks/use-products";
 import { useQueryClient } from "@tanstack/react-query";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getImageTier } from "@/lib/image-tiers";
+import { cn } from "@/shared/utils";
 
 interface FilterState {
   categories: string[];
@@ -121,6 +124,30 @@ const ProductList = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [productToDelete, setProductToDelete] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedIds, setSelectedIdsState] = useState<string[]>([]);
+
+  // Load selections from session storage on mount
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem("dashboard_selected_products");
+      if (stored) {
+        setSelectedIdsState(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error("Failed to load selected products", e);
+    }
+  }, []);
+
+  // Wrapper to update state and sync to session storage
+  const setSelectedIds = (value: string[] | ((prev: string[]) => string[])) => {
+    setSelectedIdsState((prev) => {
+      const nextValue = typeof value === 'function' ? value(prev) : value;
+      sessionStorage.setItem("dashboard_selected_products", JSON.stringify(nextValue));
+      return nextValue;
+    });
+  };
+  const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
+  const [isDeletingBulk, setIsDeletingBulk] = useState(false);
   const [togglingVisibility, setTogglingVisibility] = useState<number | null>(
     null,
   );
@@ -205,6 +232,226 @@ const ProductList = () => {
       });
       setIsDeleteDialogOpen(false);
       setProductToDelete(null);
+    }
+  };
+
+  const confirmBulkDelete = async () => {
+    if (selectedIds.length > 0) {
+      setIsDeletingBulk(true);
+      try {
+        await Promise.all(selectedIds.map((id) => deleteProduct(id)));
+        await queryClient.invalidateQueries({ queryKey: ["products"] });
+        toast.success("Products Deleted", {
+          description: `${selectedIds.length} products have been removed`
+        });
+        setSelectedIds([]);
+      } catch (error) {
+        toast.error("Error deleting products");
+      } finally {
+        setIsDeletingBulk(false);
+        setIsBulkDeleteDialogOpen(false);
+      }
+    }
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filteredAndSortedProducts.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredAndSortedProducts.map((p) => p.id));
+    }
+  };
+
+  const toggleSelectProduct = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((pId) => pId !== id) : [...prev, id]
+    );
+  };
+
+  const handleExportCsv = async () => {
+    if (selectedIds.length === 0) return;
+    try {
+      const selectedProducts = contextProducts?.filter(p => selectedIds.includes(p.id)) || [];
+      
+      const ExcelJS = (await import("exceljs")).default;
+      const FileSaver = await import("file-saver");
+      const saveAs = FileSaver.saveAs || FileSaver.default;
+
+      // Fetch fresh categories and subcategories for data validation
+      const categoriesRes = await getCategories();
+      const subCategoriesRes = await getSubCategories();
+      const categories = categoriesRes.data || [];
+      const subCategories = subCategoriesRes.data || [];
+
+      const workbook = new ExcelJS.Workbook();
+      const ws = workbook.addWorksheet("Products");
+
+      ws.columns = [
+        { header: "SKU", key: "sku", width: 22 },
+        { header: "Product Name", key: "name", width: 45 },
+        { header: "Description", key: "desc", width: 70 },
+        { header: "Category", key: "cat", width: 22 },
+        { header: "Subcategory", key: "subcat", width: 28 },
+        { header: "Selling Price (₹)", key: "price", width: 18 },
+        { header: "MRP / Original Price (₹)", key: "mrp", width: 22 },
+        { header: "Stock Quantity", key: "stock", width: 15 },
+        { header: "Image / Photo Shoot No.", key: "imagefile", width: 35 },
+        { header: "Attribute 1 Label", key: "attr1l", width: 20 },
+        { header: "Attribute 1 Value", key: "attr1v", width: 25 },
+        { header: "Attribute 2 Label", key: "attr2l", width: 20 },
+        { header: "Attribute 2 Value", key: "attr2v", width: 25 },
+        { header: "Attribute 3 Label", key: "attr3l", width: 20 },
+        { header: "Attribute 3 Value", key: "attr3v", width: 25 },
+        { header: "Attribute 4 Label", key: "attr4l", width: 20 },
+        { header: "Attribute 4 Value", key: "attr4v", width: 25 },
+        { header: "Attribute 5 Label", key: "attr5l", width: 20 },
+        { header: "Attribute 5 Value", key: "attr5v", width: 25 },
+      ];
+
+      ws.getRow(1).font = { bold: true };
+      ws.getRow(1).fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE0E0E0' }
+      };
+
+      const sortedCategories = [...categories].sort((a, b) => {
+        if (a.name.toLowerCase() === 'sarees') return -1;
+        if (b.name.toLowerCase() === 'sarees') return 1;
+        return a.name.localeCompare(b.name);
+      });
+      const categoryNames = sortedCategories.map((c) => c.name);
+      
+      const allSubCategoryNames = [...subCategories].sort((a, b) => {
+        const iA = getSubcategorySortIndex(a.name);
+        const iB = getSubcategorySortIndex(b.name);
+        if (iA !== iB) return iA - iB;
+        return a.name.localeCompare(b.name);
+      }).map((s) => s.name);
+      const uniqueSubCategoryNames = [...new Set(allSubCategoryNames)];
+
+      selectedProducts.forEach(p => {
+        let attrs: Record<string, string> = {};
+        if (p.attributes) {
+          if (Array.isArray(p.attributes)) {
+             p.attributes.forEach((attr: any) => {
+               if (attr.name && attr.value) attrs[attr.name] = attr.value;
+             });
+          } else if (typeof p.attributes === 'object') {
+             attrs = { ...p.attributes };
+          }
+        }
+        
+        // Add material as an attribute if it exists and isn't already there
+        if (p.material && !attrs['Material']) {
+          attrs['Material'] = p.material;
+        }
+        
+        const attrKeys = Object.keys(attrs).slice(0, 5);
+
+        ws.addRow({
+          sku: p.sku || "",
+          name: p.name || "",
+          desc: p.description || "",
+          cat: p.categoryName || p.categories?.name || categories.find((c: any) => c.id === p.category_id)?.name || "",
+          subcat: p.subCategoryName || p.sub_category?.name || subCategories.find((s: any) => s.id === p.sub_category_id)?.name || "",
+          price: p.price || 0,
+          mrp: p.originalPrice || p.original_price || "",
+          stock: p.quantity !== undefined ? p.quantity : (p.stock_quantity || 0),
+          imagefile: Array.isArray(p.images) ? p.images.join(", ") : (p.images || ""),
+          attr1l: attrKeys[0] || "",
+          attr1v: attrs[attrKeys[0]] || "",
+          attr2l: attrKeys[1] || "",
+          attr2v: attrs[attrKeys[1]] || "",
+          attr3l: attrKeys[2] || "",
+          attr3v: attrs[attrKeys[2]] || "",
+          attr4l: attrKeys[3] || "",
+          attr4v: attrs[attrKeys[3]] || "",
+          attr5l: attrKeys[4] || "",
+          attr5v: attrs[attrKeys[4]] || "",
+        });
+      });
+
+      // Data validation hidden columns setup
+      ws.getColumn('Z').hidden = true;
+      ws.getColumn('AA').hidden = true;
+
+      categoryNames.forEach((cat, index) => {
+        ws.getCell(`Z${index + 1}`).value = cat;
+      });
+
+      const catSubMap = new Map<string, string[]>();
+      subCategories.forEach((sub) => {
+        const parentCat = categories.find((c) => String(c.id) === String(sub.category_id));
+        if (parentCat) {
+          if (!catSubMap.has(parentCat.name)) catSubMap.set(parentCat.name, []);
+          const arr = catSubMap.get(parentCat.name)!;
+          if (!arr.includes(sub.name)) arr.push(sub.name);
+        }
+      });
+
+      let colOffset = 0;
+      for (const [catName, subcats] of catSubMap) {
+        // Start from column AB (index 28)
+        const colNumber = 28 + colOffset;
+        let colLetter = "";
+        let temp = colNumber;
+        while (temp > 0) {
+          let modulo = (temp - 1) % 26;
+          colLetter = String.fromCharCode(65 + modulo) + colLetter;
+          temp = Math.floor((temp - modulo) / 26);
+        }
+
+        const col = ws.getColumn(colLetter);
+        col.hidden = true;
+
+        subcats.forEach((subName, idx) => {
+          ws.getCell(`${colLetter}${idx + 1}`).value = subName;
+        });
+
+        const safeName = catName.replace(/[^a-zA-Z0-9]/g, "_");
+        const rangeAddr = `Products!$${colLetter}$1:$${colLetter}$${Math.max(1, subcats.length)}`;
+        workbook.definedNames.add(rangeAddr, safeName);
+        colOffset++;
+      }
+
+      uniqueSubCategoryNames.forEach((subcat, index) => {
+        ws.getCell(`AA${index + 1}`).value = subcat;
+      });
+
+      const catFormula = `$Z$1:$Z$${Math.max(2, categoryNames.length)}`;
+
+      for (let i = 2; i <= selectedProducts.length + 1; i++) {
+        // Column D is Category
+        ws.getCell(`D${i}`).dataValidation = {
+          type: 'list',
+          allowBlank: true,
+          formulae: [catFormula],
+          showErrorMessage: true,
+          errorTitle: 'Invalid Category',
+          error: 'Please select a category from the dropdown list'
+        };
+
+        // Column E is Subcategory
+        const indirectFormula = `INDIRECT(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(D${i}," ","_"),"&","_"),"-","_"))`;
+        ws.getCell(`E${i}`).dataValidation = {
+          type: 'list',
+          allowBlank: true,
+          formulae: [indirectFormula],
+          showErrorMessage: true,
+          errorTitle: 'Invalid Subcategory',
+          error: 'Please select a subcategory that belongs to the chosen category'
+        };
+      }
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      saveAs(blob, "products-export.xlsx");
+      
+      toast.success("Export Successful", { description: "Excel file has been downloaded." });
+    } catch (error) {
+      console.error("Export error:", error);
+      toast.error("Export Failed", { description: "There was an error generating the Excel file." });
     }
   };
 
@@ -319,14 +566,7 @@ const ProductList = () => {
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => router.push("/dashboard/products/bulk-import")}
-            className="h-9 gap-2 px-4 rounded-lg transition-all"
-          >
-            <Plus className="h-4 w-4" />
-            Bulk Import
-          </Button>
+
           <Button
             onClick={() => router.push("/dashboard/add-product")}
             className="bg-slate-900 hover:bg-slate-800 text-white shadow-md h-9 gap-2 px-4 rounded-lg transition-all"
@@ -678,7 +918,22 @@ const ProductList = () => {
         <Table>
           <TableHeader className="bg-slate-50/80">
             <TableRow className="hover:bg-transparent border-b border-slate-300">
-              <TableHead className="w-[80px] font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 pl-6">
+              <TableHead 
+                className="w-[80px] pl-6 pr-4 cursor-pointer"
+                onClick={toggleSelectAll}
+              >
+                <div className="flex h-full w-full items-center">
+                  <Checkbox
+                    checked={
+                      filteredAndSortedProducts.length > 0 &&
+                      selectedIds.length === filteredAndSortedProducts.length
+                    }
+                    aria-label="Select all"
+                    className="pointer-events-none data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900"
+                  />
+                </div>
+              </TableHead>
+              <TableHead className="w-[80px] font-semibold text-xs uppercase tracking-wider text-slate-500 py-4 pl-2">
                 Image
               </TableHead>
               <TableHead className="font-semibold text-xs uppercase tracking-wider text-slate-500 py-4">
@@ -728,13 +983,30 @@ const ProductList = () => {
             ) : (
               filteredAndSortedProducts.map((product) => {
                 const isVisible = product.isVisible !== false; // Default to true if undefined
+                const isSelected = selectedIds.includes(product.id);
                 return (
                   <TableRow
                     key={product.id}
-                    className={`group hover:bg-slate-50/50 border-slate-50 transition-colors ${!isVisible ? "opacity-50" : ""}`}
+                    className={cn(
+                      "group hover:bg-slate-50/50 transition-colors border-l-2",
+                      !isVisible && "opacity-50",
+                      isSelected ? "bg-slate-50/80 border-l-slate-900 border-b-slate-200" : "border-l-transparent border-b-slate-100"
+                    )}
                   >
+                    <TableCell 
+                      className="w-[80px] pl-6 pr-4 py-4 cursor-pointer"
+                      onClick={() => toggleSelectProduct(product.id)}
+                    >
+                      <div className="flex h-full w-full items-center">
+                        <Checkbox
+                          checked={isSelected}
+                          aria-label={`Select ${product.name}`}
+                          className="pointer-events-none data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900"
+                        />
+                      </div>
+                    </TableCell>
                     <TableCell
-                      className="pl-6 py-4 cursor-pointer"
+                      className="pl-2 py-4 cursor-pointer"
                       onClick={() => handleEdit(product)}
                     >
                       <div className="relative h-12 w-12 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden">
@@ -864,6 +1136,15 @@ const ProductList = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                            <DropdownMenuItem 
+                              onClick={() => {
+                                sessionStorage.setItem(`product_${product.id}`, JSON.stringify(product));
+                                router.push(`/dashboard/add-product?edit=${product.id}`);
+                              }}
+                            >
+                              <Edit className="mr-2 h-4 w-4 text-slate-500" />
+                              Edit Details
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleDeleteClick(product)} className="text-red-600 focus:bg-red-50 focus:text-red-700">
                               <Trash2 className="mr-2 h-4 w-4" />
                               Delete
@@ -935,6 +1216,15 @@ const ProductList = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                      <DropdownMenuItem 
+                        onClick={() => {
+                          sessionStorage.setItem(`product_${product.id}`, JSON.stringify(product));
+                          router.push(`/dashboard/add-product?edit=${product.id}`);
+                        }}
+                      >
+                        <Edit className="mr-2 h-4 w-4 text-slate-500" />
+                        Edit Details
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDeleteClick(product)} className="text-red-600 focus:bg-red-50 focus:text-red-700">
                         <Trash2 className="mr-2 h-4 w-4" />
                         Delete
@@ -1053,6 +1343,74 @@ const ProductList = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <AlertDialog
+        open={isBulkDeleteDialogOpen}
+        onOpenChange={setIsBulkDeleteDialogOpen}
+      >
+        <AlertDialogContent className="rounded-2xl shadow-2xl border-0">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-bold text-slate-900">
+              Delete Multiple Products?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500">
+              Are you sure you want to delete {selectedIds.length} selected products? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeletingBulk} className="rounded-xl border-slate-300">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmBulkDelete();
+              }}
+              disabled={isDeletingBulk}
+              className="bg-red-600 hover:bg-red-700 text-white rounded-xl flex items-center gap-2"
+            >
+              {isDeletingBulk && <RefreshCw className="h-4 w-4 animate-spin" />}
+              {isDeletingBulk ? 'Deleting...' : 'Delete All Selected'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Floating Bulk Actions Bar */}
+      {selectedIds.length > 0 && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-slate-900/95 backdrop-blur-md text-white px-6 py-3 rounded-full shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] border border-slate-700 animate-in slide-in-from-bottom-10 fade-in duration-300">
+          <div className="flex items-center gap-3 border-r border-slate-700 pr-5">
+            <span className="flex items-center justify-center bg-white text-slate-900 font-bold text-xs h-6 w-6 rounded-full">
+              {selectedIds.length}
+            </span>
+            <span className="text-sm font-medium tracking-wide">Selected</span>
+          </div>
+          <div className="flex items-center gap-2 pl-1">
+            <Button
+              onClick={handleExportCsv}
+              className="bg-slate-800 hover:bg-slate-700 text-white border-0 h-9 text-xs rounded-full px-5 shadow-none"
+            >
+              <Package className="w-4 h-4 mr-2" />
+              Export Excel
+            </Button>
+            <Button
+              onClick={() => setIsBulkDeleteDialogOpen(true)}
+              className="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border-0 h-9 text-xs rounded-full px-5 shadow-none transition-colors"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setSelectedIds([])}
+              className="text-slate-400 hover:text-white hover:bg-slate-800 h-9 w-9 p-0 rounded-full ml-1"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,15 +1,18 @@
 // @ts-nocheck
 "use client"
 
+import { getSubcategorySortIndex } from "@/shared/lib/category-order";
+
 import React, { useState, useCallback, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 import * as XLSX from "xlsx"
 import JSZip from "jszip"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/shared/ui/button"
 import { useToast } from "@/shared/ui/use-toast"
 import { useInventory } from "@/shared/contexts/InventoryContext"
-import { createProduct } from "@/services/products"
+import { createProduct, updateProduct } from "@/services/products"
 import { getCategories, getSubCategories } from "@/services/categories"
 import { formatColorEntry, getColorSwatch } from "@/shared/lib/color-swatch"
 import { getCategoryPrefix, getMaterialPrefix } from "@/shared/lib/sku-generator"
@@ -67,6 +70,7 @@ interface ParsedProduct {
   imagePreviews: string[]
   /** Lazy ZIP entries — extracted only when uploading this product */
   zipEntries?: Array<{ path: string; entry: any }>
+  existingImageIds: string[]
   // status
   errors: string[]
   warnings: string[]
@@ -165,6 +169,7 @@ const MAX_UPLOAD_RETRIES = 3
 
 export default function BulkImportPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { toast } = useToast()
   const { fetchData } = useInventory()
 
@@ -263,6 +268,8 @@ export default function BulkImportPage() {
       "text/csv": [".csv"],
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
       "application/vnd.ms-excel": [".xls"],
+      "application/octet-stream": [".xlsx", ".xls", ".csv"],
+      "application/zip": [".zip"]
     },
     maxFiles: 1,
     multiple: false,
@@ -313,10 +320,35 @@ export default function BulkImportPage() {
       const data = await csvFile.arrayBuffer()
       const workbook = XLSX.read(data, { type: "array" })
       const sheet = workbook.Sheets[workbook.SheetNames[0]]
-      const rows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: "" })
-
-      if (rows.length === 0) {
+      const rawRows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: "" })
+      
+      if (rawRows.length === 0) {
         toast({ title: "Empty file", description: "The spreadsheet has no data rows", variant: "destructive" })
+        setParsing(false)
+        return
+      }
+
+      // Pre-process rows into a lowercase-keyed map to make parsing case-insensitive
+      const allNormalizedRows = rawRows.map(r => {
+        const lower: Record<string, any> = {}
+        Object.keys(r).forEach(k => {
+          lower[k.trim().toLowerCase()] = r[k]
+        })
+        return { original: r, lower }
+      })
+
+      // Filter out rows that are effectively empty (e.g. have a S.No but no name or price)
+      const normalizedRows = allNormalizedRows.filter(({ lower }) => {
+        const name = String(lower["product name"] ?? lower["name"] ?? lower["title"] ?? "").trim()
+        const price = String(lower["selling price (₹)"] ?? lower["selling price"] ?? lower["price"] ?? "").trim()
+        const mrp = String(lower["mrp / original price (₹)"] ?? lower["mrp"] ?? lower["original price"] ?? lower["original_price"] ?? "").trim()
+        
+        // Only keep rows that have at least a name or a price
+        return name !== "" || price !== "" || mrp !== ""
+      })
+
+      if (normalizedRows.length === 0) {
+        toast({ title: "Empty file", description: "No valid products found in the spreadsheet", variant: "destructive" })
         setParsing(false)
         return
       }
@@ -348,21 +380,34 @@ export default function BulkImportPage() {
         }
 
         // Map entries to rows based on explicit filenames or row number fallback
-        for (let idx = 0; idx < rows.length; idx++) {
-          const row = rows[idx]
+        for (let idx = 0; idx < normalizedRows.length; idx++) {
+          const { lower: lowerRow } = normalizedRows[idx]
           const rowNum = idx + 1
-          const imageFileNamesRaw = String(row["Image File Name"] ?? row["Image / Photo Shoot No."] ?? row["Images"] ?? "").trim()
+          const imageFileNamesRaw = String(lowerRow["image file name"] ?? lowerRow["image / photo shoot no."] ?? lowerRow["images"] ?? "").trim()
           
-          const entries: Array<{ path: string; entry: any }> = []
+          const entries: Array<{ path: string; entry: any; isThumb?: boolean }> = []
           
           if (imageFileNamesRaw) {
             const names = imageFileNamesRaw.split(",").map(s => s.trim()).filter(Boolean)
-            for (const name of names) {
-              let entry = fileMap.get(name)
-              if (!entry && !name.includes(".")) {
-                entry = fileMap.get(name + ".png") || fileMap.get(name + ".jpg") || fileMap.get(name + ".jpeg") || fileMap.get(name + ".webp")
+            for (const rawName of names) {
+              const isThumb = rawName.toLowerCase().includes("t")
+              const cleanName = rawName.replace(/t/gi, "").trim()
+
+              // First try looking for the exact cleaned number (without 't')
+              let entry = fileMap.get(cleanName)
+              if (!entry && !cleanName.includes(".")) {
+                entry = fileMap.get(cleanName + ".png") || fileMap.get(cleanName + ".jpg") || fileMap.get(cleanName + ".jpeg") || fileMap.get(cleanName + ".webp")
               }
-              if (entry) entries.push(entry)
+              
+              // Fallback to rawName in case the file actually has 't' in its filename
+              if (!entry) {
+                entry = fileMap.get(rawName)
+                if (!entry && !rawName.includes(".")) {
+                  entry = fileMap.get(rawName + ".png") || fileMap.get(rawName + ".jpg") || fileMap.get(rawName + ".jpeg") || fileMap.get(rawName + ".webp")
+                }
+              }
+
+              if (entry) entries.push({ ...entry, isThumb })
             }
           } else {
             // Fallback to prefix matching based on rowNum
@@ -371,35 +416,71 @@ export default function BulkImportPage() {
               const fileName = path.split("/").pop() || ""
               const match = fileName.match(/^(\d+)[-_\.]?/)
               if (match && parseInt(match[1], 10) === rowNum) {
-                entries.push({ path, entry })
+                const isThumb = fileName.toLowerCase().includes("t")
+                entries.push({ path, entry, isThumb })
               }
             }
           }
 
           if (entries.length > 0) {
-            zipEntryMap.set(rowNum, entries)
+            // Sort entries: files flagged as thumbnail go first
+            entries.sort((a, b) => {
+              if (a.isThumb && !b.isThumb) return -1
+              if (!a.isThumb && b.isThumb) return 1
+              
+              // If neither or both are thumbs, sort alphabetically ONLY if we used fallback matching.
+              // If they provided explicit comma-separated names, we want to preserve their order.
+              if (!imageFileNamesRaw) {
+                const aName = a.path.split("/").pop()?.toLowerCase() || ""
+                const bName = b.path.split("/").pop()?.toLowerCase() || ""
+                return aName.localeCompare(bName, undefined, { numeric: true, sensitivity: 'base' })
+              }
+              return 0;
+            })
+
+            // Filter out the 'isThumb' property so zipEntryMap stays consistent if needed
+            zipEntryMap.set(rowNum, entries.map(e => ({ path: e.path, entry: e.entry })))
             const firstEntry = entries[0]
             const blob = await firstEntry.entry.async("blob")
             const preview = URL.createObjectURL(blob)
             previewMap.set(rowNum, { previews: [preview], count: entries.length })
+          } else if (imageFileNamesRaw && !zipFile) {
+            // If they didn't upload a ZIP but have comma-separated UUIDs/URLs, show a placeholder preview
+            const ids = imageFileNamesRaw.split(",").map(s => s.trim()).filter(Boolean)
+            if (ids.length > 0) {
+              previewMap.set(rowNum, { previews: [], count: ids.length })
+            }
+          }
+        }
+      } else {
+        // No zip file, but try to capture existing images for preview count
+        for (let idx = 0; idx < normalizedRows.length; idx++) {
+          const { lower: lowerRow } = normalizedRows[idx]
+          const rowNum = idx + 1
+          const imageFileNamesRaw = String(lowerRow["image file name"] ?? lowerRow["image / photo shoot no."] ?? lowerRow["images"] ?? "").trim()
+          if (imageFileNamesRaw) {
+            const ids = imageFileNamesRaw.split(",").map(s => s.trim()).filter(Boolean)
+            if (ids.length > 0) {
+              previewMap.set(rowNum, { previews: [], count: ids.length })
+            }
           }
         }
       }
 
       // 3. Parse each row into a ParsedProduct
-      const parsed: ParsedProduct[] = rows.map((row, idx) => {
+      const parsed: ParsedProduct[] = normalizedRows.map(({ original: row, lower: lowerRow }, idx) => {
         const rowNum = idx + 1
         const errors: string[] = []
 
-        // Read fields (flexible header matching)
-        const name = String(row["Product Name"] ?? row["name"] ?? row["Title"] ?? "").trim()
-        const description = String(row["Description"] ?? row["description"] ?? row["Long Description"] ?? row["Short Description"] ?? "").trim()
-        const priceRaw = String(row["Selling Price (₹)"] ?? row["Selling Price"] ?? row["price"] ?? "").replace(/,/g, "")
-        const mrpRaw = String(row["MRP / Original Price (₹)"] ?? row["MRP"] ?? row["Original Price"] ?? row["original_price"] ?? "").replace(/,/g, "")
-        const rawCategory = String(row["Category"] ?? row["category"] ?? "").trim()
+        // Read fields (flexible header matching, case-insensitive)
+        const name = String(lowerRow["product name"] ?? lowerRow["name"] ?? lowerRow["title"] ?? "").trim()
+        const description = String(lowerRow["description"] ?? lowerRow["long description"] ?? lowerRow["short description"] ?? "").trim()
+        const priceRaw = String(lowerRow["selling price (₹)"] ?? lowerRow["selling price"] ?? lowerRow["price"] ?? "").replace(/,/g, "")
+        const mrpRaw = String(lowerRow["mrp / original price (₹)"] ?? lowerRow["mrp"] ?? lowerRow["original price"] ?? lowerRow["original_price"] ?? "").replace(/,/g, "")
+        const rawCategory = String(lowerRow["category"] ?? "").trim()
         
         let categoryName = rawCategory;
-        let subCategoryName = String(row["Subcategory"] ?? row["Sub Category"] ?? row["subcategory"] ?? "").trim()
+        let subCategoryName = String(lowerRow["subcategory"] ?? lowerRow["sub category"] ?? "").trim()
 
         // Handle "saree>organja" format
         if (rawCategory.includes(">")) {
@@ -410,48 +491,24 @@ export default function BulkImportPage() {
           }
         }
 
-        const material = String(row["Material"] ?? row["material"] ?? "").trim()
-        const skuRaw = String(row["SKU / Barcode"] ?? row["SKU"] ?? row["sku"] ?? row["Barcode"] ?? row["barcode"] ?? "").trim()
-        const colorsRaw = String(row["Colors"] ?? row["colors"] ?? "").trim()
-        const stockRaw = String(row["Stock Quantity"] ?? row["Stock"] ?? row["stock_quantity"] ?? row["Quantity"] ?? "1").replace(/,/g, "")
-        const specsRaw = String(row["Specifications"] ?? row["specifications"] ?? "").trim()
-        const variantsRaw = String(row["Variants"] ?? row["variants"] ?? "").trim()
+        const material = String(lowerRow["material"] ?? "").trim()
+        const skuRaw = String(lowerRow["sku / barcode"] ?? lowerRow["sku"] ?? lowerRow["barcode"] ?? "").trim()
+        const colorsRaw = String(lowerRow["colors"] ?? "").trim()
+        const stockRaw = String(lowerRow["stock quantity"] ?? lowerRow["stock"] ?? lowerRow["stock_quantity"] ?? lowerRow["quantity"] ?? "1").replace(/,/g, "")
+        const specsRaw = String(lowerRow["specifications"] ?? "").trim()
+        const variantsRaw = String(lowerRow["variants"] ?? "").trim()
         const parsedSpecs = parseSpecifications(specsRaw)
 
         // Capture specs from Attribute Label/Value columns
         for (let i = 1; i <= 5; i++) {
-          const label = String(row[`Attribute ${i} Label`] ?? "").trim()
-          const value = String(row[`Attribute ${i} Value`] ?? "").trim()
+          const label = String(lowerRow[`attribute ${i} label`] ?? "").trim()
+          const value = String(lowerRow[`attribute ${i} value`] ?? "").trim()
           if (label && value) {
             parsedSpecs[label] = value
           }
         }
 
-        // Capture any extra unknown columns as specifications
-        const standardKeys = [
-          "Product Name", "name", "Title",
-          "Description", "description", "Long Description", "Short Description",
-          "Selling Price (₹)", "Selling Price", "price",
-          "MRP / Original Price (₹)", "MRP", "Original Price", "original_price",
-          "Category", "category",
-          "Subcategory", "Sub Category", "subcategory",
-          "Material", "material",
-          "SKU / Barcode", "SKU", "sku", "Barcode", "barcode",
-          "Colors", "colors",
-          "Stock Quantity", "Stock", "stock_quantity", "Quantity",
-          "Variants", "variants",
-          "Attribute 1 Label", "Attribute 1 Value",
-          "Attribute 2 Label", "Attribute 2 Value",
-          "Attribute 3 Label", "Attribute 3 Value",
-          "Attribute 4 Label", "Attribute 4 Value",
-          "Attribute 5 Label", "Attribute 5 Value",
-          "S.No", "Image File Name", "Image / Photo Shoot No.", "Images"
-        ]
-        Object.keys(row).forEach((key) => {
-          if (!standardKeys.includes(key) && String(row[key]).trim()) {
-            parsedSpecs[key.trim()] = String(row[key]).trim()
-          }
-        })
+        // We no longer capture unknown columns as specifications to prevent accidental sheet data (like scratch columns or misaligned headers) from appearing on the frontend.
 
         // Validate (lax rules for user specific format)
         if (!name) errors.push("Product name is required (use 'Product Name' or 'Title')")
@@ -468,7 +525,9 @@ export default function BulkImportPage() {
         const cat = categories.find(
           (c) => c.name.toLowerCase() === categoryName.toLowerCase(),
         )
-        // If not found, we just allow it to be null, no error
+        if (categoryName && !cat) {
+          errors.push(`Category "${categoryName}" not found in admin. Please select an existing category.`)
+        }
 
         // Resolve subcategory
         let subCat = null
@@ -478,6 +537,9 @@ export default function BulkImportPage() {
               s.name.toLowerCase() === subCategoryName.toLowerCase() &&
               String(s.category_id) === String(cat.id),
           )
+          if (!subCat) {
+            errors.push(`Subcategory "${subCategoryName}" not found under "${cat.name}". Please select an existing subcategory.`)
+          }
         }
 
         // Parse colors
@@ -491,14 +553,23 @@ export default function BulkImportPage() {
         // Get images from ZIP (lazy — entries only, no full extraction yet)
         const zipEntries = zipEntryMap.get(rowNum) ?? []
         const previewData = previewMap.get(rowNum) ?? { previews: [], count: 0 }
+        
+        const imageFileNamesRaw = String(lowerRow["image file name"] ?? lowerRow["image / photo shoot no."] ?? lowerRow["images"] ?? "").trim()
+        const existingImageIds = imageFileNamesRaw 
+          ? imageFileNamesRaw.split(",").map(s => s.trim()).filter(s => s.length > 15) // UUIDs or URLs
+          : [];
+
         if (zipEntries.length === 0 && zipFile) {
           errors.push(`No images found in ZIP for this product. Ensure filenames match the "Image File Name" column or follow the "rowNumber-1.jpg" naming convention.`)
         }
 
         const warnings: string[] = []
+        if (zipEntries.length === 0 && !zipFile && existingImageIds.length === 0) {
+          warnings.push("No images provided for this product.");
+        }
+
         if (price <= 0) warnings.push("Price is ₹0 — set it here or edit after import")
         if (!description) warnings.push("No description — add it here or edit after import")
-        if (!material) warnings.push("No material specified")
 
         return {
           rowNumber: rowNum,
@@ -519,6 +590,7 @@ export default function BulkImportPage() {
           imageFiles: [], // populated lazily during upload
           imagePreviews: previewData.previews,
           zipEntries, // lazy references
+          existingImageIds,
           errors,
           warnings,
           status: "pending" as const,
@@ -680,6 +752,13 @@ export default function BulkImportPage() {
 
         // 4. Generate human-readable SKU
         let sku = product.sku ? product.sku.trim().toUpperCase().replace(/\s+/g, "-") : null
+        
+        let existingProductId = null;
+        if (sku) {
+           const { data: existingProd } = await supabase.from("products").select("id").eq("sku", sku).maybeSingle();
+           if (existingProd) existingProductId = existingProd.id;
+        }
+
         if (!sku) {
           const catPrefix = getCategoryPrefix(product.categoryName)
           const matPrefix = getMaterialPrefix(product.name, product.categoryName, product.material)
@@ -705,36 +784,13 @@ export default function BulkImportPage() {
         setProducts((prev) =>
           prev.map((p) =>
             p.rowNumber === product.rowNumber
-              ? { ...p, statusMessage: "Creating product..." }
+              ? { ...p, statusMessage: existingProductId ? "Updating product..." : "Creating product..." }
               : p,
           ),
         )
 
-        let finalCategoryId = product.categoryId;
-        let finalSubCategoryId = product.subCategoryId;
-
-        // Auto-create category if missing
-        if (!finalCategoryId && product.categoryName) {
-           const slug = product.categoryName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-           const { data: existingCat } = await supabase.from("categories").select("id").ilike("name", product.categoryName).single();
-           if (existingCat) {
-             finalCategoryId = existingCat.id;
-           } else {
-             const { data: newCat } = await supabase.from("categories").insert({ name: product.categoryName, slug }).select("id").single();
-             if (newCat) finalCategoryId = newCat.id;
-           }
-        }
-
-        // Auto-create subcategory if missing
-        if (finalCategoryId && !finalSubCategoryId && product.subCategoryName) {
-           const { data: existingSub } = await supabase.from("sub_categories").select("id").eq("category_id", finalCategoryId).ilike("name", product.subCategoryName).single();
-           if (existingSub) {
-             finalSubCategoryId = existingSub.id;
-           } else {
-             const { data: newSub } = await supabase.from("sub_categories").insert({ name: product.subCategoryName, category_id: finalCategoryId }).select("id").single();
-             if (newSub) finalSubCategoryId = newSub.id;
-           }
-        }
+        const finalCategoryId = product.categoryId;
+        const finalSubCategoryId = product.subCategoryId;
 
         const payload: any = {
           name: product.name,
@@ -745,7 +801,6 @@ export default function BulkImportPage() {
           subCategory: finalSubCategoryId,
           colors: product.colors,
           quantity: product.stockQuantity,
-          images: imageIds,
           specifications: product.specifications,
           material: product.material || null,
           sku,
@@ -756,10 +811,25 @@ export default function BulkImportPage() {
           variants: product.variants,
         }
 
-        // 6. Create product DIRECTLY — no fetchData() per product!
-        const result = await createProduct(payload)
+        if (imageIds.length > 0) {
+          payload.images = imageIds;
+        } else if (product.existingImageIds && product.existingImageIds.length > 0) {
+          payload.images = product.existingImageIds;
+        }
+
+        // 6. Create or Update product DIRECTLY
+        let result;
+        let actionWord = "Created";
+        if (existingProductId) {
+          // Exclude certain fields that shouldn't be overwritten blindly if empty in update
+          result = await updateProduct(existingProductId, payload);
+          actionWord = "Updated";
+        } else {
+          result = await createProduct(payload);
+        }
+
         if (result.error) {
-          throw new Error(result.error.message || "Failed to create product")
+          throw new Error(result.error.message || `Failed to ${existingProductId ? 'update' : 'create'} product`)
         }
 
         // Track success in session
@@ -769,8 +839,8 @@ export default function BulkImportPage() {
 
         // Success
         const imgMsg = failedUploads.length > 0
-          ? `✅ Created with ${imageIds.length} images (${failedUploads.length} failed)`
-          : `✅ Created with ${imageIds.length} images`
+          ? `✅ ${actionWord} with ${imageIds.length || product.existingImageIds.length} images (${failedUploads.length} failed)`
+          : `✅ ${actionWord} with ${imageIds.length || product.existingImageIds.length} images`
 
         setProducts((prev) =>
           prev.map((p) =>
@@ -831,8 +901,7 @@ export default function BulkImportPage() {
         { header: "MRP / Original Price (₹)", key: "mrp", width: 22 },
         { header: "Stock Quantity", key: "stock", width: 15 },
         { header: "SKU", key: "sku", width: 22 },
-        { header: "Material", key: "material", width: 18 },
-        { header: "Image File Name", key: "imagefile", width: 35 },
+        { header: "Image / Photo Shoot No.", key: "imagefile", width: 35 },
         { header: "Attribute 1 Label", key: "attr1l", width: 20 },
         { header: "Attribute 1 Value", key: "attr1v", width: 25 },
         { header: "Attribute 2 Label", key: "attr2l", width: 20 },
@@ -853,8 +922,19 @@ export default function BulkImportPage() {
         fgColor: { argb: 'FFE0E0E0' }
       }
 
-      const categoryNames = categories.map((c) => c.name)
-      const allSubCategoryNames = subCategories.map((s) => s.name)
+      // Use same sort order as admin: Sarees first, then alphabetical
+      const sortedCategories = [...categories].sort((a, b) => {
+        if (a.name.toLowerCase() === 'sarees') return -1;
+        if (b.name.toLowerCase() === 'sarees') return 1;
+        return a.name.localeCompare(b.name);
+      });
+      const categoryNames = sortedCategories.map((c) => c.name)
+      const allSubCategoryNames = [...subCategories].sort((a, b) => {
+        const iA = getSubcategorySortIndex(a.name);
+        const iB = getSubcategorySortIndex(b.name);
+        if (iA !== iB) return iA - iB;
+        return a.name.localeCompare(b.name);
+      }).map((s) => s.name)
       const uniqueSubCategoryNames = [...new Set(allSubCategoryNames)]
 
       // Add Sample Rows
@@ -867,8 +947,7 @@ export default function BulkImportPage() {
         mrp: 12000,
         stock: 1,
         sku: "SAR-TSK-001",
-        material: "Tussar Silk",
-        imagefile: "1001.png, 1002.png, 1003.png",
+        imagefile: "2234, 2235t, 2236",
         attr1l: "Wash Care",
         attr1v: "Dry Clean Only",
         attr2l: "Dimensions",
@@ -886,8 +965,7 @@ export default function BulkImportPage() {
         mrp: 2500,
         stock: 3,
         sku: "DUP-MCT-001",
-        material: "Cotton",
-        imagefile: "2001.png, 2002.png",
+        imagefile: "2245, 2246t, 2247",
         attr1l: "Wash Care",
         attr1v: "Hand Wash",
         attr2l: "Dimensions",
@@ -1041,7 +1119,7 @@ export default function BulkImportPage() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => router.push("/dashboard/products")}
+          onClick={() => router.push("/dashboard/add-product")}
           className="gap-1.5"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -1182,9 +1260,8 @@ export default function BulkImportPage() {
                 <div>
                   <p className="font-medium text-slate-700">Drop your images ZIP file here</p>
                   <div className="text-xs text-slate-500 mt-3 space-y-2 text-left bg-white border border-slate-200 rounded-lg p-3 inline-block">
-                    <p><strong>1. Folders = Excel Rows:</strong> Folder <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">1</code> matches Row 1 in Excel, Folder <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">2</code> matches Row 2, etc.</p>
-                    <p><strong>2. Image Names:</strong> Inside folder <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">1</code>, name the images <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">1.jpg</code>, <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">2.jpg</code>, etc.</p>
-                    <p className="text-amber-600 font-medium">✨ The image named 1.jpg is always the main thumbnail.</p>
+                    <p><strong>1. Match by Image Name:</strong> The numbers in your <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">Image / Photo Shoot No.</code> column must match the image file names in your ZIP.</p>
+                    <p><strong>2. Thumbnails:</strong> Add a <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">t</code> to any number in your Excel sheet (like <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">2235t</code>) to automatically make it the main thumbnail!</p>
                   </div>
                 </div>
               )}
@@ -1247,14 +1324,14 @@ export default function BulkImportPage() {
               </div>
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
-                <span className="text-slate-600"><strong>Needs attention</strong> — missing price, material, etc. Edit inline or fix after import</span>
+                <span className="text-slate-600"><strong>Needs attention</strong> — missing price or description. Edit inline or fix after import</span>
               </div>
               <div className="flex items-center gap-2">
                 <XCircle className="h-4 w-4 text-red-500 shrink-0" />
                 <span className="text-slate-600"><strong>Blocked</strong> — missing product name. Must fix to import</span>
               </div>
             </div>
-            <p className="text-xs text-slate-500 pt-1">💡 Expand any row to edit Price, Stock, Material, and SKU directly. Changes apply instantly.</p>
+            <p className="text-xs text-slate-500 pt-1">💡 Expand any row to edit Price, Stock, and SKU directly. Changes apply instantly.</p>
           </div>
 
           {/* Product list */}
@@ -1306,8 +1383,20 @@ export default function BulkImportPage() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-slate-900 truncate">{product.name || "(no name)"}</p>
                         <p className="text-xs text-slate-500 truncate">
-                          {product.categoryName}
-                          {product.subCategoryName ? ` → ${product.subCategoryName}` : ""} · ₹
+                          {product.categoryId ? (
+                            <span className="text-green-600">{product.categoryName}</span>
+                          ) : product.categoryName ? (
+                            <span className="text-red-500">⚠ {product.categoryName}</span>
+                          ) : (
+                            <span className="text-slate-400">No category</span>
+                          )}
+                          {product.subCategoryName ? (
+                            product.subCategoryId ? (
+                              <span className="text-green-600"> → {product.subCategoryName}</span>
+                            ) : (
+                              <span className="text-red-500"> → ⚠ {product.subCategoryName}</span>
+                            )
+                          ) : ""} · ₹
                           {product.price.toLocaleString("en-IN")} · {product.zipEntries?.length ?? product.imageFiles.length} images
                         </p>
                       </div>
@@ -1389,6 +1478,83 @@ export default function BulkImportPage() {
 
                         {/* Editable details grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                          {/* Category dropdown */}
+                          <div>
+                            <label className="text-slate-500 block mb-1">Category</label>
+                            <select
+                              className={`w-full px-2 py-1.5 border rounded text-sm font-medium ${!product.categoryId ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"}`}
+                              value={product.categoryId || ""}
+                              onChange={(e) => {
+                                const catId = e.target.value || null
+                                const cat = categories.find(c => c.id === catId)
+                                setProducts(prev => prev.map(p => {
+                                  if (p.rowNumber !== product.rowNumber) return p
+                                  // Clear subcategory when category changes
+                                  const newErrors = p.errors
+                                    .filter(err => !err.toLowerCase().includes('category'))
+                                  if (!catId) newErrors.push('Category is required')
+                                  return {
+                                    ...p,
+                                    categoryId: catId,
+                                    categoryName: cat?.name || '',
+                                    subCategoryId: null,
+                                    subCategoryName: '',
+                                    errors: newErrors,
+                                  }
+                                }))
+                              }}
+                            >
+                              <option value="">Select category...</option>
+                              {categories
+                                .sort((a, b) => {
+                                  if (a.name.toLowerCase() === 'sarees') return -1;
+                                  if (b.name.toLowerCase() === 'sarees') return 1;
+                                  return a.name.localeCompare(b.name);
+                                })
+                                .map(cat => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                          {/* Subcategory dropdown */}
+                          <div>
+                            <label className="text-slate-500 block mb-1">Subcategory</label>
+                            <select
+                              className={`w-full px-2 py-1.5 border rounded text-sm font-medium ${product.subCategoryName && !product.subCategoryId ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"}`}
+                              value={product.subCategoryId || ""}
+                              disabled={!product.categoryId}
+                              onChange={(e) => {
+                                const subId = e.target.value || null
+                                const sub = subCategories.find(s => s.id === subId)
+                                setProducts(prev => prev.map(p => {
+                                  if (p.rowNumber !== product.rowNumber) return p
+                                  const newErrors = p.errors.filter(err => !err.toLowerCase().includes('subcategory'))
+                                  return {
+                                    ...p,
+                                    subCategoryId: subId,
+                                    subCategoryName: sub?.name || '',
+                                    errors: newErrors,
+                                  }
+                                }))
+                              }}
+                            >
+                              <option value="">None / All</option>
+                              {subCategories
+                                .filter(s => String(s.category_id) === String(product.categoryId))
+                                .sort((a, b) => {
+                                  const cat = categories.find(c => String(c.id) === String(product.categoryId))
+                                  if (cat && cat.name.toLowerCase() === 'sarees') {
+                                    const iA = getSubcategorySortIndex(a.name);
+                                    const iB = getSubcategorySortIndex(b.name);
+                                    if (iA !== iB) return iA - iB;
+                                  }
+                                  return a.name.localeCompare(b.name);
+                                })
+                                .map(sub => (
+                                <option key={sub.id} value={sub.id}>{sub.name}</option>
+                              ))}
+                            </select>
+                          </div>
                           <div>
                             <label className="text-slate-500 block mb-1">Selling Price (₹)</label>
                             <input
@@ -1439,23 +1605,7 @@ export default function BulkImportPage() {
                               }}
                             />
                           </div>
-                          <div>
-                            <label className="text-slate-500 block mb-1">Material</label>
-                            <input
-                              type="text"
-                              className={`w-full px-2 py-1.5 border rounded text-sm font-medium ${!product.material ? "border-amber-300 bg-amber-50" : "border-slate-200 bg-white"}`}
-                              value={product.material}
-                              placeholder="e.g. Organza, Silk"
-                              onChange={(e) => {
-                                setProducts(prev => prev.map(p =>
-                                  p.rowNumber === product.rowNumber
-                                    ? { ...p, material: e.target.value, warnings: p.warnings.filter(w => !w.includes("material")) }
-                                    : p
-                                ))
-                              }}
-                            />
-                          </div>
-                          <div className="sm:col-span-2">
+                          <div className="sm:col-span-3">
                             <label className="text-slate-500 block mb-1">SKU</label>
                             <input
                               type="text"
@@ -1638,7 +1788,14 @@ export default function BulkImportPage() {
                 >
                   Import More
                 </Button>
-                <Button onClick={() => router.push("/dashboard/products")} className="gap-1.5">
+                <Button 
+                  onClick={async () => {
+                    await queryClient.invalidateQueries({ queryKey: ["products"] });
+                    await queryClient.invalidateQueries({ queryKey: ["home", "category-index"] });
+                    router.push("/dashboard/products");
+                  }} 
+                  className="gap-1.5"
+                >
                   <Package className="h-4 w-4" />
                   View Products
                 </Button>

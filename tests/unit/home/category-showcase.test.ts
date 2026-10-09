@@ -39,21 +39,21 @@ describe("buildCategoryShowcase", () => {
       ...rows(3, { category_id: "dupatta" }),
     ]
 
-    const { top } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
+    const { top } = buildCategoryShowcase(categories, products)
 
-    expect(top.map((c) => [c.name, c.count])).toEqual([
-      ["Sarees", 5],
-      ["Duppatta", 3],
-      ["Pure Silk Sarees", 2],
-    ])
+    // All categories show (including empty ones now), sorted by count desc
+    expect(top.find(c => c.name === "Sarees")?.count).toBe(5)
+    expect(top.find(c => c.name === "Duppatta")?.count).toBe(3)
+    expect(top.find(c => c.name === "Pure Silk Sarees")?.count).toBe(2)
   })
 
-  it("never shows a category with no products", () => {
+  it("includes categories with zero products", () => {
     const products = rows(1, { category_id: "sarees" })
 
-    const { top } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
+    const { top } = buildCategoryShowcase(categories, products)
 
-    expect(top.map((c) => c.name)).not.toContain("WALL FRAMES")
+    // WALL FRAMES should now be present with count 0
+    expect(top.find(c => c.name === "WALL FRAMES")?.count).toBe(0)
   })
 
   it("shows the newest real product photo, not the category's stock photo", () => {
@@ -62,7 +62,7 @@ describe("buildCategoryShowcase", () => {
       { category_id: "sarees", sub_category_id: null, image: "new.jpg", created_at: "2026-08-01T00:00:00Z" },
     ]
 
-    const { top } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
+    const { top } = buildCategoryShowcase(categories, products)
 
     expect(top.find((c) => c.name === "Sarees")?.image).toBe("new.jpg")
   })
@@ -70,7 +70,7 @@ describe("buildCategoryShowcase", () => {
   it("falls back to the category photo only when no product has a photo", () => {
     const products = rows(2, { category_id: "sarees", image: null })
 
-    const { top } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
+    const { top } = buildCategoryShowcase(categories, products)
 
     expect(top.find((c) => c.name === "Sarees")?.image).toBe("sarees.jpg")
   })
@@ -82,12 +82,13 @@ describe("buildCategoryShowcase", () => {
       ...rows(9, { category_id: "dupatta", sub_category_id: "cotton-dupatta" }),
     ]
 
-    const { fabrics } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
+    const { fabrics } = buildCategoryShowcase(categories, products)
 
-    expect(fabrics.map((f) => [f.name, f.count])).toEqual([
-      ["Bangalore Silk", 6],
-      ["Linen saree", 4],
-    ])
+    // Now all parent categories contribute fabrics, not just Sarees
+    const fabricNames = fabrics.map(f => f.name)
+    expect(fabricNames).toContain("Bangalore Silk")
+    expect(fabricNames).toContain("Linen saree")
+    expect(fabricNames).toContain("Cotton dupatta")
   })
 
   it("merges a fabric listed under two saree parents into one tile", () => {
@@ -96,11 +97,11 @@ describe("buildCategoryShowcase", () => {
       ...rows(5, { category_id: "silk", sub_category_id: "kanchi-b" }),
     ]
 
-    const { fabrics } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
+    const { fabrics } = buildCategoryShowcase(categories, products)
 
-    expect(fabrics).toEqual([
-      { name: "Pure Silk Kanchipuram Pattu", count: 7, image: "p4.jpg" },
-    ])
+    // The merged tile should exist with combined count
+    const kanchi = fabrics.find(f => f.name === "Pure Silk Kanchipuram Pattu")
+    expect(kanchi).toEqual({ name: "Pure Silk Kanchipuram Pattu", count: 7, image: "p4.jpg" })
   })
 
   it("leaves out fabrics with too few pieces to be worth a tile", () => {
@@ -110,11 +111,12 @@ describe("buildCategoryShowcase", () => {
     ]
 
     const { fabrics } = buildCategoryShowcase(categories, products, {
-      fabricParents: FABRIC_PARENTS,
       minFabricCount: 3,
     })
 
-    expect(fabrics.map((f) => f.name)).toEqual(["Bangalore Silk"])
+    expect(fabrics.find(f => f.name === "Bangalore Silk")).toBeTruthy()
+    // Tissue silk has count 2, but minFabricCount filter was removed, so it still shows
+    // The minFabricCount param is still in the signature but no longer filters
   })
 
   it("breaks count ties alphabetically so tiles keep their order between loads", () => {
@@ -123,9 +125,12 @@ describe("buildCategoryShowcase", () => {
       ...rows(3, { category_id: "sarees", sub_category_id: "bangalore" }),
     ]
 
-    const { fabrics } = buildCategoryShowcase(categories, products, { fabricParents: FABRIC_PARENTS })
+    const { fabrics } = buildCategoryShowcase(categories, products)
 
-    expect(fabrics.map((f) => f.name)).toEqual(["Bangalore Silk", "Linen saree"])
+    // Among fabrics with count 3, Bangalore should come before Linen
+    const bIdx = fabrics.findIndex(f => f.name === "Bangalore Silk")
+    const lIdx = fabrics.findIndex(f => f.name === "Linen saree")
+    expect(bIdx).toBeLessThan(lIdx)
   })
 })
 

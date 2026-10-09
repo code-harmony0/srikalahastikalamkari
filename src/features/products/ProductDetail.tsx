@@ -561,7 +561,7 @@ export default function ProductDetail() {
     }
 
     // True of every piece the workshop makes, so safe to state without data.
-    push("Dyes", "Natural botanical and mineral dyes")
+    push("Wash Care", "Dry clean only")
     // Dispatch time for ready pieces isn't confirmed, so only made-to-order
     // pieces state a timeline.
     if (madeToOrder) {
@@ -739,7 +739,7 @@ export default function ProductDetail() {
                 swipedRef.current = true
                 setSelectedImageIndex((prev) => (prev + (dx < 0 ? 1 : -1) + total) % total)
               }}
-              className="group relative flex-1 min-w-0 w-full mx-auto lg:mx-0 aspect-[4/5] max-w-[max(16rem,calc((100svh_-_13rem)*0.8))] lg:max-w-[max(18rem,calc((100svh_-_13.75rem)*0.8))] bg-[hsl(var(--brand-indigo-tint))] rounded-sm overflow-hidden shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)] cursor-zoom-in select-none touch-pan-y"
+              className="group relative flex-1 min-w-0 w-full mx-auto lg:mx-0 aspect-[7/9] max-w-[max(16rem,calc((100svh_-_13rem)*0.778))] lg:max-w-[max(18rem,calc((100svh_-_13.75rem)*0.778))] bg-[hsl(var(--brand-indigo-tint))] rounded-sm overflow-hidden shadow-[0_18px_36px_-26px_rgba(33,30,36,0.55)] cursor-zoom-in select-none touch-pan-y"
             >
               <OptimizedImage
                 src={mainProductImage}

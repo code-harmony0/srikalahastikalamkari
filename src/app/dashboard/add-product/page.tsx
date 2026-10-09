@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   Card,
   CardContent,
@@ -148,6 +149,7 @@ const FormSection = ({
 
 const AddProduct = () => {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const searchParams = useSearchParams()
   const { toast } = useToast()
   const { addProduct, updateProduct } = useInventory()
@@ -990,6 +992,8 @@ const AddProduct = () => {
         sessionStorage.removeItem(`product_${editingProduct.id}`)
 
         // Navigate back immediately - the context has already refreshed
+        await queryClient.invalidateQueries({ queryKey: ["products"] });
+        await queryClient.invalidateQueries({ queryKey: ["home", "category-index"] });
         router.push("/dashboard/products")
       } else {
         const result = await addProduct(productData)
@@ -1002,7 +1006,9 @@ const AddProduct = () => {
         })
 
         // Navigate back after a short delay for new products
-        setTimeout(() => {
+        setTimeout(async () => {
+          await queryClient.invalidateQueries({ queryKey: ["products"] });
+          await queryClient.invalidateQueries({ queryKey: ["home", "category-index"] });
           router.push("/dashboard/products")
         }, 500)
       }
@@ -1083,14 +1089,27 @@ const AddProduct = () => {
 
   return (
     <div className="px-0 py-4 md:p-8 min-h-screen bg-slate-50/50 font-sans">
-      <Button
-        variant="ghost"
-        className="mb-4 md:mb-6 mt-4 md:mt-0 ml-4 hover:bg-white rounded-xl h-11 px-2 md:px-4"
-        onClick={() => router.push("/dashboard/products")}
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Products
-      </Button>
+      <div className="flex justify-between items-center mb-4 md:mb-6 mt-4 md:mt-0 px-4 md:px-0">
+        <Button
+          variant="ghost"
+          className="hover:bg-white rounded-xl h-11 px-2 md:px-4"
+          onClick={() => router.push("/dashboard/products")}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Products
+        </Button>
+
+        {!isEditMode && (
+          <Button
+            variant="outline"
+            onClick={() => router.push("/dashboard/products/bulk-import")}
+            className="h-10 gap-2 px-4 rounded-xl transition-all border-slate-200 bg-white"
+          >
+            <Plus className="h-4 w-4" />
+            Bulk Import
+          </Button>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit}>
         <div className="bg-white rounded-none md:rounded-2xl shadow-sm border-y md:border border-slate-100 overflow-hidden max-w-4xl mx-auto">
