@@ -367,6 +367,10 @@ export default function BulkImportPage() {
         return
       }
 
+      // Fetch all existing SKUs to know which ones are updates vs new products
+      const { data: existingSkusData } = await supabase.from('products').select('sku').not('sku', 'is', null)
+      const existingSkus = new Set((existingSkusData || []).map(p => p.sku))
+
       // 2. LAZY ZIP scanning — only read file listing, don't extract blobs yet
       //    We store ZIP entry references and extract per-product during upload
       const zipEntryMap = new Map<number, Array<{ path: string; entry: any }>>()
@@ -572,9 +576,15 @@ export default function BulkImportPage() {
           errors.push(`No images found in ZIP for this product. Ensure filenames match the "Image File Name" column or follow the "rowNumber-1.jpg" naming convention.`)
         }
 
+        const isUpdate = skuRaw && existingSkus.has(skuRaw)
+
         const warnings: string[] = []
         if (zipEntries.length === 0 && !zipFile && existingImageIds.length === 0) {
-          warnings.push("No images provided for this product.");
+          if (isUpdate) {
+            warnings.push("No images provided — existing images will be kept.")
+          } else {
+            errors.push("No images provided. A ZIP file with images is mandatory for new products.")
+          }
         }
 
                 if (!description) warnings.push("No description — add it here or edit after import")
